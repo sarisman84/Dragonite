@@ -2,14 +2,15 @@
 #include <wrl/client.h>
 #include "../../EngineUtilities.h"
 
-
-using Microsoft::WRL::ComPtr;
-using Engine::Windows::Resolution;
+#pragma comment(lib, "d3d11.lib")
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
+
+using Microsoft::WRL::ComPtr;
+using Engine::Windows::Resolution;
 
 namespace Engine
 {
