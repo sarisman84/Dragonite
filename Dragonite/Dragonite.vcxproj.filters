@@ -17,8 +17,14 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{bcd98574-6809-4d29-bb31-13ebb0312ae5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics\Models">
-      <UniqueIdentifier>{b2de9f8c-2769-4869-ab04-a6b3eef6352a}</UniqueIdentifier>
+    <Filter Include="Core\Graphics\Rendering">
+      <UniqueIdentifier>{e0ebaac6-766f-44e1-9c9e-630e939b1253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Utilities">
+      <UniqueIdentifier>{641ba903-007c-4fc5-96e4-f351d2fd2903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{6e511c9b-933b-489b-aa3a-b2ce8937220e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,11 +37,17 @@
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Model.cpp">
-      <Filter>Core\Graphics\Models</Filter>
+    <ClCompile Include="Core\Graphics\Rendering\Render.cpp">
+      <Filter>Core\Graphics\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\ColorShader.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="Core\Runtime.cpp">
+      <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\Triangle.cpp">
+      <Filter>Core\Graphics\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\Quad.cpp">
+      <Filter>Core\Graphics\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,20 +60,36 @@
     <ClInclude Include="Core\Graphics\GraphicsEngine.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Model.h">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClInclude>
     <ClInclude Include="CommonUtilities.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\ColorShader.h" />
+    <ClInclude Include="Core\Graphics\Rendering\Render.h">
+      <Filter>Core\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Runtime.h">
+      <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Triangle.h">
+      <Filter>Core\Graphics\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Quad.h">
+      <Filter>Core\Graphics\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Color_VS.hlsl">
+    <FxCompile Include="Shaders\ColorShader_PS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Color_PS.hlsl">
+    <FxCompile Include="Shaders\ColorShader_VS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SinWave_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Utilities\ShaderUtilities.hlsli">
+      <Filter>Shaders\Utilities</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 using namespace Engine::Windows;
 namespace Engine
 {
+
 	enum class SystemState
 	{
 		Run, Exit
@@ -12,15 +13,16 @@ namespace Engine
 	class System
 	{
 	public:
-		System() = default;
+		//System();
+		//~System();
 		bool Initialize(HINSTANCE anHInstance, int nCmdShow);
 		void Shutdown();
 		MSG StartRuntime();
+		inline Graphics::GraphicsEngine* GetGraphicsEngine() { return &myGraphicsEngine; }
 	private:
 		Graphics::GraphicsEngine myGraphicsEngine;
 		WindowInfo myWindowsInfo;
 		SystemState myRuntimeState;
-		void EngineRuntime();
 	};
 }
 

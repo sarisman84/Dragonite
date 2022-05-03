@@ -5,8 +5,17 @@
 
 
 
+Engine::Graphics::GraphicsEngine::GraphicsEngine() = default;
+
+
+Engine::Graphics::GraphicsEngine::~GraphicsEngine() = default;
+
+
 bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle)
 {
+
+	
+
 	HRESULT result;
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -65,14 +74,23 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	viewport.MaxDepth = 1.0f;
 	myContext->RSSetViewports(1, &viewport);
 
-
 	return true;
 }
 
 
-void Engine::Graphics::GraphicsEngine::Render()
+void Engine::Graphics::GraphicsEngine::DrawElements()
 {
+
+	
+
+
 	float color[4] = { 1.0f,0.8f,0.5f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
+	
+
+	for (size_t i = 0; i < myRenderTargets.size(); i++)
+	{
+		myRenderTargets[i]->Draw();
+	}
 	mySwapChain->Present(1, 0);
 }

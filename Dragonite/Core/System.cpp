@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Runtime.h"
 
 LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
@@ -15,12 +16,16 @@ LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLPa
 	return 0;
 }
 
+//Engine::System::System() = default;
+
+//Engine::System::~System() = default;
+
 bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 {
 	myWindowsInfo = InitializeWindow(L"Dragonite", { 1980, 1080 }, anHInstance, WndProc);
 
 	if (!myWindowsInfo.myWindowInstance) return false;
-	myGraphicsEngine = Graphics::GraphicsEngine();
+	//myGraphicsEngine = new Graphics::GraphicsEngine();
 	if (!myGraphicsEngine.Initialize(myWindowsInfo.myResolution, myWindowsInfo.myWindowInstance)) return false;
 
 
@@ -36,6 +41,8 @@ void Engine::System::Shutdown()
 
 MSG Engine::System::StartRuntime()
 {
+	Runtime runtime = Runtime(this);
+	runtime.Awake();
 	myRuntimeState = SystemState::Run;
 	MSG msg = {};
 
@@ -51,8 +58,11 @@ MSG Engine::System::StartRuntime()
 				myRuntimeState = SystemState::Exit;
 				break;
 			}
-		}
-		EngineRuntime();
+		} 
+
+		runtime.Update();
+		myGraphicsEngine.DrawElements();
+		
 	}
 
 	return msg;
@@ -60,7 +70,4 @@ MSG Engine::System::StartRuntime()
 
 
 
-void Engine::System::EngineRuntime()
-{
-	myGraphicsEngine.Render();
-}
+

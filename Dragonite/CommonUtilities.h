@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <array>
 namespace CommonUtilities
 {
 	namespace Math
