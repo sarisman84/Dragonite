@@ -17,7 +17,7 @@ MeshInfo Triangle::OnInit()
 	Vertex vertices[] =
 	{
 		Vector4<float>{-1.f, -1.f,  0, 1} *myObjectMatrix,Vector4<float>{1,0,0,1},
-		Vector4<float>{0,      1.f,  0, 1} *myObjectMatrix,Vector4<float>{0,1,0,1},
+		Vector4<float>{0,     1.f,  0, 1} *myObjectMatrix,Vector4<float>{0,1,0,1},
 		Vector4<float>{1.f,  -1.f,  0, 1} *myObjectMatrix,Vector4<float>{0,0,1,1},
 	};
 
