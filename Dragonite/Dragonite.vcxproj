@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -158,21 +158,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\Render.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\Quad.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\Triangle.cpp" />
+    <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommonUtilities.h" />
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
-    <ClInclude Include="Core\Graphics\Rendering\Render.h" />
-    <ClInclude Include="Core\Graphics\Rendering\Quad.h" />
-    <ClInclude Include="Core\Graphics\Rendering\Triangle.h" />
+    <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\System.h" />
+    <ClInclude Include="Core\Utilities\Math\Matrix.h" />
+    <ClInclude Include="Core\Utilities\Math\Matrix3x3.h" />
+    <ClInclude Include="Core\Utilities\Math\Matrix4x4.h" />
+    <ClInclude Include="Core\Utilities\Math\Vector.h" />
+    <ClInclude Include="Core\Utilities\Math\Vector2.h" />
+    <ClInclude Include="Core\Utilities\Math\Vector3.h" />
+    <ClInclude Include="Core\Utilities\Math\Vector4.h" />
+    <ClInclude Include="Core\Utilities\UtilityFunctions.h" />
     <ClInclude Include="EngineUtilities.h" />
   </ItemGroup>
   <ItemGroup>

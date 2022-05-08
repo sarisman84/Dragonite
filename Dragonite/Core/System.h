@@ -19,6 +19,7 @@ namespace Engine
 		void Shutdown();
 		MSG StartRuntime();
 		inline Graphics::GraphicsEngine* GetGraphicsEngine() { return &myGraphicsEngine; }
+		inline WindowInfo& GetWindowsInfo() { return myWindowsInfo; }
 	private:
 		Graphics::GraphicsEngine myGraphicsEngine;
 		WindowInfo myWindowsInfo;

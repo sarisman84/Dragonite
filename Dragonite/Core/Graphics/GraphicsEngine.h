@@ -2,23 +2,28 @@
 #include <wrl/client.h>
 #include <vector>
 #include <memory>
+#include <string>
 
-#include "Graphics/Rendering/Render.h"
+#include "Rendering/RenderObject.h"
 #include "../../EngineUtilities.h"
 
+using Microsoft::WRL::ComPtr;
+using Engine::Windows::Resolution;
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
 
+class RenderObject;
+struct Shape;
+enum class Primitive;
 
 
-using Microsoft::WRL::ComPtr;
-using Engine::Windows::Resolution;
 
 namespace Engine
 {
+	class System;
 	namespace Graphics
 	{
 		class GraphicsEngine
@@ -26,31 +31,29 @@ namespace Engine
 		public:
 			GraphicsEngine();
 			~GraphicsEngine();
-			bool Initialize(Engine::Windows::Resolution aResolution, HWND aWindowsHandle);
+			bool Initialize(Engine::Windows::Resolution aResolution, HWND aWindowsHandle, System* aSystem);
 			void DrawElements();
 
-			template<class Element, typename... Args>
-			std::shared_ptr<Element> CreateElement(Args&&... someArgs);
+			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
+			std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);
 		private:
+			Shape GetUnitTriangle();
+			Shape GetUnitQuad();
+			Shape GetUnitCircle();
+
 			ComPtr<ID3D11Device> myDevice;
 			ComPtr<ID3D11DeviceContext> myContext;
 			ComPtr<IDXGISwapChain> mySwapChain;
 			ComPtr<ID3D11RenderTargetView> myBackBuffer;
 
 
-			std::vector<std::shared_ptr<Render>> myRenderTargets;
+			std::vector<std::shared_ptr<RenderObject>> myRenderTargets;
+			System* mySystem;
 		};
 
 
 
-		template<class Element, typename ...Args>
-		inline std::shared_ptr<Element> GraphicsEngine::CreateElement(Args&&... someArgs)
-		{
-			std::shared_ptr<Render> element = std::make_shared<Element>(myDevice.Get(), myContext.Get(), someArgs...);
-			if (!element->Initialize()) return nullptr;
-			myRenderTargets.push_back(element);
-			return std::dynamic_pointer_cast<Element>(myRenderTargets.back());
-		}
+
 	}
 
 }

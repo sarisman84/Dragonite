@@ -26,7 +26,7 @@ bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 
 	if (!myWindowsInfo.myWindowInstance) return false;
 	//myGraphicsEngine = new Graphics::GraphicsEngine();
-	if (!myGraphicsEngine.Initialize(myWindowsInfo.myResolution, myWindowsInfo.myWindowInstance)) return false;
+	if (!myGraphicsEngine.Initialize(myWindowsInfo.myResolution, myWindowsInfo.myWindowInstance, this)) return false;
 
 
 	ShowWindow(myWindowsInfo.myWindowInstance, nCmdShow);

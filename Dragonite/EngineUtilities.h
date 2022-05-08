@@ -6,9 +6,6 @@
 
 namespace Engine
 {
-
-
-
 	namespace Windows
 	{
 		struct Resolution
@@ -21,6 +18,14 @@ namespace Engine
 			Resolution myResolution;
 			HWND myWindowInstance;
 			DWORD myWindowStyle;
+
+			float GetAspectRatio()
+			{
+				float x = static_cast<float>(myResolution.width);
+				float y = static_cast<float>(myResolution.height);
+
+				return x / y;
+			}
 		};
 
 
@@ -42,7 +47,7 @@ namespace Engine
 			RegisterClassExW(&wcex);
 
 
-			HWND hWnd = CreateWindow(aName, aName,	info.myWindowStyle, CW_USEDEFAULT, CW_USEDEFAULT, aResolution.width, aResolution.height, nullptr, nullptr, anHInstance, nullptr
+			HWND hWnd = CreateWindow(aName, aName, info.myWindowStyle, CW_USEDEFAULT, CW_USEDEFAULT, aResolution.width, aResolution.height, nullptr, nullptr, anHInstance, nullptr
 			);
 
 			info.myWindowInstance = hWnd;

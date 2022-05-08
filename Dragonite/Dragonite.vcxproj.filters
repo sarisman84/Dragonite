@@ -17,14 +17,23 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{bcd98574-6809-4d29-bb31-13ebb0312ae5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics\Rendering">
-      <UniqueIdentifier>{e0ebaac6-766f-44e1-9c9e-630e939b1253}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Utilities">
       <UniqueIdentifier>{641ba903-007c-4fc5-96e4-f351d2fd2903}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{6e511c9b-933b-489b-aa3a-b2ce8937220e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Shapes">
+      <UniqueIdentifier>{17ef4507-0ea2-4d56-b34a-ad827e6160be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math">
+      <UniqueIdentifier>{6c810fdb-b0d7-47d7-b7f6-a786607ad05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math\Vectors">
+      <UniqueIdentifier>{f245c52e-9cbc-47a9-b436-9d46ce334930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math\Matrixes">
+      <UniqueIdentifier>{233cbb38-4f0c-494c-823a-9537bffd770c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,17 +46,11 @@
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\Render.cpp">
-      <Filter>Core\Graphics\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Runtime.cpp">
       <Filter>Core\System</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\Triangle.cpp">
-      <Filter>Core\Graphics\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\Quad.cpp">
-      <Filter>Core\Graphics\Rendering</Filter>
+    <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
+      <Filter>Core\Graphics\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,20 +63,35 @@
     <ClInclude Include="Core\Graphics\GraphicsEngine.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="CommonUtilities.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Render.h">
-      <Filter>Core\Graphics\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Runtime.h">
       <Filter>Core\System</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Triangle.h">
-      <Filter>Core\Graphics\Rendering</Filter>
+    <ClInclude Include="Core\Graphics\Rendering\RenderObject.h">
+      <Filter>Core\Graphics\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Quad.h">
-      <Filter>Core\Graphics\Rendering</Filter>
+    <ClInclude Include="Core\Utilities\UtilityFunctions.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector2.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector3.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector4.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix4x4.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix3x3.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
