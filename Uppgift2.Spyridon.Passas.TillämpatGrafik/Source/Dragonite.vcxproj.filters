@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{73a83eda-0477-40a8-819a-6228bbb27cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Core\System">
+      <UniqueIdentifier>{291b9eaa-e46f-4c04-92d7-72be83a0a385}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{8b7ea186-d262-4190-a601-3b4b3b3abd38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{bcd98574-6809-4d29-bb31-13ebb0312ae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Utilities">
+      <UniqueIdentifier>{641ba903-007c-4fc5-96e4-f351d2fd2903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{6e511c9b-933b-489b-aa3a-b2ce8937220e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Shapes">
+      <UniqueIdentifier>{17ef4507-0ea2-4d56-b34a-ad827e6160be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math">
+      <UniqueIdentifier>{6c810fdb-b0d7-47d7-b7f6-a786607ad05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math\Vectors">
+      <UniqueIdentifier>{f245c52e-9cbc-47a9-b436-9d46ce334930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Math\Matrixes">
+      <UniqueIdentifier>{233cbb38-4f0c-494c-823a-9537bffd770c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\System.cpp">
+      <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\GraphicsEngine.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Runtime.cpp">
+      <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
+      <Filter>Core\Graphics\Shapes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EngineUtilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\System.h">
+      <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\GraphicsEngine.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Runtime.h">
+      <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\RenderObject.h">
+      <Filter>Core\Graphics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\UtilityFunctions.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector2.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector3.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Vector4.h">
+      <Filter>Utilities\Math\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix4x4.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix3x3.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Matrix.h">
+      <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\ColorShader_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ColorShader_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SinWave_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Utilities\ShaderUtilities.hlsli">
+      <Filter>Shaders\Utilities</Filter>
+    </None>
+  </ItemGroup>
+</Project>

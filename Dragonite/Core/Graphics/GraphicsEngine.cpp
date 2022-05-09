@@ -63,9 +63,9 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 		return false;
 	}
 
-	D3D11_TEXTURE2D_DESC textureDesc;
-	backBufferTexture->GetDesc(&textureDesc);
-	backBufferTexture->Release();
+	//D3D11_TEXTURE2D_DESC textureDesc;
+	//backBufferTexture->GetDesc(&textureDesc);
+	//backBufferTexture->Release();
 
 	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), nullptr);
 	D3D11_VIEWPORT viewport = { 0 };

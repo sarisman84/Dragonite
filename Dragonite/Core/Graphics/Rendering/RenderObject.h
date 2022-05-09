@@ -69,7 +69,6 @@ private:
 	bool TryLoadVertexShader(long& someResult, const std::string& aPath, std::string& someExtraData);
 	bool TryLoadPixelShader(long& someResult, const std::string& aPath);
 	
-
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 	ComPtr<ID3D11Buffer> myIndexBuffer;
 	ComPtr<ID3D11VertexShader> myVertexShader;

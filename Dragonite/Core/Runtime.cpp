@@ -29,12 +29,14 @@ void Engine::Runtime::Awake()
 void Engine::Runtime::Update()
 {
 	someCount++;
-	Math::Vector3f pos = { sin(someCount * 0.01f), 0.f, 0.f };
-	pos.x = Utilities::Clamp(-0.3f, 0.3f, pos.x);
+	Math::Vector3f pos = { 0.5f * sin(someCount * 0.01f), 0.5f * cos(someCount * 0.01f), 0.f };
+	pos.x /= mySystem->GetWindowsInfo().GetAspectRatio();
+	//pos.x = Utilities::Clamp(-0.3f, 0.3f, pos.x);
 	someShape->SetPosition(pos);
 
-	pos = { -sin(someCount * 0.01f), 0.f, 0.f };
-	pos.x = Utilities::Clamp(-0.3f, 0.3f, pos.x);
+	pos = { 0.5f * -sin(someCount * 0.01f), 0.5f * -cos(someCount * 0.01f), 0.f };
+	pos.x /= mySystem->GetWindowsInfo().GetAspectRatio();
+	//pos.x = Utilities::Clamp(-0.3f, 0.3f, pos.x);
 
 
 	someOtherShape->SetPosition(pos);
