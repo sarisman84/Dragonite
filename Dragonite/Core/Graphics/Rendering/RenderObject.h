@@ -14,7 +14,7 @@ struct ID3D11InputLayout;
 
 
 
-enum class Primitive
+enum class Primitive2D
 {
 	Circle, Quad, Triangle
 };

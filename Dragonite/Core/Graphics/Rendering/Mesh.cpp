@@ -3,13 +3,10 @@
 #include <fstream>
 
 
-Mesh::Mesh(ID3D11Device* aDevice, ID3D11DeviceContext* aContext)
+
+
+Mesh::Mesh()
 {
-	myDevice = aDevice;
-	myContext = aContext;
-
-	
-
 }
 
 Mesh::~Mesh()
@@ -23,7 +20,7 @@ Mesh::~Mesh()
 	delete[] myVertexData;
 }
 
-HRESULT Mesh::TryInitializeInputLayout(std::string someVertexData)
+HRESULT Mesh::TryInitializeInputLayout(ID3D11Device* aDevice, std::string someVertexData)
 {
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
@@ -32,10 +29,10 @@ HRESULT Mesh::TryInitializeInputLayout(std::string someVertexData)
 	};
 
 
-	return myDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexData.data(), someVertexData.size(), &myInputLayout);
+	return aDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexData.data(), someVertexData.size(), &myInputLayout);
 }
 
-HRESULT Mesh::TryIntializeBuffer(BufferType aType, void* someData, unsigned int aDataSize)
+HRESULT Mesh::TryIntializeBuffer(ID3D11Device* aDevice, BufferType aType, void* someData, unsigned int aDataSize)
 {
 	D3D11_BUFFER_DESC bufferDesc = {};
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
@@ -54,7 +51,7 @@ HRESULT Mesh::TryIntializeBuffer(BufferType aType, void* someData, unsigned int 
 		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bufferDesc.CPUAccessFlags = 0;
 
-		return myDevice->CreateBuffer(&bufferDesc, &data, &myVertexBuffer);
+		return aDevice->CreateBuffer(&bufferDesc, &data, &myVertexBuffer);
 	case BufferType::Index:
 		if (myIndexBuffer)
 			myIndexBuffer->Release();
@@ -64,14 +61,14 @@ HRESULT Mesh::TryIntializeBuffer(BufferType aType, void* someData, unsigned int 
 		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bufferDesc.CPUAccessFlags = 0;
 
-		return myDevice->CreateBuffer(&bufferDesc, &data, &myIndexBuffer);
+		return aDevice->CreateBuffer(&bufferDesc, &data, &myIndexBuffer);
 	}
 
 
 	return E_INVALIDARG;
 }
 
-HRESULT Mesh::TryInitializeShader(ShaderType aType, std::string aPath, std::string& someExtraData)
+HRESULT Mesh::TryInitializeShader(ID3D11Device* aDevice, ShaderType aType, std::string aPath, std::string& someExtraData)
 {
 	std::ifstream file;
 	file.open(aPath.c_str(), std::ios::binary);
@@ -79,27 +76,27 @@ HRESULT Mesh::TryInitializeShader(ShaderType aType, std::string aPath, std::stri
 	switch (aType)
 	{
 	case ShaderType::Vertex:
-		return myDevice->CreateVertexShader(someExtraData.data(), someExtraData.size(), nullptr, &myVertexShader);
+		return aDevice->CreateVertexShader(someExtraData.data(), someExtraData.size(), nullptr, &myVertexShader);
 	case ShaderType::Pixel:
-		return myDevice->CreatePixelShader(someExtraData.data(), someExtraData.size(), nullptr, &myPixelShader);
+		return aDevice->CreatePixelShader(someExtraData.data(), someExtraData.size(), nullptr, &myPixelShader);
 	}
 	return E_INVALIDARG;
 }
 
-void Mesh::Draw()
+void Mesh::Draw(ID3D11DeviceContext* aContext)
 {
-	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	myContext->IASetInputLayout(myInputLayout);
+	aContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	aContext->IASetInputLayout(myInputLayout);
 
 	unsigned int stride = sizeof(VertexInfo);
 	unsigned int offset = 0;
-	myContext->IASetVertexBuffers(0, 1, &myVertexBuffer, &stride, &offset);
-	myContext->IASetIndexBuffer(myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	aContext->IASetVertexBuffers(0, 1, &myVertexBuffer, &stride, &offset);
+	aContext->IASetIndexBuffer(myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	myContext->VSSetShader(myVertexShader, nullptr, 0);
-	myContext->PSSetShader(myPixelShader, nullptr, 0);
+	aContext->VSSetShader(myVertexShader, nullptr, 0);
+	aContext->PSSetShader(myPixelShader, nullptr, 0);
 
-	myContext->DrawIndexed(myIndecesAmm, 0, 0);
+	aContext->DrawIndexed(myIndecesAmm, 0, 0);
 }
 
 

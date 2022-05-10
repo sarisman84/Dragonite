@@ -15,11 +15,11 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
+struct ID3D11Buffer;
 
 class RenderObject;
 struct Shape;
-enum class Primitive;
-
+enum class Primitive2D;
 
 
 namespace Engine
@@ -36,8 +36,11 @@ namespace Engine
 			void DrawElements();
 
 			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
-			std::shared_ptr<RenderObject> CreatePrimitive(Primitive aPrimitiveShape);
+			std::shared_ptr<RenderObject> Create2DElement(Primitive2D aPrimitiveShape);
+			std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
 		private:
+
+
 			Shape GetUnitTriangle();
 			Shape GetUnitQuad();
 			Shape GetUnitCircle();

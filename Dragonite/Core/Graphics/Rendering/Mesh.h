@@ -37,34 +37,37 @@ enum class ShaderType
 	Vertex, Pixel
 };
 
-class Mesh
+struct MeshData
 {
-public:
-	Mesh(ID3D11Device* aDevice, ID3D11DeviceContext* aContext);
-	~Mesh();
-	HRESULT TryInitializeInputLayout(std::string someVertexData);
-	HRESULT TryIntializeBuffer(BufferType aType, void* someData, unsigned int aDataSize);
-	HRESULT TryInitializeShader(ShaderType aType, std::string aPath, std::string& someExtraData);
-	inline ObjectBufferData& GetObjectData() { return myObjectBufferData; }
-	void Draw();
-private:
 	VertexInfo* myVertexData;
 	unsigned int myVertexDataAmm;
 
 	unsigned int* myIndexData;
 	unsigned int myIndecesAmm;
+};
 
-	ObjectBufferData myObjectBufferData;
-	ID3D11Device* myDevice;
-	ID3D11DeviceContext* myContext;
 
+
+class Mesh
+{
+public:
+	Mesh();
+	~Mesh();
+	HRESULT TryInitializeInputLayout(ID3D11Device* aDevice, std::string someVertexData);
+	HRESULT TryIntializeBuffer(ID3D11Device* aDevice, BufferType aType, void* someData, unsigned int aDataSize);
+	HRESULT TryInitializeShader(ID3D11Device* aDevice, ShaderType aType, std::string aPath, std::string& someExtraData);
+
+	void Draw(ID3D11DeviceContext* aContext);
+private:
 	ID3D11VertexShader* myVertexShader;
 	ID3D11PixelShader* myPixelShader;
 	ID3D11InputLayout* myInputLayout;
 
 	ID3D11Buffer* myVertexBuffer;
 	ID3D11Buffer* myIndexBuffer;
-
-
 };
+
+
+
+
 

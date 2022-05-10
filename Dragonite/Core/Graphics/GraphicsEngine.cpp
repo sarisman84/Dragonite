@@ -94,18 +94,18 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	mySwapChain->Present(1, 0);
 }
 
-std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::CreatePrimitive(Primitive aPrimitiveShape)
+std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::Create2DElement(Primitive2D aPrimitiveShape)
 {
 	Shape aShape;
 	switch (aPrimitiveShape)
 	{
-	case Primitive::Circle:
+	case Primitive2D::Circle:
 		aShape = GetUnitCircle();
 		break;
-	case Primitive::Quad:
+	case Primitive2D::Quad:
 		aShape = GetUnitQuad();
 		break;
-	case Primitive::Triangle:
+	case Primitive2D::Triangle:
 		aShape = GetUnitTriangle();
 		break;
 	}
