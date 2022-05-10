@@ -35,6 +35,9 @@
     <Filter Include="Utilities\Math\Matrixes">
       <UniqueIdentifier>{233cbb38-4f0c-494c-823a-9537bffd770c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\System\Components">
+      <UniqueIdentifier>{ae0b45e6-ce3e-40ff-9127-be7c16849e2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,6 +57,9 @@
     </ClCompile>
     <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp">
       <Filter>Core\Graphics\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ComponentManager.cpp">
+      <Filter>Core\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\Mesh.h">
       <Filter>Core\Graphics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ComponentManager.h">
+      <Filter>Core\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

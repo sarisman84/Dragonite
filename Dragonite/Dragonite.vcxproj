@@ -157,6 +157,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\ComponentManager.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\ComponentManager.h" />
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
     <ClInclude Include="Core\Graphics\Rendering\Mesh.h" />
     <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
