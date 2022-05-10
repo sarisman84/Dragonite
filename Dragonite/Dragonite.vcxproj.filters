@@ -52,6 +52,9 @@
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
       <Filter>Core\Graphics\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp">
+      <Filter>Core\Graphics\Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineUtilities.h">
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utilities\Math\Matrix.h">
       <Filter>Utilities\Math\Matrixes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Mesh.h">
+      <Filter>Core\Graphics\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

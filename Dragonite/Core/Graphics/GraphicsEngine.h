@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Rendering/RenderObject.h"
+#include "Rendering/Mesh.h"
 #include "../../EngineUtilities.h"
 
 using Microsoft::WRL::ComPtr;
@@ -35,7 +36,7 @@ namespace Engine
 			void DrawElements();
 
 			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
-			std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);
+			std::shared_ptr<RenderObject> CreatePrimitive(Primitive aPrimitiveShape);
 		private:
 			Shape GetUnitTriangle();
 			Shape GetUnitQuad();
@@ -48,6 +49,7 @@ namespace Engine
 
 
 			std::vector<std::shared_ptr<RenderObject>> myRenderTargets;
+			std::vector<std::shared_ptr<Mesh>> myMeshes;
 			System* mySystem;
 		};
 

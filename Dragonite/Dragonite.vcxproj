@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\System.cpp" />
@@ -165,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="Core\Graphics\Rendering\Mesh.h" />
     <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\System.h" />

@@ -94,7 +94,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	mySwapChain->Present(1, 0);
 }
 
-std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::CreateElement(Primitive aPrimitiveShape)
+std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::CreatePrimitive(Primitive aPrimitiveShape)
 {
 	Shape aShape;
 	switch (aPrimitiveShape)

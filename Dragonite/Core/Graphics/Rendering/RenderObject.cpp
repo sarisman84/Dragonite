@@ -125,6 +125,15 @@ void RenderObject::Draw()
 	myContext->Unmap(myVertexBuffer.Get(), 0);
 
 
+	//MVP
+
+	//object to world
+	//world to camera
+	//camera to projection
+	//perpsective divide //Behövs inte göra
+
+
+
 
 	//UpdateBuffers();
 

@@ -10,10 +10,10 @@ Engine::Runtime::Runtime(System* aCoreSystem)
 void Engine::Runtime::Awake()
 {
 
-	Object triangle = mySystem->GetGraphicsEngine()->CreateElement(Primitive::Triangle);
-	Object quad = mySystem->GetGraphicsEngine()->CreateElement(Primitive::Quad);
-	someShape = mySystem->GetGraphicsEngine()->CreateElement(Primitive::Circle);
-	someOtherShape = mySystem->GetGraphicsEngine()->CreateElement(Primitive::Circle);
+	Object triangle = mySystem->GetGraphicsEngine()->CreatePrimitive(Primitive::Triangle);
+	Object quad = mySystem->GetGraphicsEngine()->CreatePrimitive(Primitive::Quad);
+	someShape = mySystem->GetGraphicsEngine()->CreatePrimitive(Primitive::Circle);
+	someOtherShape = mySystem->GetGraphicsEngine()->CreatePrimitive(Primitive::Circle);
 
 
 	someShape->SetSize({ 0.25f, 0.25f, 0.25f });
