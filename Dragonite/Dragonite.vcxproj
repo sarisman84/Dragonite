@@ -157,16 +157,23 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\ComponentManager.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp" />
+    <ClCompile Include="Core\Graphics\Rendering\MeshRendering.cpp" />
+    <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\ComponentManager.h" />
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
-    <ClInclude Include="Core\Graphics\Rendering\Mesh.h" />
+    <ClInclude Include="Core\Graphics\Rendering\Camera.h" />
+    <ClInclude Include="Core\Graphics\Rendering\CommonComponents.h" />
+    <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h" />
+    <ClInclude Include="Core\Graphics\Rendering\MeshRendering.h" />
+    <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h" />
     <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\System.h" />

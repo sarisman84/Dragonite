@@ -1,5 +1,7 @@
 #include "System.h"
 #include "Runtime.h"
+#include "Rendering/ModelFactory.h"
+#include "ComponentManager.h"
 
 LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
@@ -20,13 +22,25 @@ LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLPa
 
 //Engine::System::~System() = default;
 
+Engine::System::~System()
+{
+	for (auto& pair : myManagers)
+	{
+		if (pair.second)
+			delete pair.second;
+	}
+
+	myManagers.clear();
+}
+
 bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 {
+	myGraphicsEngine = AddManager<Graphics::GraphicsEngine>();
 	myWindowsInfo = InitializeWindow(L"Dragonite", { 1980, 1080 }, anHInstance, WndProc);
 
 	if (!myWindowsInfo.myWindowInstance) return false;
 	//myGraphicsEngine = new Graphics::GraphicsEngine();
-	if (!myGraphicsEngine.Initialize(myWindowsInfo.myResolution, myWindowsInfo.myWindowInstance, this)) return false;
+	if (!myGraphicsEngine->Initialize(myWindowsInfo.myResolution, myWindowsInfo.myWindowInstance, this)) return false;
 
 
 	ShowWindow(myWindowsInfo.myWindowInstance, nCmdShow);
@@ -41,6 +55,10 @@ void Engine::System::Shutdown()
 
 MSG Engine::System::StartRuntime()
 {
+	AddManager<ModelFactory>();
+	AddManager<EntityManager>()->FetchSystem(this);
+
+
 	Runtime runtime = Runtime(this);
 	runtime.Awake();
 	myRuntimeState = SystemState::Run;
@@ -58,11 +76,11 @@ MSG Engine::System::StartRuntime()
 				myRuntimeState = SystemState::Exit;
 				break;
 			}
-		} 
+		}
 
 		runtime.Update();
-		myGraphicsEngine.DrawElements();
-		
+		myGraphicsEngine->DrawElements();
+
 	}
 
 	return msg;

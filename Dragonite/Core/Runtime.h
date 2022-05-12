@@ -1,5 +1,7 @@
 #pragma once
 #include "Rendering/RenderObject.h"
+#include "ComponentManager.h"
+#include <vector>
 namespace Engine
 {
 	class System;
@@ -9,13 +11,13 @@ namespace Engine
 		friend System;
 	private:
 		Runtime(System* aCoreSystem);
-		int someCount;
-		Object someShape;
-		Object someOtherShape;
+		std::vector<EntityID> myEntities;
+
 	protected:
 		System* mySystem;
 		virtual void Awake();
 		virtual void Update();
+
 	};
 }
 

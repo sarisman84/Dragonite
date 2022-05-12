@@ -1,28 +1,28 @@
 #include "ComponentManager.h"
 
-ComponentManager::~ComponentManager()
-{
-	for (auto pair: mySystems)
-	{
-		if (pair.second)
-			delete pair.second;
-
-	}
-
-	myComponents.clear();
-}
 
 
-
-void ComponentManager::UpdateComponents(float aTimeDelta)
+EntityManager::EntityManager()
 {
 
-	for (auto& pair : myComponents)
-	{
-		for (EntityID entity = 0; entity < pair.second.size(); ++entity)
-		{
-			mySystems[pair.first]->Update(entity, aTimeDelta);
-		}
+};
 
-	}
+EntityID EntityManager::CreateEntity()
+{
+	EntityID anID = myActiveEntityAmm;
+	myActiveEntityAmm++;
+	return anID;
 }
+
+void EntityManager::DeleteEntity(EntityID anID)
+{
+	for (auto const& pair : myComponents)
+	{
+		auto& comp = pair.second;
+
+		comp->OnEntityDestroyed(anID);
+	}
+
+	myActiveEntityAmm--;
+}
+

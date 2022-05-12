@@ -2,7 +2,7 @@
 #include <wrl/client.h>
 #include <string>
 #include "../Utilities/Math/Matrix4x4.h"
-
+#include "MeshInfo.h"
 using Microsoft::WRL::ComPtr;
 
 struct ID3D11Device;
@@ -20,11 +20,6 @@ enum class Primitive2D
 };
 
 
-struct Vertex
-{
-	float myX, myY, myZ, myW;
-	float myR, myG, myB, myA;
-};
 
 
 struct Shape

@@ -2,14 +2,15 @@
 #include <ostream>
 namespace Math
 {
-	
+
 
 	template <class T>
 	class Vector4
 	{
 
 	public:
-
+		static const Vector4<T> zero = Vector4<T>(0, 0, 0, 0);
+		static const Vector4<T> one = Vector4<T>(1, 1, 1, 1);
 		T x;
 		T y;
 		T z;
@@ -204,4 +205,7 @@ namespace Math
 
 	using Vector4f = Vector4<float>;
 	using Vector4i = Vector4<int>;
+
+
+
 }

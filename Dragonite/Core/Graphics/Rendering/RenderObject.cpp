@@ -108,18 +108,12 @@ void RenderObject::Draw()
 
 	for (size_t i = 0; i < myShape.myVerticesAmm; i++)
 	{
-		auto pos = Math::Vector4f(myShape.myVertices[i].myX, myShape.myVertices[i].myY, myShape.myVertices[i].myZ, myShape.myVertices[i].myW);
+		auto pos = myShape.myVertices[i].myPosition;
 		pos = pos * myObjectMatrix;
-		someVertices[i].myX = pos.x /** mySystem->GetWindowsInfo().GetAspectRatio()*/;
-		someVertices[i].myY = pos.y;
-		someVertices[i].myZ = pos.z;
-		someVertices[i].myW = pos.w;
+		someVertices[i].myPosition = pos;
 
 
-		someVertices[i].myR = myShape.myVertices[i].myR;
-		someVertices[i].myG = myShape.myVertices[i].myG;
-		someVertices[i].myB = myShape.myVertices[i].myB;
-		someVertices[i].myA = myShape.myVertices[i].myA;
+		someVertices[i].myColor = myShape.myVertices[i].myColor;
 	}
 	memcpy(resource.pData, someVertices, sizeof(Vertex) * myShape.myVerticesAmm);
 	myContext->Unmap(myVertexBuffer.Get(), 0);
