@@ -36,7 +36,7 @@
       <UniqueIdentifier>{233cbb38-4f0c-494c-823a-9537bffd770c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\System\Components">
-      <UniqueIdentifier>{ae0b45e6-ce3e-40ff-9127-be7c16849e2b}</UniqueIdentifier>
+      <UniqueIdentifier>{020e1a5e-81f2-4d89-a180-59818772b1f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,11 +55,14 @@
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
       <Filter>Core\Graphics\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\Mesh.cpp">
-      <Filter>Core\Graphics\Shapes</Filter>
-    </ClCompile>
     <ClCompile Include="Core\ComponentManager.cpp">
       <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\MeshRendering.cpp">
+      <Filter>Core\System\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +105,22 @@
     <ClInclude Include="Core\Utilities\Math\Matrix.h">
       <Filter>Utilities\Math\Matrixes</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Mesh.h">
+    <ClInclude Include="Core\ComponentManager.h">
+      <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\MeshRendering.h">
+      <Filter>Core\System\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\CommonComponents.h">
+      <Filter>Core\System\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Camera.h">
+      <Filter>Core\System\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h">
       <Filter>Core\Graphics\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="Core\ComponentManager.h">

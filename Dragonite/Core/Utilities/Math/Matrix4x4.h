@@ -36,13 +36,13 @@ namespace Math
 		}
 
 
-		
+
 		Vector3<T> GetPosition()
 		{
 			Vector3<T> position;
-			position.x = *this(4, 1);
-			position.y = *this(4, 2);
-			position.z = *this(4, 3);
+			position.x = (*this)(4, 1);
+			position.y = (*this)(4, 2);
+			position.z = (*this)(4, 3);
 			return position;
 		}
 

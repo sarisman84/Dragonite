@@ -63,6 +63,24 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 		return false;
 	}
 
+
+
+
+	D3D11_BUFFER_DESC bufferDesc = { 0 };
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	bufferDesc.ByteWidth = sizeof(FrameBufferData),
+		result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myFrameBuffer);
+	if (FAILED(result)) return false;
+
+	bufferDesc.ByteWidth = sizeof(ObjectBufferData);
+	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myObjectBuffer);
+	if (FAILED(result)) return false;
+
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
 	//backBufferTexture->Release();
@@ -77,6 +95,13 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	viewport.MaxDepth = 1.0f;
 	myContext->RSSetViewports(1, &viewport);
 
+
+
+
+
+
+
+
 	return true;
 }
 
@@ -86,11 +111,30 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	float color[4] = { 1.0f,0.8f,0.5f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
 
+	D3D11_MAPPED_SUBRESOURCE resource;
+
+	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+
+	FrameBufferData data;
+	memcpy(resource.pData, &data, sizeof(FrameBufferData));
+
+	myContext->Unmap(myFrameBuffer.Get(), 0);
+
+
+	while (!myRenderInstructions.empty())
+	{
+		auto renderCall = myRenderInstructions.front();
+		myRenderInstructions.pop();
+		renderCall.myCallback(renderCall.myInstance, this);
+
+
+	}
 
 	for (size_t i = 0; i < myRenderTargets.size(); i++)
 	{
 		myRenderTargets[i]->Draw();
 	}
+
 	mySwapChain->Present(1, 0);
 }
 
@@ -120,13 +164,13 @@ std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::Create2DElement(
 Shape Engine::Graphics::GraphicsEngine::GetUnitTriangle()
 {
 	using namespace Engine::Graphics;
-	Shape triangle;
+	Shape triangle; 
 
 	Vertex vertices[] =
 	{
-		{-1.f, -1.f,  0, 1, 1,0,0,1},
-		{0,     1.f,  0, 1, 0,1,0,1},
-		{1.f,  -1.f,  0, 1, 0,0,1,1}
+		Vertex{Math::Vector4f(-1.f, -1.f,  0, 1), Math::Vector4f(1,0,0,1)},
+		Vertex{Math::Vector4f(0,     1.f,  0, 1), Math::Vector4f(0,1,0,1)},
+		Vertex{Math::Vector4f(1.f,  -1.f,  0, 1), Math::Vector4f(0,0,1,1)}
 	};
 
 	unsigned int indices[] =
@@ -148,10 +192,10 @@ Shape Engine::Graphics::GraphicsEngine::GetUnitQuad()
 	Shape quad;
 	Vertex vertices[] =
 	{
-		{1.f,   1.f,  1, 1, 1,0,0,1},
-		{-1.f,  1.f,  1, 1, 0,1,0,1},
-		{-1.f, -1.f,  1, 1, 0,0,1,1},
-		{1.f,  -1.f,  1, 1, 1,0,1,1}
+		{Math::Vector4f{1.f,   1.f,  1, 1}, Math::Vector4f{1,0,0,1}},
+		{Math::Vector4f{-1.f,  1.f,  1, 1}, Math::Vector4f{0,1,0,1}},
+		{Math::Vector4f{-1.f, -1.f,  1, 1}, Math::Vector4f{0,0,1,1}},
+		{Math::Vector4f{1.f,  -1.f,  1, 1}, Math::Vector4f{1,0,1,1}}
 	};
 
 	unsigned int indices[] =
@@ -187,9 +231,9 @@ Shape Engine::Graphics::GraphicsEngine::GetUnitCircle()
 		circle.myIndicies[posIndex + 1] = posIndex + 1;
 		circle.myIndicies[posIndex + 2] = posIndex + 2;
 
-		circle.myVertices[posIndex] = Vertex{ pos.x,  pos.y,  1, 1,   1, 1, 1,1 };
-		circle.myVertices[posIndex + 1] = Vertex{ pos2.x, pos2.y, 1, 1,   0, 0, 0,1 };
-		circle.myVertices[posIndex + 2] = Vertex{ pos3.x, pos3.y, 1, 1,   1, 1, 1,1 };
+		circle.myVertices[posIndex] = Vertex{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
+		circle.myVertices[posIndex + 1] = Vertex{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
+		circle.myVertices[posIndex + 2] = Vertex{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
 
 		posIndex += 3;
 	}
