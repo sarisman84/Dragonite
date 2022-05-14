@@ -36,6 +36,11 @@ namespace Math
 		}
 
 
+		void SetPosition(Vector3<T> aPosition)
+		{
+			SetRow(4, { aPosition.x, aPosition.y, aPosition.z, 1 });
+		}
+
 
 		Vector3<T> GetPosition()
 		{
@@ -50,9 +55,9 @@ namespace Math
 		Vector3<T> GetUpDirection()
 		{
 			Vector3<T> direction;
-			direction.x = *this(2, 1);
-			direction.y = *this(2, 2);
-			direction.z = *this(2, 3);
+			direction.x = (*this)(2, 1);
+			direction.y = (*this)(2, 2);
+			direction.z = (*this)(2, 3);
 			return direction;
 		}
 
@@ -60,9 +65,9 @@ namespace Math
 		Vector3<T> GetForwardDirection()
 		{
 			Vector3<T> direction;
-			direction.x = *this(2, 1);
-			direction.y = *this(2, 2);
-			direction.z = *this(2, 3);
+			direction.x = (*this)(2, 1);
+			direction.y = (*this)(2, 2);
+			direction.z = (*this)(2, 3);
 			return direction;
 		}
 
@@ -70,9 +75,9 @@ namespace Math
 		Vector3<T> GetRightDirection()
 		{
 			Vector3<T> direction;
-			direction.x = *this(2, 1);
-			direction.y = *this(2, 2);
-			direction.z = *this(2, 3);
+			direction.x = (*this)(2, 1);
+			direction.y = (*this)(2, 2);
+			direction.z = (*this)(2, 3);
 			return direction;
 		}
 

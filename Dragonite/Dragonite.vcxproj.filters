@@ -38,6 +38,9 @@
     <Filter Include="Core\System\Components">
       <UniqueIdentifier>{020e1a5e-81f2-4d89-a180-59818772b1f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics\Model">
+      <UniqueIdentifier>{5dd3403a-0065-47a9-8468-ab12b8fcfe3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -55,14 +58,23 @@
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
       <Filter>Core\Graphics\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="Core\ComponentManager.cpp">
-      <Filter>Core\System</Filter>
+    <ClCompile Include="Core\Components\Camera.cpp">
+      <Filter>Core\System\Components</Filter>
     </ClCompile>
     <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp">
-      <Filter>Core\Graphics</Filter>
+      <Filter>Core\Graphics\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\MeshRendering.cpp">
+    <ClCompile Include="Core\Components\ModelRenderer.cpp">
       <Filter>Core\System\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Transform.cpp">
+      <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameObject.cpp">
+      <Filter>Core\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,22 +120,31 @@
     <ClInclude Include="Core\ComponentManager.h">
       <Filter>Core\System</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\MeshRendering.h">
+    <ClInclude Include="Core\Transform.h">
+      <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Component.h">
       <Filter>Core\System\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\CommonComponents.h">
+    <ClInclude Include="Core\Components\Camera.h">
       <Filter>Core\System\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Camera.h">
-      <Filter>Core\System\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h">
-      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h">
-      <Filter>Core\Graphics\Shapes</Filter>
+      <Filter>Core\Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ComponentManager.h">
+    <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h">
+      <Filter>Core\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Components\ModelRenderer.h">
+      <Filter>Core\System\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Extensions.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameObject.h">
       <Filter>Core\System</Filter>
     </ClInclude>
   </ItemGroup>

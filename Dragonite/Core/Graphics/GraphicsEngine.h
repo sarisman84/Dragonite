@@ -5,9 +5,9 @@
 #include <string>
 #include <queue>
 
-#include "Rendering/RenderObject.h"
 #include "../../EngineUtilities.h"
-#include "Graphics/Rendering/Camera.h"
+#include "Utilities/Math/Matrix.h"
+#include "Utilities/Math/Vector.h"
 
 using Microsoft::WRL::ComPtr;
 using Engine::Windows::Resolution;
@@ -20,10 +20,9 @@ struct ID3D11Buffer;
 
 class RenderObject;
 struct Shape;
-struct ModelInstance;
 enum class Primitive2D;
-struct ObjectFrameData;
-
+class Camera;
+struct ModelInstance;
 
 
 
@@ -44,11 +43,7 @@ namespace Engine
 		};
 
 
-		struct RenderInstruction
-		{
-			void(*myCallback)(ModelInstance&, class GraphicsEngine*);
-			ModelInstance& myInstance;
-		};
+
 
 
 		class GraphicsEngine
@@ -58,13 +53,13 @@ namespace Engine
 			~GraphicsEngine();
 			bool Initialize(Engine::Windows::Resolution aResolution, HWND aWindowsHandle, System* aSystem);
 
-			inline void AddRenderInstruction(void(*aCallback)(ModelInstance&, class GraphicsEngine*), ModelInstance& anInstance)
+			inline void AddRenderInstruction(ModelInstance* anInstance)
 			{
-				myRenderInstructions.push(RenderInstruction{ aCallback, anInstance });
+				myRenderInstructions.push(anInstance);
 			}
 
-			inline void SetRenderCamera(Camera& aCamera) { myRenderCamera = aCamera; }
-			inline Camera& GetRenderCamera() noexcept { return myRenderCamera; }
+			inline void SetRenderCamera(Camera* aCamera) { myRenderCamera = aCamera; }
+			inline Camera* GetRenderCamera() noexcept { return myRenderCamera; }
 
 			void DrawElements();
 			inline ID3D11Device* GetDevice() { return myDevice.Get(); }
@@ -91,11 +86,11 @@ namespace Engine
 			ComPtr<ID3D11Buffer> myObjectBuffer;
 			ComPtr<ID3D11Buffer> myFrameBuffer;
 
-			std::queue <RenderInstruction> myRenderInstructions;
+			std::queue <ModelInstance*> myRenderInstructions;
 			std::vector<std::shared_ptr<RenderObject>> myRenderTargets;
 			//std::vector<std::shared_ptr<Mesh>> myMeshes;
 			System* mySystem;
-			Camera myRenderCamera;
+			Camera* myRenderCamera;
 		};
 
 

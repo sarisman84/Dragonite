@@ -4,6 +4,8 @@
 #include "Rendering/RenderObject.h"
 #include "System.h"
 #include "Utilities/Math/Vector2.h"
+#include "Components/Camera.h"
+#include "Rendering/MeshInfo.h"
 #define REPORT_DX_WARNINGS
 
 
@@ -108,7 +110,7 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 
 void Engine::Graphics::GraphicsEngine::DrawElements()
 {
-	float color[4] = { 1.0f,0.8f,0.5f,1.0f }; // RGBA
+	float color[4] = { 0.8f,0.8f,0.8f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
 
 	D3D11_MAPPED_SUBRESOURCE resource;
@@ -116,6 +118,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
 	FrameBufferData data;
+	data.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
 	memcpy(resource.pData, &data, sizeof(FrameBufferData));
 
 	myContext->Unmap(myFrameBuffer.Get(), 0);
@@ -123,9 +126,13 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	while (!myRenderInstructions.empty())
 	{
-		auto renderCall = myRenderInstructions.front();
+		myContext->Map(myObjectBuffer.Get(), 1, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		ObjectBufferData objData;
+		objData.myObjectMatrix = myRenderInstructions.front()->myTransform.myTransformMatrix;
+		memcpy(resource.pData, &objData, sizeof(ObjectBufferData));
+		myContext->Unmap(myObjectBuffer.Get(), 1);
+
 		myRenderInstructions.pop();
-		renderCall.myCallback(renderCall.myInstance, this);
 
 
 	}
@@ -164,13 +171,13 @@ std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::Create2DElement(
 Shape Engine::Graphics::GraphicsEngine::GetUnitTriangle()
 {
 	using namespace Engine::Graphics;
-	Shape triangle; 
+	Shape triangle;
 
-	Vertex vertices[] =
+	Vertex2D vertices[] =
 	{
-		Vertex{Math::Vector4f(-1.f, -1.f,  0, 1), Math::Vector4f(1,0,0,1)},
-		Vertex{Math::Vector4f(0,     1.f,  0, 1), Math::Vector4f(0,1,0,1)},
-		Vertex{Math::Vector4f(1.f,  -1.f,  0, 1), Math::Vector4f(0,0,1,1)}
+		Vertex2D{Math::Vector4f(-1.f, -1.f,  0, 1), Math::Vector4f(1,0,0,1)},
+		Vertex2D{Math::Vector4f(0,     1.f,  0, 1), Math::Vector4f(0,1,0,1)},
+		Vertex2D{Math::Vector4f(1.f,  -1.f,  0, 1), Math::Vector4f(0,0,1,1)}
 	};
 
 	unsigned int indices[] =
@@ -190,7 +197,7 @@ Shape Engine::Graphics::GraphicsEngine::GetUnitQuad()
 {
 	using namespace Engine::Graphics;
 	Shape quad;
-	Vertex vertices[] =
+	Vertex2D vertices[] =
 	{
 		{Math::Vector4f{1.f,   1.f,  1, 1}, Math::Vector4f{1,0,0,1}},
 		{Math::Vector4f{-1.f,  1.f,  1, 1}, Math::Vector4f{0,1,0,1}},
@@ -231,9 +238,9 @@ Shape Engine::Graphics::GraphicsEngine::GetUnitCircle()
 		circle.myIndicies[posIndex + 1] = posIndex + 1;
 		circle.myIndicies[posIndex + 2] = posIndex + 2;
 
-		circle.myVertices[posIndex] = Vertex{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
-		circle.myVertices[posIndex + 1] = Vertex{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
-		circle.myVertices[posIndex + 2] = Vertex{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
+		circle.myVertices[posIndex] = Vertex2D{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
+		circle.myVertices[posIndex + 1] = Vertex2D{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
+		circle.myVertices[posIndex + 2] = Vertex2D{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
 
 		posIndex += 3;
 	}

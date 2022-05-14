@@ -1,7 +1,10 @@
 #pragma once
 #include "Rendering/RenderObject.h"
-#include "ComponentManager.h"
 #include <vector>
+#include "GameObject.h"
+#include <memory>
+
+class Scene;
 namespace Engine
 {
 	class System;
@@ -9,15 +12,20 @@ namespace Engine
 	class Runtime
 	{
 		friend System;
+
+	public:
+		Runtime() = default;
+		std::vector<GameObject>& GetAllGameObjects() { return myEntities; }
+		inline System* GetSystem() { return mySystem; }
+		GameObject& CreateGameObject();
 	private:
 		Runtime(System* aCoreSystem);
-		std::vector<EntityID> myEntities;
-
-	protected:
+		std::vector<GameObject> myEntities;
+		
 		System* mySystem;
-		virtual void Awake();
-		virtual void Update();
-
+		void Awake();
+		void Update(float aTimeDelta);
+		std::shared_ptr<Scene> myScene;
 	};
 }
 

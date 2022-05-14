@@ -1,94 +1,126 @@
 #include "ModelFactory.h"
-#include <d3d11.h>
-#include "Graphics/GraphicsEngine.h"
-using namespace Engine::Graphics;
-
-MeshData GetUnitCube()
-{
-	MeshData data;
-
-
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(-1, -1, 1, 1), Math::Vector4f::one }); //0
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(-1,  1, 1, 1), Math::Vector4f::one }); //1
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(1,  1, 1, 1), Math::Vector4f::one }); //2
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(1, -1, 1, 1), Math::Vector4f::one }); //3
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(1, -1,-1, 1), Math::Vector4f::one }); //4
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(-1,  1,-1, 1), Math::Vector4f::one }); //5
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(1,  1,-1, 1), Math::Vector4f::one }); //6
-	data.myVertecies.emplace_back(Vertex{ Math::Vector4f(-1, -1,-1, 1), Math::Vector4f::one }); //7
-
-
-	data.myIndicies = {
-		//Front vv
-				0,1,2,
-				3,0,2,
-
-		//Botton vv
-				0,3,4,
-				4,7,0,
-
-		//Left   vv
-				7,1,0,
-				1,7,6,
-
-		//Right  vv
-				2,4,3,
-				5,4,2,
-
-		//Top    vv
-				2,5,1,
-				1,5,6,
-	};
-
-	return data;
-}
+#include "System.h"
+#include <d3d11.h>  
+#include <fstream>
 
 ModelFactory::ModelFactory()
 {
-	ModelPtr cube = std::make_shared<Model>();
-	MeshData data = GetUnitCube();
+	myModelTypes[UNITCUBE] = GetUnitCube();
+	myModelTypes[UNITPIRAMID] = GetUnitPiramid();
+	myModelTypes[UNITICOSPHERE] = GetUnitIcoSphere();
 
 
-
-	InitializeBuffers(data);
-
-
-
-	cube->myMesh.push_back(data);
-
-
-
-	myTypes["UnitCube"] = cube;
-
+	
 
 }
 
-ModelFactory::~ModelFactory() = default;
-
-void ModelFactory::CreateModel(std::string aType, Model aModel)
+ModelInstance* ModelFactory::CreateInstanceOf(std::string aKey)
 {
-	myTypes[aType] = std::make_shared<Model>(aModel);
-}
-
-ModelInstance ModelFactory::GetModel(std::string aType)
-{
+	ID3D11Device* device = mySystem->GetGraphicsEngine()->GetDevice();
 	ModelInstance ins;
-	ins.myModel = myTypes[aType];
+	ins.myModel = myModelTypes[aKey];
+	std::string someData;
 
-	std::string* vertexData;
-	myEngine->InitializeShader(ShaderType::Vertex, ins.myVertexShader, ins.myVertexShaderPath, vertexData);
-	myEngine->InitializeShader(ShaderType::Pixel, ins.myPixelShader, ins.myPixelShaderPath);
+	if (FAILED(LoadVertexShader(device, ins.myVertexShader, ins.myVertexShaderPath, someData)))
+		return nullptr;
+	if (FAILED(LoadPixelShader(device, ins.myPixelShader, ins.myPixelShaderPath)))
+		return nullptr;
 
-	myEngine->InitializeLayout(ins.myInputLayout, vertexData);
+	if (FAILED(LoadInputLayout(device, ins.myInputLayout, someData)))
+		return nullptr;
 
-
-
-	return ins;
+	myInstances.push_back(ins);
+	return &myInstances.back();
 }
 
-void Engine::Graphics::ModelFactory::InitializeBuffers(MeshData & someData)
+void ModelFactory::InitializeBuffers()
 {
-	myEngine->InitializeBuffer(BufferType::Vertex, someData.myVertexBuffer, someData.myVertecies, someData.myVertecies.size());
-	myEngine->InitializeBuffer(BufferType::Index, someData.myIndexBuffer, someData.myIndicies, someData.myIndicies.size());
+	ID3D11Device* device = mySystem->GetGraphicsEngine()->GetDevice();
+	for (auto& model : myModelTypes)
+	{
+		if (!model.second)
+			continue;
+		for (auto& subMesh : model.second->myMesh)
+		{
+			if (FAILED(InitializeBuffer(device, BufferType::Vertex, subMesh)))
+				continue;
+			if (FAILED(InitializeBuffer(device, BufferType::Index, subMesh)))
+				continue;
+		}
+	}
 }
 
+HRESULT ModelFactory::LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& anOutVertexData)
+{
+	std::ifstream vsFile;
+	vsFile.open(aPath, std::ios::binary);
+	anOutVertexData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
+
+
+
+	vsFile.close();
+
+	return aDevice->CreateVertexShader(anOutVertexData.data(), anOutVertexData.size(), nullptr, &aShader);
+}
+
+HRESULT ModelFactory::LoadPixelShader(ID3D11Device* aDevice, ComPtr<ID3D11PixelShader>& aShader, const char* aPath)
+{
+
+	std::ifstream psFile;
+	psFile.open(aPath, std::ios::binary);
+	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	psFile.close();
+	return aDevice->CreatePixelShader(psData.data(), psData.size(), nullptr, &aShader);
+}
+
+HRESULT ModelFactory::LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputLayout>& aLayout, std::string someVertexData)
+{
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	return aDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexData.data(), someVertexData.size(), &aLayout);;
+}
+
+HRESULT ModelFactory::InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData)
+{
+	D3D11_BUFFER_DESC bufferDesc;
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(data));
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	switch (aType)
+	{
+	case BufferType::Vertex:
+		data.pSysMem = &someData.myVertecies.front();
+		bufferDesc.ByteWidth = sizeof(Vertex) * static_cast<int>(someData.myVertecies.size());
+		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		return aDevice->CreateBuffer(&bufferDesc, &data, &someData.myVertexBuffer);
+	case BufferType::Index:
+		data.pSysMem = &someData.myIndicies.front();
+		bufferDesc.ByteWidth = sizeof(unsigned int) * static_cast<int>(someData.myIndicies.size());
+		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		return aDevice->CreateBuffer(&bufferDesc, &data, &someData.myIndexBuffer);
+	default:
+		break;
+	}
+
+	return E_NOTIMPL;
+}
+
+ModelPtr ModelFactory::GetUnitCube()
+{
+	return ModelPtr();
+}
+
+ModelPtr ModelFactory::GetUnitPiramid()
+{
+	return ModelPtr();
+}
+
+ModelPtr ModelFactory::GetUnitIcoSphere()
+{
+	return ModelPtr();
+}

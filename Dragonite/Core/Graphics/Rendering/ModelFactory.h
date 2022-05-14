@@ -1,46 +1,51 @@
 #pragma once
-#include <vector>
-#include "Utilities/Math/Vector4.h"
+#include "Rendering/MeshInfo.h"
 #include <wrl/client.h>
-#include <typeinfo>
 #include <map>
 #include <string>
-#include "CommonComponents.h"
-#include "MeshInfo.h"
-using Microsoft::WRL::ComPtr;
+#include <vector>
 
-struct ID3D11Device;
-struct ID3D11DeviceContext;
-struct ID3D11Buffer;
-struct ID3D11VertexShader;
-struct ID3D11PixelShader;
-struct ID3D11InputLayout;
+#define UNITCUBE "Cube"
+#define UNITPIRAMID "Piramid"
+#define UNITICOSPHERE "IcoSphere"
 
 
 namespace Engine
 {
-	namespace Graphics
-	{
-		class GraphicsEngine;
-		class ModelFactory
-		{
-		public:
-			ModelFactory();
-			~ModelFactory();
-			inline void FetchGraphicsEngine(GraphicsEngine* anEngine) { myEngine = anEngine; }
-			void CreateModel(std::string aType, Model aModel);
-			ModelInstance GetModel(std::string aType);
-
-		private:
-			void InitializeBuffers(MeshData& someData);
-
-
-			std::map<std::string, ModelPtr> myTypes;
-			GraphicsEngine* myEngine;
-		};
-	}
+	class System;
 }
 
+struct ID3D11Device;
 
 
+enum class BufferType
+{
+	Vertex, Index
+};
 
+class ModelFactory
+{
+public:
+	ModelFactory();
+	inline void FetchSystem(Engine::System* aSystem)
+	{
+		mySystem = aSystem;
+		InitializeBuffers();
+	}
+	ModelInstance* CreateInstanceOf(std::string aKey);
+private:
+	void InitializeBuffers();
+	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);
+	HRESULT LoadPixelShader(ID3D11Device* aDevice, ComPtr<ID3D11PixelShader>& aShader, const char* aPath);
+	HRESULT LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputLayout>& aLayout, std::string someVertexData);
+
+	HRESULT InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData);
+
+	ModelPtr GetUnitCube();
+	ModelPtr GetUnitPiramid();
+	ModelPtr GetUnitIcoSphere();
+
+	std::map<std::string, ModelPtr> myModelTypes;
+	std::vector<ModelInstance> myInstances;
+	Engine::System* mySystem;
+};

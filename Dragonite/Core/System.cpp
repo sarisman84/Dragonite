@@ -1,7 +1,9 @@
 #include "System.h"
 #include "Runtime.h"
 #include "Rendering/ModelFactory.h"
-#include "ComponentManager.h"
+
+#include <chrono>
+
 
 LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
@@ -51,12 +53,13 @@ bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 
 void Engine::System::Shutdown()
 {
+	myRuntimeState = SystemState::Exit;
 }
 
 MSG Engine::System::StartRuntime()
 {
-	AddManager<ModelFactory>();
-	AddManager<EntityManager>()->FetchSystem(this);
+	AddManager<ModelFactory>()->FetchSystem(this);
+	//AddManager<EntityManager>()->FetchSystem(this);
 
 
 	Runtime runtime = Runtime(this);
@@ -64,8 +67,17 @@ MSG Engine::System::StartRuntime()
 	myRuntimeState = SystemState::Run;
 	MSG msg = {};
 
+	
+
+	auto totalTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+	auto deltaTime = totalTime;
+
 	while (myRuntimeState == SystemState::Run)
 	{
+
+		auto curTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+		deltaTime = curTime - totalTime;
+		totalTime = curTime;
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -77,8 +89,12 @@ MSG Engine::System::StartRuntime()
 				break;
 			}
 		}
+		auto now = std::chrono::high_resolution_clock::now();
 
-		runtime.Update();
+
+
+
+		runtime.Update(static_cast<float>(deltaTime));
 		myGraphicsEngine->DrawElements();
 
 	}

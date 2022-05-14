@@ -87,6 +87,7 @@ bool RenderObject::Initialize()
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
+	
 
 	result = myDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), vsData.data(), vsData.size(), &myInputLayout);
 	if (FAILED(result))
@@ -99,8 +100,8 @@ bool RenderObject::Initialize()
 void RenderObject::Draw()
 {
 
-	Vertex someVertices[1000];
-	ZeroMemory(&someVertices, sizeof(Vertex) * myShape.myVerticesAmm);
+	Vertex2D someVertices[1000];
+	ZeroMemory(&someVertices, sizeof(Vertex2D) * myShape.myVerticesAmm);
 
 	D3D11_MAPPED_SUBRESOURCE resource;
 
@@ -115,7 +116,7 @@ void RenderObject::Draw()
 
 		someVertices[i].myColor = myShape.myVertices[i].myColor;
 	}
-	memcpy(resource.pData, someVertices, sizeof(Vertex) * myShape.myVerticesAmm);
+	memcpy(resource.pData, someVertices, sizeof(Vertex2D) * myShape.myVerticesAmm);
 	myContext->Unmap(myVertexBuffer.Get(), 0);
 
 
@@ -134,7 +135,7 @@ void RenderObject::Draw()
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	myContext->IASetInputLayout(myInputLayout.Get());
 
-	unsigned int stride = sizeof(Vertex);
+	unsigned int stride = sizeof(Vertex2D);
 	unsigned int offset = 0;
 	myContext->IASetVertexBuffers(0, 1, myVertexBuffer.GetAddressOf(), &stride, &offset);
 	myContext->IASetIndexBuffer(myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -145,11 +146,11 @@ void RenderObject::Draw()
 	myContext->DrawIndexed(myIndicesAmm, 0, 0);
 }
 
-bool RenderObject::TryCreateVertexBuffer(long& someResult, Vertex* someVertices, unsigned int aSize)
+bool RenderObject::TryCreateVertexBuffer(long& someResult, Vertex2D* someVertices, unsigned int aSize)
 {
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	//ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * aSize;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex2D) * aSize;
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

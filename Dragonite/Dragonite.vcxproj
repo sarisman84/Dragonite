@@ -122,6 +122,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Core;Core/Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +144,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Core;Core/Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,26 +159,32 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Core\ComponentManager.cpp" />
+    <ClCompile Include="Core\Components\Camera.cpp" />
+    <ClCompile Include="Core\Components\ModelRenderer.cpp" />
+    <ClCompile Include="Core\GameObject.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\MeshRendering.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
+    <ClCompile Include="Core\Scene.cpp" />
     <ClCompile Include="Core\System.cpp" />
+    <ClCompile Include="Core\Transform.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\ComponentManager.h" />
+    <ClInclude Include="Core\Component.h" />
+    <ClInclude Include="Core\Components\Camera.h" />
+    <ClInclude Include="Core\Components\ModelRenderer.h" />
+    <ClInclude Include="Core\GameObject.h" />
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
-    <ClInclude Include="Core\Graphics\Rendering\Camera.h" />
-    <ClInclude Include="Core\Graphics\Rendering\CommonComponents.h" />
     <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h" />
-    <ClInclude Include="Core\Graphics\Rendering\MeshRendering.h" />
     <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h" />
     <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
     <ClInclude Include="Core\Runtime.h" />
+    <ClInclude Include="Core\Scene.h" />
     <ClInclude Include="Core\System.h" />
+    <ClInclude Include="Core\Transform.h" />
+    <ClInclude Include="Core\Utilities\Extensions.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix3x3.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix4x4.h" />

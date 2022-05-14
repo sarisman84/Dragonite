@@ -9,8 +9,7 @@ namespace Math
 	{
 
 	public:
-		static const Vector4<T> zero = Vector4<T>(0, 0, 0, 0);
-		static const Vector4<T> one = Vector4<T>(1, 1, 1, 1);
+
 		T x;
 		T y;
 		T z;

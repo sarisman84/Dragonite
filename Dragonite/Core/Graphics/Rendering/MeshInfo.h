@@ -1,6 +1,6 @@
 #pragma once
 #include <wrl/client.h>
-#include "CommonComponents.h"
+#include "GameObject.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -49,8 +49,8 @@ struct ModelInstance
 	friend class ModelFactory;
 public:
 	ModelPtr myModel;
-	const char* myVertexShaderPath;
-	const char* myPixelShaderPath;
+	const char* myVertexShaderPath = "Shaders/ColorShader_VS.cso";
+	const char* myPixelShaderPath = "Shaders/ColorShader_PS.cso";
 	Transform myTransform;
 private:
 	ComPtr<ID3D11VertexShader> myVertexShader;

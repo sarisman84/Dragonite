@@ -29,11 +29,13 @@ namespace Engine
 		
 		template<class Manager>
 		Manager* Get();
-		
-	private:
 
 		template<class Manager>
 		Manager* AddManager();
+		
+	private:
+
+	
 
 		Graphics::GraphicsEngine* myGraphicsEngine;
 		WindowInfo myWindowsInfo;
