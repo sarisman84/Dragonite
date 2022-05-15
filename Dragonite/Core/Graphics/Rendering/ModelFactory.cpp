@@ -2,6 +2,7 @@
 #include "System.h"
 #include <d3d11.h>  
 #include <fstream>
+#include <iostream>
 
 ModelFactory::ModelFactory()
 {
@@ -10,7 +11,7 @@ ModelFactory::ModelFactory()
 	myModelTypes[UNITICOSPHERE] = GetUnitIcoSphere();
 
 
-	
+
 
 }
 
@@ -29,6 +30,7 @@ ModelInstance* ModelFactory::CreateInstanceOf(std::string aKey)
 	if (FAILED(LoadInputLayout(device, ins.myInputLayout, someData)))
 		return nullptr;
 
+	std::cout << "[Log]<ModelFactory>: Created Instance of " << aKey << "!" << std::endl;
 	myInstances.push_back(ins);
 	return &myInstances.back();
 }
@@ -46,6 +48,8 @@ void ModelFactory::InitializeBuffers()
 				continue;
 			if (FAILED(InitializeBuffer(device, BufferType::Index, subMesh)))
 				continue;
+
+			std::cout << "[Log]<ModelFactory>: Model (" << model.first << ") initialized! " << std::endl;
 		}
 	}
 }
@@ -112,7 +116,46 @@ HRESULT ModelFactory::InitializeBuffer(ID3D11Device* aDevice, const BufferType a
 
 ModelPtr ModelFactory::GetUnitCube()
 {
-	return ModelPtr();
+	ModelPtr model = std::make_shared<Model>();
+	MeshData data;
+
+	for (float xPos = -1; xPos <= 1; xPos++)
+	{
+		if (xPos == 0) continue;
+		for (float yPos = -1; yPos <= 1; yPos++)
+		{
+			if (yPos == 0) continue;
+			for (float zPos = -1; zPos <= 1; zPos++)
+			{
+				if (zPos == 0) continue;
+				data.myVertecies.push_back(Vertex{ Math::Vector4f(xPos, yPos, zPos, 1.f), Math::Vector4f(1.f, 1.f, 1.f, 1.f) });
+			}
+
+		}
+	}
+
+	data.myIndicies = {
+		0,2,3, //Left Side
+		1,0,3,
+
+		6,2,0, //Back Side
+		4,6,0,
+
+		5,4,7, //Right Side
+		6,7,4,
+
+		3,7,1, //Front Side
+		5,1,7,
+
+		3,6,7,//Top Side
+		2,6,3,
+
+		1,4,0,//Bottom Side
+		4,5,1
+	};
+
+	model->myMesh.push_back(data);
+	return model;
 }
 
 ModelPtr ModelFactory::GetUnitPiramid()

@@ -7,15 +7,15 @@
 void Scene::Awake()
 {
 	myCamera = myRuntime->CreateGameObject();
-	myCamera.myName = "Camera";
+	myCamera->myName = "Camera";
 
 
 	myCube = myRuntime->CreateGameObject();
-	myCube.myName = "A Cube";
-	myCube.AddComponent<ModelRenderer>();
-	myCube.myTransform.myTransformMatrix.SetPosition({ 0,0, 10 });
+	myCube->myName = "A Cube";
+	myCube->AddComponent<ModelRenderer>();
+	myCube->myTransform.myTransformMatrix.SetPosition({ 0,0, 10 });
 
-	auto cam = myCamera.AddComponent<Camera>();
+	auto cam = myCamera->AddComponent<Camera>();
 
 	myRuntime->GetSystem()->GetGraphicsEngine()->SetRenderCamera(cam.get());
 }

@@ -33,5 +33,7 @@ private:
 	Math::Matrix4x4f myProjectionMatrix;
 	float myNearPlane, myFarPlane;
 	float myFOV;
+	float myMovementSpeed;
+	Math::Vector2f myInput;
 };
 

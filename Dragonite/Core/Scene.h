@@ -10,7 +10,7 @@ public:
 	void Update(float aTimeDelta);
 	Runtime* myRuntime;
 private:
-	GameObject myCamera;
-	GameObject myCube;
+	GameObject* myCamera;
+	GameObject* myCube;
 	float myCounter;
 };

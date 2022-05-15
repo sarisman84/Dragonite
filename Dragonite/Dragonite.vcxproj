@@ -169,6 +169,7 @@
     <ClCompile Include="Core\Scene.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\Transform.cpp" />
+    <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +186,7 @@
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\Transform.h" />
     <ClInclude Include="Core\Utilities\Extensions.h" />
+    <ClInclude Include="Core\Utilities\Input.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix3x3.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix4x4.h" />

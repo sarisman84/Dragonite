@@ -16,12 +16,16 @@ Engine::Runtime::Runtime(System* aCoreSystem)
 	myScene->myRuntime = this;
 }
 
-GameObject& Engine::Runtime::CreateGameObject()
+GameObject* Engine::Runtime::CreateGameObject()
 {
-	GameObject obj = GameObject();
-	obj.mySystem = mySystem;
+	GameObjectPtr obj = std::make_shared<GameObject>();
+	obj->mySystem = mySystem;
+
+
+	size_t pos = myEntities.size();
 	myEntities.push_back(obj);
-	return myEntities.back();
+
+	return myEntities[pos].get();
 }
 
 
@@ -31,16 +35,16 @@ GameObject& Engine::Runtime::CreateGameObject()
 void Engine::Runtime::Awake()
 {
 	std::cout << "Executing Runtime!" << std::endl;
-	
+
 	myScene->Awake();
 }
 
 void Engine::Runtime::Update(float aTimeDelta)
 {
-	
+
 	for (size_t i = 0; i < myEntities.size(); i++)
 	{
-		myEntities[i].UpdateComponents(aTimeDelta);
+		myEntities[i]->UpdateComponents(aTimeDelta);
 	}
 
 

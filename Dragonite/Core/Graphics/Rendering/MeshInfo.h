@@ -9,7 +9,13 @@ struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11InputLayout;
 
-
+namespace Engine
+{
+	namespace Graphics
+	{
+		class GraphicsEngine;
+	}
+}
 
 struct Vertex
 {
@@ -21,6 +27,7 @@ struct Vertex
 
 struct MeshData
 {
+	friend class Engine::Graphics::GraphicsEngine;
 	friend class ModelFactory;
 public:
 	std::vector<Vertex> myVertecies;
@@ -44,9 +51,12 @@ public:
 using ModelPtr = std::shared_ptr<Model>;
 
 
+
+
 struct ModelInstance
 {
 	friend class ModelFactory;
+	friend class Engine::Graphics::GraphicsEngine;
 public:
 	ModelPtr myModel;
 	const char* myVertexShaderPath = "Shaders/ColorShader_VS.cso";

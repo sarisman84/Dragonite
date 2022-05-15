@@ -113,7 +113,9 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	float color[4] = { 0.8f,0.8f,0.8f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
 
+
 	D3D11_MAPPED_SUBRESOURCE resource;
+
 
 	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
@@ -122,15 +124,45 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	memcpy(resource.pData, &data, sizeof(FrameBufferData));
 
 	myContext->Unmap(myFrameBuffer.Get(), 0);
+	myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
 
 	while (!myRenderInstructions.empty())
 	{
-		myContext->Map(myObjectBuffer.Get(), 1, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		auto instruction = myRenderInstructions.front();
+	
+
+
+
+		D3D11_MAPPED_SUBRESOURCE oResource;
+		myContext->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &oResource);
 		ObjectBufferData objData;
-		objData.myObjectMatrix = myRenderInstructions.front()->myTransform.myTransformMatrix;
-		memcpy(resource.pData, &objData, sizeof(ObjectBufferData));
-		myContext->Unmap(myObjectBuffer.Get(), 1);
+		objData.myObjectMatrix = instruction->myTransform.myTransformMatrix;
+		memcpy(oResource.pData, &objData, sizeof(ObjectBufferData));
+
+		myContext->Unmap(myObjectBuffer.Get(), 0);
+
+		myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+
+		myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		myContext->IASetInputLayout(instruction->myInputLayout.Get());
+
+		unsigned int stride = sizeof(Vertex);
+		unsigned int offset = 0;
+
+
+		for (auto& mesh : instruction->myModel->myMesh)
+		{
+			myContext->IASetVertexBuffers(0, 1, mesh.myVertexBuffer.GetAddressOf(), &stride, &offset);
+			myContext->IASetIndexBuffer(mesh.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+			myContext->VSSetShader(instruction->myVertexShader.Get(), nullptr, 0);
+			myContext->PSSetShader(instruction->myPixelShader.Get(), nullptr, 0);
+
+			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndicies.size()), 0, 0);
+		}
+
+
 
 		myRenderInstructions.pop();
 
@@ -156,6 +188,7 @@ std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::Create2DElement(
 	case Primitive2D::Quad:
 		aShape = GetUnitQuad();
 		break;
+
 	case Primitive2D::Triangle:
 		aShape = GetUnitTriangle();
 		break;

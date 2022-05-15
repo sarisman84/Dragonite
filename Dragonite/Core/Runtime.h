@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include <memory>
 
+
+using GameObjectPtr = std::shared_ptr<GameObject>;
+
 class Scene;
 namespace Engine
 {
@@ -15,12 +18,12 @@ namespace Engine
 
 	public:
 		Runtime() = default;
-		std::vector<GameObject>& GetAllGameObjects() { return myEntities; }
+		std::vector<GameObjectPtr>& GetAllGameObjects() { return myEntities; }
 		inline System* GetSystem() { return mySystem; }
-		GameObject& CreateGameObject();
+		GameObject* CreateGameObject();
 	private:
 		Runtime(System* aCoreSystem);
-		std::vector<GameObject> myEntities;
+		std::vector<GameObjectPtr> myEntities;
 		
 		System* mySystem;
 		void Awake();

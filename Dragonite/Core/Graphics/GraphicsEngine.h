@@ -24,7 +24,15 @@ enum class Primitive2D;
 class Camera;
 struct ModelInstance;
 
+struct FrameBufferData
+{
+	Math::Matrix4x4f myClipSpaceMatrix;
+};
 
+struct ObjectBufferData
+{
+	Math::Matrix4x4f myObjectMatrix;
+};
 
 
 namespace Engine
@@ -32,17 +40,7 @@ namespace Engine
 	class System;
 	namespace Graphics
 	{
-		struct ObjectBufferData
-		{
-			Math::Matrix4x4f myObjectMatrix;
-		};
-
-		struct FrameBufferData
-		{
-			Math::Matrix4x4f myClipSpaceMatrix;
-		};
-
-
+		
 
 
 

@@ -41,6 +41,9 @@
     <Filter Include="Core\Graphics\Model">
       <UniqueIdentifier>{5dd3403a-0065-47a9-8468-ab12b8fcfe3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\System\Input">
+      <UniqueIdentifier>{67b0d9d5-be6e-4d95-9923-5bb922093193}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,6 +78,9 @@
     </ClCompile>
     <ClCompile Include="Core\GameObject.cpp">
       <Filter>Core\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utilities\Input.cpp">
+      <Filter>Core\System\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,9 +123,6 @@
     <ClInclude Include="Core\Utilities\Math\Matrix.h">
       <Filter>Utilities\Math\Matrixes</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ComponentManager.h">
-      <Filter>Core\System</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Transform.h">
       <Filter>Core\System</Filter>
     </ClInclude>
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Core\GameObject.h">
       <Filter>Core\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Input.h">
+      <Filter>Core\System\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

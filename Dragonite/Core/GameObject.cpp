@@ -6,7 +6,7 @@
 GameObject::GameObject()
 {
 	myComponents = std::vector<std::shared_ptr<Component>>();
-
+	myTransform.myTransformMatrix = Math::Matrix4x4f();
 }
 
 GameObject::GameObject(std::string aName)

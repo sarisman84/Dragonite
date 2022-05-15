@@ -3,10 +3,13 @@
 #include "Rendering/ModelFactory.h"
 
 #include <chrono>
-
+#include "Utilities/Input.h"
 
 LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
+	CommonUtilities::Mouse::UpdateEvents(aHWnd, aMessage, aWParam, anLParam);
+	CommonUtilities::Keyboard::Update(aMessage, aWParam, anLParam);
+
 	switch (aMessage)
 	{
 	case WM_CLOSE:
@@ -69,13 +72,13 @@ MSG Engine::System::StartRuntime()
 
 	
 
-	auto totalTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+	auto totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 	auto deltaTime = totalTime;
 
 	while (myRuntimeState == SystemState::Run)
 	{
 
-		auto curTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+		auto curTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 		deltaTime = curTime - totalTime;
 		totalTime = curTime;
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -89,14 +92,13 @@ MSG Engine::System::StartRuntime()
 				break;
 			}
 		}
-		auto now = std::chrono::high_resolution_clock::now();
 
 
 
 
-		runtime.Update(static_cast<float>(deltaTime));
+		runtime.Update(static_cast<float>(deltaTime / 1000.f));
 		myGraphicsEngine->DrawElements();
-
+		CommonUtilities::Mouse::EndFrame();
 	}
 
 	return msg;

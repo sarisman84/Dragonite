@@ -1,6 +1,9 @@
 #pragma once
 #include <ostream>
 #include "Utilities/UtilityFunctions.h"
+
+#pragma warning(disable: 4244)
+
 namespace Math
 {
 

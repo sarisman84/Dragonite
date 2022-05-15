@@ -25,16 +25,16 @@ public:
 	template<class Comp>
 	std::shared_ptr<Comp> AddComponent()
 	{
-		std::shared_ptr<Comp> comp = std::make_shared<Comp>();
+		std::shared_ptr<Component> comp = std::make_shared<Comp>();
 		comp->myGameObject = this;
 		comp->myTransform = &myTransform;
 		comp->mySystem = mySystem;
-
+		comp->OnAwake();
 		myComponents.push_back(comp);
 
 
 
-		return comp;
+		return std::dynamic_pointer_cast<Comp>(comp);
 	}
 
 
