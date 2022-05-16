@@ -27,6 +27,9 @@ namespace Engine
 		inline Graphics::GraphicsEngine* GetGraphicsEngine() { return Get<Graphics::GraphicsEngine>(); }
 		inline WindowInfo& GetWindowsInfo() { return myWindowsInfo; }
 		
+		inline const float GetTimeDelta() { return myTimeDelta; };
+		inline const float GetTotalTime() { return myTotalTime; };
+
 		template<class Manager>
 		Manager* Get();
 
@@ -34,7 +37,8 @@ namespace Engine
 		Manager* AddManager();
 		
 	private:
-
+		float myTimeDelta;
+		float myTotalTime;
 	
 
 		Graphics::GraphicsEngine* myGraphicsEngine;

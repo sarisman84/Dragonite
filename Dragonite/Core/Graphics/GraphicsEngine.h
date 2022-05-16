@@ -27,6 +27,9 @@ struct ModelInstance;
 struct FrameBufferData
 {
 	Math::Matrix4x4f myClipSpaceMatrix;
+	float myTimeDelta;
+	float myTotalTime;
+	float myGarbage[2];
 };
 
 struct ObjectBufferData

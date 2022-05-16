@@ -19,6 +19,9 @@ struct PixelOutput
 cbuffer FrameBuffer : register(b0)
 {
     float4x4 myClipSpaceMatrix;
+    float myTimeDelta;
+    float myTotalTime;
+    float2 myGarbage;
 }
 
 cbuffer ObjectBuffer : register(b1)

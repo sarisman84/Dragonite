@@ -110,7 +110,7 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 
 void Engine::Graphics::GraphicsEngine::DrawElements()
 {
-	float color[4] = { 0.8f,0.8f,0.8f,1.0f }; // RGBA
+	float color[4] = { 0.2f,0.2f,0.2f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
 
 
@@ -121,6 +121,8 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	FrameBufferData data;
 	data.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
+	data.myTimeDelta = mySystem->GetTimeDelta();
+	data.myTotalTime = mySystem->GetTotalTime();
 	memcpy(resource.pData, &data, sizeof(FrameBufferData));
 
 	myContext->Unmap(myFrameBuffer.Get(), 0);
@@ -130,7 +132,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	while (!myRenderInstructions.empty())
 	{
 		auto instruction = myRenderInstructions.front();
-	
+
 
 
 

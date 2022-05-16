@@ -128,30 +128,30 @@ ModelPtr ModelFactory::GetUnitCube()
 			for (float zPos = -1; zPos <= 1; zPos++)
 			{
 				if (zPos == 0) continue;
-				data.myVertecies.push_back(Vertex{ Math::Vector4f(xPos, yPos, zPos, 1.f), Math::Vector4f(1.f, 1.f, 1.f, 1.f) });
+				data.myVertecies.push_back(Vertex{ Math::Vector4f(xPos, yPos, zPos, 1.f), Math::Vector4f(xPos, yPos, zPos, 1.f) });
 			}
 
 		}
 	}
 
 	data.myIndicies = {
-		0,2,3, //Left Side
-		1,0,3,
+		3,2,0, //Left
+		0,1,3,
 
-		6,2,0, //Back Side
-		4,6,0,
+		3,1,5, //Front
+		5,7,3,
 
-		5,4,7, //Right Side
-		6,7,4,
+		6,7,5, //Right
+		5,4,6,
 
-		3,7,1, //Front Side
-		5,1,7,
+		2,6,4, //Back
+		4,0,2,
 
-		3,6,7,//Top Side
-		2,6,3,
+		3,7,6, //Top
+		2,3,6,
 
-		1,4,0,//Bottom Side
-		4,5,1
+		5,1,4, //Bottom
+		0,4,1,
 	};
 
 	model->myMesh.push_back(data);

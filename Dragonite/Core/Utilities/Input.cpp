@@ -356,10 +356,11 @@ void CommonUtilities::Mouse::UpdateEvents(HWND aWindowsIns, UINT aMessage, WPARA
 		//std::cout << _K(aMessage) << " -> " << ourMouseState[_K(aMessage)] << std::endl;
 	}
 
+	
 
 	if (aMessage == WM_MOUSEMOVE)
 	{
-		ourPastMousePosition = ourMousePosition;
+		
 		POINT point;
 		if (GetCursorPos(&point))
 		{
@@ -375,9 +376,10 @@ void CommonUtilities::Mouse::UpdateEvents(HWND aWindowsIns, UINT aMessage, WPARA
 
 void CommonUtilities::Mouse::EndFrame()
 {
+	ourMouseDelta = { 0,0 };
 	auto diff = ourMousePosition - ourPastMousePosition;
 	ourMouseDelta = diff.GetNormalized().Cast<float>();
-
+	ourPastMousePosition = ourMousePosition;
 
 }
 

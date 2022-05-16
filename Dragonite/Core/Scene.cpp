@@ -13,7 +13,7 @@ void Scene::Awake()
 	myCube = myRuntime->CreateGameObject();
 	myCube->myName = "A Cube";
 	myCube->AddComponent<ModelRenderer>();
-	myCube->myTransform.myTransformMatrix.SetPosition({ 0,0, 10 });
+	myCube->myTransform.SetPosition({ 0,0, 10 });
 
 	auto cam = myCamera->AddComponent<Camera>();
 
@@ -23,5 +23,6 @@ void Scene::Awake()
 void Scene::Update(float aTimeDelta)
 {
 	myCounter += aTimeDelta;
-	std::cout << '\r' << myCounter << std::flush;
+	myCube->myTransform.SetPosition(myCube->myTransform.GetPosition() + Math::Vector3f(cos(myCounter), sin(myCounter), 0) * aTimeDelta);
+	//std::cout << aTimeDelta << "/" << myRuntime->GetSystem()->GetTotalTime() << std::endl;
 }

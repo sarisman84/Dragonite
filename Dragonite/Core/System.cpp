@@ -41,7 +41,7 @@ Engine::System::~System()
 bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 {
 	myGraphicsEngine = AddManager<Graphics::GraphicsEngine>();
-	myWindowsInfo = InitializeWindow(L"Dragonite", { 1980, 1080 }, anHInstance, WndProc);
+	myWindowsInfo = InitializeWindow(L"Dragonite", { 1920, 1080 }, anHInstance, WndProc);
 
 	if (!myWindowsInfo.myWindowInstance) return false;
 	//myGraphicsEngine = new Graphics::GraphicsEngine();
@@ -95,8 +95,9 @@ MSG Engine::System::StartRuntime()
 
 
 
-
-		runtime.Update(static_cast<float>(deltaTime / 1000.f));
+		myTimeDelta = deltaTime / 1000.f;
+		myTotalTime = totalTime / 1000.f;
+		runtime.Update(static_cast<float>(myTimeDelta));
 		myGraphicsEngine->DrawElements();
 		CommonUtilities::Mouse::EndFrame();
 	}

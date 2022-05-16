@@ -8,15 +8,23 @@ using namespace Math;
 using namespace CPPExtend;
 struct Transform
 {
-
-	Vector3f myPosition;
-	Vector3f mySize;
-	Vector4f myRotation;
-
 	Matrix4x4f myTransformMatrix;
 
+	void SetPosition(Vector3f aPosition);
+	Vector3f GetPosition();
+
+	void SetRotation(Vector4f aRotation);
+	Vector4f GetRotation();
+
+	void SetSize(Vector3f aSize);
+	Vector3f GetSize();
+
+
+	Vector3f GetUp();
+	Vector3f GetRight();
+	Vector3f GetForward();
 
 private:
-	void UpdateMatrix();
+	Vector4f myRotation;
 
 };

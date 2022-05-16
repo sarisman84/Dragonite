@@ -35,5 +35,6 @@ private:
 	float myFOV;
 	float myMovementSpeed;
 	Math::Vector2f myInput;
+	Math::Vector4f myRotation;
 };
 

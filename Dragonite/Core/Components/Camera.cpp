@@ -21,31 +21,32 @@ void Camera::OnUpdate(float aDeltaTime)
 {
 	using namespace CommonUtilities;
 
-	float xInput = Keyboard::GetButton(Keyboard::Key::A) ? 1.f : Keyboard::GetButton(Keyboard::Key::D) ? -1.f : 0.f;
+	float xInput = Keyboard::GetButton(Keyboard::Key::A) ? -1.f : Keyboard::GetButton(Keyboard::Key::D) ? 1.f : 0.f;
 	float zInput = Keyboard::GetButton(Keyboard::Key::W) ? 1.f : Keyboard::GetButton(Keyboard::Key::S) ? -1.f : 0.f;
 	float yInput = Keyboard::GetButton(Keyboard::Key::Space) ? 1.f : Keyboard::GetButton(Keyboard::Key::Control) ? -1.f : 0.f;
 
+	auto mouseDelta = Mouse::GetMouseDelta();
+	if (mouseDelta.y != 0 || mouseDelta.x != 0)
+		myRotation = Vector4f{ mouseDelta.y , mouseDelta.x, 0, 0 };
+	else
+		myRotation = { 0,0,0,0 };
+
 	//myInput = myInput.Lerp({ xInput, zInput }, aDeltaTime);
+	auto result = myTransform->GetRight() * xInput * myMovementSpeed + myTransform->GetUp() * yInput * myMovementSpeed + myTransform->GetForward() * zInput * myMovementSpeed;
+	result *= aDeltaTime;
+	myTransform->SetPosition(result + myTransform->GetPosition());
+	myTransform->SetRotation(myRotation);
 
-	myTransform->myTransformMatrix.SetPosition(myTransform->myTransformMatrix.GetPosition() + Math::Vector3f(xInput * myMovementSpeed, yInput, zInput * myMovementSpeed) * aDeltaTime);
-
-	std::cout << '\r' << "[Log]<Camera>: Pos ( x: " << myTransform->myTransformMatrix.GetPosition().x << ", y:" << myTransform->myTransformMatrix.GetPosition().y << ", z:" << myTransform->myTransformMatrix.GetPosition().z << ")" << std::flush;
+	
 }
 
 void Camera::UpdateProjectionMatrix()
 {
-	float nearPlane = ((-myNearPlane) * myFarPlane) / (myFarPlane - myNearPlane);
-	float farPlane = myFarPlane / (myFarPlane - myNearPlane);
-
-	float aspectRatio = mySystem->GetWindowsInfo().GetAspectRatio();
-
-	float xFOV = 1 / tan(myFOV / 2.f);
-	float yFOV = aspectRatio * (1 / tan(myFOV / 2.f));
-
-
-	myProjectionMatrix(1, 1) = xFOV;
-	myProjectionMatrix(2, 2) = yFOV;
-	myProjectionMatrix(3, 3) = farPlane;
-	myProjectionMatrix(3, 4) = 1.f;
-	myProjectionMatrix(4, 3) = nearPlane;
+	const float wh = mySystem->GetWindowsInfo().GetAspectRatio();
+	myProjectionMatrix(1, 1) = 1.0f / std::tan(myFOV / 2.0f);
+	myProjectionMatrix(2, 2) = wh * (1.0f / std::tan(myFOV / 2.0f));
+	myProjectionMatrix(3, 3) = myFarPlane / (myFarPlane - myNearPlane);
+	myProjectionMatrix(3, 4) = 1;
+	myProjectionMatrix(4, 3) = -(myNearPlane * myFarPlane) / (myFarPlane - myNearPlane);
+	myProjectionMatrix(4, 4) = 0;
 }

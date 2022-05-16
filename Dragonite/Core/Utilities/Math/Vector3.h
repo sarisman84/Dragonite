@@ -192,7 +192,7 @@ namespace Math
 
 
 	template <class T>
-	std::ostream operator<<(std::ostream& aOutputStream, const Vector3<T> aVector)
+	std::ostream& operator<<(std::ostream& aOutputStream, const Vector3<T>& aVector)
 	{
 		aOutputStream << "(x:" << aVector.x << ", y:" << aVector.y << ", z:" << aVector.z << ")";
 		return aOutputStream;

@@ -4,8 +4,8 @@
 
 PixelOutput main(PixelInputType anInput)
 {
-	PixelOutput output;
-	output.myColor = anInput.myColor;
+    PixelOutput output;
+    output.myColor = anInput.myColor + sin(myTotalTime);
 
-	return output;
+    return output;
 }

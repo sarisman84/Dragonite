@@ -36,50 +36,7 @@ namespace Math
 		}
 
 
-		void SetPosition(Vector3<T> aPosition)
-		{
-			SetRow(4, { aPosition.x, aPosition.y, aPosition.z, 1 });
-		}
 
-
-		Vector3<T> GetPosition()
-		{
-			Vector3<T> position;
-			position.x = (*this)(4, 1);
-			position.y = (*this)(4, 2);
-			position.z = (*this)(4, 3);
-			return position;
-		}
-
-
-		Vector3<T> GetUpDirection()
-		{
-			Vector3<T> direction;
-			direction.x = (*this)(2, 1);
-			direction.y = (*this)(2, 2);
-			direction.z = (*this)(2, 3);
-			return direction;
-		}
-
-
-		Vector3<T> GetForwardDirection()
-		{
-			Vector3<T> direction;
-			direction.x = (*this)(2, 1);
-			direction.y = (*this)(2, 2);
-			direction.z = (*this)(2, 3);
-			return direction;
-		}
-
-
-		Vector3<T> GetRightDirection()
-		{
-			Vector3<T> direction;
-			direction.x = (*this)(2, 1);
-			direction.y = (*this)(2, 2);
-			direction.z = (*this)(2, 3);
-			return direction;
-		}
 
 
 		Vector4<T> GetRow(const int aRow)
@@ -214,7 +171,7 @@ namespace Math
 		static Matrix4x4<T> GetFastInverse(const Matrix4x4<T>& aTransform)
 		{
 
-			Matrix4x4<T> copy = aTransform;
+			/*Matrix4x4<T> copy = aTransform;
 			Matrix4x4<T> rotationInverse = Matrix4x4<T>::Transpose(aTransform);
 
 
@@ -231,7 +188,25 @@ namespace Math
 			if ((copy * rotationInverse) != Matrix4x4<T>()) return translationInverse;
 
 
-			return Matrix4x4<T>();
+			return Matrix4x4<T>();*/
+
+			Matrix4x4<T> inverse;
+			// Transponera översta 3x3 delen
+			inverse.myMatrixBuffer[0][0] = aTransform.myMatrixBuffer[0][0];
+			inverse.myMatrixBuffer[0][1] = aTransform.myMatrixBuffer[1][0];
+			inverse.myMatrixBuffer[0][2] = aTransform.myMatrixBuffer[2][0];
+			inverse.myMatrixBuffer[1][0] = aTransform.myMatrixBuffer[0][1];
+			inverse.myMatrixBuffer[1][1] = aTransform.myMatrixBuffer[1][1];
+			inverse.myMatrixBuffer[1][2] = aTransform.myMatrixBuffer[2][1];
+			inverse.myMatrixBuffer[2][0] = aTransform.myMatrixBuffer[0][2];
+			inverse.myMatrixBuffer[2][1] = aTransform.myMatrixBuffer[1][2];
+			inverse.myMatrixBuffer[2][2] = aTransform.myMatrixBuffer[2][2];
+
+			// Multiplicera 3x3 delen med de 3 längst ner
+			inverse.myMatrixBuffer[3][0] = -aTransform.myMatrixBuffer[3][0] * inverse.myMatrixBuffer[0][0] + -aTransform.myMatrixBuffer[3][1] * inverse.myMatrixBuffer[1][0] + -aTransform.myMatrixBuffer[3][2] * inverse.myMatrixBuffer[2][0];
+			inverse.myMatrixBuffer[3][1] = -aTransform.myMatrixBuffer[3][0] * inverse.myMatrixBuffer[0][1] + -aTransform.myMatrixBuffer[3][1] * inverse.myMatrixBuffer[1][1] + -aTransform.myMatrixBuffer[3][2] * inverse.myMatrixBuffer[2][1];
+			inverse.myMatrixBuffer[3][2] = -aTransform.myMatrixBuffer[3][0] * inverse.myMatrixBuffer[0][2] + -aTransform.myMatrixBuffer[3][1] * inverse.myMatrixBuffer[1][2] + -aTransform.myMatrixBuffer[3][2] * inverse.myMatrixBuffer[2][2];
+			return inverse;
 		}
 
 		Matrix4x4<T> operator+(const Matrix4x4<T> aRhs)
@@ -359,6 +334,7 @@ namespace Math
 
 		std::array<std::array<T, 4>, 4> myMatrixBuffer;
 
+
 	};
 
 
@@ -390,6 +366,36 @@ namespace Math
 		{
 			result.w += (vectorElements[row - 1] * aRhs(row, 4));
 		}
+
+
+		return result;
+	}
+
+
+
+	template<typename T>
+	Vector3<T> operator *(const Vector3<T> aLhs, const Matrix4x4<T> aRhs)
+	{
+		std::array<T, 3> vectorElements = { aLhs.x, aLhs.y, aLhs.z };
+		Vector3<T> result;
+
+		for (int row = 1; row <= 3; row++)
+		{
+			result.x += (vectorElements[row - 1] * aRhs(row, 1));
+		}
+
+
+		for (int row = 1; row <= 3; row++)
+		{
+			result.y += (vectorElements[row - 1] * aRhs(row, 2));
+		}
+
+
+		for (int row = 1; row <= 3; row++)
+		{
+			result.z += (vectorElements[row - 1] * aRhs(row, 3));
+		}
+
 
 
 		return result;
