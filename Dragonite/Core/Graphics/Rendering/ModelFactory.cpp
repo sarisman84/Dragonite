@@ -165,7 +165,27 @@ ModelPtr ModelFactory::GetUnitCube()
 
 ModelPtr ModelFactory::GetUnitPiramid()
 {
-	return ModelPtr();
+	ModelPtr model = std::make_shared<Model>();
+	MeshData data;
+
+	data.myVertecies.push_back(Vertex{ Vector4f(0.f, 1.f, 0.f, 1.f), Vector4f(1.f, 0.f, 0.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(1.f, 0.f, 1.f, 1.f), Vector4f(1.f, 1.f, 0.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 1.f, 1.f, 1.f), Vector4f(0.f, 1.f, 0.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 1.f, -1.f, 1.f), Vector4f(0.f ,0.f, 1.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(1.f, 1.f, -1.f, 1.f), Vector4f(0.f, 1.f, 1.f, 1.f) });
+
+	data.myIndicies = {
+		0,1,4,
+		0,2,1,
+		0,3,2,
+		0,3,4,
+		3,1,2,
+		4,1,3
+	};
+
+
+	model->myMesh.push_back(data);
+	return model;
 }
 
 ModelPtr ModelFactory::GetUnitIcoSphere()

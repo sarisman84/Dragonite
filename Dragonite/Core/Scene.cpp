@@ -12,8 +12,14 @@ void Scene::Awake()
 
 	myCube = myRuntime->CreateGameObject();
 	myCube->myName = "A Cube";
-	myCube->AddComponent<ModelRenderer>();
+	myCube->AddComponent<ModelRenderer>()->LoadModel(UNITCUBE, "", "Shaders/AnimatedSinWave_PS.cso");
 	myCube->myTransform.SetPosition({ 0,0, 10 });
+
+
+	auto secondCube = myRuntime->CreateGameObject();
+	secondCube->myName = "Another Cube";
+	secondCube->AddComponent<ModelRenderer>()->LoadModel(UNITCUBE);
+	secondCube->myTransform.SetPosition({ 1.5f, 0.f, 10 });
 
 	auto cam = myCamera->AddComponent<Camera>();
 
