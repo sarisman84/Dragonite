@@ -164,6 +164,9 @@
     <FxCompile Include="Shaders\SinWave_PS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\AnimatedSinWave_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Utilities\ShaderUtilities.hlsli">

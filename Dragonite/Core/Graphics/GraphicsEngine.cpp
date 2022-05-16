@@ -127,7 +127,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	myContext->Unmap(myFrameBuffer.Get(), 0);
 	myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
-
+	myContext->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
 	while (!myRenderInstructions.empty())
 	{

@@ -32,7 +32,7 @@ public:
 		mySystem = aSystem;
 		InitializeBuffers();
 	}
-	ModelInstance* CreateInstanceOf(std::string aKey);
+	ModelInstance* CreateInstanceOf(std::string aKey, std::string aVertexShaderPath = "", std::string aPixelShaderPath = "");
 private:
 	void InitializeBuffers();
 	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);

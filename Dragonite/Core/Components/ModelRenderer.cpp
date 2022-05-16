@@ -2,7 +2,7 @@
 
 void ModelRenderer::OnAwake()
 {
-	myModelInstance = mySystem->Get<ModelFactory>()->CreateInstanceOf(UNITCUBE);
+	myModelInstance = mySystem->Get<ModelFactory>()->CreateInstanceOf(UNITCUBE, "", "Shaders/AnimatedSinWave_PS.cso");
 	myGraphicsEngine = mySystem->GetGraphicsEngine();
 }
 

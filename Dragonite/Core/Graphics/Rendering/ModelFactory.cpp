@@ -15,10 +15,16 @@ ModelFactory::ModelFactory()
 
 }
 
-ModelInstance* ModelFactory::CreateInstanceOf(std::string aKey)
+ModelInstance* ModelFactory::CreateInstanceOf(std::string aKey, std::string aVertexShaderPath, std::string aPixelShaderPath)
 {
 	ID3D11Device* device = mySystem->GetGraphicsEngine()->GetDevice();
 	ModelInstance ins;
+	if (aVertexShaderPath != "")
+		ins.myVertexShaderPath = aVertexShaderPath.c_str();
+
+	if (aPixelShaderPath != "")
+		ins.myPixelShaderPath = aPixelShaderPath.c_str();
+
 	ins.myModel = myModelTypes[aKey];
 	std::string someData;
 
@@ -118,7 +124,6 @@ ModelPtr ModelFactory::GetUnitCube()
 {
 	ModelPtr model = std::make_shared<Model>();
 	MeshData data;
-
 	for (float xPos = -1; xPos <= 1; xPos++)
 	{
 		if (xPos == 0) continue;
