@@ -1,7 +1,6 @@
 #include "GraphicsEngine.h"
 #include <d3d11.h>
 #include <fstream>
-#include "Rendering/RenderObject.h"
 #include "System.h"
 #include "Utilities/Math/Vector2.h"
 #include "Components/Camera.h"
@@ -16,7 +15,7 @@ Engine::Graphics::GraphicsEngine::GraphicsEngine() = default;
 Engine::Graphics::GraphicsEngine::~GraphicsEngine() = default;
 
 
-bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle, System * aSystem)
+bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWindowsHandle, System * aSystem)
 {
 
 	mySystem = aSystem;
@@ -65,7 +64,9 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 		return false;
 	}
 
-
+	D3D11_TEXTURE2D_DESC textureDesc;
+	backBufferTexture->GetDesc(&textureDesc);
+	backBufferTexture->Release();
 
 
 	D3D11_BUFFER_DESC bufferDesc = { 0 };
@@ -84,11 +85,41 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	if (FAILED(result)) return false;
 
 
+	bufferDesc.ByteWidth = sizeof(MaterialBufferData);
+	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myMaterialBuffer);
+	if (FAILED(result)) return false;
+
+
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	// Create the texture sampler state.
+
+	result = myDevice->CreateSamplerState(&samplerDesc, &mySamplerState);
+
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 
 	ID3D11Texture2D* depthBufferTexture;
 	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
-	depthBufferDesc.Width = static_cast<unsigned int>(aResolution.width);
-	depthBufferDesc.Height = static_cast<unsigned int>(aResolution.height);
+	depthBufferDesc.Width = static_cast<unsigned int>(textureDesc.Width);
+	depthBufferDesc.Height = static_cast<unsigned int>(textureDesc.Height);
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthBufferDesc.SampleDesc.Count = 1;
@@ -106,7 +137,13 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	depthBufferTexture->Release();
 
 
-	
+
+
+
+
+
+
+
 
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
@@ -115,8 +152,8 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(aResolution.width);
-	viewport.Height = static_cast<float>(aResolution.height);
+	viewport.Width = static_cast<float>(textureDesc.Width);
+	viewport.Height = static_cast<float>(textureDesc.Height);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	myContext->RSSetViewports(1, &viewport);
@@ -142,11 +179,9 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 		1.0f,
 		0
 	);
-	
+
 
 	D3D11_MAPPED_SUBRESOURCE resource;
-
-
 	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 
 	FrameBufferData data;
@@ -158,6 +193,8 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	myContext->Unmap(myFrameBuffer.Get(), 0);
 	myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 	myContext->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+
+
 
 	while (!myRenderInstructions.empty())
 	{
@@ -176,22 +213,38 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 		myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
 
+
+
+
+		D3D11_MAPPED_SUBRESOURCE mResource;
+		myContext->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mResource);
+		MaterialBufferData mData;
+		mData.myColor = instruction->myMaterial.myColor;
+		memcpy(mResource.pData, &objData, sizeof(MaterialBufferData));
+
+		myContext->Unmap(myMaterialBuffer.Get(), 0);
+
+		myContext->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
+
+
 		myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		myContext->IASetInputLayout(instruction->myInputLayout.Get());
+		myContext->IASetInputLayout(instruction->myModel->myInputLayout.Get());
 
 		unsigned int stride = sizeof(Vertex);
 		unsigned int offset = 0;
 
 
+		
 		for (auto& mesh : instruction->myModel->myMesh)
 		{
 			myContext->IASetVertexBuffers(0, 1, mesh.myVertexBuffer.GetAddressOf(), &stride, &offset);
 			myContext->IASetIndexBuffer(mesh.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-			myContext->VSSetShader(instruction->myVertexShader.Get(), nullptr, 0);
-			myContext->PSSetShader(instruction->myPixelShader.Get(), nullptr, 0);
-
-			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndicies.size()), 0, 0);
+			myContext->VSSetShader(instruction->myModel->myVertexShader.Get(), nullptr, 0);
+			myContext->PSSetShader(instruction->myModel->myPixelShader.Get(), nullptr, 0);
+			myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
+			myContext->PSSetShaderResources(instruction->myModel->myTexture.mySlot, 1, instruction->myModel->myTexture.myTextureResource.GetAddressOf());
+			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}
 
 
@@ -201,117 +254,44 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	}
 
-	for (size_t i = 0; i < myRenderTargets.size(); i++)
-	{
-		myRenderTargets[i]->Draw();
-	}
+
 
 	mySwapChain->Present(1, 0);
 }
 
-std::shared_ptr<RenderObject> Engine::Graphics::GraphicsEngine::Create2DElement(Primitive2D aPrimitiveShape)
-{
-	Shape aShape;
-	switch (aPrimitiveShape)
-	{
-	case Primitive2D::Circle:
-		aShape = GetUnitCircle();
-		break;
-	case Primitive2D::Quad:
-		aShape = GetUnitQuad();
-		break;
-
-	case Primitive2D::Triangle:
-		aShape = GetUnitTriangle();
-		break;
-	}
-
-	auto renderObject = std::make_shared<RenderObject>(aShape, myDevice.Get(), myContext.Get(), mySystem);
-	if (!renderObject->Initialize()) return nullptr;
-	myRenderTargets.push_back(renderObject);
-	return myRenderTargets.back();
-
-}
-
-Shape Engine::Graphics::GraphicsEngine::GetUnitTriangle()
-{
-	using namespace Engine::Graphics;
-	Shape triangle;
-
-	Vertex2D vertices[] =
-	{
-		Vertex2D{Math::Vector4f(-1.f, -1.f,  0, 1), Math::Vector4f(1,0,0,1)},
-		Vertex2D{Math::Vector4f(0,     1.f,  0, 1), Math::Vector4f(0,1,0,1)},
-		Vertex2D{Math::Vector4f(1.f,  -1.f,  0, 1), Math::Vector4f(0,0,1,1)}
-	};
-
-	unsigned int indices[] =
-	{
-		0,1,2
-	};
-
-	memcpy(triangle.myVertices, vertices, sizeof(vertices));
-	memcpy(triangle.myIndicies, indices, sizeof(indices));
-	triangle.myIndicesAmm = 3;
-	triangle.myVerticesAmm = 3;
-
-	return triangle;
-}
-
-Shape Engine::Graphics::GraphicsEngine::GetUnitQuad()
-{
-	using namespace Engine::Graphics;
-	Shape quad;
-	Vertex2D vertices[] =
-	{
-		{Math::Vector4f{1.f,   1.f,  1, 1}, Math::Vector4f{1,0,0,1}},
-		{Math::Vector4f{-1.f,  1.f,  1, 1}, Math::Vector4f{0,1,0,1}},
-		{Math::Vector4f{-1.f, -1.f,  1, 1}, Math::Vector4f{0,0,1,1}},
-		{Math::Vector4f{1.f,  -1.f,  1, 1}, Math::Vector4f{1,0,1,1}}
-	};
-
-	unsigned int indices[] =
-	{
-		3,1,0,2,1,3
-	};
-
-	memcpy(quad.myVertices, vertices, sizeof(vertices));
-	memcpy(quad.myIndicies, indices, sizeof(indices));
-	quad.myIndicesAmm = 6;
-	quad.myVerticesAmm = 4;
-
-	return quad;
-}
-
-Shape Engine::Graphics::GraphicsEngine::GetUnitCircle()
-{
-	Shape circle;
-	int segments = 50;
-
-	circle.myVerticesAmm = 3 * segments;
-	circle.myIndicesAmm = 3 * segments;
-	int posIndex = 0;
-	for (size_t i = 0; i < segments; i++)
-	{
-		float p = 3.14159265f * (i * (360.f / segments) / 180.f);
-		float p2 = 3.14159265f * ((i + 1) * (360.f / segments) / 180.f);
-		Math::Vector2f pos(cos(p), sin(p));
-		Math::Vector2f pos3(cos(p2), sin(p2));
-		Math::Vector2f pos2(0.f, 0.f);
-
-		circle.myIndicies[posIndex] = posIndex;
-		circle.myIndicies[posIndex + 1] = posIndex + 1;
-		circle.myIndicies[posIndex + 2] = posIndex + 2;
-
-		circle.myVertices[posIndex] = Vertex2D{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
-		circle.myVertices[posIndex + 1] = Vertex2D{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
-		circle.myVertices[posIndex + 2] = Vertex2D{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
-
-		posIndex += 3;
-	}
 
 
-	return circle;
-}
+
+
+//Shape Engine::Graphics::GraphicsEngine::GetUnitCircle()
+//{
+//	Shape circle;
+//	int segments = 50;
+//
+//	circle.myVerticesAmm = 3 * segments;
+//	circle.myIndicesAmm = 3 * segments;
+//	int posIndex = 0;
+//	for (size_t i = 0; i < segments; i++)
+//	{
+//		float p = 3.14159265f * (i * (360.f / segments) / 180.f);
+//		float p2 = 3.14159265f * ((i + 1) * (360.f / segments) / 180.f);
+//		Math::Vector2f pos(cos(p), sin(p));
+//		Math::Vector2f pos3(cos(p2), sin(p2));
+//		Math::Vector2f pos2(0.f, 0.f);
+//
+//		circle.myIndicies[posIndex] = posIndex;
+//		circle.myIndicies[posIndex + 1] = posIndex + 1;
+//		circle.myIndicies[posIndex + 2] = posIndex + 2;
+//
+//		circle.myVertices[posIndex] = Vertex2D{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
+//		circle.myVertices[posIndex + 1] = Vertex2D{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
+//		circle.myVertices[posIndex + 2] = Vertex2D{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
+//
+//		posIndex += 3;
+//	}
+//
+//
+//	return circle;
+//}
 
 

@@ -1,5 +1,4 @@
 #pragma once
-#include "Rendering/RenderObject.h"
 #include <vector>
 #include "GameObject.h"
 #include <memory>

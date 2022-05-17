@@ -18,9 +18,10 @@ struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
 struct ID3D11Buffer;
 struct ID3D11DepthStencilView;
+struct ID3D11SamplerState;
 
-class RenderObject;
-struct Shape;
+
+
 enum class Primitive2D;
 class Camera;
 struct ModelInstance;
@@ -36,6 +37,11 @@ struct FrameBufferData
 struct ObjectBufferData
 {
 	Math::Matrix4x4f myObjectMatrix;
+};
+
+struct MaterialBufferData
+{
+	Math::Vector4f myColor;
 };
 
 
@@ -71,14 +77,11 @@ namespace Engine
 			inline ComPtr<ID3D11Buffer>& FrameBuffer() { return myFrameBuffer; }
 
 			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
-			std::shared_ptr<RenderObject> Create2DElement(Primitive2D aPrimitiveShape);
+			
 			//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
 		private:
 
 
-			Shape GetUnitTriangle();
-			Shape GetUnitQuad();
-			Shape GetUnitCircle();
 
 			ComPtr<ID3D11Device> myDevice;
 			ComPtr<ID3D11DeviceContext> myContext;
@@ -87,10 +90,13 @@ namespace Engine
 
 			ComPtr<ID3D11Buffer> myObjectBuffer;
 			ComPtr<ID3D11Buffer> myFrameBuffer;
+			ComPtr<ID3D11Buffer> myMaterialBuffer;
 			ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 
+			ComPtr<ID3D11SamplerState> mySamplerState;
+
 			std::queue <ModelInstance*> myRenderInstructions;
-			std::vector<std::shared_ptr<RenderObject>> myRenderTargets;
+	
 			//std::vector<std::shared_ptr<Mesh>> myMeshes;
 			System* mySystem;
 			Camera* myRenderCamera;

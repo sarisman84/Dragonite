@@ -44,6 +44,9 @@
     <Filter Include="Core\System\Input">
       <UniqueIdentifier>{67b0d9d5-be6e-4d95-9923-5bb922093193}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\stb">
+      <UniqueIdentifier>{2c964b4b-8ceb-42c7-b158-542114e8d614}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,9 +60,6 @@
     </ClCompile>
     <ClCompile Include="Core\Runtime.cpp">
       <Filter>Core\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp">
-      <Filter>Core\Graphics\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="Core\Components\Camera.cpp">
       <Filter>Core\System\Components</Filter>
@@ -95,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="Core\Runtime.h">
       <Filter>Core\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\RenderObject.h">
-      <Filter>Core\Graphics\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="Core\Utilities\UtilityFunctions.h">
       <Filter>Utilities</Filter>
@@ -152,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utilities\Input.h">
       <Filter>Core\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\STB\ImageImport.h">
+      <Filter>Utilities\stb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

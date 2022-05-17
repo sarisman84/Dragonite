@@ -8,6 +8,7 @@ struct ID3D11Buffer;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11InputLayout;
+struct ID3D11ShaderResourceView;
 
 namespace Engine
 {
@@ -17,12 +18,27 @@ namespace Engine
 	}
 }
 
+struct Texture
+{
+	int mySlot;
+	ComPtr<ID3D11ShaderResourceView> myTextureResource;
+};
+
 struct Vertex
 {
 	Math::Vector4f myPosition;
 	Math::Vector4f myColor;
+	Math::Vector2f myUV;
 };
 
+
+struct Material
+{
+	Math::Vector4f myColor;
+	const char* myTexturePath;
+	const char* myVertexShader;
+	const char* myPixelShader;
+};
 
 
 struct MeshData
@@ -31,19 +47,25 @@ struct MeshData
 	friend class ModelFactory;
 public:
 	std::vector<Vertex> myVertecies;
-	std::vector<unsigned int> myIndicies;
+	unsigned int myIndiciesAmm;
 private:
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 	ComPtr<ID3D11Buffer> myIndexBuffer;
-	
+
 };
 
 
 struct Model
 {
+	friend class ModelFactory;
+	friend class Engine::Graphics::GraphicsEngine;
 public:
 	std::vector<MeshData> myMesh;
-
+private:
+	ComPtr<ID3D11VertexShader> myVertexShader;
+	ComPtr<ID3D11PixelShader> myPixelShader;
+	ComPtr<ID3D11InputLayout> myInputLayout;
+	Texture myTexture;
 
 };
 
@@ -55,17 +77,11 @@ using ModelPtr = std::shared_ptr<Model>;
 
 struct ModelInstance
 {
-	friend class ModelFactory;
-	friend class Engine::Graphics::GraphicsEngine;
+
 public:
 	ModelPtr myModel;
-	const char* myVertexShaderPath = "Shaders/ColorShader_VS.cso";
-	const char* myPixelShaderPath = "Shaders/ColorShader_PS.cso";
 	Transform myTransform;
-private:
-	ComPtr<ID3D11VertexShader> myVertexShader;
-	ComPtr<ID3D11PixelShader> myPixelShader;
-	ComPtr<ID3D11InputLayout> myInputLayout;
+	Material myMaterial;
 };
 
 

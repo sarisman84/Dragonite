@@ -1,5 +1,6 @@
 #pragma once
 #include "Runtime.h"
+#include "Components/ModelRenderer.h"
 
 using namespace Engine;
 
@@ -13,4 +14,5 @@ private:
 	GameObjectPtr myCamera;
 	GameObjectPtr myCube;
 	float myCounter;
+	std::shared_ptr<ModelRenderer> myCubeRenderer;
 };

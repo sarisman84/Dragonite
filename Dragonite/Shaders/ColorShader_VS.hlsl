@@ -11,8 +11,10 @@ PixelInputType main(VertexInputType anInput)
     float4 vertexWorldPos = mul(myObjectMatrix, vertexObjectPos);
 	float4 vertexClipPos = mul(myClipSpaceMatrix, vertexWorldPos);
 
+    output.myWorldPosition = vertexWorldPos;
 	output.myPosition = vertexClipPos;
     output.myColor = anInput.myColor;
+    output.myUV = anInput.myUV;
 
 	return output;
 }

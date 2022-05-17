@@ -33,8 +33,8 @@ namespace Engine
 		template<class Manager>
 		Manager* Get();
 
-		template<class Manager>
-		Manager* AddManager();
+		template<class Manager, typename... Args>
+		Manager* AddManager(Args&&... someArgs);
 		
 	private:
 		float myTimeDelta;
@@ -60,11 +60,11 @@ namespace Engine
 		return nullptr;
 	}
 
-	template<class Manager>
-	inline Manager* System::AddManager()
+	template<class Manager, typename... Args>
+	inline Manager* System::AddManager(Args&&... someArgs)
 	{
 		size_t hashKey = typeid(Manager).hash_code();
-		myManagers[hashKey] = static_cast<void*>(new Manager());
+		myManagers[hashKey] = static_cast<void*>(new Manager(someArgs...));
 		return Get<Manager>();
 	}
 }

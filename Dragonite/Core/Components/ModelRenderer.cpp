@@ -1,8 +1,8 @@
 #include "ModelRenderer.h"
-
+#include <iostream>
 void ModelRenderer::OnAwake()
 {
-	
+
 	myGraphicsEngine = mySystem->GetGraphicsEngine();
 }
 
@@ -14,7 +14,13 @@ void ModelRenderer::OnUpdate(float /*aDeltaTime*/)
 	myGraphicsEngine->AddRenderInstruction(myModelInstance.get());
 }
 
-void ModelRenderer::LoadModel(const char* aModel, const char* aVertexShader, const char* aPixelShader)
+void ModelRenderer::LoadModel(const char* aModel, const Material aMaterial)
 {
-	myModelInstance = mySystem->Get<ModelFactory>()->CreateInstanceOf(aModel, aVertexShader, aPixelShader);
+	std::cout << "[Log]<ModelRenderer>: Attempting to create an instance of " << aModel << "!" << std::endl;
+	myModelInstance = mySystem->Get<ModelFactory>()->CreateInstanceOf(aModel, aMaterial);
+}
+
+Math::Vector4f& ModelRenderer::Color()
+{
+	return myModelInstance->myMaterial.myColor;
 }

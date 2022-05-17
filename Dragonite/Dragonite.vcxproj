@@ -164,7 +164,6 @@
     <ClCompile Include="Core\GameObject.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp" />
-    <ClCompile Include="Core\Graphics\Rendering\RenderObject.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\Scene.cpp" />
     <ClCompile Include="Core\System.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
     <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h" />
     <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h" />
-    <ClInclude Include="Core\Graphics\Rendering\RenderObject.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\Scene.h" />
     <ClInclude Include="Core\System.h" />
@@ -194,6 +192,7 @@
     <ClInclude Include="Core\Utilities\Math\Vector2.h" />
     <ClInclude Include="Core\Utilities\Math\Vector3.h" />
     <ClInclude Include="Core\Utilities\Math\Vector4.h" />
+    <ClInclude Include="Core\Utilities\STB\ImageImport.h" />
     <ClInclude Include="Core\Utilities\UtilityFunctions.h" />
     <ClInclude Include="EngineUtilities.h" />
   </ItemGroup>

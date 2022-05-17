@@ -1,9 +1,12 @@
 #include "Utilities/ShaderUtilities.hlsli"
 
+Texture2D aTexture : register(t0);
+SamplerState aSampler : register(s0);
+
 PixelOutput main(PixelInputType anInput)
 {
     PixelOutput output;
-    output.myColor = anInput.myColor + sin((anInput.myPosition / myTimeDelta) * 2.f) * myTotalTime;
+    output.myColor = trunc(sin((anInput.myPosition * myTimeDelta) / myTimeDelta) * myTotalTime * anInput.myColor);
 
     return output;
 }

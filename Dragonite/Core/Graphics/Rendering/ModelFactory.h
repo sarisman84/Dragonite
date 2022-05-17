@@ -6,7 +6,7 @@
 #include <vector>
 
 #define UNITCUBE "Cube"
-#define UNITPIRAMID "Piramid"
+#define UNITPYRAMID "Piramid"
 #define UNITICOSPHERE "IcoSphere"
 
 
@@ -16,6 +16,7 @@ namespace Engine
 }
 
 struct ID3D11Device;
+struct ID3D11DeviceContext;
 
 
 enum class BufferType
@@ -26,24 +27,30 @@ enum class BufferType
 class ModelFactory
 {
 public:
-	ModelFactory();
-	inline void FetchSystem(Engine::System* aSystem)
-	{
-		mySystem = aSystem;
-		InitializeBuffers();
-	}
-	ModelInsPtr CreateInstanceOf(std::string aKey, std::string aVertexShaderPath = "", std::string aPixelShaderPath = "");
+	ModelFactory(Engine::System* aSystem);
+
+	ModelInsPtr CreateInstanceOf(std::string aKey, const Material aMaterial);
 private:
-	void InitializeBuffers();
+	struct TempMeshData
+	{
+		std::vector<Vertex> myVertecies;
+		std::vector<unsigned int> myIndicies;
+	};
+
+
 	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);
 	HRESULT LoadPixelShader(ID3D11Device* aDevice, ComPtr<ID3D11PixelShader>& aShader, const char* aPath);
 	HRESULT LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputLayout>& aLayout, std::string someVertexData);
+	HRESULT LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, const int aSlot = 0);
 
-	HRESULT InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData);
+	HRESULT InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData, TempMeshData someTempData);
 
-	ModelPtr GetUnitCube();
-	ModelPtr GetUnitPiramid();
-	ModelPtr GetUnitIcoSphere();
+
+	ModelPtr InitializeModelOfType(std::vector<TempMeshData> someTempData);
+
+	TempMeshData GetUnitCube();
+	TempMeshData GetUnitPiramid();
+	TempMeshData GetUnitIcoSphere();
 
 	std::map<std::string, ModelPtr> myModelTypes;
 	std::vector<ModelInsPtr> myInstances;

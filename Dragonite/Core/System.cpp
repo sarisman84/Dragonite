@@ -61,7 +61,7 @@ void Engine::System::Shutdown()
 
 MSG Engine::System::StartRuntime()
 {
-	AddManager<ModelFactory>()->FetchSystem(this);
+	AddManager<ModelFactory>(this);
 	//AddManager<EntityManager>()->FetchSystem(this);
 
 
