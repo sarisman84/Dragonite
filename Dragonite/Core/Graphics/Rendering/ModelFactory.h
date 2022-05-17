@@ -32,7 +32,7 @@ public:
 		mySystem = aSystem;
 		InitializeBuffers();
 	}
-	ModelInstance* CreateInstanceOf(std::string aKey, std::string aVertexShaderPath = "", std::string aPixelShaderPath = "");
+	ModelInsPtr CreateInstanceOf(std::string aKey, std::string aVertexShaderPath = "", std::string aPixelShaderPath = "");
 private:
 	void InitializeBuffers();
 	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);
@@ -46,6 +46,6 @@ private:
 	ModelPtr GetUnitIcoSphere();
 
 	std::map<std::string, ModelPtr> myModelTypes;
-	std::vector<ModelInstance> myInstances;
+	std::vector<ModelInsPtr> myInstances;
 	Engine::System* mySystem;
 };

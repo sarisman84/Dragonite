@@ -34,7 +34,7 @@ public:
 
 
 
-		return std::dynamic_pointer_cast<Comp>(comp);
+		return std::dynamic_pointer_cast<Comp>(myComponents.back());
 	}
 
 

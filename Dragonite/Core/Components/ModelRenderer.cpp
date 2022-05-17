@@ -11,7 +11,7 @@ void ModelRenderer::OnUpdate(float /*aDeltaTime*/)
 	if (!myModelInstance) return;
 	myModelInstance->myTransform = *myTransform;
 
-	myGraphicsEngine->AddRenderInstruction(myModelInstance);
+	myGraphicsEngine->AddRenderInstruction(myModelInstance.get());
 }
 
 void ModelRenderer::LoadModel(const char* aModel, const char* aVertexShader, const char* aPixelShader)

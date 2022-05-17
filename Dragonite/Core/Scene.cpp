@@ -16,9 +16,9 @@ void Scene::Awake()
 	myCube->myTransform.SetPosition({ 0,0, 10 });
 
 
-	auto secondCube = myRuntime->CreateGameObject();
+	auto& secondCube = myRuntime->CreateGameObject();
 	secondCube->myName = "Another Cube";
-	secondCube->AddComponent<ModelRenderer>()->LoadModel(UNITCUBE);
+	secondCube->AddComponent<ModelRenderer>()->LoadModel(UNITPIRAMID);
 	secondCube->myTransform.SetPosition({ 1.5f, 0.f, 10 });
 
 	auto cam = myCamera->AddComponent<Camera>();
@@ -29,6 +29,7 @@ void Scene::Awake()
 void Scene::Update(float aTimeDelta)
 {
 	myCounter += aTimeDelta;
-	myCube->myTransform.SetPosition(myCube->myTransform.GetPosition() + Math::Vector3f(cos(myCounter), sin(myCounter), 0) * aTimeDelta);
+	myCube->myTransform.SetPosition(myCube->myTransform.GetPosition() + Math::Vector3f(cos(myCounter) * 2.f, sin(myCounter) * 2.f, 0) * aTimeDelta);
+	myCube->myTransform.SetRotation(Math::Vector4f{ -10.f, -10.f, 10.f, 10.f } *aTimeDelta);
 	//std::cout << aTimeDelta << "/" << myRuntime->GetSystem()->GetTotalTime() << std::endl;
 }

@@ -83,11 +83,35 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myObjectBuffer);
 	if (FAILED(result)) return false;
 
+
+
+	ID3D11Texture2D* depthBufferTexture;
+	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
+	depthBufferDesc.Width = static_cast<unsigned int>(aResolution.width);
+	depthBufferDesc.Height = static_cast<unsigned int>(aResolution.height);
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	result = myDevice->CreateTexture2D(&depthBufferDesc, nullptr, &depthBufferTexture);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	result = myDevice->CreateDepthStencilView(depthBufferTexture, nullptr, &myDepthBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	depthBufferTexture->Release();
+
+
+	
+
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
 	//backBufferTexture->Release();
-
-	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), nullptr);
+	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
@@ -112,7 +136,13 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 {
 	float color[4] = { 0.2f,0.2f,0.2f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
-
+	myContext->ClearDepthStencilView(
+		myDepthBuffer.Get(),
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
+		0
+	);
+	
 
 	D3D11_MAPPED_SUBRESOURCE resource;
 

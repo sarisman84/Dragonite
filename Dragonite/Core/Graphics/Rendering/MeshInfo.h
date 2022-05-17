@@ -67,3 +67,6 @@ private:
 	ComPtr<ID3D11PixelShader> myPixelShader;
 	ComPtr<ID3D11InputLayout> myInputLayout;
 };
+
+
+using ModelInsPtr = std::shared_ptr<ModelInstance>;

@@ -17,6 +17,7 @@ struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 struct ID3D11RenderTargetView;
 struct ID3D11Buffer;
+struct ID3D11DepthStencilView;
 
 class RenderObject;
 struct Shape;
@@ -86,6 +87,7 @@ namespace Engine
 
 			ComPtr<ID3D11Buffer> myObjectBuffer;
 			ComPtr<ID3D11Buffer> myFrameBuffer;
+			ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 
 			std::queue <ModelInstance*> myRenderInstructions;
 			std::vector<std::shared_ptr<RenderObject>> myRenderTargets;

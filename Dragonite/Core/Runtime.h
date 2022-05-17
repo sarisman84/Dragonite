@@ -20,7 +20,7 @@ namespace Engine
 		Runtime() = default;
 		std::vector<GameObjectPtr>& GetAllGameObjects() { return myEntities; }
 		inline System* GetSystem() { return mySystem; }
-		GameObject* CreateGameObject();
+		GameObjectPtr& CreateGameObject();
 	private:
 		Runtime(System* aCoreSystem);
 		std::vector<GameObjectPtr> myEntities;

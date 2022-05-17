@@ -16,7 +16,7 @@ Engine::Runtime::Runtime(System* aCoreSystem)
 	myScene->myRuntime = this;
 }
 
-GameObject* Engine::Runtime::CreateGameObject()
+GameObjectPtr& Engine::Runtime::CreateGameObject()
 {
 	GameObjectPtr obj = std::make_shared<GameObject>();
 	obj->mySystem = mySystem;
@@ -25,7 +25,7 @@ GameObject* Engine::Runtime::CreateGameObject()
 	size_t pos = myEntities.size();
 	myEntities.push_back(obj);
 
-	return myEntities[pos].get();
+	return myEntities[pos];
 }
 
 

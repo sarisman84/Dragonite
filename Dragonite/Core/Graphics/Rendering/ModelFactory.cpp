@@ -15,30 +15,30 @@ ModelFactory::ModelFactory()
 
 }
 
-ModelInstance* ModelFactory::CreateInstanceOf(std::string aKey, std::string aVertexShaderPath, std::string aPixelShaderPath)
+ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, std::string aVertexShaderPath, std::string aPixelShaderPath)
 {
 	ID3D11Device* device = mySystem->GetGraphicsEngine()->GetDevice();
-	ModelInstance ins;
+	ModelInsPtr ins = std::make_shared<ModelInstance>();
 	if (aVertexShaderPath != "")
-		ins.myVertexShaderPath = aVertexShaderPath.c_str();
+		ins->myVertexShaderPath = aVertexShaderPath.c_str();
 
 	if (aPixelShaderPath != "")
-		ins.myPixelShaderPath = aPixelShaderPath.c_str();
+		ins->myPixelShaderPath = aPixelShaderPath.c_str();
 
-	ins.myModel = myModelTypes[aKey];
+	ins->myModel = myModelTypes[aKey];
 	std::string someData;
 
-	if (FAILED(LoadVertexShader(device, ins.myVertexShader, ins.myVertexShaderPath, someData)))
+	if (FAILED(LoadVertexShader(device, ins->myVertexShader, ins->myVertexShaderPath, someData)))
 		return nullptr;
-	if (FAILED(LoadPixelShader(device, ins.myPixelShader, ins.myPixelShaderPath)))
+	if (FAILED(LoadPixelShader(device, ins->myPixelShader, ins->myPixelShaderPath)))
 		return nullptr;
 
-	if (FAILED(LoadInputLayout(device, ins.myInputLayout, someData)))
+	if (FAILED(LoadInputLayout(device, ins->myInputLayout, someData)))
 		return nullptr;
 
 	std::cout << "[Log]<ModelFactory>: Created Instance of " << aKey << "!" << std::endl;
 	myInstances.push_back(ins);
-	return &myInstances.back();
+	return myInstances.back();
 }
 
 void ModelFactory::InitializeBuffers()
@@ -170,17 +170,17 @@ ModelPtr ModelFactory::GetUnitPiramid()
 
 	data.myVertecies.push_back(Vertex{ Vector4f(0.f, 1.f, 0.f, 1.f), Vector4f(1.f, 0.f, 0.f, 1.f) });
 	data.myVertecies.push_back(Vertex{ Vector4f(1.f, 0.f, 1.f, 1.f), Vector4f(1.f, 1.f, 0.f, 1.f) });
-	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 1.f, 1.f, 1.f), Vector4f(0.f, 1.f, 0.f, 1.f) });
-	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 1.f, -1.f, 1.f), Vector4f(0.f ,0.f, 1.f, 1.f) });
-	data.myVertecies.push_back(Vertex{ Vector4f(1.f, 1.f, -1.f, 1.f), Vector4f(0.f, 1.f, 1.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 0.f, 1.f, 1.f), Vector4f(0.f, 1.f, 0.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(-1.f, 0.f, -1.f, 1.f), Vector4f(0.f ,0.f, 1.f, 1.f) });
+	data.myVertecies.push_back(Vertex{ Vector4f(1.f, 0.f, -1.f, 1.f), Vector4f(0.f, 1.f, 1.f, 1.f) });
 
 	data.myIndicies = {
-		0,1,4,
-		0,2,1,
-		0,3,2,
-		0,3,4,
+		1,4,0,
+		2,1,0,
+		3,2,0,
+		4,3,0,
+		3,4,1,
 		3,1,2,
-		4,1,3
 	};
 
 
