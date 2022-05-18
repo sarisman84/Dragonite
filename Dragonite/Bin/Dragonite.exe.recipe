@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Dragonite.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\AnimatedSinWave_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\ColorShader_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\ColorShader_VS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\SinWave_PS.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
