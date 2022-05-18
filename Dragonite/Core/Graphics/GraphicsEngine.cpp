@@ -179,7 +179,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 		1.0f,
 		0
 	);
-
+	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
 
 	D3D11_MAPPED_SUBRESOURCE resource;
 	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -206,7 +206,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 		D3D11_MAPPED_SUBRESOURCE oResource;
 		myContext->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &oResource);
 		ObjectBufferData objData;
-		objData.myObjectMatrix = instruction->myTransform.myTransformMatrix;
+		objData.myObjectMatrix = instruction->myTransform.GetMatrix();
 		memcpy(oResource.pData, &objData, sizeof(ObjectBufferData));
 
 		myContext->Unmap(myObjectBuffer.Get(), 0);
@@ -242,7 +242,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 			myContext->VSSetShader(instruction->myModel->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(instruction->myModel->myPixelShader.Get(), nullptr, 0);
-			myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
+			
 			myContext->PSSetShaderResources(instruction->myModel->myTexture.mySlot, 1, instruction->myModel->myTexture.myTextureResource.GetAddressOf());
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}

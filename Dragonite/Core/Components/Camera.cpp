@@ -4,7 +4,7 @@
 
 Math::Matrix4x4f Camera::GetClipSpaceMatrix()
 {
-	return  Math::Matrix4x4f::GetFastInverse(myTransform->myTransformMatrix) * myProjectionMatrix;
+	return  Math::Matrix4x4f::GetFastInverse(myTransform->GetMatrix()) * myProjectionMatrix;
 }
 
 void Camera::OnAwake()
@@ -19,6 +19,7 @@ void Camera::OnAwake()
 
 void Camera::OnUpdate(float aDeltaTime)
 {
+	aDeltaTime;
 	using namespace CommonUtilities;
 
 	float xInput = Keyboard::GetButton(Keyboard::Key::A) ? -1.f : Keyboard::GetButton(Keyboard::Key::D) ? 1.f : 0.f;
@@ -26,18 +27,22 @@ void Camera::OnUpdate(float aDeltaTime)
 	float yInput = Keyboard::GetButton(Keyboard::Key::Space) ? 1.f : Keyboard::GetButton(Keyboard::Key::Control) ? -1.f : 0.f;
 
 	auto mouseDelta = Mouse::GetMouseDelta();
-	if (mouseDelta.y != 0 || mouseDelta.x != 0)
-		myRotation = Vector4f{ mouseDelta.y , mouseDelta.x, 0, 0 };
-	else
-		myRotation = { 0,0,0,0 };
+	if (Mouse::GetButton(Mouse::Key::LeftMouseButton))
+		myRotation = Vector4f{ -mouseDelta.y , -mouseDelta.x, 0, 0 };
 
+	auto right = myTransform->Right();
+	auto up = myTransform->Up();
+	auto forward = myTransform->Forward();
 	//myInput = myInput.Lerp({ xInput, zInput }, aDeltaTime);
-	auto result = myTransform->GetRight() * xInput * myMovementSpeed + myTransform->GetUp() * yInput * myMovementSpeed + myTransform->GetForward() * zInput * myMovementSpeed;
-	result *= aDeltaTime;
-	myTransform->SetPosition(result + myTransform->GetPosition());
-	myTransform->SetRotation(myRotation);
+	auto result = right * xInput * myMovementSpeed + up * yInput * myMovementSpeed + forward * zInput * myMovementSpeed;
+	result;
+	auto oldPos = myTransform->Position();
+	myTransform->Position = myTransform->Position() + (result * aDeltaTime);
+	myTransform->Rotation = myTransform->Rotation() + myRotation * aDeltaTime;
 
-	
+
+
+
 }
 
 void Camera::UpdateProjectionMatrix()

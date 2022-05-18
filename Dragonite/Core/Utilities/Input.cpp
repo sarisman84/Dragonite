@@ -378,7 +378,7 @@ void CommonUtilities::Mouse::EndFrame()
 {
 	ourMouseDelta = { 0,0 };
 	auto diff = ourMousePosition - ourPastMousePosition;
-	ourMouseDelta = diff.GetNormalized().Cast<float>();
+	ourMouseDelta = diff.Cast<float>();
 	ourPastMousePosition = ourMousePosition;
 
 }

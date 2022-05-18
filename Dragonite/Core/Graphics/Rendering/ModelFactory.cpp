@@ -24,10 +24,10 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 	const char* pixelShaderPath = aMaterial.myPixelShader;
 
 
-		
 
 
-		
+
+
 
 	ins->myModel = myModelTypes[aKey];
 	std::string someData;
@@ -92,7 +92,11 @@ HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, cons
 	int width, height, channels;
 	unsigned char* img = stbi_load(aTexturePath, &width, &height, &channels, 0);
 
-	if (!img) return E_INVALIDARG;
+	if (!img)
+	{
+		std::cout << "[ERROR]<ModelFactory/LoadTexture>: STB Reported '" << stbi_failure_reason() << "'" << std::endl;
+		return E_INVALIDARG;
+	}
 
 	switch (channels)
 	{

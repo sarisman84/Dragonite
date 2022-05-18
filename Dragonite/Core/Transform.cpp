@@ -1,57 +1,71 @@
 #include "Transform.h"
+#include <iostream>
 
 
-void Transform::SetPosition(Vector3f aPosition)
+
+
+
+
+
+
+
+Transform::Transform()
 {
-	myTransformMatrix.SetRow(4, { aPosition.x, aPosition.y, aPosition.z, 1.f });
+	Position = Property<Vector3f>([this]()->Vector3f { return myPosition; }, [this](const Vector3f aValue)
+		{
+			myPosition = aValue;
+			myPositionMatrix = Matrix4x4f::CreateTransformMatrix(aValue);
+
+
+		});
+
+	Rotation = Property<Vector4f>([this]()->Vector4f { return myRotation; }, [this](const Vector4f aValue)
+		{
+
+			float pi = 3.141592653589793238f;
+			Matrix4x4f xRot = Matrix4x4f::CreateRotationAroundX(aValue.x * pi / 180.f);
+			Matrix4x4f yRot = Matrix4x4f::CreateRotationAroundY(aValue.y * pi / 180.f);
+			Matrix4x4f zRot = Matrix4x4f::CreateRotationAroundZ(aValue.z * pi / 180.f);
+
+
+			myRotation = aValue;
+			myRotationMatrix = xRot * yRot * zRot;
+
+		});
+
+	Size = Property<Vector3f>([this]()->Vector3f { return mySize; }, [this](const Vector3f aValue)
+		{
+			mySize = aValue;
+			myScaleMatrix = Matrix4x4f::CreateSizeMatrix(aValue);
+
+		});
+
+
+	Up = Property<Vector3f>([this]()->Vector3f
+		{
+			auto transformMatrix = GetMatrix();
+			Vector3f result = { transformMatrix(2,1), transformMatrix(2,2), transformMatrix(2,3) };
+			return result;
+		});
+
+
+	Right = Property<Vector3f>([this]()->Vector3f
+		{
+			auto transformMatrix = GetMatrix();
+			Vector3f result = { transformMatrix(1,1), transformMatrix(1,2), transformMatrix(1,3) };
+			return result;
+		});
+
+
+	Forward = Property<Vector3f>([this]()->Vector3f
+		{
+			auto transformMatrix = GetMatrix();
+			Vector3f result = { transformMatrix(3,1), transformMatrix(3,2), transformMatrix(3,3) };
+			return result;
+		});
 }
 
-Vector3f Transform::GetPosition()
+Matrix4x4f Transform::GetMatrix()
 {
-	auto result = myTransformMatrix.GetRow(4);
-	return { result.x, result.y, result.z };
-}
-
-void Transform::SetRotation(Vector4f aRotation)
-{
-	float pi = 3.141592653589793238f;
-
-	auto rotMatrix = Matrix4x4f::CreateRotationAroundX(aRotation.x * pi / 180.f);
-	rotMatrix = Matrix4x4f::CreateRotationAroundY(aRotation.y * pi / 180.f) * rotMatrix;
-	rotMatrix = Matrix4x4f::CreateRotationAroundZ(aRotation.z * pi / 180.f) * rotMatrix;
-
-	myTransformMatrix = rotMatrix * myTransformMatrix;
-	myRotation = aRotation;
-}
-
-Vector4f Transform::GetRotation()
-{
-	return myRotation;
-}
-
-void Transform::SetSize(Vector3f aSize)
-{
-	myTransformMatrix(1, 1) = aSize.x;
-	myTransformMatrix(2, 2) = aSize.y;
-	myTransformMatrix(3, 3) = aSize.z;
-}
-
-Vector3f Transform::GetSize()
-{
-	return { myTransformMatrix(1, 1) ,  myTransformMatrix(2, 2), myTransformMatrix(3, 3) };
-}
-
-Vector3f Transform::GetUp()
-{
-	return {myTransformMatrix(2,1), myTransformMatrix(2,2), myTransformMatrix(2,3) };
-}
-
-Vector3f Transform::GetRight()
-{
-	return { myTransformMatrix(1,1), myTransformMatrix(1,2), myTransformMatrix(1,3) };
-}
-
-Vector3f Transform::GetForward()
-{
-	return { myTransformMatrix(3,1), myTransformMatrix(3,2), myTransformMatrix(3,3) };;
+	return  myScaleMatrix * myRotationMatrix * myPositionMatrix;
 }

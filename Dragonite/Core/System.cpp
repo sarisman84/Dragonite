@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include "Utilities/Input.h"
+#include <iostream>
 
 LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
@@ -70,7 +71,7 @@ MSG Engine::System::StartRuntime()
 	myRuntimeState = SystemState::Run;
 	MSG msg = {};
 
-	
+
 
 	auto totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 	auto deltaTime = totalTime;
@@ -97,12 +98,44 @@ MSG Engine::System::StartRuntime()
 
 		myTimeDelta = deltaTime / 1000.f;
 		myTotalTime = totalTime / 1000.f;
-		runtime.Update(static_cast<float>(myTimeDelta));
+		runtime.Update(myTimeDelta);
 		myGraphicsEngine->DrawElements();
+		myFrameCounter++;
 		CommonUtilities::Mouse::EndFrame();
+
+		using namespace CommonUtilities;
+
+		if (GetForegroundWindow() == myWindowsInfo.myWindowInstance)
+			myLockMouseFlag = Keyboard::GetButtonDown(Keyboard::Key::Escape) ? !myLockMouseFlag : myLockMouseFlag;
+
+
+		if (myLockMouseFlag)
+		{
+			//SetCursorPos(myWindowsInfo.myResolution.width / 2, myWindowsInfo.myResolution.height / 2);
+
+			ContainCursor();
+			ShowCursor(false);
+		}
+
 	}
 
 	return msg;
+}
+
+void Engine::System::ContainCursor()
+{
+	auto mousePos = CommonUtilities::Mouse::GetMousePosition();
+	auto offset = 10;
+	std::cout << mousePos << std::endl;
+	if (mousePos.x < offset)
+		SetCursorPos(myWindowsInfo.myResolution.width - offset, mousePos.y);
+	if (mousePos.x > myWindowsInfo.myResolution.width - offset)
+		SetCursorPos(0, mousePos.y);
+
+	if (mousePos.y < offset)
+		SetCursorPos(mousePos.x, myWindowsInfo.myResolution.height - offset);
+	if (mousePos.y > myWindowsInfo.myResolution.height - offset)
+		SetCursorPos(mousePos.x, 0);
 }
 
 

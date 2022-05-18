@@ -26,7 +26,7 @@ namespace Engine
 		MSG StartRuntime();
 		inline Graphics::GraphicsEngine* GetGraphicsEngine() { return Get<Graphics::GraphicsEngine>(); }
 		inline WindowInfo& GetWindowsInfo() { return myWindowsInfo; }
-		
+
 		inline const float GetTimeDelta() { return myTimeDelta; };
 		inline const float GetTotalTime() { return myTotalTime; };
 
@@ -35,11 +35,25 @@ namespace Engine
 
 		template<class Manager, typename... Args>
 		Manager* AddManager(Args&&... someArgs);
-		
+
+
+		inline const int GetFPS()
+		{
+			if (myTimeDelta == 0) return 0;
+			auto result = static_cast<int>(myFrameCounter / myTotalTime);
+			if (result > 2000)
+				return 0;
+			return result;
+		}
+
 	private:
+		void ContainCursor();
+
+
+		bool myLockMouseFlag;
 		float myTimeDelta;
 		float myTotalTime;
-	
+		int myFrameCounter;
 
 		Graphics::GraphicsEngine* myGraphicsEngine;
 		WindowInfo myWindowsInfo;

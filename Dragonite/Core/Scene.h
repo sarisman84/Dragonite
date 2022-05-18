@@ -12,7 +12,6 @@ public:
 	Runtime* myRuntime;
 private:
 	GameObjectPtr myCamera;
-	GameObjectPtr myCube;
 	float myCounter;
-	std::shared_ptr<ModelRenderer> myCubeRenderer;
+	std::vector<GameObjectPtr> myObjectsToUpdate;
 };

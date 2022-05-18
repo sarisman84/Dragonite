@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include "Utilities/UtilityFunctions.h"
 namespace Math
 {
 
@@ -104,6 +105,20 @@ namespace Math
 			int w = aMinValue.w < aCurrentValue.w ? aMinValue.w : aMaxValue.w > aCurrentValue.w ? aMaxValue.w : aCurrentValue.w;
 
 			return Vector4<T>(x, y, z, w);
+		}
+
+
+
+		static Vector4<T> Lerp(Vector4<T> aLhs, Vector4<T> aRhs, float aValue)
+		{
+			Vector4<T> result;
+
+			result.x = Utilities::Lerp(aLhs.x, aRhs.x, aValue);
+			result.y = Utilities::Lerp(aLhs.y, aRhs.y, aValue);
+			result.z = Utilities::Lerp(aLhs.z, aRhs.z, aValue);
+			result.w = Utilities::Lerp(aLhs.w, aRhs.w, aValue);
+
+			return result;
 		}
 	};
 

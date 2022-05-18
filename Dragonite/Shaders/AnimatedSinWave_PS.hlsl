@@ -6,7 +6,7 @@ SamplerState aSampler : register(s0);
 PixelOutput main(PixelInputType anInput)
 {
     PixelOutput output;
-    output.myColor = trunc(sin((anInput.myPosition * myTimeDelta) / myTimeDelta) * myTotalTime * anInput.myColor);
+    output.myColor = aTexture.Sample(aSampler, (anInput.myPosition.xy + float2(1.0f, 1.0f)  * myTimeDelta)).rgba + myColor;
 
     return output;
 }
