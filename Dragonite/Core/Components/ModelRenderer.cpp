@@ -22,5 +22,7 @@ void ModelRenderer::LoadModel(const char* aModel, const Material aMaterial)
 
 Math::Vector4f& ModelRenderer::Color()
 {
-	return myModelInstance->myMaterial.myColor;
+	if (myModelInstance)
+		return myModelInstance->myMaterial.myColor;
+	return myPaddingVal;
 }

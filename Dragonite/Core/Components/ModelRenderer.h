@@ -18,5 +18,6 @@ public:
 private:
 	ModelInsPtr myModelInstance;
 	Engine::Graphics::GraphicsEngine* myGraphicsEngine;
+	Math::Vector4f myPaddingVal;
 };
 
