@@ -48,7 +48,7 @@ private:
 
 	ModelPtr InitializeModelOfType(std::vector<TempMeshData> someTempData);
 
-	TempMeshData GetUnitCube();
+	std::vector<TempMeshData> GetUnitCube();
 	TempMeshData GetUnitPiramid();
 	TempMeshData GetUnitIcoSphere();
 

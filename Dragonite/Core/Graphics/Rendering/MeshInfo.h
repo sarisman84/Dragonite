@@ -26,8 +26,9 @@ struct Texture
 
 struct Vertex
 {
-	Math::Vector4f myPosition;
+	Math::Vector3f myPosition;
 	Math::Vector4f myColor;
+	Math::Vector3f myNormal;
 	Math::Vector2f myUV;
 };
 

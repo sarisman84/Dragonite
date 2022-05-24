@@ -3,13 +3,15 @@ struct PixelInputType
     float4 myPosition : SV_POSITION;
     float4 myWorldPosition : POSITION;
     float4 myColor : COLOR;
+    float4 myNormal : NORMAL;
     float2 myUV : TEXCOORD;
 };
 
 struct VertexInputType
 {
-    float4 myPosition : POSITION;
+    float3 myPosition : POSITION;
     float4 myColor : COLOR;
+    float3 myNormal : NORMAL;
     float2 myUV : TEXCOORD;
 };
 
@@ -34,6 +36,13 @@ cbuffer ObjectBuffer : register(b1)
 
 cbuffer MaterialBuffer : register(b2)
 {
-    float4 myColor;
+    float4 myMaterialColor;
+}
+
+cbuffer GlobalLightBuffer : register(b3)
+{
+    float4 myLightDirection;
+    float4 myDirLightColor;
+    float4 myAmbientColor;
 }
 

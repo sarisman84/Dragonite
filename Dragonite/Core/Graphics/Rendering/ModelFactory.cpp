@@ -79,8 +79,9 @@ HRESULT ModelFactory::LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputL
 {
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
@@ -220,90 +221,96 @@ ModelPtr ModelFactory::InitializeModelOfType(std::vector<TempMeshData> someTempD
 	return model;
 }
 
-ModelFactory::TempMeshData ModelFactory::GetUnitCube()
+std::vector<ModelFactory::TempMeshData> ModelFactory::GetUnitCube()
 {
+	TempMeshData cube;
 
-	TempMeshData data;
-	data.myVertecies = {
-			  Vertex{Vector4f{0.5f,  -0.5f,  0.5f,  1},  Vector4f{1, 1, 1, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{0.5f,   0.5f,  0.5f,  1},  Vector4f{1, 1, 1, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{-0.5f,  0.5f,  0.5f,  1},  Vector4f{1, 1, 1, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{-0.5f, -0.5f,  0.5f,  1},  Vector4f{1, 1, 1, 1}, Vector2f{1, 1}},
-			  Vertex{Vector4f{-0.5f, -0.5f,  0.5f,  1},  Vector4f{1, 0, 0, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{-0.5f,  0.5f,  0.5f,  1},  Vector4f{1, 0, 0, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{-0.5f,  0.5f, -0.5f,  1},  Vector4f{1, 0, 0, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{-0.5f, -0.5f, -0.5f , 1},  Vector4f{1, 0, 0, 1}, Vector2f{1, 1}},
-			  Vertex{Vector4f{-0.5f, -0.5f, -0.5f , 1},  Vector4f{0, 1, 0, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{-0.5f,  0.5f, -0.5f,  1},  Vector4f{0, 1, 0, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{0.5f,   0.5f, -0.5f,  1},  Vector4f{0, 1, 0, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{0.5f,  -0.5f, -0.5f,  1},  Vector4f{0, 1, 0, 1}, Vector2f{1, 1}},
-			  Vertex{Vector4f{0.5f,  -0.5f, -0.5f,  1},  Vector4f{0, 0, 1, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{0.5f,   0.5f, -0.5f,  1},  Vector4f{0, 0, 1, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{0.5f,   0.5f,  0.5f,  1},  Vector4f{0, 0, 1, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{0.5f,  -0.5f,  0.5f,  1},  Vector4f{0, 0, 1, 1}, Vector2f{1, 1}},
-			  Vertex{Vector4f{0.5f,   0.5f,  0.5f,  1},  Vector4f{1, 1, 0, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{0.5f,   0.5f, -0.5f,  1},  Vector4f{1, 1, 0, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{-0.5f,  0.5f, -0.5f,  1},  Vector4f{1, 1, 0, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{-0.5f,  0.5f,  0.5f,  1},  Vector4f{1, 1, 0, 1}, Vector2f{1, 1}},
-			  Vertex{Vector4f{-0.5f, -0.5f,  0.5f,  1},  Vector4f{1, 0, 1, 1}, Vector2f{0, 1}},
-			  Vertex{Vector4f{-0.5f, -0.5f, -0.5f , 1},  Vector4f{1, 0, 1, 1}, Vector2f{0, 0}},
-			  Vertex{Vector4f{0.5f,  -0.5f, -0.5f,  1},  Vector4f{1, 0, 1, 1}, Vector2f{1, 0}},
-			  Vertex{Vector4f{0.5f,  -0.5f,  0.5f,  1},  Vector4f{1, 0, 1, 1}, Vector2f{1, 1}},
 
+	cube.myVertecies = {
+		{{-0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},	UnitVector3::left<float>,  {1, 1}},
+		{{-0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {1, 0}},
+		{{-0.5f,  0.5f,   0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {0, 0}},
+		{{-0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {0, 1}},
+		{{0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},UnitVector3::right<float>,  {1, 1}},
+		{{0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {1, 0}},
+		{{0.5f,  0.5f,   0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {0, 0}},
+		{{0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {0, 1}},
+		{{-0.5f,  -0.5f, 0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {1, 1}},
+		{{0.5f,  -0.5f,  0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {0, 1}},
+		{{0.5f,  0.5f,   0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {0, 0}},
+		{{-0.5f,  0.5f,  0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {1, 0}},
+		{{-0.5f,  -0.5f,  -0.5f},  {0, 0, 1, 1},UnitVector3::backward<float>,  {1, 1}},
+		{{0.5f,  -0.5f,   -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {0, 1}},
+		{{0.5f,  0.5f,    -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {0, 0}},
+		{{-0.5f,  0.5f,   -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {1, 0}},
+		{{-0.5f,  0.5f,  -0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {1, 1}},
+		{{0.5f,   0.5f,  -0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {0, 1}},
+		{{0.5f,   0.5f,   0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {0, 0}},
+		{{-0.5f,  0.5f,   0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {1, 0}},
+		{{-0.5f, -0.5f,   -0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {1, 1}},
+		{{0.5f,  -0.5f,    -0.5f}, {0, 1, 0, 1}, UnitVector3::down<float>, {0, 1}},
+		{{0.5f,  -0.5f,    0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {0, 0}},
+		{{-0.5f, -0.5f,    0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {1, 0}},
 	};
 
-	data.myIndicies =
-	{
-	  0, 1, 2,
-	  0, 2, 3,
-	  4, 5, 6,
-	  4, 6, 7,
-	  8, 9, 10,
-	  8, 10, 11,
-	  12, 13, 14,
-	  12, 14, 15,
-	  16, 17, 18,
-	  16, 18, 19,
-	  20, 21, 22,
-	  20, 22, 23
+	cube.myIndicies = {
+		0,1,3,
+		1,2,3,
+		7,5,4,
+		7,6,5,
+		8,9,11,
+		9,10,11,
+		15,13,12,
+		15,14,13,
+		19,17,16,
+		19,18,17,
+		20,21,23,
+		21,22,23,
 	};
 
 
-	return data;
+
+
+
+
+
+
+
+	return { cube };
 }
 
 ModelFactory::TempMeshData ModelFactory::GetUnitPiramid()
 {
 	TempMeshData data;
 
-	auto tip = Vector4f(0.f, 0.5f, 0.f, 1.f);
-	auto rbCorner = Vector4f(0.5f, -0.5f, 0.5f, 1.f);
-	auto lbCorner = Vector4f(-0.5f, -0.5f, 0.5f, 1.f);
-	auto lfCorner = Vector4f(-0.5f, -0.5f, -0.5f, 1.f);
-	auto rfCorner = Vector4f(0.5f, -0.5f, -0.5f, 1.f);
+	auto tip = Vector3f(0.f, 0.5f, 0.f);
+	auto rbCorner = Vector3f(0.5f, -0.5f, 0.5f);
+	auto lbCorner = Vector3f(-0.5f, -0.5f, 0.5f);
+	auto lfCorner = Vector3f(-0.5f, -0.5f, -0.5f);
+	auto rfCorner = Vector3f(0.5f, -0.5f, -0.5f);
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1), Vector2f(0, 0) }); //0
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //0
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1), Vector2f(0, 0) }); //3
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //3
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1), Vector2f(0, 0) }); //6
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //6
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1), Vector2f(0, 0) }); //9
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //9
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(1, 0) });
 
 
 
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 1) }); //12
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1), Vector2f(1, 0) });
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 0) });
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1), Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(1, 1) }); //12
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(0, 0) });
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
 
 	data.myIndicies = {
 		2,1,0, //R

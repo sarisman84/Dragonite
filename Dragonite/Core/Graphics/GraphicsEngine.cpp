@@ -5,7 +5,7 @@
 #include "Utilities/Math/Vector2.h"
 #include "Components/Camera.h"
 #include "Rendering/MeshInfo.h"
-#define REPORT_DX_WARNINGS
+//#define REPORT_DX_WARNINGS
 
 
 
@@ -87,6 +87,11 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HW
 
 	bufferDesc.ByteWidth = sizeof(MaterialBufferData);
 	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myMaterialBuffer);
+	if (FAILED(result)) return false;
+
+
+	bufferDesc.ByteWidth = sizeof(GlobalLightBufferData);
+	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myGlobalLightBuffer);
 	if (FAILED(result)) return false;
 
 
@@ -181,50 +186,32 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	);
 	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
 
-	D3D11_MAPPED_SUBRESOURCE resource;
-	myContext->Map(myFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	FrameBufferData fData;
+	fData.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
+	fData.myTimeDelta = mySystem->GetTimeDelta();
+	fData.myTotalTime = mySystem->GetTotalTime();
 
-	FrameBufferData data;
-	data.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
-	data.myTimeDelta = mySystem->GetTimeDelta();
-	data.myTotalTime = mySystem->GetTotalTime();
-	memcpy(resource.pData, &data, sizeof(FrameBufferData));
+	UpdateConstantBuffer(myFrameBuffer, &fData, sizeof(FrameBufferData), 0, &ID3D11DeviceContext::VSSetConstantBuffers, &ID3D11DeviceContext::PSSetConstantBuffers);
 
-	myContext->Unmap(myFrameBuffer.Get(), 0);
-	myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
-	myContext->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
+	GlobalLightBufferData lData;
+	lData.myAmbientLight = { 1.f, 0.5f, 0.5f ,1.f };
+	lData.myLightDirection = { -1.f, -1.f, -1.f, 0.f };
+	lData.myLightColor = { 0.5f, 0.5f, 0.f, 1.f };
+	UpdateConstantBuffer(myGlobalLightBuffer, &lData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 
 	while (!myRenderInstructions.empty())
 	{
 		auto instruction = myRenderInstructions.front();
 
+		ObjectBufferData oData;
+		oData.myObjectMatrix = instruction->myTransform.GetMatrix();
+		UpdateConstantBuffer(myObjectBuffer, &oData, sizeof(ObjectBufferData), 1, &ID3D11DeviceContext::VSSetConstantBuffers);
 
-
-
-		D3D11_MAPPED_SUBRESOURCE oResource;
-		myContext->Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &oResource);
-		ObjectBufferData objData;
-		objData.myObjectMatrix = instruction->myTransform.GetMatrix();
-		memcpy(oResource.pData, &objData, sizeof(ObjectBufferData));
-
-		myContext->Unmap(myObjectBuffer.Get(), 0);
-
-		myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
-
-
-
-
-		D3D11_MAPPED_SUBRESOURCE mResource;
-		myContext->Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mResource);
 		MaterialBufferData mData;
 		mData.myColor = instruction->myMaterial.myColor;
-		memcpy(mResource.pData, &objData, sizeof(MaterialBufferData));
-
-		myContext->Unmap(myMaterialBuffer.Get(), 0);
-
-		myContext->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
+		UpdateConstantBuffer(myMaterialBuffer, &mData, sizeof(MaterialBufferData), 2, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 
 		myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -234,7 +221,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 		unsigned int offset = 0;
 
 
-		
+
 		for (auto& mesh : instruction->myModel->myMesh)
 		{
 			myContext->IASetVertexBuffers(0, 1, mesh.myVertexBuffer.GetAddressOf(), &stride, &offset);
@@ -242,12 +229,10 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 			myContext->VSSetShader(instruction->myModel->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(instruction->myModel->myPixelShader.Get(), nullptr, 0);
-			
+
 			myContext->PSSetShaderResources(instruction->myModel->myTexture.mySlot, 1, instruction->myModel->myTexture.myTextureResource.GetAddressOf());
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}
-
-
 
 		myRenderInstructions.pop();
 
@@ -257,6 +242,22 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 
 	mySwapChain->Present(1, 0);
+}
+
+void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
+	void (ID3D11DeviceContext:: * anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
+	void (ID3D11DeviceContext:: * anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer))
+{
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	myContext->Map(aConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, someData, someDataSize);
+	myContext->Unmap(aConstantBuffer.Get(), 0);
+
+	if (anOnConstantBufferUpdateCallback != 0)
+		(myContext.Get()->*anOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
+	if (anotherOnConstantBufferUpdateCallback != 0)
+		(myContext.Get()->*anotherOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
 }
 
 

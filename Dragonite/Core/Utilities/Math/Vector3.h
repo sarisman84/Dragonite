@@ -120,6 +120,10 @@ namespace Math
 			return result;
 		}
 
+
+
+
+
 	};
 
 	template <class T>
@@ -216,4 +220,21 @@ namespace Math
 	using Vector3f = Vector3<float>;
 	using Vector3i = Vector3<int>;
 	using Vector3ui = Vector3<unsigned int>;
+	namespace UnitVector3
+	{
+		template<class Value>
+		inline static const Vector3<Value> right = Vector3<Value>(1.f, 0.f, 0.f);
+		template<class Value>
+		inline static const Vector3<Value> left = Vector3<Value>(-1.f, 0.f, 0.f);
+		template<class Value>
+		inline static const Vector3<Value> up = Vector3<Value>(0.f, 1.f, 0.f);
+		template<class Value>
+		inline static const Vector3<Value> down = Vector3<Value>(0.f, -1.f, 0.f);
+		template<class Value>
+		inline static const Vector3<Value> forward = Vector3<Value>(0.f, 0.f, 1.f);
+		template<class Value>
+		inline static const Vector3<Value> backward = Vector3<Value>(0.f, 0.f, -1.f);
+	}
+	
+
 }

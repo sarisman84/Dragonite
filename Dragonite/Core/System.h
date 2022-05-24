@@ -48,7 +48,9 @@ namespace Engine
 
 	private:
 		void ContainCursor();
-
+		inline size_t GetManagerID();
+		template<class Manager>
+		inline size_t GetManagerTypeID();
 
 		bool myLockMouseFlag;
 		float myTimeDelta;
@@ -58,17 +60,18 @@ namespace Engine
 		Graphics::GraphicsEngine* myGraphicsEngine;
 		WindowInfo myWindowsInfo;
 		SystemState myRuntimeState;
-		std::map<size_t, void*> myManagers;
+		std::unordered_map<size_t, void*> myManagers;
 	};
 
 
 	template<class Manager>
 	inline Manager* System::Get()
 	{
-		size_t hashKey = typeid(Manager).hash_code();
+		size_t key = GetManagerTypeID<Manager>();
+
 		for (auto& pair : myManagers)
 		{
-			if (hashKey == pair.first)
+			if (key == pair.first)
 				return static_cast<Manager*>(pair.second);
 		}
 		return nullptr;
@@ -77,9 +80,24 @@ namespace Engine
 	template<class Manager, typename... Args>
 	inline Manager* System::AddManager(Args&&... someArgs)
 	{
-		size_t hashKey = typeid(Manager).hash_code();
-		myManagers[hashKey] = static_cast<void*>(new Manager(someArgs...));
+		size_t key = GetManagerTypeID<Manager>();
+		myManagers[key] = static_cast<void*>(new Manager(someArgs...));
 		return Get<Manager>();
+	}
+
+
+
+	inline size_t Engine::System::GetManagerID()
+	{
+		static size_t counter;
+		return counter++;
+	}
+
+	template<class Manager>
+	inline size_t Engine::System::GetManagerTypeID()
+	{
+		static size_t key = GetManagerID();
+		return key;
 	}
 }
 

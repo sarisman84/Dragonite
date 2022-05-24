@@ -44,6 +44,13 @@ struct MaterialBufferData
 	Math::Vector4f myColor;
 };
 
+struct GlobalLightBufferData
+{
+	Math::Vector4f myLightDirection;
+	Math::Vector4f myLightColor;
+	Math::Vector4f myAmbientLight;
+};
+
 
 namespace Engine
 {
@@ -76,6 +83,12 @@ namespace Engine
 			inline ComPtr<ID3D11Buffer>& ObjectBuffer() { return myObjectBuffer; }
 			inline ComPtr<ID3D11Buffer>& FrameBuffer() { return myFrameBuffer; }
 
+
+
+			void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot, 
+				void (ID3D11DeviceContext::*anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const * aConstantBuffer),
+				void (ID3D11DeviceContext::* anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer) = nullptr);
+			
 			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
 			
 			//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
@@ -91,7 +104,11 @@ namespace Engine
 			ComPtr<ID3D11Buffer> myObjectBuffer;
 			ComPtr<ID3D11Buffer> myFrameBuffer;
 			ComPtr<ID3D11Buffer> myMaterialBuffer;
+			ComPtr<ID3D11Buffer> myGlobalLightBuffer;
 			ComPtr<ID3D11DepthStencilView> myDepthBuffer;
+
+
+
 
 			ComPtr<ID3D11SamplerState> mySamplerState;
 
