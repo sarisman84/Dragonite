@@ -29,6 +29,8 @@ struct Vertex
 	Math::Vector3f myPosition;
 	Math::Vector4f myColor;
 	Math::Vector3f myNormal;
+	Math::Vector3f myTangent;
+	Math::Vector3f myBiNormal;
 	Math::Vector2f myUV;
 };
 
@@ -37,6 +39,7 @@ struct Material
 {
 	Math::Vector4f myColor;
 	const char* myTexturePath;
+	const char* myNormalMapPath;
 	const char* myVertexShader;
 	const char* myPixelShader;
 };
@@ -52,7 +55,8 @@ public:
 private:
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 	ComPtr<ID3D11Buffer> myIndexBuffer;
-
+	Texture myAlbedoMap;
+	Texture myNormalMap;
 };
 
 
@@ -66,7 +70,7 @@ private:
 	ComPtr<ID3D11VertexShader> myVertexShader;
 	ComPtr<ID3D11PixelShader> myPixelShader;
 	ComPtr<ID3D11InputLayout> myInputLayout;
-	Texture myTexture;
+	
 
 };
 

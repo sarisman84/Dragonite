@@ -225,7 +225,8 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 			myContext->VSSetShader(instruction->myModel->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(instruction->myModel->myPixelShader.Get(), nullptr, 0);
 
-			myContext->PSSetShaderResources(instruction->myModel->myTexture.mySlot, 1, instruction->myModel->myTexture.myTextureResource.GetAddressOf());
+			myContext->PSSetShaderResources(mesh.myAlbedoMap.mySlot, 1, mesh.myAlbedoMap.myTextureResource.GetAddressOf());
+			myContext->PSSetShaderResources(mesh.myNormalMap.mySlot, 1, mesh.myNormalMap.myTextureResource.GetAddressOf());
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}
 

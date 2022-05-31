@@ -77,6 +77,8 @@ namespace Engine
 				return myLightData;
 			}
 
+
+
 			inline void SetRenderCamera(Camera* aCamera) { myRenderCamera = aCamera; }
 			inline Camera* GetRenderCamera() noexcept { return myRenderCamera; }
 
