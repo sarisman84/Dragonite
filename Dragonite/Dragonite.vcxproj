@@ -188,6 +188,7 @@
     <ClInclude Include="Core\Utilities\Math\Matrix.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix3x3.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix4x4.h" />
+    <ClInclude Include="Core\Utilities\Math\Noise.h" />
     <ClInclude Include="Core\Utilities\Math\Vector.h" />
     <ClInclude Include="Core\Utilities\Math\Vector2.h" />
     <ClInclude Include="Core\Utilities\Math\Vector3.h" />

@@ -73,6 +73,10 @@ namespace Engine
 				myRenderInstructions.push(anInstance);
 			}
 
+			inline GlobalLightBufferData& GlobalLightData(){
+				return myLightData;
+			}
+
 			inline void SetRenderCamera(Camera* aCamera) { myRenderCamera = aCamera; }
 			inline Camera* GetRenderCamera() noexcept { return myRenderCamera; }
 
@@ -117,6 +121,8 @@ namespace Engine
 			//std::vector<std::shared_ptr<Mesh>> myMeshes;
 			System* mySystem;
 			Camera* myRenderCamera;
+
+			GlobalLightBufferData myLightData;
 		};
 
 

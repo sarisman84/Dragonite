@@ -3,7 +3,7 @@
 #include <d3d11.h>  
 #include <fstream>
 #include <iostream>
-
+#include "Utilities/Math/Noise.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Utilities/STB/ImageImport.h"
@@ -14,6 +14,7 @@ ModelFactory::ModelFactory(Engine::System* aSystem)
 	myModelTypes[UNITCUBE] = InitializeModelOfType({ GetUnitCube() });
 	myModelTypes[UNITPYRAMID] = InitializeModelOfType({ GetUnitPiramid() });
 	myModelTypes[UNITICOSPHERE] = InitializeModelOfType({ GetUnitIcoSphere() });
+	myModelTypes[GEN_TERRAIN] = InitializeModelOfType({ GetProcedualTerrain() });
 }
 
 ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMaterial)
@@ -328,4 +329,92 @@ ModelFactory::TempMeshData ModelFactory::GetUnitPiramid()
 ModelFactory::TempMeshData ModelFactory::GetUnitIcoSphere()
 {
 	return TempMeshData();
+}
+
+std::vector<float> ModelFactory::GenerateNoise()
+{
+	int resolution = 16;
+	std::vector<float> val;
+	for (size_t i = 0; i < resolution * resolution; i++)
+	{
+		val.push_back(RandomFloat());
+	}
+
+
+	size_t upsampleAmm = 6;
+
+	for (size_t i = 1; i <= upsampleAmm; i++)
+	{
+		AddNoise(val, powf(0.25f, i));
+		val = Upsample2X(val, resolution);
+		resolution *= 2;
+	}
+
+	return val;
+}
+
+std::vector<ModelFactory::TempMeshData> ModelFactory::GetProcedualTerrain()
+{
+	auto noiseMap = GenerateNoise();
+	//Grid Size (Width, Length)
+	TempMeshData data;
+
+
+	int width = sqrt(static_cast<int>(noiseMap.size()));
+	int height = sqrt(static_cast<int>(noiseMap.size()));
+
+	//Generate vertex points
+	for (int y = -(height / 2); y < height / 2; ++y)
+	{
+		for (int x = -(width / 2); x < width / 2; ++x)
+		{
+			int index = ((x + (width / 2)) + width * (y + (height / 2)));
+			float uvX = (static_cast<float>(x) + (static_cast<float>(width) / 2.f)) / static_cast<float>(noiseMap.size());
+			float uvY = (static_cast<float>(y) + (static_cast<float>(height) / 2.f)) / static_cast<float>(noiseMap.size());
+			Vertex vertex;
+			vertex.myPosition = Vector3f{ static_cast<float>(x), noiseMap[index] * 50.f, static_cast<float>(y) };
+			vertex.myUV = { uvX ,uvY };
+			vertex.myColor = { 1,1,1,1 };
+			data.myVertecies.push_back(vertex);
+		}
+	}
+
+	//Setup Normal and Indicies
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			//Calculate indicies
+			int nY = y + 1;
+			int nX = x + 1;
+
+			int i_a = x + width * y; // 0
+			int i_b = x + width * nY; // 1
+			int i_c = nX + width * nY; // 2
+			int i_d = nX + width * y; // 3
+
+
+			data.myIndicies.push_back(i_a);
+			data.myIndicies.push_back(i_b);
+			data.myIndicies.push_back(i_c);
+
+			data.myIndicies.push_back(i_c);
+			data.myIndicies.push_back(i_d);
+			data.myIndicies.push_back(i_a);
+
+
+			//Calculate normals
+			auto vectorBetweenAandB = (data.myVertecies[i_b].myPosition - data.myVertecies[i_a].myPosition);
+			auto vectorBetweenAandD = (data.myVertecies[i_d].myPosition - data.myVertecies[i_a].myPosition);
+
+			auto normal = vectorBetweenAandB.Cross(vectorBetweenAandD);
+
+			data.myVertecies[i_a].myNormal = normal.GetNormalized();
+
+		}
+	}
+
+
+
+	return { data };
 }

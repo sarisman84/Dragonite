@@ -12,7 +12,7 @@ void Camera::OnAwake()
 	myFOV = 90.f;
 	myNearPlane = 0.1f;
 	myFarPlane = 10000.f;
-	myMovementSpeed = 5.f;
+	myMovementSpeed = 15.f;
 	UpdateProjectionMatrix();
 
 }

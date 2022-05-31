@@ -8,7 +8,7 @@
 #define UNITCUBE "Cube"
 #define UNITPYRAMID "Piramid"
 #define UNITICOSPHERE "IcoSphere"
-
+#define GEN_TERRAIN "Procedual Terrain"
 
 namespace Engine
 {
@@ -51,6 +51,9 @@ private:
 	std::vector<TempMeshData> GetUnitCube();
 	TempMeshData GetUnitPiramid();
 	TempMeshData GetUnitIcoSphere();
+
+	std::vector<float> GenerateNoise();
+	std::vector<TempMeshData> GetProcedualTerrain();
 
 	std::map<std::string, ModelPtr> myModelTypes;
 	std::vector<ModelInsPtr> myInstances;

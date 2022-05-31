@@ -47,6 +47,9 @@
     <Filter Include="Utilities\stb">
       <UniqueIdentifier>{2c964b4b-8ceb-42c7-b158-542114e8d614}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\Math\Noise">
+      <UniqueIdentifier>{b0b7f210-84f8-44bd-9a79-abd9b8f28c23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utilities\STB\ImageImport.h">
       <Filter>Utilities\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Math\Noise.h">
+      <Filter>Utilities\Math\Noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

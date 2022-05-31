@@ -168,7 +168,7 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HW
 
 
 
-
+	myLightData.myAmbientLight = { 1,1,1,1 };
 
 	return true;
 }
@@ -193,12 +193,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	UpdateConstantBuffer(myFrameBuffer, &fData, sizeof(FrameBufferData), 0, &ID3D11DeviceContext::VSSetConstantBuffers, &ID3D11DeviceContext::PSSetConstantBuffers);
 
-
-	GlobalLightBufferData lData;
-	lData.myAmbientLight = { 1.f, 0.5f, 0.5f ,1.f };
-	lData.myLightDirection = { -1.f, -1.f, -1.f, 0.f };
-	lData.myLightColor = { 0.5f, 0.5f, 0.f, 1.f };
-	UpdateConstantBuffer(myGlobalLightBuffer, &lData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
+	UpdateConstantBuffer(myGlobalLightBuffer, &myLightData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 
 	while (!myRenderInstructions.empty())
