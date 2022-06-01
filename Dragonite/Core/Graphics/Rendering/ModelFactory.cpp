@@ -44,13 +44,33 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 
 
 
-	for (size_t i = 0; i < ins->myModel->myMesh.size(); i++)
+	for (size_t m = 0; m < ins->myModel->myMesh.size(); m++)
 	{
-		if (FAILED(LoadTexture(device, ins->myModel->myMesh[i].myAlbedoMap, aMaterial.myTexturePath, 0)))
-			return nullptr;
+		ins->myModel->myMesh[m].myTextureBuffer.resize(aMaterial.myTextureMapInfo.size());
+		for (size_t t = 0; t < aMaterial.myTextureMapInfo.size(); t++)
+		{
+			auto texture = aMaterial.myTextureMapInfo[t];
 
-		if (FAILED(LoadTexture(device, ins->myModel->myMesh[i].myNormalMap, aMaterial.myNormalMapPath, 1, true)))
-			return nullptr;
+
+			switch (texture.myType)
+			{
+			case Texture::Type::Albedo:
+			{
+				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t))))
+					return nullptr;
+
+
+			}
+			break;
+			case Texture::Type::Normal:
+				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t), true)))
+					return nullptr;
+				break;
+
+			}
+
+		}
+
 	}
 
 
@@ -391,7 +411,7 @@ std::vector<ModelFactory::TempMeshData> ModelFactory::GetProcedualTerrain()
 			float uvX = (static_cast<float>(x) + (static_cast<float>(width) / 2.f)) / static_cast<float>(width);
 			float uvY = (static_cast<float>(y) + (static_cast<float>(height) / 2.f)) / static_cast<float>(height);
 			Vertex vertex;
-			vertex.myPosition = Vector3f{ static_cast<float>(x), noiseMap[index] * 50.f, static_cast<float>(y) };
+			vertex.myPosition = Vector3f{ static_cast<float>(x), noiseMap[index] * 150.f, static_cast<float>(y) };
 			vertex.myUV = { uvX * 10.f ,uvY * 10.f };
 			vertex.myColor = { 1,1,1,1 };
 			data.myVertecies.push_back(vertex);

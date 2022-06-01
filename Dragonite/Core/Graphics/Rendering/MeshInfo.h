@@ -20,6 +20,11 @@ namespace Engine
 
 struct Texture
 {
+	enum class Type
+	{
+		Albedo, Normal
+	};
+	Type myType;
 	int mySlot;
 	ComPtr<ID3D11ShaderResourceView> myTextureResource;
 };
@@ -37,9 +42,13 @@ struct Vertex
 
 struct Material
 {
+	struct TextureInfo
+	{
+		const char* myTexturePath;
+		Texture::Type myType;
+	};
 	Math::Vector4f myColor;
-	const char* myTexturePath;
-	const char* myNormalMapPath;
+	std::vector<TextureInfo> myTextureMapInfo;
 	const char* myVertexShader;
 	const char* myPixelShader;
 };
@@ -55,8 +64,7 @@ public:
 private:
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 	ComPtr<ID3D11Buffer> myIndexBuffer;
-	Texture myAlbedoMap;
-	Texture myNormalMap;
+	std::vector<Texture> myTextureBuffer;
 };
 
 

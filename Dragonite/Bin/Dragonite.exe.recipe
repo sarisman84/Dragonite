@@ -18,6 +18,9 @@
     <ContentFile>
       <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\SinWave_PS.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\C++\Dragonite\Dragonite\Bin\Shaders\TerrainShader_PS.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
