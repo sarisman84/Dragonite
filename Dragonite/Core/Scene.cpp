@@ -41,7 +41,7 @@ void Scene::Awake()
 
 	myRuntime->GetSystem()->GetGraphicsEngine()->SetRenderCamera(cam.get());
 
-	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myAmbientLight = { 0.1f,0.25f,0.1f,1 };
+	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myAmbientLight = { 0.75f,0.0f,0.75f,1 };
 	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightColor = { 0.75f, 0.75f, 0.75f, 1.f };
 	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection = { 0.f, -1.f, 0.f, 0.f };
 }

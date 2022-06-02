@@ -24,8 +24,6 @@ float4 DrawTexture(PixelInputType anInput, Texture2D anAlbedoMap, Texture2D aNor
     
     float4 ambientColor = myMaterialColor * myAmbientColor;
     float4 dirColor = myMaterialColor * myDirLightColor * max(ambientColor, dot(-myLightDirection, float4(normal, 0.f)));
- 
-    
     
     return anAlbedoMap.Sample(aSampler, anInput.myUV.xy).rgba * dirColor;
     
