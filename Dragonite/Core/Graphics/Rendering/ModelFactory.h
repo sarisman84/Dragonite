@@ -8,7 +8,7 @@
 #define UNITCUBE "Cube"
 #define UNITPYRAMID "Piramid"
 #define UNITICOSPHERE "IcoSphere"
-
+#define GEN_TERRAIN "Procedual Terrain"
 
 namespace Engine
 {
@@ -23,6 +23,7 @@ enum class BufferType
 {
 	Vertex, Index
 };
+
 
 class ModelFactory
 {
@@ -41,7 +42,7 @@ private:
 	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);
 	HRESULT LoadPixelShader(ID3D11Device* aDevice, ComPtr<ID3D11PixelShader>& aShader, const char* aPath);
 	HRESULT LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputLayout>& aLayout, std::string someVertexData);
-	HRESULT LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, const int aSlot = 0);
+	HRESULT LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, int aSlot = 0, bool anNormalMapImportFlag = false);
 
 	HRESULT InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData, TempMeshData someTempData);
 
@@ -51,6 +52,9 @@ private:
 	std::vector<TempMeshData> GetUnitCube();
 	TempMeshData GetUnitPiramid();
 	TempMeshData GetUnitIcoSphere();
+
+	std::vector<float> GenerateNoise();
+	std::vector<TempMeshData> GetProcedualTerrain();
 
 	std::map<std::string, ModelPtr> myModelTypes;
 	std::vector<ModelInsPtr> myInstances;

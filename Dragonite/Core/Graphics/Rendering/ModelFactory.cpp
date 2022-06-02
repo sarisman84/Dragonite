@@ -3,7 +3,7 @@
 #include <d3d11.h>  
 #include <fstream>
 #include <iostream>
-
+#include "Utilities/Math/Noise.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Utilities/STB/ImageImport.h"
@@ -14,6 +14,7 @@ ModelFactory::ModelFactory(Engine::System* aSystem)
 	myModelTypes[UNITCUBE] = InitializeModelOfType({ GetUnitCube() });
 	myModelTypes[UNITPYRAMID] = InitializeModelOfType({ GetUnitPiramid() });
 	myModelTypes[UNITICOSPHERE] = InitializeModelOfType({ GetUnitIcoSphere() });
+	myModelTypes[GEN_TERRAIN] = InitializeModelOfType({ GetProcedualTerrain() });
 }
 
 ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMaterial)
@@ -41,8 +42,37 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 	if (FAILED(LoadInputLayout(device, ins->myModel->myInputLayout, someData)))
 		return nullptr;
 
-	if (FAILED(LoadTexture(device, ins->myModel->myTexture, aMaterial.myTexturePath, 0)))
-		return nullptr;
+
+
+	for (size_t m = 0; m < ins->myModel->myMesh.size(); m++)
+	{
+		ins->myModel->myMesh[m].myTextureBuffer.resize(aMaterial.myTextureMapInfo.size());
+		for (size_t t = 0; t < aMaterial.myTextureMapInfo.size(); t++)
+		{
+			auto texture = aMaterial.myTextureMapInfo[t];
+
+
+			switch (texture.myType)
+			{
+			case Texture::Type::Albedo:
+			{
+				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t))))
+					return nullptr;
+
+
+			}
+			break;
+			case Texture::Type::Normal:
+				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t), true)))
+					return nullptr;
+				break;
+
+			}
+
+		}
+
+	}
+
 
 	std::cout << "[Log]<ModelFactory>: Created Instance of " << aKey << "!" << std::endl;
 	ins->myMaterial = aMaterial;
@@ -82,13 +112,15 @@ HRESULT ModelFactory::LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputL
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	return aDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexData.data(), someVertexData.size(), &aLayout);
 }
 
-HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, const int aSlot)
+HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, int aSlot, bool anNormalMapImportFlag)
 {
 
 	int width, height, channels;
@@ -126,11 +158,11 @@ HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, cons
 
 	ID3D11Texture2D* texturePtr = nullptr;
 
-	D3D11_SUBRESOURCE_DATA subResourceDesc;
+
 	D3D11_TEXTURE2D_DESC desc;
 	aTexture.mySlot = aSlot;
 	ZeroMemory(&desc, sizeof(desc));
-	ZeroMemory(&subResourceDesc, sizeof(subResourceDesc));
+	//ZeroMemory(&subResourceDesc, sizeof(subResourceDesc));
 
 	desc.Width = width;
 	desc.Height = height;
@@ -139,24 +171,32 @@ HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, cons
 
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.Format = anNormalMapImportFlag ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
+	desc.MipLevels = 0;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 
 
 
-	subResourceDesc.pSysMem = (void*)img;
+	/*subResourceDesc.pSysMem = (void*)img;
 	subResourceDesc.SysMemPitch = width * 4;
-	subResourceDesc.SysMemSlicePitch = width * height * 4;
+	subResourceDesc.SysMemSlicePitch = width * height * 4;*/
 
-	if (FAILED(aDevice->CreateTexture2D(&desc, &subResourceDesc, &texturePtr)))
+	if (FAILED(aDevice->CreateTexture2D(&desc, nullptr, &texturePtr)))
 		return E_FAIL;
+
+
+	auto context = mySystem->GetGraphicsEngine()->GetDeviceContext();
+
+	context->UpdateSubresource(texturePtr, 0, nullptr, (void*)img, width * 4, width * height * 4);
 
 	if (FAILED(aDevice->CreateShaderResourceView(texturePtr, NULL, &aTexture.myTextureResource)))
 		return E_FAIL;
+
+	context->GenerateMips(aTexture.myTextureResource.Get());
 
 	texturePtr->Release();
 
@@ -227,30 +267,30 @@ std::vector<ModelFactory::TempMeshData> ModelFactory::GetUnitCube()
 
 
 	cube.myVertecies = {
-		{{-0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},	UnitVector3::left<float>,  {1, 1}},
-		{{-0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {1, 0}},
-		{{-0.5f,  0.5f,   0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {0, 0}},
-		{{-0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1},  UnitVector3::left<float>, {0, 1}},
-		{{0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},UnitVector3::right<float>,  {1, 1}},
-		{{0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {1, 0}},
-		{{0.5f,  0.5f,   0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {0, 0}},
-		{{0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1}, UnitVector3::right<float>, {0, 1}},
-		{{-0.5f,  -0.5f, 0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {1, 1}},
-		{{0.5f,  -0.5f,  0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {0, 1}},
-		{{0.5f,  0.5f,   0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {0, 0}},
-		{{-0.5f,  0.5f,  0.5f},  {0, 0, 1, 1}, UnitVector3::forward<float>, {1, 0}},
-		{{-0.5f,  -0.5f,  -0.5f},  {0, 0, 1, 1},UnitVector3::backward<float>,  {1, 1}},
-		{{0.5f,  -0.5f,   -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {0, 1}},
-		{{0.5f,  0.5f,    -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {0, 0}},
-		{{-0.5f,  0.5f,   -0.5f},  {0, 0, 1, 1}, UnitVector3::backward<float>, {1, 0}},
-		{{-0.5f,  0.5f,  -0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {1, 1}},
-		{{0.5f,   0.5f,  -0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {0, 1}},
-		{{0.5f,   0.5f,   0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {0, 0}},
-		{{-0.5f,  0.5f,   0.5f},  {0, 1, 0, 1}, UnitVector3::up<float>, {1, 0}},
-		{{-0.5f, -0.5f,   -0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {1, 1}},
-		{{0.5f,  -0.5f,    -0.5f}, {0, 1, 0, 1}, UnitVector3::down<float>, {0, 1}},
-		{{0.5f,  -0.5f,    0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {0, 0}},
-		{{-0.5f, -0.5f,    0.5f},  {0, 1, 0, 1}, UnitVector3::down<float>, {1, 0}},
+		{{-0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},{0,0,0}, {0,0,0},	UnitVector3::left<float>,  {1, 1}},
+		{{-0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0},  UnitVector3::left<float>, {1, 0}},
+		{{-0.5f,  0.5f,   0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0},  UnitVector3::left<float>, {0, 0}},
+		{{-0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0},  UnitVector3::left<float>, {0, 1}},
+		{{0.5f,  -0.5f,  -0.5f}, {1, 0, 0, 1},{0,0,0}, {0,0,0},UnitVector3::right<float>,  {1, 1}},
+		{{0.5f,  -0.5f,  0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::right<float>, {1, 0}},
+		{{0.5f,  0.5f,   0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::right<float>, {0, 0}},
+		{{0.5f,  0.5f,  -0.5f},  {1, 0, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::right<float>, {0, 1}},
+		{{-0.5f,  -0.5f, 0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0}, UnitVector3::forward<float>, {1, 1}},
+		{{0.5f,  -0.5f,  0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0}, UnitVector3::forward<float>, {0, 1}},
+		{{0.5f,  0.5f,   0.5f},  {0, 0, 1, 1},{}, {0,0,0}, UnitVector3::forward<float>, {0, 0}},
+		{{-0.5f,  0.5f,  0.5f},  {0, 0, 1, 1},{}, {0,0,0}, UnitVector3::forward<float>, {1, 0}},
+		{{-0.5f,  -0.5f,  -0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0},UnitVector3::backward<float>,  {1, 1}},
+		{{0.5f,  -0.5f,   -0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0}, UnitVector3::backward<float>, {0, 1}},
+		{{0.5f,  0.5f,    -0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0}, UnitVector3::backward<float>, {0, 0}},
+		{{-0.5f,  0.5f,   -0.5f},  {0, 0, 1, 1},{0,0,0}, {0,0,0}, UnitVector3::backward<float>, {1, 0}},
+		{{-0.5f,  0.5f,  -0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::up<float>, {1, 1}},
+		{{0.5f,   0.5f,  -0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::up<float>, {0, 1}},
+		{{0.5f,   0.5f,   0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::up<float>, {0, 0}},
+		{{-0.5f,  0.5f,   0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::up<float>, {1, 0}},
+		{{-0.5f, -0.5f,   -0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::down<float>, {1, 1}},
+		{{0.5f,  -0.5f,    -0.5f}, {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::down<float>, {0, 1}},
+		{{0.5f,  -0.5f,    0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::down<float>, {0, 0}},
+		{{-0.5f, -0.5f,    0.5f},  {0, 1, 0, 1},{0,0,0}, {0,0,0}, UnitVector3::down<float>, {1, 0}},
 	};
 
 	cube.myIndicies = {
@@ -289,28 +329,28 @@ ModelFactory::TempMeshData ModelFactory::GetUnitPiramid()
 	auto lfCorner = Vector3f(-0.5f, -0.5f, -0.5f);
 	auto rfCorner = Vector3f(0.5f, -0.5f, -0.5f);
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //0
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip,Vector3f(), Vector3f(), Vector2f(0, 0) }); //0
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner,Vector3f(), Vector3f(), Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner,Vector3f(), Vector3f(), Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //3
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip,Vector3f(), Vector3f(), Vector2f(0, 0) }); //3
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner,Vector3f(), Vector3f(), Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner,Vector3f(), Vector3f(), Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //6
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip,Vector3f(), Vector3f(), Vector2f(0, 0) }); //6
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner,Vector3f(), Vector3f(), Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner,Vector3f(), Vector3f(), Vector2f(1, 0) });
 
-	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip, Vector2f(0, 0) }); //9
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ tip, Vector4f(1, 1, 1, 1),tip,Vector3f(), Vector3f(), Vector2f(0, 0) }); //9
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner,Vector3f(), Vector3f(), Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner,Vector3f(), Vector3f(), Vector2f(1, 0) });
 
 
 
-	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner, Vector2f(1, 1) }); //12
-	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner, Vector2f(1, 0) });
-	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner, Vector2f(0, 0) });
-	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner, Vector2f(0, 1) });
+	data.myVertecies.push_back(Vertex{ rfCorner, Vector4f(1, 1, 1, 1),rfCorner,Vector3f(), Vector3f(), Vector2f(1, 1) }); //12
+	data.myVertecies.push_back(Vertex{ lfCorner, Vector4f(1, 1, 1, 1),lfCorner,Vector3f(), Vector3f(), Vector2f(1, 0) });
+	data.myVertecies.push_back(Vertex{ lbCorner, Vector4f(1, 1, 1, 1),lbCorner,Vector3f(), Vector3f(), Vector2f(0, 0) });
+	data.myVertecies.push_back(Vertex{ rbCorner, Vector4f(1, 1, 1, 1),rbCorner,Vector3f(), Vector3f(), Vector2f(0, 1) });
 
 	data.myIndicies = {
 		2,1,0, //R
@@ -328,4 +368,94 @@ ModelFactory::TempMeshData ModelFactory::GetUnitPiramid()
 ModelFactory::TempMeshData ModelFactory::GetUnitIcoSphere()
 {
 	return TempMeshData();
+}
+
+std::vector<float> ModelFactory::GenerateNoise()
+{
+	int resolution = 16;
+	std::vector<float> val;
+	for (size_t i = 0; i < resolution * resolution; i++)
+	{
+		val.push_back(RandomFloat());
+	}
+
+
+	size_t upsampleAmm = 6;
+
+	for (size_t i = 1; i <= upsampleAmm; i++)
+	{
+		AddNoise(val, powf(0.25f, i));
+		val = Upsample2X(val, resolution);
+		resolution *= 2;
+	}
+
+	return val;
+}
+
+std::vector<ModelFactory::TempMeshData> ModelFactory::GetProcedualTerrain()
+{
+	auto noiseMap = GenerateNoise();
+	//Grid Size (Width, Length)
+	TempMeshData data;
+
+
+	int width = sqrt(static_cast<int>(noiseMap.size()));
+	int height = sqrt(static_cast<int>(noiseMap.size()));
+
+	//Generate vertex points
+	for (int y = -(height / 2); y < height / 2; ++y)
+	{
+		for (int x = -(width / 2); x < width / 2; ++x)
+		{
+			int index = ((x + (width / 2)) + width * (y + (height / 2)));
+			float uvX = (static_cast<float>(x) + (static_cast<float>(width) / 2.f)) / static_cast<float>(width);
+			float uvY = (static_cast<float>(y) + (static_cast<float>(height) / 2.f)) / static_cast<float>(height);
+			Vertex vertex;
+			vertex.myPosition = Vector3f{ static_cast<float>(x), noiseMap[index] * 150.f, static_cast<float>(y) };
+			vertex.myUV = { uvX * 10.f ,uvY * 10.f };
+			vertex.myColor = { 1,1,1,1 };
+			data.myVertecies.push_back(vertex);
+		}
+	}
+
+	//Setup Normal and Indicies
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			//Calculate indicies
+			int nY = y + 1;
+			int nX = x + 1;
+
+			int i_a = x + width * y; // 0
+			int i_b = x + width * nY; // 1
+			int i_c = nX + width * nY; // 2
+			int i_d = nX + width * y; // 3
+
+
+			data.myIndicies.push_back(i_a);
+			data.myIndicies.push_back(i_b);
+			data.myIndicies.push_back(i_c);
+
+			data.myIndicies.push_back(i_c);
+			data.myIndicies.push_back(i_d);
+			data.myIndicies.push_back(i_a);
+
+
+			//Calculate normals
+			auto vectorBetweenAandB = (data.myVertecies[i_b].myPosition - data.myVertecies[i_a].myPosition);
+			auto vectorBetweenAandD = (data.myVertecies[i_d].myPosition - data.myVertecies[i_a].myPosition);
+
+			auto normal = vectorBetweenAandB.Cross(vectorBetweenAandD);
+
+			data.myVertecies[i_a].myNormal = normal.GetNormalized();
+			data.myVertecies[i_a].myTangent = data.myVertecies[i_a].myNormal.Cross({ Vector3f(0.f, 0.f, 1.f) }).GetNormalized();
+			data.myVertecies[i_a].myBiNormal = data.myVertecies[i_a].myNormal.Cross({ Vector3f(-1.f, 0.f, 0.f) }).GetNormalized();
+
+		}
+	}
+
+
+
+	return { data };
 }
