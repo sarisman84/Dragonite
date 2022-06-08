@@ -195,7 +195,7 @@ HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, cons
 
 	if (FAILED(aDevice->CreateShaderResourceView(texturePtr, NULL, &aTexture.myTextureResource)))
 		return E_FAIL;
-
+	
 	context->GenerateMips(aTexture.myTextureResource.Get());
 
 	texturePtr->Release();
