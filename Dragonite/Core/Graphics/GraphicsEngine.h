@@ -99,7 +99,7 @@ namespace Engine
 			
 			//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
 		private:
-
+			void RenderInstances();
 
 
 			ComPtr<ID3D11Device> myDevice;

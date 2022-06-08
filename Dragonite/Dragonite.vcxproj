@@ -168,6 +168,7 @@
     <ClCompile Include="Core\Scene.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\Transform.cpp" />
+    <ClCompile Include="Core\Utilities\Algorithms\SparseSet.cpp" />
     <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -183,6 +184,7 @@
     <ClInclude Include="Core\Scene.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\Transform.h" />
+    <ClInclude Include="Core\Utilities\Algorithms\SparseSet.h" />
     <ClInclude Include="Core\Utilities\Extensions.h" />
     <ClInclude Include="Core\Utilities\Input.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix.h" />

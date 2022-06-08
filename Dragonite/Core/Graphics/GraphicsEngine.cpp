@@ -195,7 +195,32 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 	UpdateConstantBuffer(myGlobalLightBuffer, &myLightData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
 
+	RenderInstances();
+	
 
+
+
+	mySwapChain->Present(1, 0);
+}
+
+void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
+	void (ID3D11DeviceContext:: * anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
+	void (ID3D11DeviceContext:: * anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer))
+{
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	myContext->Map(aConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, someData, someDataSize);
+	myContext->Unmap(aConstantBuffer.Get(), 0);
+
+	if (anOnConstantBufferUpdateCallback != 0)
+		(myContext.Get()->*anOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
+	if (anotherOnConstantBufferUpdateCallback != 0)
+		(myContext.Get()->*anotherOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
+}
+
+void Engine::Graphics::GraphicsEngine::RenderInstances()
+{
 	while (!myRenderInstructions.empty())
 	{
 		auto instruction = myRenderInstructions.front();
@@ -229,7 +254,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 			{
 				myContext->PSSetShaderResources(texture.mySlot, 1, texture.myTextureResource.GetAddressOf());
 			}
-			
+
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}
 
@@ -237,26 +262,6 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 
 
 	}
-
-
-
-	mySwapChain->Present(1, 0);
-}
-
-void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
-	void (ID3D11DeviceContext:: * anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
-	void (ID3D11DeviceContext:: * anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer))
-{
-
-	D3D11_MAPPED_SUBRESOURCE resource;
-	myContext->Map(aConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, someData, someDataSize);
-	myContext->Unmap(aConstantBuffer.Get(), 0);
-
-	if (anOnConstantBufferUpdateCallback != 0)
-		(myContext.Get()->*anOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
-	if (anotherOnConstantBufferUpdateCallback != 0)
-		(myContext.Get()->*anotherOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
 }
 
 
