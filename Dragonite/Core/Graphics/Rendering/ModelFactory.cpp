@@ -4,9 +4,9 @@
 #include <fstream>
 #include <iostream>
 #include "Utilities/Math/Noise.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "Utilities/STB/ImageImport.h"
+//
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "Utilities/STB/ImageImport.h"
 
 ModelFactory::ModelFactory(Engine::System* aSystem)
 {
@@ -52,22 +52,7 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 			auto texture = aMaterial.myTextureMapInfo[t];
 
 
-			switch (texture.myType)
-			{
-			case Texture::Type::Albedo:
-			{
-				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t))))
-					return nullptr;
-
-
-			}
-			break;
-			case Texture::Type::Normal:
-				if (FAILED(LoadTexture(device, ins->myModel->myMesh[m].myTextureBuffer[t], texture.myTexturePath, static_cast<int>(t), true)))
-					return nullptr;
-				break;
-
-			}
+			ins->myModel->myMesh[m].myTextureBuffer[t] = Dragonite::Texture(mySystem->GetGraphicsEngine(), texture.myTexturePath, texture.myType);
 
 		}
 
@@ -120,90 +105,7 @@ HRESULT ModelFactory::LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputL
 	return aDevice->CreateInputLayout(layout, sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC), someVertexData.data(), someVertexData.size(), &aLayout);
 }
 
-HRESULT ModelFactory::LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, int aSlot, bool anNormalMapImportFlag)
-{
 
-	int width, height, channels;
-	unsigned char* img = stbi_load(aTexturePath, &width, &height, &channels, 0);
-
-	if (!img)
-	{
-		std::cout << "[ERROR]<ModelFactory/LoadTexture>: STB Reported '" << stbi_failure_reason() << "'" << std::endl;
-		return E_INVALIDARG;
-	}
-
-	switch (channels)
-	{
-	case 3:
-	{
-		std::vector<unsigned char> imageData(width * height * 4);
-
-		for (size_t i = 0; i < width * height; i++)
-		{
-			imageData[4 * i + 0] = img[3 * i + 0];
-			imageData[4 * i + 1] = img[3 * i + 1];
-			imageData[4 * i + 2] = img[3 * i + 2];
-			imageData[4 * i + 3] = 255;
-		}
-		img = imageData.data();
-		break;
-	}
-	case 4:
-		break;
-	default:
-		return E_INVALIDARG;
-	}
-
-
-
-	ID3D11Texture2D* texturePtr = nullptr;
-
-
-	D3D11_TEXTURE2D_DESC desc;
-	aTexture.mySlot = aSlot;
-	ZeroMemory(&desc, sizeof(desc));
-	//ZeroMemory(&subResourceDesc, sizeof(subResourceDesc));
-
-	desc.Width = width;
-	desc.Height = height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.Format = anNormalMapImportFlag ? DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	desc.CPUAccessFlags = 0;
-	desc.MipLevels = 0;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
-
-
-
-
-	/*subResourceDesc.pSysMem = (void*)img;
-	subResourceDesc.SysMemPitch = width * 4;
-	subResourceDesc.SysMemSlicePitch = width * height * 4;*/
-
-	if (FAILED(aDevice->CreateTexture2D(&desc, nullptr, &texturePtr)))
-		return E_FAIL;
-
-
-	auto context = mySystem->GetGraphicsEngine()->GetDeviceContext();
-
-	context->UpdateSubresource(texturePtr, 0, nullptr, (void*)img, width * 4, width * height * 4);
-
-	if (FAILED(aDevice->CreateShaderResourceView(texturePtr, NULL, &aTexture.myTextureResource)))
-		return E_FAIL;
-	
-	context->GenerateMips(aTexture.myTextureResource.Get());
-
-	texturePtr->Release();
-
-
-
-	return NOERROR;
-}
 
 
 
@@ -380,7 +282,7 @@ std::vector<float> ModelFactory::GenerateNoise()
 	}
 
 
-	size_t upsampleAmm = 6;
+	size_t upsampleAmm = 2;
 
 	for (size_t i = 1; i <= upsampleAmm; i++)
 	{
@@ -411,26 +313,32 @@ std::vector<ModelFactory::TempMeshData> ModelFactory::GetProcedualTerrain()
 			float uvX = (static_cast<float>(x) + (static_cast<float>(width) / 2.f)) / static_cast<float>(width);
 			float uvY = (static_cast<float>(y) + (static_cast<float>(height) / 2.f)) / static_cast<float>(height);
 			Vertex vertex;
-			vertex.myPosition = Vector3f{ static_cast<float>(x), noiseMap[index] * 150.f, static_cast<float>(y) };
-			vertex.myUV = { uvX * 10.f ,uvY * 10.f };
+			vertex.myPosition = Vector3f{ static_cast<float>(x), (noiseMap[index] - 0.5f) * 6.0f, static_cast<float>(y) };
+			vertex.myUV = { uvX * 30.f ,uvY * 30.f };
 			vertex.myColor = { 1,1,1,1 };
 			data.myVertecies.push_back(vertex);
 		}
 	}
 
 	//Setup Normal and Indicies
-	for (int y = 0; y < height - 1; y++)
+	for (int y = 1; y < height - 1; y++)
 	{
-		for (int x = 0; x < width - 1; x++)
+		for (int x = 1; x < width - 1; x++)
 		{
 			//Calculate indicies
-			int nY = y + 1;
-			int nX = x + 1;
+			int nY = y;
+			int nX = x;
 
-			int i_a = x + width * y; // 0
-			int i_b = x + width * nY; // 1
+			/*		int bNY = y - 1;
+					int bNX = x - 1;*/
+
+			int i_a = (x - 1) + width * (y - 1); // 0
+			int i_b = (x - 1) + width * nY; // 1
 			int i_c = nX + width * nY; // 2
-			int i_d = nX + width * y; // 3
+			int i_d = nX + width * (y - 1); // 3
+
+		/*	int i_ND = bNX + width * y;
+			int i_NB = x + width * bNY;*/
 
 
 			data.myIndicies.push_back(i_a);
@@ -441,16 +349,27 @@ std::vector<ModelFactory::TempMeshData> ModelFactory::GetProcedualTerrain()
 			data.myIndicies.push_back(i_d);
 			data.myIndicies.push_back(i_a);
 
-
 			//Calculate normals
-			auto vectorBetweenAandB = (data.myVertecies[i_b].myPosition - data.myVertecies[i_a].myPosition);
-			auto vectorBetweenAandD = (data.myVertecies[i_d].myPosition - data.myVertecies[i_a].myPosition);
+			Vector3f tangentA;
+			Vector3f tangentB;
 
-			auto normal = vectorBetweenAandB.Cross(vectorBetweenAandD);
 
-			data.myVertecies[i_a].myNormal = normal.GetNormalized();
+			tangentA = (data.myVertecies[(x + 1) + width * y].myPosition - data.myVertecies[(x - 1) + width * y].myPosition);
+			tangentB = (data.myVertecies[x + width * (y + 1)].myPosition - data.myVertecies[x + width * (y - 1)].myPosition);
+
+
+
+
+
+
+
+
+
+			auto normal = tangentB.Cross(tangentA).GetNormalized();
+
+			data.myVertecies[i_a].myNormal = normal;
 			data.myVertecies[i_a].myTangent = data.myVertecies[i_a].myNormal.Cross({ Vector3f(0.f, 0.f, 1.f) }).GetNormalized();
-			data.myVertecies[i_a].myBiNormal = data.myVertecies[i_a].myNormal.Cross({ Vector3f(-1.f, 0.f, 0.f) }).GetNormalized();
+			data.myVertecies[i_a].myBiNormal = data.myVertecies[i_a].myNormal.Cross({ Vector3f(1.f, 0.f, 0.f) }).GetNormalized();
 
 		}
 	}

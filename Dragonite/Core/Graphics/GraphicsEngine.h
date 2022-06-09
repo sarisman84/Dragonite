@@ -9,6 +9,10 @@
 #include "Utilities/Math/Matrix.h"
 #include "Utilities/Math/Vector.h"
 
+#include "Utilities/Algorithms/SparseSet.h"
+
+#pragma warning (disable: 4471)
+
 using Microsoft::WRL::ComPtr;
 using Engine::Windows::Resolution;
 
@@ -20,6 +24,9 @@ struct ID3D11Buffer;
 struct ID3D11DepthStencilView;
 struct ID3D11SamplerState;
 
+
+enum D3D11_FILTER;
+enum D3D11_TEXTURE_ADDRESS_MODE;
 
 
 enum class Primitive2D;
@@ -57,7 +64,7 @@ namespace Engine
 	class System;
 	namespace Graphics
 	{
-		
+
 
 
 
@@ -70,10 +77,11 @@ namespace Engine
 
 			inline void AddRenderInstruction(ModelInstance* anInstance)
 			{
-				myRenderInstructions.push(anInstance);
+				myRenderInstructions.Insert(anInstance);
 			}
 
-			inline GlobalLightBufferData& GlobalLightData(){
+			inline GlobalLightBufferData& GlobalLightData()
+			{
 				return myLightData;
 			}
 
@@ -91,16 +99,19 @@ namespace Engine
 
 
 
-			void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot, 
-				void (ID3D11DeviceContext::*anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const * aConstantBuffer),
+			void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
+				void (ID3D11DeviceContext::* anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
 				void (ID3D11DeviceContext::* anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer) = nullptr);
-			
+
 			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
-			
+
 			//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
 		private:
 			void RenderInstances();
 
+			HRESULT InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>& aBuffer);
+			HRESULT InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE  aTileType, ComPtr<ID3D11SamplerState>& aSampler);
+			HRESULT InitializeDepthBuffer(const Resolution& aResolution, ComPtr<ID3D11DepthStencilView>& aDepthBuffer);
 
 			ComPtr<ID3D11Device> myDevice;
 			ComPtr<ID3D11DeviceContext> myContext;
@@ -118,14 +129,16 @@ namespace Engine
 
 			ComPtr<ID3D11SamplerState> mySamplerState;
 
-			std::queue <ModelInstance*> myRenderInstructions;
-	
+			Dragonite::SparseSet<ModelInstance*> myRenderInstructions;
+
 			//std::vector<std::shared_ptr<Mesh>> myMeshes;
 			System* mySystem;
 			Camera* myRenderCamera;
 
 			GlobalLightBufferData myLightData;
 		};
+
+
 
 
 

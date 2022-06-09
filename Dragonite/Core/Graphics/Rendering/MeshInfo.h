@@ -1,14 +1,17 @@
 #pragma once
-#include <wrl/client.h>
-#include "GameObject.h"
 
-using Microsoft::WRL::ComPtr;
+#include "GameObject.h"
+#include "Rendering/Framework/Texture.h"
+
+
+using namespace Dragonite;
+
 
 struct ID3D11Buffer;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11InputLayout;
-struct ID3D11ShaderResourceView;
+
 
 namespace Engine
 {
@@ -18,16 +21,7 @@ namespace Engine
 	}
 }
 
-struct Texture
-{
-	enum class Type
-	{
-		Albedo, Normal
-	};
-	Type myType;
-	int mySlot;
-	ComPtr<ID3D11ShaderResourceView> myTextureResource;
-};
+
 
 struct Vertex
 {

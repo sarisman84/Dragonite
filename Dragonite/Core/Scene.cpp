@@ -12,7 +12,7 @@ float factorial(float aVal)
 	return 1;
 }
 
-Scene::Scene() : mySet(100, 5)
+Scene::Scene()
 {
 }
 
@@ -52,11 +52,6 @@ void Scene::Awake()
 
 
 
-	mySet.Insert("Never gonna give you up", 0);
-	mySet.Remove(0);
-	mySet.Insert("Never gonna give you up", 0);
-	mySet.Insert("Never gonna let you down", 1);
-	mySet.Insert("Never go around and desert you", 2);
 }
 
 void Scene::Update(float aTimeDelta)
@@ -68,11 +63,9 @@ void Scene::Update(float aTimeDelta)
 	{
 		myObjectsToUpdate[i]->myTransform.Rotation = myObjectsToUpdate[i]->myTransform.Rotation() + Vector4f{ 10.f, 10.f, 10.f, 10.f } *aTimeDelta;
 	}
-	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection = Math::Vector4f::Lerp(myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection, { cosf(myRuntime->GetSystem()->GetTotalTime()) * 4.f,-1.0f, 0.f, 0.f }, aTimeDelta);
+	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection = Math::Vector4f::Lerp(myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection, { (cosf(myRuntime->GetSystem()->GetTotalTime() / 2.f) * 4.f),-1.0f, 0.f, 0.f }, aTimeDelta);
+	
 	//std::cout << '\r' << "[Log]<Runtime>: Direction - " << myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection << std::flush;
 
 
-	std::cout << '\r' << mySet << std::flush;
-
-	
 }

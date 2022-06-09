@@ -23,9 +23,9 @@ Transform::Transform()
 		{
 
 			float pi = 3.141592653589793238f;
-			Matrix4x4f xRot = Matrix4x4f::CreateRotationAroundX(aValue.x * pi / 180.f);
-			Matrix4x4f yRot = Matrix4x4f::CreateRotationAroundY(aValue.y * pi / 180.f);
-			Matrix4x4f zRot = Matrix4x4f::CreateRotationAroundZ(aValue.z * pi / 180.f);
+			Matrix4x4f xRot = Matrix4x4f::CreateRotationAroundX((aValue.x * pi) / 180.f);
+			Matrix4x4f yRot = Matrix4x4f::CreateRotationAroundY((aValue.y * pi) / 180.f);
+			Matrix4x4f zRot = Matrix4x4f::CreateRotationAroundZ((aValue.z * pi) / 180.f);
 
 
 			myRotation = aValue;

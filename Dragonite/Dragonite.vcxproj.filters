@@ -23,9 +23,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{6e511c9b-933b-489b-aa3a-b2ce8937220e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics\Shapes">
-      <UniqueIdentifier>{17ef4507-0ea2-4d56-b34a-ad827e6160be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Math">
       <UniqueIdentifier>{6c810fdb-b0d7-47d7-b7f6-a786607ad05b}</UniqueIdentifier>
     </Filter>
@@ -38,9 +35,6 @@
     <Filter Include="Core\System\Components">
       <UniqueIdentifier>{020e1a5e-81f2-4d89-a180-59818772b1f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics\Model">
-      <UniqueIdentifier>{5dd3403a-0065-47a9-8468-ab12b8fcfe3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\System\Input">
       <UniqueIdentifier>{67b0d9d5-be6e-4d95-9923-5bb922093193}</UniqueIdentifier>
     </Filter>
@@ -52,6 +46,12 @@
     </Filter>
     <Filter Include="Utilities\Algorithms">
       <UniqueIdentifier>{777cd5d1-9aa4-4890-9dd4-67b4b160c4b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Framework">
+      <UniqueIdentifier>{555b96e3-bd47-48f0-8fd8-c05d99974175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Framework\Model">
+      <UniqueIdentifier>{5dd3403a-0065-47a9-8468-ab12b8fcfe3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +71,7 @@
       <Filter>Core\System\Components</Filter>
     </ClCompile>
     <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp">
-      <Filter>Core\Graphics\Model</Filter>
+      <Filter>Core\Graphics\Framework\Model</Filter>
     </ClCompile>
     <ClCompile Include="Core\Components\ModelRenderer.cpp">
       <Filter>Core\System\Components</Filter>
@@ -90,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="Core\Utilities\Algorithms\SparseSet.cpp">
       <Filter>Utilities\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\Framework\Texture.cpp">
+      <Filter>Core\Graphics\Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,10 +142,10 @@
       <Filter>Core\System\Components</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h">
-      <Filter>Core\Graphics\Model</Filter>
+      <Filter>Core\Graphics\Framework\Model</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h">
-      <Filter>Core\Graphics\Model</Filter>
+      <Filter>Core\Graphics\Framework\Model</Filter>
     </ClInclude>
     <ClInclude Include="Core\Components\ModelRenderer.h">
       <Filter>Core\System\Components</Filter>
@@ -167,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utilities\Algorithms\SparseSet.h">
       <Filter>Utilities\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Framework\Texture.h">
+      <Filter>Core\Graphics\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

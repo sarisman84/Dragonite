@@ -5,17 +5,20 @@
 #include "Utilities/Math/Vector2.h"
 #include "Components/Camera.h"
 #include "Rendering/MeshInfo.h"
-//#define REPORT_DX_WARNINGS
+#define REPORT_DX_WARNINGS
 
+#pragma warning (disable: 26812)
 
+Engine::Graphics::GraphicsEngine::GraphicsEngine() : myRenderInstructions(1000, 100)
+{
 
-Engine::Graphics::GraphicsEngine::GraphicsEngine() = default;
+}
 
 
 Engine::Graphics::GraphicsEngine::~GraphicsEngine() = default;
 
 
-bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWindowsHandle, System * aSystem)
+bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle, System * aSystem)
 {
 
 	mySystem = aSystem;
@@ -69,86 +72,18 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HW
 	backBufferTexture->Release();
 
 
-	D3D11_BUFFER_DESC bufferDesc = { 0 };
-	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 
-	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	if (FAILED(InitializeConstantBuffer(sizeof(FrameBufferData), myFrameBuffer))) return false;
 
-	bufferDesc.ByteWidth = sizeof(FrameBufferData),
-		result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myFrameBuffer);
-	if (FAILED(result)) return false;
+	if (FAILED(InitializeConstantBuffer(sizeof(ObjectBufferData), myObjectBuffer))) return false;
 
-	bufferDesc.ByteWidth = sizeof(ObjectBufferData);
-	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myObjectBuffer);
-	if (FAILED(result)) return false;
+	if (FAILED(InitializeConstantBuffer(sizeof(MaterialBufferData), myMaterialBuffer))) return false;
 
+	if (FAILED(InitializeConstantBuffer(sizeof(GlobalLightBufferData), myGlobalLightBuffer))) return false;
 
-	bufferDesc.ByteWidth = sizeof(MaterialBufferData);
-	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myMaterialBuffer);
-	if (FAILED(result)) return false;
+	if (FAILED(InitializeSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, mySamplerState))) return false;
 
-
-	bufferDesc.ByteWidth = sizeof(GlobalLightBufferData);
-	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &myGlobalLightBuffer);
-	if (FAILED(result)) return false;
-
-
-
-	D3D11_SAMPLER_DESC samplerDesc;
-	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	// Create the texture sampler state.
-
-	result = myDevice->CreateSamplerState(&samplerDesc, &mySamplerState);
-
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-
-	ID3D11Texture2D* depthBufferTexture;
-	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
-	depthBufferDesc.Width = static_cast<unsigned int>(textureDesc.Width);
-	depthBufferDesc.Height = static_cast<unsigned int>(textureDesc.Height);
-	depthBufferDesc.ArraySize = 1;
-	depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthBufferDesc.SampleDesc.Count = 1;
-	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	result = myDevice->CreateTexture2D(&depthBufferDesc, nullptr, &depthBufferTexture);
-	if (FAILED(result))
-	{
-		return false;
-	}
-	result = myDevice->CreateDepthStencilView(depthBufferTexture, nullptr, &myDepthBuffer);
-	if (FAILED(result))
-	{
-		return false;
-	}
-	depthBufferTexture->Release();
-
-
-
-
-
-
-
-
-
+	if (FAILED(InitializeDepthBuffer(Resolution{ (int)textureDesc.Width, (int)textureDesc.Height }, myDepthBuffer))) return false;
 
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
@@ -157,8 +92,8 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution /*aResolution*/, HW
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(textureDesc.Width);
-	viewport.Height = static_cast<float>(textureDesc.Height);
+	viewport.Width = static_cast<float>(aResolution.width);
+	viewport.Height = static_cast<float>(aResolution.height);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	myContext->RSSetViewports(1, &viewport);
@@ -196,7 +131,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	UpdateConstantBuffer(myGlobalLightBuffer, &myLightData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 	RenderInstances();
-	
+
 
 
 
@@ -221,9 +156,9 @@ void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>
 
 void Engine::Graphics::GraphicsEngine::RenderInstances()
 {
-	while (!myRenderInstructions.empty())
+	for (size_t i = 0; i < myRenderInstructions.Size(); i++)
 	{
-		auto instruction = myRenderInstructions.front();
+		auto instruction = myRenderInstructions[i];
 
 		ObjectBufferData oData;
 		oData.myObjectMatrix = instruction->myTransform.GetMatrix();
@@ -250,53 +185,84 @@ void Engine::Graphics::GraphicsEngine::RenderInstances()
 			myContext->VSSetShader(instruction->myModel->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(instruction->myModel->myPixelShader.Get(), nullptr, 0);
 
-			for (auto& texture : mesh.myTextureBuffer)
+			for (size_t t = 0; t < mesh.myTextureBuffer.size(); t++)
 			{
-				myContext->PSSetShaderResources(texture.mySlot, 1, texture.myTextureResource.GetAddressOf());
+				auto& texture = mesh.myTextureBuffer[t];
+				/*myContext->PSSetShaderResources(texture.mySlot, 1, texture.myTextureResource.GetAddressOf());*/
+				texture.BindTexture(myContext, t);
 			}
 
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);
 		}
 
-		myRenderInstructions.pop();
-
-
 	}
+
+	myRenderInstructions.Clear();
+}
+
+HRESULT Engine::Graphics::GraphicsEngine::InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>&aBuffer)
+{
+	HRESULT result;
+	D3D11_BUFFER_DESC bufferDesc = { 0 };
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	bufferDesc.ByteWidth = someDataSize;
+	result = myDevice->CreateBuffer(&bufferDesc, nullptr, &aBuffer);
+	return result;
+}
+
+HRESULT Engine::Graphics::GraphicsEngine::InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE aTileType, ComPtr<ID3D11SamplerState>&aSampler)
+{
+
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = aFilter;
+	samplerDesc.AddressU = aTileType;
+	samplerDesc.AddressV = aTileType;
+	samplerDesc.AddressW = aTileType;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+
+	return myDevice->CreateSamplerState(&samplerDesc, &aSampler);
+}
+
+HRESULT Engine::Graphics::GraphicsEngine::InitializeDepthBuffer(const Resolution & aResolution, ComPtr<ID3D11DepthStencilView>&aDepthBuffer)
+{
+	HRESULT result;
+	ID3D11Texture2D* depthBufferTexture;
+	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
+	depthBufferDesc.Width = static_cast<unsigned int>(aResolution.width);
+	depthBufferDesc.Height = static_cast<unsigned int>(aResolution.height);
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	result = myDevice->CreateTexture2D(&depthBufferDesc, nullptr, &depthBufferTexture);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	result = myDevice->CreateDepthStencilView(depthBufferTexture, nullptr, &aDepthBuffer);
+	depthBufferTexture->Release();
+	return result;
 }
 
 
 
 
 
-//Shape Engine::Graphics::GraphicsEngine::GetUnitCircle()
-//{
-//	Shape circle;
-//	int segments = 50;
-//
-//	circle.myVerticesAmm = 3 * segments;
-//	circle.myIndicesAmm = 3 * segments;
-//	int posIndex = 0;
-//	for (size_t i = 0; i < segments; i++)
-//	{
-//		float p = 3.14159265f * (i * (360.f / segments) / 180.f);
-//		float p2 = 3.14159265f * ((i + 1) * (360.f / segments) / 180.f);
-//		Math::Vector2f pos(cos(p), sin(p));
-//		Math::Vector2f pos3(cos(p2), sin(p2));
-//		Math::Vector2f pos2(0.f, 0.f);
-//
-//		circle.myIndicies[posIndex] = posIndex;
-//		circle.myIndicies[posIndex + 1] = posIndex + 1;
-//		circle.myIndicies[posIndex + 2] = posIndex + 2;
-//
-//		circle.myVertices[posIndex] = Vertex2D{ Math::Vector4f{pos.x,  pos.y,  1, 1}, Math::Vector4f{   1, 1, 1,1 } };
-//		circle.myVertices[posIndex + 1] = Vertex2D{ Math::Vector4f{pos2.x, pos2.y, 1, 1}, Math::Vector4f{   0, 0, 0,1 } };
-//		circle.myVertices[posIndex + 2] = Vertex2D{ Math::Vector4f{pos3.x, pos3.y, 1, 1}, Math::Vector4f{   1, 1, 1,1 } };
-//
-//		posIndex += 3;
-//	}
-//
-//
-//	return circle;
-//}
 
 

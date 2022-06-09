@@ -42,7 +42,6 @@ private:
 	HRESULT LoadVertexShader(ID3D11Device* aDevice, ComPtr<ID3D11VertexShader>& aShader, const char* aPath, std::string& someExtraData);
 	HRESULT LoadPixelShader(ID3D11Device* aDevice, ComPtr<ID3D11PixelShader>& aShader, const char* aPath);
 	HRESULT LoadInputLayout(ID3D11Device* aDevice, ComPtr<ID3D11InputLayout>& aLayout, std::string someVertexData);
-	HRESULT LoadTexture(ID3D11Device* aDevice, Texture& aTexture, const char* aTexturePath, int aSlot = 0, bool anNormalMapImportFlag = false);
 
 	HRESULT InitializeBuffer(ID3D11Device* aDevice, const BufferType aType, MeshData& someData, TempMeshData someTempData);
 

@@ -34,7 +34,10 @@ void Camera::OnUpdate(float aDeltaTime)
 	auto up = myTransform->Up();
 	auto forward = myTransform->Forward();
 	//myInput = myInput.Lerp({ xInput, zInput }, aDeltaTime);
-	auto result = right * xInput * myMovementSpeed + up * yInput * myMovementSpeed + forward * zInput * myMovementSpeed;
+
+	float movementSpeed = Keyboard::GetButton(Keyboard::Key::LeftShift) ? myMovementSpeed * 2.f : myMovementSpeed;
+
+	auto result = right * xInput * movementSpeed + up * yInput * movementSpeed + forward * zInput * movementSpeed;
 	result;
 	auto oldPos = myTransform->Position();
 	myTransform->Position = myTransform->Position() + (result * aDeltaTime);

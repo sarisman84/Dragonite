@@ -13,7 +13,6 @@ public:
 	void Update(float aTimeDelta);
 	Runtime* myRuntime;
 private:
-	Dragonite::SparseSet<const char*> mySet;
 	GameObjectPtr myCamera;
 	float myCounter;
 	std::vector<GameObjectPtr> myObjectsToUpdate;

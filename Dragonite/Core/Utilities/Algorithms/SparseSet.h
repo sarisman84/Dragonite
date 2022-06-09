@@ -30,7 +30,10 @@ namespace Dragonite
 		}
 
 
-
+		Value& operator[](const Key& aKey)
+		{
+			return myDenseSet[mySparseSet[aKey]].myValue;
+		}
 
 		Key Find(const SparseSet<Value>::Key& aKey)
 		{
@@ -40,15 +43,21 @@ namespace Dragonite
 
 			return -1;
 		}
-		void Insert(const Value& aValue, const SparseSet<Value>::Key& aKey)
+		void Insert(const Value& aValue, const SparseSet<Value>::Key& aKey = -1)
 		{
-			if (aKey > myMaxValue) return;
-			if (myCurrentCount >= myCapacity) return;
-			if (Find(aKey) != -1) return;
+			SparseSet<Value>::Key key = aKey != -1 ? aKey : myNextCounter;
 
-			myDenseSet[myCurrentCount] = Data{ aValue, aKey };
-			mySparseSet[aKey] = myCurrentCount;
+
+			if (key > myMaxValue) return;
+			if (myCurrentCount >= myCapacity) return;
+			if (Find(key) != -1) return;
+
+			myDenseSet[myCurrentCount] = Data{ aValue, key };
+			mySparseSet[key] = myCurrentCount;
 			myCurrentCount++;
+
+
+			myNextCounter = aKey != -1 ? aKey + 1 : myNextCounter + 1;
 		}
 		void Remove(const SparseSet<Value>::Key& aKey)
 		{
@@ -58,10 +67,12 @@ namespace Dragonite
 			myDenseSet[mySparseSet[aKey]] = temp;
 			mySparseSet[temp.myKey] = mySparseSet[aKey];
 			myCurrentCount--;
+			myNextCounter--;
 		}
 		void Clear()
 		{
 			myCurrentCount = 0;
+			myNextCounter = 0;
 		}
 
 
@@ -92,7 +103,7 @@ namespace Dragonite
 		size_t myCurrentCount;
 		size_t myCapacity;
 		size_t myMaxValue;
-
+		size_t myNextCounter;
 
 	};
 
