@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 
-Engine::Runtime::Runtime(System* aCoreSystem)
+Dragonite::Runtime::Runtime(System* aCoreSystem)
 {
 	mySystem = aCoreSystem;
 
@@ -16,7 +16,7 @@ Engine::Runtime::Runtime(System* aCoreSystem)
 	myScene->myRuntime = this;
 }
 
-GameObjectPtr& Engine::Runtime::CreateGameObject()
+GameObjectPtr& Dragonite::Runtime::CreateGameObject()
 {
 	GameObjectPtr obj = std::make_shared<GameObject>();
 	obj->mySystem = mySystem;
@@ -32,14 +32,14 @@ GameObjectPtr& Engine::Runtime::CreateGameObject()
 
 
 
-void Engine::Runtime::Awake()
+void Dragonite::Runtime::Awake()
 {
 	std::cout << "Executing Runtime!" << std::endl;
 
 	myScene->Awake();
 }
 
-void Engine::Runtime::Update(float aTimeDelta)
+void Dragonite::Runtime::Update(float aTimeDelta)
 {
 
 	for (size_t i = 0; i < myEntities.size(); i++)

@@ -3,7 +3,7 @@
 #include "Components/ModelRenderer.h"
 #include "Utilities/Algorithms/SparseSet.h"
 
-using namespace Engine;
+using namespace Dragonite;
 
 class Scene
 {

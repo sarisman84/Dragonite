@@ -9,16 +9,16 @@
 
 #pragma warning (disable: 26812)
 
-Engine::Graphics::GraphicsEngine::GraphicsEngine() : myRenderInstructions(1000, 100)
+Dragonite::GraphicsEngine::GraphicsEngine() : myRenderInstructions(1000, 100)
 {
 
 }
 
 
-Engine::Graphics::GraphicsEngine::~GraphicsEngine() = default;
+Dragonite::GraphicsEngine::~GraphicsEngine() = default;
 
 
-bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle, System * aSystem)
+bool Dragonite::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle, System * aSystem)
 {
 
 	mySystem = aSystem;
@@ -103,13 +103,19 @@ bool Engine::Graphics::GraphicsEngine::Initialize(Resolution aResolution, HWND a
 
 
 
-	myLightData.myAmbientLight = { 1,1,1,1 };
+	myLightData.myAmbientLight = { 0.5f,0.5f,0.5f,1 };
+
+
+
+	myCubemapTexture = std::make_shared<Texture>(this, "Textures/cube_1024_preblurred_angle3_Skansen3.dds", Texture::Type::Cubemap);
+
+	myCubemapTexture->BindTexture(myContext, 9);
 
 	return true;
 }
 
 
-void Engine::Graphics::GraphicsEngine::DrawElements()
+void Dragonite::GraphicsEngine::DrawElements()
 {
 	float color[4] = { 0.2f,0.2f,0.2f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
@@ -125,6 +131,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	fData.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
 	fData.myTimeDelta = mySystem->GetTimeDelta();
 	fData.myTotalTime = mySystem->GetTotalTime();
+	fData.myCameraPosition = Math::Vector4f(myRenderCamera->GetTransform()->Position(), 1);
 
 	UpdateConstantBuffer(myFrameBuffer, &fData, sizeof(FrameBufferData), 0, &ID3D11DeviceContext::VSSetConstantBuffers, &ID3D11DeviceContext::PSSetConstantBuffers);
 
@@ -138,7 +145,7 @@ void Engine::Graphics::GraphicsEngine::DrawElements()
 	mySwapChain->Present(1, 0);
 }
 
-void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
+void Dragonite::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
 	void (ID3D11DeviceContext:: * anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
 	void (ID3D11DeviceContext:: * anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer))
 {
@@ -154,7 +161,7 @@ void Engine::Graphics::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>
 		(myContext.Get()->*anotherOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
 }
 
-void Engine::Graphics::GraphicsEngine::RenderInstances()
+void Dragonite::GraphicsEngine::RenderInstances()
 {
 	for (size_t i = 0; i < myRenderInstructions.Size(); i++)
 	{
@@ -200,7 +207,7 @@ void Engine::Graphics::GraphicsEngine::RenderInstances()
 	myRenderInstructions.Clear();
 }
 
-HRESULT Engine::Graphics::GraphicsEngine::InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>&aBuffer)
+HRESULT Dragonite::GraphicsEngine::InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>&aBuffer)
 {
 	HRESULT result;
 	D3D11_BUFFER_DESC bufferDesc = { 0 };
@@ -215,7 +222,7 @@ HRESULT Engine::Graphics::GraphicsEngine::InitializeConstantBuffer(const size_t 
 	return result;
 }
 
-HRESULT Engine::Graphics::GraphicsEngine::InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE aTileType, ComPtr<ID3D11SamplerState>&aSampler)
+HRESULT Dragonite::GraphicsEngine::InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE aTileType, ComPtr<ID3D11SamplerState>&aSampler)
 {
 
 
@@ -239,7 +246,7 @@ HRESULT Engine::Graphics::GraphicsEngine::InitializeSampler(D3D11_FILTER aFilter
 	return myDevice->CreateSamplerState(&samplerDesc, &aSampler);
 }
 
-HRESULT Engine::Graphics::GraphicsEngine::InitializeDepthBuffer(const Resolution & aResolution, ComPtr<ID3D11DepthStencilView>&aDepthBuffer)
+HRESULT Dragonite::GraphicsEngine::InitializeDepthBuffer(const Resolution & aResolution, ComPtr<ID3D11DepthStencilView>&aDepthBuffer)
 {
 	HRESULT result;
 	ID3D11Texture2D* depthBufferTexture;

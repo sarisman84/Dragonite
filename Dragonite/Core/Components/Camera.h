@@ -28,6 +28,7 @@ public:
 
 	void OnAwake() override;
 	void OnUpdate(float aDeltaTime) override;
+	
 private:
 	void UpdateProjectionMatrix();
 	Math::Matrix4x4f myProjectionMatrix;

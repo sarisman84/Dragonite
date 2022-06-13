@@ -1,6 +1,7 @@
 #pragma once
 #include <ostream>
 #include "Utilities/UtilityFunctions.h"
+#include "Utilities/Math/Vector3.h"
 namespace Math
 {
 
@@ -32,6 +33,12 @@ namespace Math
 		{
 		}
 		Vector4(const Vector4<T>& aVector4) = default;
+		Vector4(const Vector3<T>& aVector3, const T& aW) : 
+			x(aVector3.x), 
+			y(aVector3.y), 
+			z(aVector3.z), 
+			w(aW)
+		{ }
 
 		//destructor
 		~Vector4() = default;

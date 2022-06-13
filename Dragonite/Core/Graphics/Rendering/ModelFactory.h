@@ -10,7 +10,7 @@
 #define UNITICOSPHERE "IcoSphere"
 #define GEN_TERRAIN "Procedual Terrain"
 
-namespace Engine
+namespace Dragonite
 {
 	class System;
 }
@@ -28,7 +28,7 @@ enum class BufferType
 class ModelFactory
 {
 public:
-	ModelFactory(Engine::System* aSystem);
+	ModelFactory(Dragonite::System* aSystem);
 
 	ModelInsPtr CreateInstanceOf(std::string aKey, const Material aMaterial);
 private:
@@ -57,5 +57,5 @@ private:
 
 	std::map<std::string, ModelPtr> myModelTypes;
 	std::vector<ModelInsPtr> myInstances;
-	Engine::System* mySystem;
+	Dragonite::System* mySystem;
 };

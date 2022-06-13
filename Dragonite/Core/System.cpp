@@ -28,7 +28,7 @@ LRESULT CALLBACK WndProc(HWND aHWnd, UINT aMessage, WPARAM aWParam, LPARAM anLPa
 
 //Engine::System::~System() = default;
 
-Engine::System::~System()
+Dragonite::System::~System()
 {
 	for (auto& pair : myManagers)
 	{
@@ -39,9 +39,9 @@ Engine::System::~System()
 	myManagers.clear();
 }
 
-bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
+bool Dragonite::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 {
-	myGraphicsEngine = AddManager<Graphics::GraphicsEngine>();
+	myGraphicsEngine = AddManager<Dragonite::GraphicsEngine>();
 	myWindowsInfo = InitializeWindow(L"Dragonite", { 1920, 1080 }, anHInstance, WndProc);
 
 	if (!myWindowsInfo.myWindowInstance) return false;
@@ -55,12 +55,12 @@ bool Engine::System::Initialize(HINSTANCE anHInstance, int nCmdShow)
 	return true;
 }
 
-void Engine::System::Shutdown()
+void Dragonite::System::Shutdown()
 {
 	myRuntimeState = SystemState::Exit;
 }
 
-MSG Engine::System::StartRuntime()
+MSG Dragonite::System::StartRuntime()
 {
 	AddManager<ModelFactory>(this);
 	//AddManager<EntityManager>()->FetchSystem(this);
@@ -122,7 +122,7 @@ MSG Engine::System::StartRuntime()
 	return msg;
 }
 
-void Engine::System::ContainCursor()
+void Dragonite::System::ContainCursor()
 {
 	auto mousePos = CommonUtilities::Mouse::GetMousePosition();
 	auto offset = 10;

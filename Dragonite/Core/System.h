@@ -3,8 +3,8 @@
 #include "../EngineUtilities.h"
 #include <map>
 #include <typeinfo>
-using namespace Engine::Windows;
-namespace Engine
+using namespace Dragonite::Windows;
+namespace Dragonite
 {
 
 	enum class SystemState
@@ -24,7 +24,7 @@ namespace Engine
 		bool Initialize(HINSTANCE anHInstance, int nCmdShow);
 		void Shutdown();
 		MSG StartRuntime();
-		inline Graphics::GraphicsEngine* GetGraphicsEngine() { return Get<Graphics::GraphicsEngine>(); }
+		inline GraphicsEngine* GetGraphicsEngine() { return Get<GraphicsEngine>(); }
 		inline WindowInfo& GetWindowsInfo() { return myWindowsInfo; }
 
 		inline const float GetTimeDelta() { return myTimeDelta; };
@@ -57,7 +57,7 @@ namespace Engine
 		float myTotalTime;
 		int myFrameCounter;
 
-		Graphics::GraphicsEngine* myGraphicsEngine;
+		Dragonite::GraphicsEngine* myGraphicsEngine;
 		WindowInfo myWindowsInfo;
 		SystemState myRuntimeState;
 		std::unordered_map<size_t, void*> myManagers;
@@ -87,14 +87,14 @@ namespace Engine
 
 
 
-	inline size_t Engine::System::GetManagerID()
+	inline size_t Dragonite::System::GetManagerID()
 	{
 		static size_t counter;
 		return counter++;
 	}
 
 	template<class Manager>
-	inline size_t Engine::System::GetManagerTypeID()
+	inline size_t Dragonite::System::GetManagerTypeID()
 	{
 		static size_t key = GetManagerID();
 		return key;

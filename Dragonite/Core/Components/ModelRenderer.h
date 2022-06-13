@@ -28,7 +28,11 @@ public:
 
 			Material::TextureInfo{"Textures/Grass_n.png", Texture::Type::Normal},
 			Material::TextureInfo{"Textures/Rock_n.png", Texture::Type::Normal},
-			Material::TextureInfo{"Textures/Snow_n.png", Texture::Type::Normal}
+			Material::TextureInfo{"Textures/Snow_n.png", Texture::Type::Normal},
+
+			Material::TextureInfo{"Textures/Grass_m.png", Texture::Type::Metallic},
+			Material::TextureInfo{"Textures/Rock_m.png", Texture::Type::Metallic},
+			Material::TextureInfo{"Textures/Snow_m.png", Texture::Type::Metallic}
 	},
 	  "Shaders/ColorShader_VS.cso",
 	  "Shaders/TerrainShader_PS.cso"
@@ -40,7 +44,7 @@ public:
 	Math::Vector4f& Color();
 private:
 	ModelInsPtr myModelInstance;
-	Engine::Graphics::GraphicsEngine* myGraphicsEngine;
+	Dragonite::GraphicsEngine* myGraphicsEngine;
 	Math::Vector4f myPaddingVal;
 };
 

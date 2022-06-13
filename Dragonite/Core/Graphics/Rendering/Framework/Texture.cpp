@@ -5,13 +5,16 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Utilities/STB/ImageImport.h"
+#include "Utilities/External/DDSTextureLoader.h"
 
-Dragonite::Texture::Texture(Engine::Graphics::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType)
+#include <string>
+
+Dragonite::Texture::Texture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType)
 {
 	if (!aGraphicsEngine) return;
 
 	ImageInfo info;
-	if (FAILED(ImportTexture(aTexturePath, info)))
+	if (FAILED(ImportTexture(aGraphicsEngine, aTexturePath, info, aTextureType == Type::Cubemap)))
 	{
 		return;
 	}
@@ -32,15 +35,13 @@ Dragonite::Texture::Texture(Engine::Graphics::GraphicsEngine* aGraphicsEngine, c
 
 	switch (aTextureType)
 	{
+	default:
 	case Dragonite::Texture::Type::Albedo:
 		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 		break;
 	case Dragonite::Texture::Type::Normal:
 		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-		break;
-	default:
 		break;
 	}
 
@@ -73,8 +74,19 @@ void Dragonite::Texture::BindTexture(ComPtr<ID3D11DeviceContext>& aContext, cons
 	aContext->PSSetShaderResources(aSlot, 1, myTextureResource.GetAddressOf());
 }
 
-HRESULT Dragonite::Texture::ImportTexture(const char* aTexturePath, ImageInfo& anOutput)
+HRESULT Dragonite::Texture::ImportTexture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, ImageInfo& anOutput, bool anImportDDSFile)
 {
+
+	if (anImportDDSFile)
+	{
+		std::string path = std::string(aTexturePath);
+		HRESULT result = DirectX::CreateDDSTextureFromFile(aGraphicsEngine->GetDevice(), std::wstring(path.begin(), path.end()).c_str(), 0, &myTextureResource);
+
+		if (result != NOERROR)
+			std::cout << "[ERROR]<Texture/ImportTexture>: Couldnt import DDS file (" << aTexturePath << ")" << std::endl;
+		return result;
+	}
+
 	int width, height, channels;
 	unsigned char* img = stbi_load(aTexturePath, &width, &height, &channels, 0);
 

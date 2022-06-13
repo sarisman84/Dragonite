@@ -7,7 +7,7 @@
 using GameObjectPtr = std::shared_ptr<GameObject>;
 
 class Scene;
-namespace Engine
+namespace Dragonite
 {
 	class System;
 

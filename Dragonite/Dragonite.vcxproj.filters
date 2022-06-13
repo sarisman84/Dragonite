@@ -38,9 +38,6 @@
     <Filter Include="Core\System\Input">
       <UniqueIdentifier>{67b0d9d5-be6e-4d95-9923-5bb922093193}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utilities\stb">
-      <UniqueIdentifier>{2c964b4b-8ceb-42c7-b158-542114e8d614}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Math\Noise">
       <UniqueIdentifier>{b0b7f210-84f8-44bd-9a79-abd9b8f28c23}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,12 @@
     </Filter>
     <Filter Include="Core\Graphics\Framework\Model">
       <UniqueIdentifier>{5dd3403a-0065-47a9-8468-ab12b8fcfe3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\External">
+      <UniqueIdentifier>{6073e341-d9fd-494a-94b5-f6b3800ff3b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\External\stb">
+      <UniqueIdentifier>{2c964b4b-8ceb-42c7-b158-542114e8d614}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="Core\Graphics\Rendering\Framework\Texture.cpp">
       <Filter>Core\Graphics\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utilities\External\DDSTextureLoader.cpp">
+      <Filter>Utilities\External</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,9 +159,6 @@
     <ClInclude Include="Core\Scene.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Utilities\Extensions.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Core\GameObject.h">
       <Filter>Core\System</Filter>
     </ClInclude>
@@ -163,7 +166,7 @@
       <Filter>Core\System\Input</Filter>
     </ClInclude>
     <ClInclude Include="Core\Utilities\STB\ImageImport.h">
-      <Filter>Utilities\stb</Filter>
+      <Filter>Utilities\External\stb</Filter>
     </ClInclude>
     <ClInclude Include="Core\Utilities\Math\Noise.h">
       <Filter>Utilities\Math\Noise</Filter>
@@ -173,6 +176,12 @@
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\Framework\Texture.h">
       <Filter>Core\Graphics\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\External\DDSTextureLoader.h">
+      <Filter>Utilities\External</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Extensions.h">
+      <Filter>Utilities\External</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Utilities\ShaderUtilities.hlsli">
+      <Filter>Shaders\Utilities</Filter>
+    </None>
+    <None Include="Shaders\Utilities\PBRFunctions.hlsli">
       <Filter>Shaders\Utilities</Filter>
     </None>
   </ItemGroup>

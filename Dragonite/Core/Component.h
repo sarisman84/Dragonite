@@ -9,11 +9,12 @@ class Component
 public:
 	Component() = default;
 	friend class GameObject;
+	inline Transform* GetTransform() { return myTransform; }
 protected:
 
 	virtual void OnAwake() = 0;
 	virtual void OnUpdate(float aDeltaTime) = 0;
 	GameObject* myGameObject = nullptr;
 	Transform* myTransform = nullptr;
-	Engine::System* mySystem = nullptr;
+	Dragonite::System* mySystem = nullptr;
 };

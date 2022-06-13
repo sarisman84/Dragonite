@@ -14,7 +14,7 @@
 #pragma warning (disable: 4471)
 
 using Microsoft::WRL::ComPtr;
-using Engine::Windows::Resolution;
+using Dragonite::Windows::Resolution;
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -33,12 +33,14 @@ enum class Primitive2D;
 class Camera;
 struct ModelInstance;
 
+
 struct FrameBufferData
 {
 	Math::Matrix4x4f myClipSpaceMatrix;
 	float myTimeDelta;
 	float myTotalTime;
 	float myGarbage[2];
+	Math::Vector4f myCameraPosition;
 };
 
 struct ObjectBufferData
@@ -59,91 +61,91 @@ struct GlobalLightBufferData
 };
 
 
-namespace Engine
+namespace Dragonite
 {
 	class System;
-	namespace Graphics
+	class Texture;
+
+
+
+	class GraphicsEngine
 	{
+	public:
+		GraphicsEngine();
+		~GraphicsEngine();
+		bool Initialize(Dragonite::Windows::Resolution aResolution, HWND aWindowsHandle, System* aSystem);
 
-
-
-
-		class GraphicsEngine
+		inline void AddRenderInstruction(ModelInstance* anInstance)
 		{
-		public:
-			GraphicsEngine();
-			~GraphicsEngine();
-			bool Initialize(Engine::Windows::Resolution aResolution, HWND aWindowsHandle, System* aSystem);
+			myRenderInstructions.Insert(anInstance);
+		}
 
-			inline void AddRenderInstruction(ModelInstance* anInstance)
-			{
-				myRenderInstructions.Insert(anInstance);
-			}
-
-			inline GlobalLightBufferData& GlobalLightData()
-			{
-				return myLightData;
-			}
+		inline GlobalLightBufferData& GlobalLightData()
+		{
+			return myLightData;
+		}
 
 
 
-			inline void SetRenderCamera(Camera* aCamera) { myRenderCamera = aCamera; }
-			inline Camera* GetRenderCamera() noexcept { return myRenderCamera; }
+		inline void SetRenderCamera(Camera* aCamera) { myRenderCamera = aCamera; }
+		inline Camera* GetRenderCamera() noexcept { return myRenderCamera; }
 
-			void DrawElements();
-			inline ID3D11Device* GetDevice() { return myDevice.Get(); }
-			inline ID3D11DeviceContext* GetDeviceContext() { return myContext.Get(); }
+		void DrawElements();
+		inline ID3D11Device* GetDevice() { return myDevice.Get(); }
+		inline ID3D11DeviceContext* GetDeviceContext() { return myContext.Get(); }
 
-			inline ComPtr<ID3D11Buffer>& ObjectBuffer() { return myObjectBuffer; }
-			inline ComPtr<ID3D11Buffer>& FrameBuffer() { return myFrameBuffer; }
+		inline ComPtr<ID3D11Buffer>& ObjectBuffer() { return myObjectBuffer; }
+		inline ComPtr<ID3D11Buffer>& FrameBuffer() { return myFrameBuffer; }
 
 
 
-			void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
-				void (ID3D11DeviceContext::* anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
-				void (ID3D11DeviceContext::* anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer) = nullptr);
+		void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
+			void (ID3D11DeviceContext::* anOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer),
+			void (ID3D11DeviceContext::* anotherOnConstantBufferUpdateCallback)(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aConstantBuffer) = nullptr);
 
-			/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
+		/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
 
-			//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
-		private:
-			void RenderInstances();
+		//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
+	private:
+		void RenderInstances();
 
-			HRESULT InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>& aBuffer);
-			HRESULT InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE  aTileType, ComPtr<ID3D11SamplerState>& aSampler);
-			HRESULT InitializeDepthBuffer(const Resolution& aResolution, ComPtr<ID3D11DepthStencilView>& aDepthBuffer);
+		HRESULT InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>& aBuffer);
+		HRESULT InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE  aTileType, ComPtr<ID3D11SamplerState>& aSampler);
+		HRESULT InitializeDepthBuffer(const Resolution& aResolution, ComPtr<ID3D11DepthStencilView>& aDepthBuffer);
 
-			ComPtr<ID3D11Device> myDevice;
-			ComPtr<ID3D11DeviceContext> myContext;
-			ComPtr<IDXGISwapChain> mySwapChain;
-			ComPtr<ID3D11RenderTargetView> myBackBuffer;
+		ComPtr<ID3D11Device> myDevice;
+		ComPtr<ID3D11DeviceContext> myContext;
+		ComPtr<IDXGISwapChain> mySwapChain;
+		ComPtr<ID3D11RenderTargetView> myBackBuffer;
 
-			ComPtr<ID3D11Buffer> myObjectBuffer;
-			ComPtr<ID3D11Buffer> myFrameBuffer;
-			ComPtr<ID3D11Buffer> myMaterialBuffer;
-			ComPtr<ID3D11Buffer> myGlobalLightBuffer;
-			ComPtr<ID3D11DepthStencilView> myDepthBuffer;
+		ComPtr<ID3D11Buffer> myObjectBuffer;
+		ComPtr<ID3D11Buffer> myFrameBuffer;
+		ComPtr<ID3D11Buffer> myMaterialBuffer;
+		ComPtr<ID3D11Buffer> myGlobalLightBuffer;
+		ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 
 
 
 
-			ComPtr<ID3D11SamplerState> mySamplerState;
+		ComPtr<ID3D11SamplerState> mySamplerState;
 
-			Dragonite::SparseSet<ModelInstance*> myRenderInstructions;
+		Dragonite::SparseSet<ModelInstance*> myRenderInstructions;
 
-			//std::vector<std::shared_ptr<Mesh>> myMeshes;
-			System* mySystem;
-			Camera* myRenderCamera;
+		//std::vector<std::shared_ptr<Mesh>> myMeshes;
+		System* mySystem;
+		Camera* myRenderCamera;
 
-			GlobalLightBufferData myLightData;
-		};
+		GlobalLightBufferData myLightData;
+
+		std::shared_ptr<Texture> myCubemapTexture;
+	};
 
 
 
 
 
 
-	}
+
 
 }
 

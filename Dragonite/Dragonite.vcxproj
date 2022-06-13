@@ -170,6 +170,7 @@
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\Transform.cpp" />
     <ClCompile Include="Core\Utilities\Algorithms\SparseSet.cpp" />
+    <ClCompile Include="Core\Utilities\External\DDSTextureLoader.cpp" />
     <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="Core\Transform.h" />
     <ClInclude Include="Core\Utilities\Algorithms\SparseSet.h" />
     <ClInclude Include="Core\Utilities\Extensions.h" />
+    <ClInclude Include="Core\Utilities\External\DDSTextureLoader.h" />
     <ClInclude Include="Core\Utilities\Input.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix.h" />
     <ClInclude Include="Core\Utilities\Math\Matrix3x3.h" />
@@ -240,6 +242,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Utilities\PBRFunctions.hlsli" />
     <None Include="Shaders\Utilities\ShaderUtilities.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

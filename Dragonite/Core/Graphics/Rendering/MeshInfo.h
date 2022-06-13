@@ -13,12 +13,10 @@ struct ID3D11PixelShader;
 struct ID3D11InputLayout;
 
 
-namespace Engine
+namespace Dragonite
 {
-	namespace Graphics
-	{
-		class GraphicsEngine;
-	}
+	class GraphicsEngine;
+
 }
 
 
@@ -50,7 +48,7 @@ struct Material
 
 struct MeshData
 {
-	friend class Engine::Graphics::GraphicsEngine;
+	friend class Dragonite::GraphicsEngine;
 	friend class ModelFactory;
 public:
 	std::vector<Vertex> myVertecies;
@@ -65,14 +63,14 @@ private:
 struct Model
 {
 	friend class ModelFactory;
-	friend class Engine::Graphics::GraphicsEngine;
+	friend class Dragonite::GraphicsEngine;
 public:
 	std::vector<MeshData> myMesh;
 private:
 	ComPtr<ID3D11VertexShader> myVertexShader;
 	ComPtr<ID3D11PixelShader> myPixelShader;
 	ComPtr<ID3D11InputLayout> myInputLayout;
-	
+
 
 };
 

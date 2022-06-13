@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#pragma comment( lib, "dxguid.lib") 
 
 namespace DirectX
 {

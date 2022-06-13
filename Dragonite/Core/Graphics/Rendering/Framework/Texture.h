@@ -6,12 +6,11 @@ using Microsoft::WRL::ComPtr;
 struct ID3D11ShaderResourceView;
 struct ID3D11DeviceContext;
 
-namespace Engine
+namespace Dragonite
 {
-	namespace Graphics
-	{
-		class GraphicsEngine;
-	}
+
+	class GraphicsEngine;
+
 }
 
 
@@ -22,10 +21,10 @@ namespace Dragonite
 	public:
 		enum class Type
 		{
-			Albedo, Normal
+			Albedo, Normal, Metallic, Cubemap
 		};
 		Texture() = default;
-		Texture(Engine::Graphics::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType);
+		Texture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType);
 
 		Texture(const Texture& aResourceView);
 		void operator=(const Texture& aResourceView);
@@ -42,7 +41,7 @@ namespace Dragonite
 		};
 
 
-		HRESULT ImportTexture(const char* aTexturePath, ImageInfo& anOutput);
+		HRESULT ImportTexture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, ImageInfo& anOutput, bool anImportDDSFile = false);
 		ComPtr<ID3D11ShaderResourceView> myTextureResource;
 	};
 }

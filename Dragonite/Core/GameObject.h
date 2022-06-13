@@ -8,7 +8,7 @@
 
 class Component;
 
-namespace Engine
+namespace Dragonite
 {
 	class Runtime;
 	class System;
@@ -59,10 +59,10 @@ public:
 	std::string myName;
 	std::string myTag;
 private:
-	friend Engine::Runtime;
+	friend Dragonite::Runtime;
 	void UpdateComponents(float aTimeDelta);
 
-	Engine::System* mySystem = nullptr;
+	Dragonite::System* mySystem = nullptr;
 	bool myActiveState = true;
 	std::vector<std::shared_ptr<Component>> myComponents = {};
 };

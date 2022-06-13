@@ -8,7 +8,7 @@
 //#define STB_IMAGE_IMPLEMENTATION
 //#include "Utilities/STB/ImageImport.h"
 
-ModelFactory::ModelFactory(Engine::System* aSystem)
+ModelFactory::ModelFactory(Dragonite::System* aSystem)
 {
 	mySystem = aSystem;
 	myModelTypes[UNITCUBE] = InitializeModelOfType({ GetUnitCube() });
