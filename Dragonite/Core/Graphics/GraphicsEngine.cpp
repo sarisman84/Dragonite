@@ -5,6 +5,8 @@
 #include "Utilities/Math/Vector2.h"
 #include "Components/Camera.h"
 #include "Rendering/MeshInfo.h"
+#include "Rendering/Framework/Texture.h"
+#include "Rendering/Framework/RenderTarget.h"
 #define REPORT_DX_WARNINGS
 
 #pragma warning (disable: 26812)
@@ -18,7 +20,7 @@ Dragonite::GraphicsEngine::GraphicsEngine() : myRenderInstructions(1000, 100)
 Dragonite::GraphicsEngine::~GraphicsEngine() = default;
 
 
-bool Dragonite::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindowsHandle, System * aSystem)
+bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWindowsHandle, System * aSystem)
 {
 
 	mySystem = aSystem;
@@ -77,13 +79,20 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindows
 
 	if (FAILED(InitializeConstantBuffer(sizeof(ObjectBufferData), myObjectBuffer))) return false;
 
-	if (FAILED(InitializeConstantBuffer(sizeof(MaterialBufferData), myMaterialBuffer))) return false;
+	if (FAILED(InitializeConstantBuffer(sizeof(StaticBufferData), myStaticBuffer))) return false;
 
-	if (FAILED(InitializeConstantBuffer(sizeof(GlobalLightBufferData), myGlobalLightBuffer))) return false;
+
 
 	if (FAILED(InitializeSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, mySamplerState))) return false;
 
-	if (FAILED(InitializeDepthBuffer(Resolution{ (int)textureDesc.Width, (int)textureDesc.Height }, myDepthBuffer))) return false;
+	myViewport = Resolution{ (int)textureDesc.Width, (int)textureDesc.Height };
+
+	if (FAILED(InitializeDepthBuffer(myViewport, myDepthBuffer))) return false;
+
+
+	StaticBufferData data;
+
+	UpdateConstantBuffer(myStaticBuffer, &data, sizeof(StaticBufferData), 0, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
@@ -92,8 +101,8 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindows
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(aResolution.width);
-	viewport.Height = static_cast<float>(aResolution.height);
+	viewport.Width = static_cast<float>(myViewport.width);
+	viewport.Height = static_cast<float>(myViewport.height);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	myContext->RSSetViewports(1, &viewport);
@@ -117,7 +126,7 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution aResolution, HWND aWindows
 
 void Dragonite::GraphicsEngine::DrawElements()
 {
-	float color[4] = { 0.2f,0.2f,0.2f,1.0f }; // RGBA
+	float color[4] = { 0.2f,0.2f,0.9f,1.0f }; // RGBA
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
 	myContext->ClearDepthStencilView(
 		myDepthBuffer.Get(),
@@ -127,16 +136,11 @@ void Dragonite::GraphicsEngine::DrawElements()
 	);
 	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
 
-	FrameBufferData fData;
-	fData.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
-	fData.myTimeDelta = mySystem->GetTimeDelta();
-	fData.myTotalTime = mySystem->GetTotalTime();
-	fData.myCameraPosition = Math::Vector4f(myRenderCamera->GetTransform()->Position(), 1);
+	UpdateFrameBuffer();
 
-	UpdateConstantBuffer(myFrameBuffer, &fData, sizeof(FrameBufferData), 0, &ID3D11DeviceContext::VSSetConstantBuffers, &ID3D11DeviceContext::PSSetConstantBuffers);
 
-	UpdateConstantBuffer(myGlobalLightBuffer, &myLightData, sizeof(GlobalLightBufferData), 3, &ID3D11DeviceContext::PSSetConstantBuffers);
-
+	if (myRenderTarget)
+		myRenderTarget->Render(this);
 	RenderInstances();
 
 
@@ -161,19 +165,39 @@ void Dragonite::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConst
 		(myContext.Get()->*anotherOnConstantBufferUpdateCallback)(aSlot, 1, aConstantBuffer.GetAddressOf());
 }
 
+void Dragonite::GraphicsEngine::UpdateFrameBuffer()
+{
+	FrameBufferData fData;
+	fData.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
+	fData.myTimeDelta = mySystem->GetTimeDelta();
+	fData.myTotalTime = mySystem->GetTotalTime();
+	fData.myCameraPosition = Math::Vector4f(myRenderCamera->GetTransform()->Position(), 1);
+
+	fData.myAmbientLight = myLightData.myAmbientLight;
+	fData.myLightColor = myLightData.myLightColor;
+	fData.myLightDirection = myLightData.myLightDirection;
+
+	UpdateConstantBuffer(myFrameBuffer, &fData, sizeof(FrameBufferData), 1, &ID3D11DeviceContext::VSSetConstantBuffers, &ID3D11DeviceContext::PSSetConstantBuffers);
+}
+
+void Dragonite::GraphicsEngine::UpdateObjectBuffer(ModelInstance * anInstance)
+{
+	ObjectBufferData oData;
+	oData.myObjectMatrix = anInstance->myTransform.GetMatrix();
+	oData.myColor = anInstance->myMaterial.myColor;
+	oData.mySize = { myRenderTarget->GetTransform()->Position() ,0 };
+	UpdateConstantBuffer(myObjectBuffer, &oData, sizeof(ObjectBufferData), 2, &ID3D11DeviceContext::VSSetConstantBuffers);
+}
+
 void Dragonite::GraphicsEngine::RenderInstances()
 {
 	for (size_t i = 0; i < myRenderInstructions.Size(); i++)
 	{
 		auto instruction = myRenderInstructions[i];
 
-		ObjectBufferData oData;
-		oData.myObjectMatrix = instruction->myTransform.GetMatrix();
-		UpdateConstantBuffer(myObjectBuffer, &oData, sizeof(ObjectBufferData), 1, &ID3D11DeviceContext::VSSetConstantBuffers);
 
-		MaterialBufferData mData;
-		mData.myColor = instruction->myMaterial.myColor;
-		UpdateConstantBuffer(myMaterialBuffer, &mData, sizeof(MaterialBufferData), 2, &ID3D11DeviceContext::PSSetConstantBuffers);
+		UpdateObjectBuffer(instruction);
+
 
 
 		myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -196,7 +220,7 @@ void Dragonite::GraphicsEngine::RenderInstances()
 			{
 				auto& texture = mesh.myTextureBuffer[t];
 				/*myContext->PSSetShaderResources(texture.mySlot, 1, texture.myTextureResource.GetAddressOf());*/
-				texture.BindTexture(myContext, t);
+				texture->BindTexture(myContext, t);
 			}
 
 			myContext->DrawIndexed(static_cast<UINT>(mesh.myIndiciesAmm), 0, 0);

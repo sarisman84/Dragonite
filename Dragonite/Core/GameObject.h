@@ -14,6 +14,8 @@ namespace Dragonite
 	class System;
 }
 
+using namespace Dragonite;
+
 class GameObject
 {
 public:

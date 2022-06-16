@@ -3,6 +3,8 @@
 #include "Components/Camera.h"
 #include <iostream>
 #include "Utilities/UtilityFunctions.h"
+#include "Components/ModelRenderer.h"
+#include "Rendering/Framework/RenderTarget.h"
 
 
 float factorial(float aVal)
@@ -40,6 +42,13 @@ void Scene::Awake()
 	objC->myName = "A Terrain";
 	objC->AddComponent<ModelRenderer>()->LoadModel(GEN_TERRAIN, ModelRenderer::terrainMaterial);
 	objC->myTransform.Position = { 0,0,0 };
+
+
+
+	auto& objD = myRuntime->CreateGameObject();
+	objD->myName = "Some water";
+	objD->AddComponent<RenderTarget>();
+	objD->myTransform.Position = { 0,0,0 };
 
 	auto cam = myCamera->AddComponent<Camera>();
 	myCamera->myTransform.Position() = { 0.f, 2.f, 0.f };

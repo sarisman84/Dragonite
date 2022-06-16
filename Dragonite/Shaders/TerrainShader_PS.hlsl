@@ -22,7 +22,7 @@ TextureCube anEnviromentalTexture : register(t9);
 
 
 
-float4 DrawTexture(PixelInputType anInput, Texture2D anAlbedoMap, Texture2D aNormalMap, Texture2D aMaterialTexture, float3x3 someTangentSpace, float3 anEyePosition)
+float4 DrawTexture(TerrainPixelInputType anInput, Texture2D anAlbedoMap, Texture2D aNormalMap, Texture2D aMaterialTexture, float3x3 someTangentSpace, float3 anEyePosition)
 {
     float3 material = aMaterialTexture.Sample(defaultSampler, anInput.myUV).rgb;
     
@@ -87,7 +87,7 @@ float4 DrawTexture(PixelInputType anInput, Texture2D anAlbedoMap, Texture2D aNor
 
 
 
-PixelOutput main(PixelInputType anInput)
+PixelOutput main(TerrainPixelInputType anInput)
 {
     
     float3 toEye = normalize(myCameraPosition.xyz - anInput.myWorldPosition.xyz);

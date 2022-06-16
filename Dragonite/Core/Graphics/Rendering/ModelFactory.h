@@ -9,7 +9,7 @@
 #define UNITPYRAMID "Piramid"
 #define UNITICOSPHERE "IcoSphere"
 #define GEN_TERRAIN "Procedual Terrain"
-
+#define UNITPLANE "Plane"
 namespace Dragonite
 {
 	class System;
@@ -49,6 +49,7 @@ private:
 	ModelPtr InitializeModelOfType(std::vector<TempMeshData> someTempData);
 
 	std::vector<TempMeshData> GetUnitCube();
+	std::vector<TempMeshData> GetUnitPlane();
 	TempMeshData GetUnitPiramid();
 	TempMeshData GetUnitIcoSphere();
 

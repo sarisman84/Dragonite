@@ -8,6 +8,11 @@ class Component
 {
 public:
 	Component() = default;
+	virtual ~Component() = default;
+
+	Component(const Component& aLhs) = default;
+	virtual Component& operator=(const Component& aLhs) = default;
+
 	friend class GameObject;
 	inline Transform* GetTransform() { return myTransform; }
 protected:

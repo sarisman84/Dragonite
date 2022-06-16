@@ -1,6 +1,7 @@
 #pragma once
 #include "Runtime.h"
-#include "Components/ModelRenderer.h"
+//#include "Components/ModelRenderer.h"
+//#include "Rendering/Framework/RenderTarget.h"
 #include "Utilities/Algorithms/SparseSet.h"
 
 using namespace Dragonite;

@@ -9,6 +9,19 @@ struct PixelInputType
     float2 myUV : TEXCOORD;
 };
 
+
+struct TerrainPixelInputType
+{
+    float4 myPosition : SV_POSITION;
+    float4 myWorldPosition : POSITION;
+    float4 myColor : COLOR;
+    float4 myNormal : NORMAL;
+    float4 myTangent : TANGENT;
+    float4 myBiNormal : BINORMAL;
+    float2 myUV : TEXCOORD;
+    float myClip : SV_ClipDistance;
+};
+
 struct VertexInputType
 {
     float3 myPosition : POSITION;
@@ -25,31 +38,36 @@ struct PixelOutput
     float4 myColor : SV_TARGET;
 };
 
-cbuffer FrameBuffer : register(b0)
+
+cbuffer StaticBuffer : register(b0)
+{
+    float2 myResolution;
+    float2 myPadding0;
+}
+
+
+cbuffer FrameBuffer : register(b1)
 {
     float4x4 myClipSpaceMatrix;
     float myTimeDelta;
     float myTotalTime;
-    float2 myGarbage;
+    float2 myPadding1;
     float4 myCameraPosition;
-}
-
-cbuffer ObjectBuffer : register(b1)
-{
-    float4x4 myObjectMatrix;
-}
-
-cbuffer MaterialBuffer : register(b2)
-{
-    float4 myMaterialColor;
-}
-
-cbuffer GlobalLightBuffer : register(b3)
-{
     float4 myLightDirection;
     float4 myDirLightColor;
     float4 myAmbientColor;
 }
+
+cbuffer ObjectBuffer : register(b2)
+{
+    float4x4 myObjectMatrix;
+    float4 myMaterialColor;
+    float4 mySize;
+}
+
+
+
+
 
 
 

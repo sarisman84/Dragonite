@@ -100,6 +100,9 @@
     <ClCompile Include="Core\Utilities\External\DDSTextureLoader.cpp">
       <Filter>Utilities\External</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Graphics\Rendering\Framework\RenderTarget.cpp">
+      <Filter>Core\Graphics\Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineUtilities.h">
@@ -183,6 +186,9 @@
     <ClInclude Include="Core\Utilities\Extensions.h">
       <Filter>Utilities\External</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Framework\RenderTarget.h">
+      <Filter>Core\Graphics\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ColorShader_PS.hlsl">
@@ -198,6 +204,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\TerrainShader_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\TerrainShader_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PlanarReflection_PS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

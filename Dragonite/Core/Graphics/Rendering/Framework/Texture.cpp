@@ -1,3 +1,5 @@
+
+
 #include "Texture.h"
 #include <d3d11.h>
 #include <iostream>
@@ -9,7 +11,11 @@
 
 #include <string>
 
-Dragonite::Texture::Texture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType)
+Dragonite::Texture::Texture() = default;
+Dragonite::Texture::~Texture() = default;
+
+
+Dragonite::Texture::Texture(Dragonite::GraphicsEngine * aGraphicsEngine, const char* aTexturePath, Type aTextureType)
 {
 	if (!aGraphicsEngine) return;
 
@@ -59,22 +65,29 @@ Dragonite::Texture::Texture(Dragonite::GraphicsEngine* aGraphicsEngine, const ch
 	texturePtr->Release();
 }
 
-Dragonite::Texture::Texture(const Texture& aTexture)
+Dragonite::Texture::Texture(const ComPtr<ID3D11ShaderResourceView>&aTextureResource)
+{
+	myTextureResource = aTextureResource;
+}
+
+Dragonite::Texture::Texture(const Texture & aTexture)
 {
 	myTextureResource = aTexture.myTextureResource;
 }
 
-void Dragonite::Texture::operator=(const Texture& aTexture)
+
+
+void Dragonite::Texture::operator=(const Texture & aTexture)
 {
 	myTextureResource = aTexture.myTextureResource;
 }
 
-void Dragonite::Texture::BindTexture(ComPtr<ID3D11DeviceContext>& aContext, const size_t& aSlot)
+void Dragonite::Texture::BindTexture(ComPtr<ID3D11DeviceContext>&aContext, const size_t & aSlot)
 {
 	aContext->PSSetShaderResources(aSlot, 1, myTextureResource.GetAddressOf());
 }
 
-HRESULT Dragonite::Texture::ImportTexture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, ImageInfo& anOutput, bool anImportDDSFile)
+HRESULT Dragonite::Texture::ImportTexture(Dragonite::GraphicsEngine * aGraphicsEngine, const char* aTexturePath, ImageInfo & anOutput, bool anImportDDSFile)
 {
 
 	if (anImportDDSFile)

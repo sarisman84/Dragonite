@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "Utilities/Math/Noise.h"
+#include "Rendering/Framework/Texture.h"
 //
 //#define STB_IMAGE_IMPLEMENTATION
 //#include "Utilities/STB/ImageImport.h"
@@ -15,6 +16,7 @@ ModelFactory::ModelFactory(Dragonite::System* aSystem)
 	myModelTypes[UNITPYRAMID] = InitializeModelOfType({ GetUnitPiramid() });
 	myModelTypes[UNITICOSPHERE] = InitializeModelOfType({ GetUnitIcoSphere() });
 	myModelTypes[GEN_TERRAIN] = InitializeModelOfType({ GetProcedualTerrain() });
+	myModelTypes[UNITPLANE] = InitializeModelOfType({ GetUnitPlane() });
 }
 
 ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMaterial)
@@ -52,7 +54,7 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 			auto texture = aMaterial.myTextureMapInfo[t];
 
 
-			ins->myModel->myMesh[m].myTextureBuffer[t] = Dragonite::Texture(mySystem->GetGraphicsEngine(), texture.myTexturePath, texture.myType);
+			ins->myModel->myMesh[m].myTextureBuffer[t] = std::make_shared<Dragonite::Texture>(mySystem->GetGraphicsEngine(), texture.myTexturePath, (Dragonite::Texture::Type)texture.myType);
 
 		}
 
@@ -219,6 +221,39 @@ std::vector<ModelFactory::TempMeshData> ModelFactory::GetUnitCube()
 
 
 	return { cube };
+}
+
+std::vector<ModelFactory::TempMeshData> ModelFactory::GetUnitPlane()
+{
+	TempMeshData data;
+
+
+	for (int x = -1; x <= 1; x += 2)
+	{
+		for (int z = -1; z <= 1; z += 2)
+		{
+			Vertex vertex;
+
+			vertex.myPosition = { 0.5f * x,0, 0.5f * z };
+			vertex.myColor = { 1,1,1,1 };
+			vertex.myUV = { 0.5f + 0.5f * x, 0.5f + 0.5f * z };
+			vertex.myNormal = { 0,1,0 };
+			vertex.myTangent = { 1,0,0 };
+			vertex.myBiNormal = { 0,0,1 };
+
+			data.myVertecies.push_back(vertex);
+		}
+	}
+
+	data.myIndicies.push_back(1);
+	data.myIndicies.push_back(2);
+	data.myIndicies.push_back(0);
+
+	data.myIndicies.push_back(2);
+	data.myIndicies.push_back(1);
+	data.myIndicies.push_back(3);
+
+	return { data };
 }
 
 ModelFactory::TempMeshData ModelFactory::GetUnitPiramid()

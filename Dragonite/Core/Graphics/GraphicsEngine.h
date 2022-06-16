@@ -39,33 +39,40 @@ struct FrameBufferData
 	Math::Matrix4x4f myClipSpaceMatrix;
 	float myTimeDelta;
 	float myTotalTime;
-	float myGarbage[2];
+	float myPadding[2];
 	Math::Vector4f myCameraPosition;
+
+	Math::Vector4f myLightDirection;
+	Math::Vector4f myLightColor;
+	Math::Vector4f myAmbientLight;
 };
 
 struct ObjectBufferData
 {
 	Math::Matrix4x4f myObjectMatrix;
-};
-
-struct MaterialBufferData
-{
 	Math::Vector4f myColor;
+	Math::Vector4f mySize;
 };
 
-struct GlobalLightBufferData
+struct StaticBufferData
+{
+	Math::Vector2f myResolution;
+	Math::Vector2f myPadding;
+};
+
+struct LightInfo
 {
 	Math::Vector4f myLightDirection;
 	Math::Vector4f myLightColor;
 	Math::Vector4f myAmbientLight;
 };
 
-
+class RenderTarget;
 namespace Dragonite
 {
 	class System;
 	class Texture;
-
+	
 
 
 	class GraphicsEngine
@@ -80,7 +87,7 @@ namespace Dragonite
 			myRenderInstructions.Insert(anInstance);
 		}
 
-		inline GlobalLightBufferData& GlobalLightData()
+		inline LightInfo& GlobalLightData()
 		{
 			return myLightData;
 		}
@@ -92,11 +99,12 @@ namespace Dragonite
 
 		void DrawElements();
 		inline ID3D11Device* GetDevice() { return myDevice.Get(); }
-		inline ID3D11DeviceContext* GetDeviceContext() { return myContext.Get(); }
+		inline ComPtr<ID3D11DeviceContext>& GetDeviceContext() { return myContext; }
 
 		inline ComPtr<ID3D11Buffer>& ObjectBuffer() { return myObjectBuffer; }
 		inline ComPtr<ID3D11Buffer>& FrameBuffer() { return myFrameBuffer; }
-
+		inline void SetRenderTarget(RenderTarget* aTarget) { myRenderTarget = aTarget; }
+		inline Dragonite::Windows::Resolution& Viewport() { return myViewport; }
 
 
 		void UpdateConstantBuffer(ComPtr<ID3D11Buffer>& aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
@@ -106,7 +114,13 @@ namespace Dragonite
 		/*	void std::shared_ptr<RenderObject> CreateElement(Primitive aPrimitiveShape);*/
 
 		//std::shared_ptr<Mesh> CreateMesh(std::shared_ptr<Mesh> aMesh);
+		void UpdateFrameBuffer();
+		void UpdateObjectBuffer(ModelInstance* anInstance);
+
 	private:
+
+
+
 		void RenderInstances();
 
 		HRESULT InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>& aBuffer);
@@ -120,7 +134,7 @@ namespace Dragonite
 
 		ComPtr<ID3D11Buffer> myObjectBuffer;
 		ComPtr<ID3D11Buffer> myFrameBuffer;
-		ComPtr<ID3D11Buffer> myMaterialBuffer;
+		ComPtr<ID3D11Buffer> myStaticBuffer;
 		ComPtr<ID3D11Buffer> myGlobalLightBuffer;
 		ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 
@@ -134,8 +148,10 @@ namespace Dragonite
 		//std::vector<std::shared_ptr<Mesh>> myMeshes;
 		System* mySystem;
 		Camera* myRenderCamera;
+		RenderTarget* myRenderTarget;
 
-		GlobalLightBufferData myLightData;
+		LightInfo myLightData;
+		Dragonite::Windows::Resolution myViewport;
 
 		std::shared_ptr<Texture> myCubemapTexture;
 	};

@@ -163,6 +163,7 @@
     <ClCompile Include="Core\Components\ModelRenderer.cpp" />
     <ClCompile Include="Core\GameObject.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsEngine.cpp" />
+    <ClCompile Include="Core\Graphics\Rendering\Framework\RenderTarget.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\Framework\Texture.cpp" />
     <ClCompile Include="Core\Graphics\Rendering\ModelFactory.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Core\Components\ModelRenderer.h" />
     <ClInclude Include="Core\GameObject.h" />
     <ClInclude Include="Core\Graphics\GraphicsEngine.h" />
+    <ClInclude Include="Core\Graphics\Rendering\Framework\RenderTarget.h" />
     <ClInclude Include="Core\Graphics\Rendering\Framework\Texture.h" />
     <ClInclude Include="Core\Graphics\Rendering\MeshInfo.h" />
     <ClInclude Include="Core\Graphics\Rendering\ModelFactory.h" />
@@ -226,6 +228,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Shaders\PlanarReflection_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\SinWave_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -239,6 +247,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\TerrainShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

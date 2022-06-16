@@ -1,8 +1,8 @@
 #pragma once
-
+#include <wrl/client.h>
 #include "GameObject.h"
-#include "Rendering/Framework/Texture.h"
 
+using Microsoft::WRL::ComPtr;
 
 using namespace Dragonite;
 
@@ -16,7 +16,7 @@ struct ID3D11InputLayout;
 namespace Dragonite
 {
 	class GraphicsEngine;
-
+	class Texture;
 }
 
 
@@ -37,7 +37,7 @@ struct Material
 	struct TextureInfo
 	{
 		const char* myTexturePath;
-		Texture::Type myType;
+		int myType;
 	};
 	Math::Vector4f myColor;
 	std::vector<TextureInfo> myTextureMapInfo;
@@ -48,22 +48,24 @@ struct Material
 
 struct MeshData
 {
-	friend class Dragonite::GraphicsEngine;
+	friend Dragonite::GraphicsEngine;
 	friend class ModelFactory;
+	friend class RenderTarget;
 public:
 	std::vector<Vertex> myVertecies;
 	unsigned int myIndiciesAmm;
 private:
 	ComPtr<ID3D11Buffer> myVertexBuffer;
 	ComPtr<ID3D11Buffer> myIndexBuffer;
-	std::vector<Texture> myTextureBuffer;
+	std::vector <std::shared_ptr< Texture>> myTextureBuffer;
 };
 
 
 struct Model
 {
+	friend Dragonite::GraphicsEngine;
 	friend class ModelFactory;
-	friend class Dragonite::GraphicsEngine;
+	friend class RenderTarget;
 public:
 	std::vector<MeshData> myMesh;
 private:

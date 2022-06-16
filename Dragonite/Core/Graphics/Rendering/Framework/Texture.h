@@ -23,10 +23,11 @@ namespace Dragonite
 		{
 			Albedo, Normal, Metallic, Cubemap
 		};
-		Texture() = default;
+		Texture();
 		Texture(Dragonite::GraphicsEngine* aGraphicsEngine, const char* aTexturePath, Type aTextureType);
-
+		Texture(const ComPtr<ID3D11ShaderResourceView>& aTextureResource);
 		Texture(const Texture& aResourceView);
+		~Texture();
 		void operator=(const Texture& aResourceView);
 
 		/*ComPtr<ID3D11ShaderResourceView>& GetResource();*/
