@@ -23,11 +23,13 @@ struct ID3D11RenderTargetView;
 struct ID3D11Buffer;
 struct ID3D11DepthStencilView;
 struct ID3D11SamplerState;
+struct ID3D11RasterizerState;
 
 
 enum D3D11_FILTER;
 enum D3D11_TEXTURE_ADDRESS_MODE;
-
+enum D3D11_CULL_MODE;
+enum D3D11_FILL_MODE;
 
 enum class Primitive2D;
 class Camera;
@@ -72,7 +74,7 @@ namespace Dragonite
 {
 	class System;
 	class Texture;
-	
+
 
 
 	class GraphicsEngine
@@ -120,9 +122,10 @@ namespace Dragonite
 	private:
 
 
-
+		void RefreshView(RenderTarget* aRenderTarget);
 		void RenderInstances();
 
+		HRESULT InitializeRasterizerState(const D3D11_CULL_MODE aCullMode, const D3D11_FILL_MODE aFillMode, ComPtr<ID3D11RasterizerState>& aRasterizerState);
 		HRESULT InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>& aBuffer);
 		HRESULT InitializeSampler(D3D11_FILTER aFilter, D3D11_TEXTURE_ADDRESS_MODE  aTileType, ComPtr<ID3D11SamplerState>& aSampler);
 		HRESULT InitializeDepthBuffer(const Resolution& aResolution, ComPtr<ID3D11DepthStencilView>& aDepthBuffer);
@@ -138,6 +141,7 @@ namespace Dragonite
 		ComPtr<ID3D11Buffer> myGlobalLightBuffer;
 		ComPtr<ID3D11DepthStencilView> myDepthBuffer;
 
+		ComPtr<ID3D11RasterizerState> myFrontCuller;
 
 
 

@@ -30,7 +30,7 @@ void RenderTarget::OnAwake()
 	}
 
 
-	
+
 	auto graphicsEngine = mySystem->GetGraphicsEngine();
 
 	graphicsEngine->SetRenderTarget(this);
@@ -48,6 +48,7 @@ void RenderTarget::Render(Dragonite::GraphicsEngine * aGraphicsEngine)
 
 	auto graphicsEngine = aGraphicsEngine;
 	auto context = graphicsEngine->GetDeviceContext();
+
 
 	graphicsEngine->UpdateFrameBuffer();
 	graphicsEngine->UpdateObjectBuffer(myInstance.get());

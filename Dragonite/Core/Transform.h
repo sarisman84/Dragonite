@@ -23,6 +23,9 @@ struct Transform
 
 	Matrix4x4f GetMatrix();
 
+
+	void SetRotation(Math::Vector3f aRotation, const bool aRotateGlobally = false);
+
 private:
 	Vector3f myPosition;
 	Vector3f mySize;
@@ -32,5 +35,7 @@ private:
 	Matrix4x4f myRotationMatrix;
 	Matrix4x4f myScaleMatrix;
 
+
+	Matrix4x4f myLocalToWorldMatrix;
 
 };

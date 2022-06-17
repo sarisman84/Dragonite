@@ -20,7 +20,7 @@ Dragonite::Texture::Texture(Dragonite::GraphicsEngine * aGraphicsEngine, const c
 	if (!aGraphicsEngine) return;
 
 	ImageInfo info;
-	if (FAILED(ImportTexture(aGraphicsEngine, aTexturePath, info, aTextureType == Type::Cubemap)))
+	if (FAILED(ImportTexture(aGraphicsEngine, aTexturePath, info, aTextureType == Type::Cubemap)) || aTextureType == Type::Cubemap)
 	{
 		return;
 	}
@@ -84,7 +84,9 @@ void Dragonite::Texture::operator=(const Texture & aTexture)
 
 void Dragonite::Texture::BindTexture(ComPtr<ID3D11DeviceContext>&aContext, const size_t & aSlot)
 {
-	aContext->PSSetShaderResources(aSlot, 1, myTextureResource.GetAddressOf());
+	auto source = myTextureResource.GetAddressOf();
+	if (source)
+		aContext->PSSetShaderResources(aSlot, 1, source);
 }
 
 HRESULT Dragonite::Texture::ImportTexture(Dragonite::GraphicsEngine * aGraphicsEngine, const char* aTexturePath, ImageInfo & anOutput, bool anImportDDSFile)

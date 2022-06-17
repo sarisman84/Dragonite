@@ -177,9 +177,6 @@
     <ClInclude Include="Core\Utilities\Algorithms\SparseSet.h">
       <Filter>Utilities\Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Rendering\Framework\Texture.h">
-      <Filter>Core\Graphics\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Utilities\External\DDSTextureLoader.h">
       <Filter>Utilities\External</Filter>
     </ClInclude>
@@ -187,6 +184,9 @@
       <Filter>Utilities\External</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Rendering\Framework\RenderTarget.h">
+      <Filter>Core\Graphics\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Rendering\Framework\Texture.h">
       <Filter>Core\Graphics\Framework</Filter>
     </ClInclude>
   </ItemGroup>

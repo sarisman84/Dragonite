@@ -67,5 +67,33 @@ Transform::Transform()
 
 Matrix4x4f Transform::GetMatrix()
 {
+
+	//return myObjectMatrix = m;
 	return  myScaleMatrix * myRotationMatrix * myPositionMatrix;
 }
+
+void Transform::SetRotation(Math::Vector3f aRotation, const bool aRotateGlobally)
+{
+	Vector4f pos;
+	if (aRotateGlobally)
+	{
+		pos = myLocalToWorldMatrix.GetRow(4);
+		myLocalToWorldMatrix.SetRow(4, { 0,0,0,1 });
+	}
+
+	float pi = 3.141592653589793238f;
+
+	Matrix4x4f rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundX((aRotation.x * pi) / 180.f) * rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundY((aRotation.y * pi) / 180.f) * rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundZ((aRotation.z * pi) / 180.f) * rotationMatrix;
+
+	myLocalToWorldMatrix = rotationMatrix * myLocalToWorldMatrix;
+
+	if (aRotateGlobally)
+	{
+		myLocalToWorldMatrix.SetRow(4, pos);
+	}
+}
+
+

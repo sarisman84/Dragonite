@@ -89,6 +89,7 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 
 	if (FAILED(InitializeDepthBuffer(myViewport, myDepthBuffer))) return false;
 
+	if (FAILED(InitializeRasterizerState(D3D11_CULL_FRONT, D3D11_FILL_SOLID, myFrontCuller))) return false;
 
 	StaticBufferData data;
 
@@ -97,7 +98,7 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 	//D3D11_TEXTURE2D_DESC textureDesc;
 	//backBufferTexture->GetDesc(&textureDesc);
 	//backBufferTexture->Release();
-	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
+	//myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
@@ -126,27 +127,41 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 
 void Dragonite::GraphicsEngine::DrawElements()
 {
-	float color[4] = { 0.2f,0.2f,0.9f,1.0f }; // RGBA
-	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
-	myContext->ClearDepthStencilView(
-		myDepthBuffer.Get(),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0
-	);
+
 	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
 
+	RefreshView(myRenderTarget);
+	RefreshView(nullptr);
+	auto position = myRenderCamera->GetTransform()->Position();
+	auto size = myRenderCamera->GetTransform()->Size();
+
+	myRenderCamera->GetTransform()->Position =
+	{
+		position.x,
+		-2.f * position.y,
+		position.z
+	};
+	myRenderCamera->GetTransform()->Size = { 1,-1,1 };
 	UpdateFrameBuffer();
-
-
-	if (myRenderTarget)
-		myRenderTarget->Render(this);
 	RenderInstances();
 
 
+	myRenderCamera->GetTransform()->Position = position;
+	myRenderCamera->GetTransform()->Size = size;
+
+
+	RefreshView(nullptr);
+	UpdateFrameBuffer();
+	if (myRenderTarget)
+		myRenderTarget->Render(this);
+
+
+
+	RenderInstances();
 
 
 	mySwapChain->Present(1, 0);
+	myRenderInstructions.Clear();
 }
 
 void Dragonite::GraphicsEngine::UpdateConstantBuffer(ComPtr<ID3D11Buffer>&aConstantBuffer, void* someData, const size_t someDataSize, const UINT aSlot,
@@ -185,8 +200,27 @@ void Dragonite::GraphicsEngine::UpdateObjectBuffer(ModelInstance * anInstance)
 	ObjectBufferData oData;
 	oData.myObjectMatrix = anInstance->myTransform.GetMatrix();
 	oData.myColor = anInstance->myMaterial.myColor;
-	oData.mySize = { myRenderTarget->GetTransform()->Position() ,0 };
+	//oData.mySize = { myRenderTarget->GetTransform()->Position() ,0 };
 	UpdateConstantBuffer(myObjectBuffer, &oData, sizeof(ObjectBufferData), 2, &ID3D11DeviceContext::VSSetConstantBuffers);
+}
+
+void Dragonite::GraphicsEngine::RefreshView(RenderTarget * aRenderTarget)
+{
+	float color[4] = { 0.2f,0.2f,0.9f,1.0f }; // RGBA
+
+
+	if (aRenderTarget)
+	{
+		myContext->OMSetRenderTargets(1, aRenderTarget->RenderTexture().GetAddressOf(), myDepthBuffer.Get());
+		myContext->ClearRenderTargetView(aRenderTarget->RenderTexture().Get(), color);
+		myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		myContext->RSSetState(myFrontCuller.Get());
+		return;
+	}
+	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
+	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	myContext->RSSetState(nullptr);
 }
 
 void Dragonite::GraphicsEngine::RenderInstances()
@@ -228,7 +262,15 @@ void Dragonite::GraphicsEngine::RenderInstances()
 
 	}
 
-	myRenderInstructions.Clear();
+
+}
+
+HRESULT Dragonite::GraphicsEngine::InitializeRasterizerState(const D3D11_CULL_MODE aCullMode, const D3D11_FILL_MODE aFillMode, ComPtr<ID3D11RasterizerState>&aRasterizerState)
+{
+	D3D11_RASTERIZER_DESC desc;
+	desc.CullMode = aCullMode;
+	desc.FillMode = aFillMode;
+	return myDevice->CreateRasterizerState(&desc, &aRasterizerState);
 }
 
 HRESULT Dragonite::GraphicsEngine::InitializeConstantBuffer(const size_t someDataSize, ComPtr<ID3D11Buffer>&aBuffer)
