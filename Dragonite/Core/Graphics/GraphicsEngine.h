@@ -122,7 +122,7 @@ namespace Dragonite
 	private:
 
 
-		void RefreshView(RenderTarget* aRenderTarget);
+		void RefreshView(RenderTarget* aRenderTarget, ComPtr<ID3D11RasterizerState> aCullingMode = nullptr);
 		void RenderInstances();
 
 		HRESULT InitializeRasterizerState(const D3D11_CULL_MODE aCullMode, const D3D11_FILL_MODE aFillMode, ComPtr<ID3D11RasterizerState>& aRasterizerState);

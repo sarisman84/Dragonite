@@ -30,20 +30,21 @@ void Camera::OnUpdate(float aDeltaTime)
 	if (Mouse::GetButton(Mouse::Key::LeftMouseButton))
 		myRotation = Vector4f{ -mouseDelta.y , -mouseDelta.x, 0, 0 };
 
-	auto right = myTransform->Right();
-	auto up = myTransform->Up();
-	auto forward = myTransform->Forward();
+	auto right = myTransform->GetRight();
+	auto up = myTransform->GetUp();
+	auto forward = myTransform->GetForward();
 	//myInput = myInput.Lerp({ xInput, zInput }, aDeltaTime);
 
 	float movementSpeed = Keyboard::GetButton(Keyboard::Key::LeftShift) ? myMovementSpeed * 2.f : myMovementSpeed;
 
 	auto result = right * xInput * movementSpeed + up * yInput * movementSpeed + forward * zInput * movementSpeed;
 	result;
-	auto oldPos = myTransform->Position();
-	myTransform->Position = myTransform->Position() + (result * aDeltaTime);
-	myTransform->Rotation = myTransform->Rotation() + myRotation * aDeltaTime;
-
-
+	auto oldPos = myTransform->GetPosition();
+	myTransform->SetPosition(myTransform->GetPosition() + (result * aDeltaTime));
+	Vector3f val = Vector3f{ myRotation.x, myRotation.y, myRotation.z } *aDeltaTime;
+	myTransform->SetRotationY(val.y, true);
+	myTransform->SetRotationX(val.x, true);
+	myTransform->SetRotationZ(val.z);
 
 
 }

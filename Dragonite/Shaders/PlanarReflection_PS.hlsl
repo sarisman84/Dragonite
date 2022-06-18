@@ -23,5 +23,8 @@ PixelOutput main(PixelInputType anInput)
     result.myColor.rgb = fresnel * reflection;
     result.myColor.a = 1.f;
     
+    
+   // result.myColor.rgb = 0.5f + 0.5f * anInput.myUV.rgg;
+    
     return result;
 }

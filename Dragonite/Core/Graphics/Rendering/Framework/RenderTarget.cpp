@@ -26,7 +26,7 @@ void RenderTarget::OnAwake()
 		{
 			mesh.myTextureBuffer.push_back(std::make_shared<Texture>(myTextureResource));
 		}
-		myTransform->Size = { 1000.f,1.f ,1000.f };
+		myTransform->SetSize({ 1000.f, 1.f, 1000.f });
 	}
 
 

@@ -27,7 +27,7 @@ void Scene::Awake()
 	auto& obj = myRuntime->CreateGameObject();
 	obj->myName = "A Cube";
 	obj->AddComponent<ModelRenderer>()->LoadModel(UNITCUBE);
-	obj->myTransform.Position = { 0,2, 10 };
+	obj->myTransform.SetPosition({ 0,2, 10 });
 	myObjectsToUpdate.push_back(obj);
 
 	myObjectsToUpdate.push_back(obj);
@@ -35,23 +35,23 @@ void Scene::Awake()
 	auto& objB = myRuntime->CreateGameObject();
 	objB->myName = "A Pyramid";
 	objB->AddComponent<ModelRenderer>()->LoadModel(UNITPYRAMID);
-	objB->myTransform.Position = { 1.5f, 2.f, 10 };
+	objB->myTransform.SetPosition({ 1.5f, 2.f, 10 });
 
 
 	auto& objC = myRuntime->CreateGameObject();
 	objC->myName = "A Terrain";
 	objC->AddComponent<ModelRenderer>()->LoadModel(GEN_TERRAIN, ModelRenderer::terrainMaterial);
-	objC->myTransform.Position = { 0,0,0 };
+	objC->myTransform.SetPosition({ 0,0,0 });
 
 
 
 	auto& objD = myRuntime->CreateGameObject();
 	objD->myName = "Some water";
 	objD->AddComponent<RenderTarget>();
-	objD->myTransform.Position = { 0,0,0 };
+	objD->myTransform.SetPosition({ 0,0,0 });
 
 	auto cam = myCamera->AddComponent<Camera>();
-	myCamera->myTransform.Position() = { 0.f, 2.f, 0.f };
+	myCamera->myTransform.SetPosition({ 0.f, 2.f, 0.f });
 
 	myRuntime->GetSystem()->GetGraphicsEngine()->SetRenderCamera(cam.get());
 
@@ -70,10 +70,10 @@ void Scene::Update(float aTimeDelta)
 
 	for (size_t i = 0; i < myObjectsToUpdate.size(); i++)
 	{
-		myObjectsToUpdate[i]->myTransform.Rotation = myObjectsToUpdate[i]->myTransform.Rotation() + Vector4f{ 10.f, 10.f, 10.f, 10.f } *aTimeDelta;
+		myObjectsToUpdate[i]->myTransform.SetRotation(myObjectsToUpdate[i]->myTransform.GetRotation() + Vector3f{ 10.f, 10.f, 10.f } *aTimeDelta);
 	}
 	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection = Math::Vector4f::Lerp(myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection, { (cosf(myRuntime->GetSystem()->GetTotalTime() / 2.f) * 4.f),-1.0f, 0.f, 0.f }, aTimeDelta);
-	
+
 	//std::cout << '\r' << "[Log]<Runtime>: Direction - " << myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection << std::flush;
 
 

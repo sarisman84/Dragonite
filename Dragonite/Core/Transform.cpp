@@ -11,71 +11,19 @@
 
 Transform::Transform()
 {
-	Position = Property<Vector3f>([this]()->Vector3f { return myPosition; }, [this](const Vector3f aValue)
-		{
-			myPosition = aValue;
-			myPositionMatrix = Matrix4x4f::CreateTransformMatrix(aValue);
 
-
-		});
-
-	Rotation = Property<Vector4f>([this]()->Vector4f { return myRotation; }, [this](const Vector4f aValue)
-		{
-
-			float pi = 3.141592653589793238f;
-			Matrix4x4f xRot = Matrix4x4f::CreateRotationAroundX((aValue.x * pi) / 180.f);
-			Matrix4x4f yRot = Matrix4x4f::CreateRotationAroundY((aValue.y * pi) / 180.f);
-			Matrix4x4f zRot = Matrix4x4f::CreateRotationAroundZ((aValue.z * pi) / 180.f);
-
-
-			myRotation = aValue;
-			myRotationMatrix = xRot * yRot * zRot;
-
-		});
-
-	Size = Property<Vector3f>([this]()->Vector3f { return mySize; }, [this](const Vector3f aValue)
-		{
-			mySize = aValue;
-			myScaleMatrix = Matrix4x4f::CreateSizeMatrix(aValue);
-
-		});
-
-
-	Up = Property<Vector3f>([this]()->Vector3f
-		{
-			auto transformMatrix = GetMatrix();
-			Vector3f result = { transformMatrix(2,1), transformMatrix(2,2), transformMatrix(2,3) };
-			return result;
-		});
-
-
-	Right = Property<Vector3f>([this]()->Vector3f
-		{
-			auto transformMatrix = GetMatrix();
-			Vector3f result = { transformMatrix(1,1), transformMatrix(1,2), transformMatrix(1,3) };
-			return result;
-		});
-
-
-	Forward = Property<Vector3f>([this]()->Vector3f
-		{
-			auto transformMatrix = GetMatrix();
-			Vector3f result = { transformMatrix(3,1), transformMatrix(3,2), transformMatrix(3,3) };
-			return result;
-		});
 }
 
-Matrix4x4f Transform::GetMatrix()
+Matrix4x4f& Transform::GetMatrix()
 {
-
 	//return myObjectMatrix = m;
-	return  myScaleMatrix * myRotationMatrix * myPositionMatrix;
+	return myLocalToWorldMatrix;
 }
 
-void Transform::SetRotation(Math::Vector3f aRotation, const bool aRotateGlobally)
+void Transform::SetRotation(Math::Vector3f aRotation, const bool aRotateLocally)
 {
 	Vector4f pos;
-	if (aRotateGlobally)
+	if (aRotateLocally)
 	{
 		pos = myLocalToWorldMatrix.GetRow(4);
 		myLocalToWorldMatrix.SetRow(4, { 0,0,0,1 });
@@ -90,10 +38,126 @@ void Transform::SetRotation(Math::Vector3f aRotation, const bool aRotateGlobally
 
 	myLocalToWorldMatrix = rotationMatrix * myLocalToWorldMatrix;
 
-	if (aRotateGlobally)
+	if (aRotateLocally)
 	{
 		myLocalToWorldMatrix.SetRow(4, pos);
 	}
+
+	myRotation = aRotation;
+}
+
+void Transform::SetRotationX(const float anXVal, const bool aRotateLocally)
+{
+	Vector4f pos;
+	if (aRotateLocally)
+	{
+		pos = myLocalToWorldMatrix.GetRow(4);
+		myLocalToWorldMatrix.SetRow(4, { 0,0,0,1 });
+	}
+
+	float pi = 3.141592653589793238f;
+
+	Matrix4x4f rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundX((anXVal * pi) / 180.f) * rotationMatrix;
+
+	myLocalToWorldMatrix = rotationMatrix * myLocalToWorldMatrix;
+
+	if (aRotateLocally)
+	{
+		myLocalToWorldMatrix.SetRow(4, pos);
+	}
+
+	myRotation.x = anXVal;
+}
+
+void Transform::SetRotationY(const float anYVal, const bool aRotateLocally)
+{
+	Vector4f pos;
+	if (aRotateLocally)
+	{
+		pos = myLocalToWorldMatrix.GetRow(4);
+		myLocalToWorldMatrix.SetRow(4, { 0,0,0,1 });
+	}
+
+	float pi = 3.141592653589793238f;
+
+	Matrix4x4f rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundY((anYVal * pi) / 180.f) * rotationMatrix;
+
+	myLocalToWorldMatrix = rotationMatrix * myLocalToWorldMatrix;
+
+	if (aRotateLocally)
+	{
+		myLocalToWorldMatrix.SetRow(4, pos);
+	}
+
+	myRotation.y = anYVal;
+}
+
+void Transform::SetRotationZ(const float anZVal, const bool aRotateLocally)
+{
+	Vector4f pos;
+	if (aRotateLocally)
+	{
+		pos = myLocalToWorldMatrix.GetRow(4);
+		myLocalToWorldMatrix.SetRow(4, { 0,0,0,1 });
+	}
+
+	float pi = 3.141592653589793238f;
+
+	Matrix4x4f rotationMatrix;
+	rotationMatrix = Matrix4x4f::CreateRotationAroundZ((anZVal * pi) / 180.f) * rotationMatrix;
+
+	myLocalToWorldMatrix = rotationMatrix * myLocalToWorldMatrix;
+
+	if (aRotateLocally)
+	{
+		myLocalToWorldMatrix.SetRow(4, pos);
+	}
+
+	myRotation.y = anZVal;
+}
+
+Math::Vector3f Transform::GetRotation()
+{
+	return myRotation;
+}
+
+void Transform::SetPosition(Math::Vector3f aPosition)
+{
+	myLocalToWorldMatrix.SetRow(4, { aPosition, 1 });
+}
+
+Math::Vector3f Transform::GetPosition()
+{
+	return { myLocalToWorldMatrix(4,1),myLocalToWorldMatrix(4,2), myLocalToWorldMatrix(4,3) };
+}
+
+void Transform::SetSize(Math::Vector3f aSize)
+{
+	myLocalToWorldMatrix(1, 1) = aSize.x;
+	myLocalToWorldMatrix(2, 2) = aSize.y;
+	myLocalToWorldMatrix(3, 3) = aSize.z;
+}
+
+Math::Vector3f Transform::GetSize()
+{
+	return { myLocalToWorldMatrix(1,1), myLocalToWorldMatrix(2,2), myLocalToWorldMatrix(3,3) };
+}
+
+Math::Vector3f Transform::GetForward()
+{
+	return { myLocalToWorldMatrix(3,1),myLocalToWorldMatrix(3,2), myLocalToWorldMatrix(3,3) };
+}
+
+Math::Vector3f Transform::GetUp()
+{
+	return { myLocalToWorldMatrix(2,1),myLocalToWorldMatrix(2,2), myLocalToWorldMatrix(2,3) };
+}
+
+Math::Vector3f Transform::GetRight()
+{
+	return { myLocalToWorldMatrix(1,1),myLocalToWorldMatrix(1,2), myLocalToWorldMatrix(1,3) };
 }
 
 

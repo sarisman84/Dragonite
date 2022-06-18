@@ -6,7 +6,7 @@
 GameObject::GameObject()
 {
 	myComponents = std::vector<std::shared_ptr<Component>>();
-	myTransform.Size = { 1,1,1 };
+	myTransform.SetSize({ 1, 1, 1 });
 }
 
 GameObject::GameObject(std::string aName)

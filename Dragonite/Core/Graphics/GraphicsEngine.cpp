@@ -92,7 +92,7 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 	if (FAILED(InitializeRasterizerState(D3D11_CULL_FRONT, D3D11_FILL_SOLID, myFrontCuller))) return false;
 
 	StaticBufferData data;
-
+	data.myResolution = { static_cast<float>(myViewport.width), static_cast<float>(myViewport.height) };
 	UpdateConstantBuffer(myStaticBuffer, &data, sizeof(StaticBufferData), 0, &ID3D11DeviceContext::PSSetConstantBuffers);
 
 	//D3D11_TEXTURE2D_DESC textureDesc;
@@ -121,43 +121,53 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 
 	myCubemapTexture->BindTexture(myContext, 9);
 
+
+
+	
+
 	return true;
 }
 
 
 void Dragonite::GraphicsEngine::DrawElements()
 {
-
+	auto position = myRenderCamera->GetTransform()->GetPosition();
+	auto size = myRenderCamera->GetTransform()->GetSize();
 	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
+	Math::Matrix4x4f reflectedM;
+	Math::Matrix4x4f ogM = myRenderCamera->GetTransform()->GetMatrix();
+	reflectedM(2, 2) = -1;
+	reflectedM(4, 2) = -2.f * ogM(4, 2);
 
-	RefreshView(myRenderTarget);
-	RefreshView(nullptr);
-	auto position = myRenderCamera->GetTransform()->Position();
-	auto size = myRenderCamera->GetTransform()->Size();
+	/*myRenderCamera->GetTransform()->SetPosition(
+		{
+			position.x,
+			-2.f * myRenderTarget->GetTransform()->GetPosition().y,
+			position.z
+		});
+	myRenderCamera->GetTransform()->SetSize({ 1, -1, 1 });*/
 
-	myRenderCamera->GetTransform()->Position =
-	{
-		position.x,
-		-2.f * position.y,
-		position.z
-	};
-	myRenderCamera->GetTransform()->Size = { 1,-1,1 };
+
+	myRenderCamera->GetTransform()->GetMatrix() = reflectedM * ogM;
+
+	RefreshView(myRenderTarget, myFrontCuller);
 	UpdateFrameBuffer();
 	RenderInstances();
 
 
-	myRenderCamera->GetTransform()->Position = position;
-	myRenderCamera->GetTransform()->Size = size;
+	myRenderCamera->GetTransform()->GetMatrix() = ogM;
 
 
 	RefreshView(nullptr);
 	UpdateFrameBuffer();
 	if (myRenderTarget)
 		myRenderTarget->Render(this);
-
-
-
 	RenderInstances();
+
+
+
+
+
 
 
 	mySwapChain->Present(1, 0);
@@ -186,7 +196,7 @@ void Dragonite::GraphicsEngine::UpdateFrameBuffer()
 	fData.myClipSpaceMatrix = myRenderCamera->GetClipSpaceMatrix();
 	fData.myTimeDelta = mySystem->GetTimeDelta();
 	fData.myTotalTime = mySystem->GetTotalTime();
-	fData.myCameraPosition = Math::Vector4f(myRenderCamera->GetTransform()->Position(), 1);
+	fData.myCameraPosition = Math::Vector4f(myRenderCamera->GetTransform()->GetPosition(), 1);
 
 	fData.myAmbientLight = myLightData.myAmbientLight;
 	fData.myLightColor = myLightData.myLightColor;
@@ -204,23 +214,29 @@ void Dragonite::GraphicsEngine::UpdateObjectBuffer(ModelInstance * anInstance)
 	UpdateConstantBuffer(myObjectBuffer, &oData, sizeof(ObjectBufferData), 2, &ID3D11DeviceContext::VSSetConstantBuffers);
 }
 
-void Dragonite::GraphicsEngine::RefreshView(RenderTarget * aRenderTarget)
+void Dragonite::GraphicsEngine::RefreshView(RenderTarget * aRenderTarget, ComPtr<ID3D11RasterizerState> aCullingMode)
 {
+
 	float color[4] = { 0.2f,0.2f,0.9f,1.0f }; // RGBA
+
+	ID3D11RenderTargetView* nullRTV = nullptr;
+	myContext->OMSetRenderTargets(1, &nullRTV, nullptr);
 
 
 	if (aRenderTarget)
 	{
 		myContext->OMSetRenderTargets(1, aRenderTarget->RenderTexture().GetAddressOf(), myDepthBuffer.Get());
 		myContext->ClearRenderTargetView(aRenderTarget->RenderTexture().Get(), color);
-		myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		myContext->RSSetState(myFrontCuller.Get());
-		return;
 	}
-	myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
-	myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
+	else
+	{
+		myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
+		myContext->ClearRenderTargetView(myBackBuffer.Get(), color);
+	}
+
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	myContext->RSSetState(nullptr);
+	myContext->RSSetState(aCullingMode.Get());
+
 }
 
 void Dragonite::GraphicsEngine::RenderInstances()
