@@ -29,7 +29,7 @@ PixelOutput main(PixelInputType anInput)
     float4 ambientColor = myMaterialColor * myAmbientColor;
     
     PixelOutput output;
-    output.myColor = aTexture.Sample(aSampler, anInput.myUV.xy).rgba * ambientColor * dirColor;
+    output.myColor = aTexture.Sample(aSampler, anInput.myUV.xy).rgba + ambientColor + dirColor;
     
     //output.myColor.rgb = 0.5f + 0.5f * normal;
     

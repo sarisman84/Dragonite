@@ -94,11 +94,6 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 	StaticBufferData data;
 	data.myResolution = { static_cast<float>(myViewport.width), static_cast<float>(myViewport.height) };
 	UpdateConstantBuffer(myStaticBuffer, &data, sizeof(StaticBufferData), 0, &ID3D11DeviceContext::PSSetConstantBuffers);
-
-	//D3D11_TEXTURE2D_DESC textureDesc;
-	//backBufferTexture->GetDesc(&textureDesc);
-	//backBufferTexture->Release();
-	//myContext->OMSetRenderTargets(1, myBackBuffer.GetAddressOf(), myDepthBuffer.Get());
 	D3D11_VIEWPORT viewport = { 0 };
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
@@ -123,7 +118,7 @@ bool Dragonite::GraphicsEngine::Initialize(Resolution /*aResolution*/, HWND aWin
 
 
 
-	
+
 
 	return true;
 }
@@ -134,21 +129,16 @@ void Dragonite::GraphicsEngine::DrawElements()
 	auto position = myRenderCamera->GetTransform()->GetPosition();
 	auto size = myRenderCamera->GetTransform()->GetSize();
 	myContext->PSSetSamplers(0, 1, mySamplerState.GetAddressOf());
+
 	Math::Matrix4x4f reflectedM;
 	Math::Matrix4x4f ogM = myRenderCamera->GetTransform()->GetMatrix();
+
 	reflectedM(2, 2) = -1;
-	reflectedM(4, 2) = -2.f * ogM(4, 2);
+	reflectedM(4, 2) = (-2.f * myRenderTarget->GetTransform()->GetPosition().y);
 
-	/*myRenderCamera->GetTransform()->SetPosition(
-		{
-			position.x,
-			-2.f * myRenderTarget->GetTransform()->GetPosition().y,
-			position.z
-		});
-	myRenderCamera->GetTransform()->SetSize({ 1, -1, 1 });*/
+	reflectedM = ogM * reflectedM;
 
-
-	myRenderCamera->GetTransform()->GetMatrix() = reflectedM * ogM;
+	myRenderCamera->GetTransform()->GetMatrix() = reflectedM;
 
 	RefreshView(myRenderTarget, myFrontCuller);
 	UpdateFrameBuffer();
@@ -235,7 +225,7 @@ void Dragonite::GraphicsEngine::RefreshView(RenderTarget * aRenderTarget, ComPtr
 	}
 
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	myContext->RSSetState(aCullingMode.Get());
+	myContext->RSSetState(aCullingMode ? aCullingMode.Get() : nullptr);
 
 }
 
@@ -283,9 +273,10 @@ void Dragonite::GraphicsEngine::RenderInstances()
 
 HRESULT Dragonite::GraphicsEngine::InitializeRasterizerState(const D3D11_CULL_MODE aCullMode, const D3D11_FILL_MODE aFillMode, ComPtr<ID3D11RasterizerState>&aRasterizerState)
 {
-	D3D11_RASTERIZER_DESC desc;
+	D3D11_RASTERIZER_DESC desc = {};
 	desc.CullMode = aCullMode;
 	desc.FillMode = aFillMode;
+	//desc.FrontCounterClockwise = false;
 	return myDevice->CreateRasterizerState(&desc, &aRasterizerState);
 }
 

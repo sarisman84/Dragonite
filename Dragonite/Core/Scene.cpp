@@ -48,7 +48,7 @@ void Scene::Awake()
 	auto& objD = myRuntime->CreateGameObject();
 	objD->myName = "Some water";
 	objD->AddComponent<RenderTarget>();
-	objD->myTransform.SetPosition({ 0,0,0 });
+	objD->myTransform.SetPosition({ 0,-0.05f,0 });
 
 	auto cam = myCamera->AddComponent<Camera>();
 	myCamera->myTransform.SetPosition({ 0.f, 2.f, 0.f });
@@ -70,7 +70,7 @@ void Scene::Update(float aTimeDelta)
 
 	for (size_t i = 0; i < myObjectsToUpdate.size(); i++)
 	{
-		myObjectsToUpdate[i]->myTransform.SetRotation(myObjectsToUpdate[i]->myTransform.GetRotation() + Vector3f{ 10.f, 10.f, 10.f } *aTimeDelta);
+		myObjectsToUpdate[i]->myTransform.SetRotation(Vector3f{ 10.f, 10.f, 10.f } *aTimeDelta);
 	}
 	myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection = Math::Vector4f::Lerp(myRuntime->GetSystem()->GetGraphicsEngine()->GlobalLightData().myLightDirection, { (cosf(myRuntime->GetSystem()->GetTotalTime() / 2.f) * 4.f),-1.0f, 0.f, 0.f }, aTimeDelta);
 

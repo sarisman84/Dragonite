@@ -37,12 +37,24 @@ ModelInsPtr ModelFactory::CreateInstanceOf(std::string aKey, const Material aMat
 	std::string someData;
 
 	if (FAILED(LoadVertexShader(device, ins->myModel->myVertexShader, vertexShaderPath, someData)))
+	{
+		std::cout << "[ERROR]<ModelFactory/" << aKey << ">: Failed to load Vertex shader " << ins->myModel->myVertexShader << "!" << std::endl;
 		return nullptr;
+	}
+
 	if (FAILED(LoadPixelShader(device, ins->myModel->myPixelShader, pixelShaderPath)))
+	{
+		std::cout << "[ERROR]<ModelFactory/" << aKey << ">: Failed to load Pixel shader " << ins->myModel->myPixelShader << "!" << std::endl;
 		return nullptr;
+	}
+
 
 	if (FAILED(LoadInputLayout(device, ins->myModel->myInputLayout, someData)))
+	{
+		std::cout << "[ERROR]<ModelFactory/" << aKey << ">: Failed to load Input layout!" << std::endl;
 		return nullptr;
+	}
+
 
 
 

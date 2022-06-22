@@ -102,7 +102,7 @@ PixelOutput main(TerrainPixelInputType anInput)
     float3x3 tangentSpace = float3x3(t, b, n);
  
     
-    float slopeBlend = smoothstep(0.7f, 1.0f, normalize(anInput.myNormal).y);
+    float slopeBlend = smoothstep(0.8f, 1.0f, normalize(anInput.myNormal).y);
     float heightBlend = smoothstep(-0.05f, 0.25f, anInput.myWorldPosition.y);
     
     

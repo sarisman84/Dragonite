@@ -18,10 +18,14 @@ Dragonite::Texture::~Texture() = default;
 Dragonite::Texture::Texture(Dragonite::GraphicsEngine * aGraphicsEngine, const char* aTexturePath, Type aTextureType)
 {
 	if (!aGraphicsEngine) return;
-
 	ImageInfo info;
-	if (FAILED(ImportTexture(aGraphicsEngine, aTexturePath, info, aTextureType == Type::Cubemap)) || aTextureType == Type::Cubemap)
+	HRESULT importResult = ImportTexture(aGraphicsEngine, aTexturePath, info, aTextureType == Type::Cubemap);
+	if (FAILED(importResult) || aTextureType == Type::Cubemap)
 	{
+		if (FAILED(importResult))
+			std::cout << "[ERROR]<Texture>: Failed to Import texture from path '" << aTexturePath << "'!" << std::endl;
+		else
+			std::cout << "[Log]<Texture>: Imported cube map: '" << aTexturePath << "'!" << std::endl;
 		return;
 	}
 	ID3D11Texture2D* texturePtr = nullptr;

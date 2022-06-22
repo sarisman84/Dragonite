@@ -42,7 +42,7 @@ void Camera::OnUpdate(float aDeltaTime)
 	auto oldPos = myTransform->GetPosition();
 	myTransform->SetPosition(myTransform->GetPosition() + (result * aDeltaTime));
 	Vector3f val = Vector3f{ myRotation.x, myRotation.y, myRotation.z } *aDeltaTime;
-	myTransform->SetRotationY(val.y, true);
+	myTransform->SetRotationY(val.y);
 	myTransform->SetRotationX(val.x, true);
 	myTransform->SetRotationZ(val.z);
 

@@ -12,7 +12,7 @@ class ModelRenderer : public Component
 public:
 	inline static const Material defaultMaterial = Material{ Math::Vector4f(1,1,1,1),
 	{
-			Material::TextureInfo{"Textures/Grass_c.png", (int)Texture::Type::Albedo},
+			Material::TextureInfo{"Textures/default.png", (int)Texture::Type::Albedo},
 			Material::TextureInfo{"Textures/Grass_n.png", (int)Texture::Type::Normal}
 	},
 		"Shaders/ColorShader_VS.cso",
