@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="TestFile.h" />
+    <ClInclude Include="Core\Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\CommonData.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="TestFile.cpp" />
+    <ClCompile Include="Core\Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{9a51c3d2-f80a-4d41-adb1-1dfa307abab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CU">
+      <UniqueIdentifier>{8bbddb5c-9f89-4733-967b-f2be64fb4cd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Imgui">
+      <UniqueIdentifier>{51212918-5129-439d-8d5a-e200faba60d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
