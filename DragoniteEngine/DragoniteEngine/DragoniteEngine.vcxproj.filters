@@ -2,19 +2,53 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="TestFile.h" />
     <ClInclude Include="Core\Application.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\CU\CommonData.h">
       <Filter>Core\CU</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\GraphicsAPI.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Transform.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Vector3.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\MathFunctions.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Vector4.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Matrix3x3.hpp">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Matrix4x4.hpp">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Vector2.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Camera.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="TestFile.cpp" />
     <ClCompile Include="Core\Application.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\GraphicsAPI.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CU\Transform.cpp">
+      <Filter>Core\CU</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Camera.cpp">
+      <Filter>Core\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +60,12 @@
     </Filter>
     <Filter Include="Core\Imgui">
       <UniqueIdentifier>{51212918-5129-439d-8d5a-e200faba60d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{de0228c9-df80-4258-9d86-0c00e2b00ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CU\Math">
+      <UniqueIdentifier>{098d4b65-7581-4fab-b825-904e3fb89438}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

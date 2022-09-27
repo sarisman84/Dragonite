@@ -13,6 +13,10 @@
 
 namespace Dragonite
 {
+	namespace GraphicsAPI
+	{
+		class GraphicsPipeline;
+	}
 
 	struct ApplicationDesc
 	{
@@ -32,7 +36,7 @@ namespace Dragonite
 		friend class Application;
 	public:
 		RuntimeHandler() = default;
-		~RuntimeHandler() = default;
+		~RuntimeHandler();
 
 		RuntimeHandler(const Application& anOtherIns) = delete;
 		void operator=(const Application& anOtherIns) = delete;
@@ -41,19 +45,20 @@ namespace Dragonite
 		template<typename Type>
 		inline Type* Get()
 		{
-			if (myUniqueDataMembers.count(&typeid(Type)) > 0)
-				return (Type*)myUniqueDataMembers[&typeid(Type)];
+			if (myUniqueDataMembers.count(typeid(Type).hash_code()) > 0)
+				return (Type*)myUniqueDataMembers[typeid(Type).hash_code()];
 			return nullptr;
 		}
 
 	private:
 		template<typename Type>
-		void AddHandler(Type* anInstance)
+		Type* AddHandler(Type* anInstance)
 		{
-			myUniqueDataMembers[&typeid(Type)] = anInstance;
+			myUniqueDataMembers[typeid(Type).hash_code()] = anInstance;
+			return anInstance;
 		}
 
-		std::unordered_map<std::type_info*, void*> myUniqueDataMembers;
+		std::unordered_map<size_t, void*> myUniqueDataMembers;
 	};
 
 
@@ -62,6 +67,10 @@ namespace Dragonite
 	{
 	public:
 		static DDLVISIBLE const bool CreateInstance(const ApplicationDesc& anApplicationDesc, Application** anOutput);
+
+		DDLVISIBLE Application();
+		DDLVISIBLE ~Application();
+
 		int DDLVISIBLE ExecuteRuntime();
 		inline DDLVISIBLE RuntimeHandler& GetInstance() { return myRuntimeHandler; }
 		DDLVISIBLE LRESULT CALLBACK LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -70,6 +79,7 @@ namespace Dragonite
 
 		HWND myInstance;
 		RuntimeHandler myRuntimeHandler;
+		GraphicsAPI::GraphicsPipeline* myPipeline;
 	};
 
 

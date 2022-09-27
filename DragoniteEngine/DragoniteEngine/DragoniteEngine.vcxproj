@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -113,6 +113,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,18 +133,37 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\CU\CommonData.h" />
+    <ClInclude Include="Core\CU\Math\MathFunctions.h" />
+    <ClInclude Include="Core\CU\Math\Matrix3x3.hpp" />
+    <ClInclude Include="Core\CU\Math\Matrix4x4.hpp" />
+    <ClInclude Include="Core\CU\Math\Vector2.h" />
+    <ClInclude Include="Core\CU\Math\Vector3.h" />
+    <ClInclude Include="Core\CU\Math\Vector4.h" />
+    <ClInclude Include="Core\CU\Transform.h" />
+    <ClInclude Include="Core\Graphics\Camera.h" />
+    <ClInclude Include="Core\Graphics\DXIncludes.h" />
+    <ClInclude Include="Core\Graphics\GraphicsAPI.h" />
+    <ClInclude Include="Core\Graphics\Models\Model.h" />
+    <ClInclude Include="Core\Graphics\Models\ModelFactory.h" />
+    <ClInclude Include="Core\Graphics\Textures\Texture.h" />
+    <ClInclude Include="Core\Graphics\Textures\TextureFactory.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="TestFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp" />
+    <ClCompile Include="Core\CU\Transform.cpp" />
+    <ClCompile Include="Core\Graphics\Camera.cpp" />
+    <ClCompile Include="Core\Graphics\GraphicsAPI.cpp" />
+    <ClCompile Include="Core\Graphics\Models\ModelFactory.cpp" />
+    <ClCompile Include="Core\Graphics\Textures\Texture.cpp" />
+    <ClCompile Include="Core\Graphics\Textures\TextureFactory.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="TestFile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include <iostream>
+#include "Graphics/GraphicsAPI.h"
 
 const bool Dragonite::Application::CreateInstance(const ApplicationDesc& anApplicationDesc, Application** anOutput)
 {
@@ -45,8 +46,18 @@ const bool Dragonite::Application::CreateInstance(const ApplicationDesc& anAppli
 
 	(*anOutput)->myRuntimeState = true;
 
+	(*anOutput)->myPipeline = new GraphicsAPI::GraphicsPipeline();
+
+	if (!(*anOutput)->myPipeline->Initialize(hWnd))
+		return false;
+	(*anOutput)->myRuntimeHandler.AddHandler((*anOutput)->myPipeline);
+
 	return true;
 }
+
+Dragonite::Application::Application() = default;
+
+Dragonite::Application::~Application() = default;
 
 int Dragonite::Application::ExecuteRuntime()
 {
@@ -65,6 +76,8 @@ int Dragonite::Application::ExecuteRuntime()
 			}
 
 		}
+		myPipeline->Render();
+
 	}
 
 
@@ -101,4 +114,14 @@ LRESULT Dragonite::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+Dragonite::RuntimeHandler::~RuntimeHandler()
+{
+	for (auto& el : myUniqueDataMembers)
+	{
+		if (el.second)
+			delete el.second;
+	}
+	myUniqueDataMembers.clear();
 }
