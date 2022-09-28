@@ -1,28 +1,41 @@
 #pragma once
 
 #include "Model.h"
+#include "Material.h"
 #include <unordered_map>
-
 
 namespace Dragonite
 {
-	namespace GraphicsAPI
-	{
-		class GraphicsPipeline;
-	}
+
+
+
+	class GraphicsPipeline;
+
 
 	class ModelFactory
 	{
 	public:
 		ModelFactory() = default;
-		bool Initialize(GraphicsAPI::GraphicsPipeline* aPipeline);
+		bool Initialize(GraphicsPipeline* aPipeline);
 
-		std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType);
+		std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial);
 	private:
-		ModelPtr CreateUnitCube();
+		//VVV Model Definitions
+		ModelRef CreateUnitCube();
 
-		GraphicsAPI::GraphicsPipeline* myPipeline;
-		std::unordered_map<PrimitiveType, ModelPtr> myFactoryData;
+		//VVV Helper Methods
+
+		HRESULT CreateVSInstance(Device aDevice, const char* aPath, VertexShader& aShader, std::string& someExtraData);
+		HRESULT CreatePSInstance(Device aDevice, const char* aPath, PixelShader& aShader);
+
+
+
+
+		GraphicsPipeline* myPipeline;
+		std::unordered_map<PrimitiveType, ModelRef> myFactoryData;
+
+
+
 	};
 }
 

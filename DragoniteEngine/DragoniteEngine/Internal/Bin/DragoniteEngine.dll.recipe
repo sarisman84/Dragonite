@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\DragoniteEngine.dll</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_VS.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

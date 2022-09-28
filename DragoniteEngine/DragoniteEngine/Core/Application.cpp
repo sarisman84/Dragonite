@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include "Graphics/GraphicsAPI.h"
+#include "Runtime.h"
+
+
+
 
 const bool Dragonite::Application::CreateInstance(const ApplicationDesc& anApplicationDesc, Application** anOutput)
 {
@@ -46,11 +50,10 @@ const bool Dragonite::Application::CreateInstance(const ApplicationDesc& anAppli
 
 	(*anOutput)->myRuntimeState = true;
 
-	(*anOutput)->myPipeline = new GraphicsAPI::GraphicsPipeline();
+	(*anOutput)->myPipeline = new GraphicsPipeline();
 
-	if (!(*anOutput)->myPipeline->Initialize(hWnd))
+	if (!(*anOutput)->myPipeline->Initialize(*anOutput, hWnd))
 		return false;
-	(*anOutput)->myRuntimeHandler.AddHandler((*anOutput)->myPipeline);
 
 	return true;
 }
@@ -61,9 +64,26 @@ Dragonite::Application::~Application() = default;
 
 int Dragonite::Application::ExecuteRuntime()
 {
+	using std::chrono::high_resolution_clock;
+
+
+	RenderInterface myInterface(*myPipeline);
+
+	myRuntimeHandler.AddHandler(&myInterface);
+
+	Runtime runtime;
+	runtime.myApplication = this;
+	runtime.myPollingStation = &myRuntimeHandler;
+	runtime.Awake();
 	MSG msg = { 0 };
+
+
+	float deltaTime = 0;
 	while (myRuntimeState)
 	{
+		Time start = Clock::now();
+		auto t_start = high_resolution_clock::now();
+
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 
@@ -76,8 +96,12 @@ int Dragonite::Application::ExecuteRuntime()
 			}
 
 		}
+		runtime.Update(deltaTime);
 		myPipeline->Render();
 
+		Time end = Clock::now();
+
+		deltaTime = std::chrono::duration<float, std::ratio<1>>(end - start).count();
 	}
 
 

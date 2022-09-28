@@ -1,42 +1,97 @@
 #pragma once
 #include "DXIncludes.h"
 #include "../CU/CommonData.h"
+#include "../CU/Math/Matrix4x4.hpp"
 
-#define DDLVISIBLE __declspec(dllexport)
-
+#include <unordered_map>
+#include <vector>
+#include <memory>
 namespace Dragonite
 {
-	namespace GraphicsAPI
+	class Camera;
+	class Application;
+	class ModelFactory;
+	struct ModelInstance;
+
+	enum class TextureSampleType
 	{
-		
+		Default
+	};
+
+	struct FrameBufferData
+	{
+		Matrix4x4f myWorldToClipMatrix;
+	};
+
+	struct ObjectBufferData
+	{
+		Matrix4x4f myModelToWorldMatrix;
+	};
 
 
 
-		class GraphicsPipeline
-		{
-		public:
-			GraphicsPipeline();
-			~GraphicsPipeline();
 
-			bool Initialize(HWND aWindowHandle);
-			void Render();
+	class GraphicsPipeline
+	{
+		friend class RenderInterface;
+	public:
+		GraphicsPipeline();
+		~GraphicsPipeline();
 
-			inline Device& GetDevice() { return myDevice; }
-			inline DeviceContext& GetContext() { return myContext; }
+		bool Initialize(Application* anApplication, HWND aWindowHandle);
+		void Render();
 
-		private:
-			HRESULT InitializeSwapChain(HWND anInstance);
-			HRESULT InitializeBackBuffer();
+		inline Device& GetDevice() { return myDevice; }
+		inline DeviceContext& GetContext() { return myContext; }
 
-			Device myDevice;
-			DeviceContext myContext;
-			SwapChain mySwapChain;
-			TargetTexture myBackBuffer;
-			Color myClearColor;
+		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
+
+		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
+			return myTextureSamplers;
+		}
 
 
-		};
-	}
+		static HRESULT CreateBuffer(Device aDevice, DataBuffer& aBuffer, const DataBufferDesc& aDesc);
+		static HRESULT CreateTexture(Device aDevice, DXTexture2D& aTexture, const TextureBufferDesc& aDesc);
+		static HRESULT SetBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize);
+
+	private:
+		HRESULT InitializeSwapChain(HWND anInstance);
+		HRESULT InitializeBackBuffer();
+		HRESULT InitializeSamplers();
+
+		Device myDevice;
+		DeviceContext myContext;
+		SwapChain mySwapChain;
+		RenderTarget myBackBuffer;
+		DepthStencil myDepthBuffer;
+		Color myClearColor;
+
+		DataBuffer myFrameBuffer;
+		DataBuffer myObjectBuffer;
+
+		Application* myApplicationPtr;
+		ModelFactory* myModelFactory;
+		Camera* myActiveCamera;
+
+		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
+		std::unordered_map<TextureSampleType, TextureSampler> myTextureSamplers;
+	};
+
+
+	class RenderInterface
+	{
+	public:
+		RenderInterface(GraphicsPipeline& aPipeline);
+
+		void DrawElement(std::shared_ptr<ModelInstance> anInstance);
+
+		inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
+
+	private:
+		GraphicsPipeline& myPipeline;
+	};
+
 
 
 }

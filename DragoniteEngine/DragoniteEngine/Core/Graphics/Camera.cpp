@@ -1,5 +1,9 @@
 #include "Camera.h"
 
+Dragonite::PerspectiveProfile::PerspectiveProfile(const float aFOV, const float aNearPlane, const float aFarPlane) : CameraProfile(), myNearPlane(aNearPlane), myFarPlane(aFarPlane), myFOV(aFOV)
+{
+}
+
 Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateViewMatrix()
 {
 	Matrix4x4f result;

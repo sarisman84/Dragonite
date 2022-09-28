@@ -87,7 +87,7 @@ namespace Dragonite
 
 		void operator+=(const Vector4<T>& someData)
 		{
-			Vector3<T> r;
+			Vector4<T> r;
 			for (size_t i = 0; i < 4; i++)
 			{
 				data[i] += someData.data[i];
@@ -127,9 +127,9 @@ namespace Dragonite
 		}
 
 
-		static float Dot(const Vector3<T> aLhs, const Vector3<T> aRhs)
+		static float Dot(const Vector4<T> aLhs, const Vector4<T> aRhs)
 		{
-			return (aLhs.x * aRhs.x) + (aLhs.y * aRhs.y) + (aLhs.z * aRhs.z);
+			return (aLhs.x * aRhs.x) + (aLhs.y * aRhs.y) + (aLhs.z * aRhs.z) + (aLhs.w * aRhs.w);
 		}
 
 
@@ -146,13 +146,13 @@ namespace Dragonite
 		}
 
 
-		static Vector3<T> Lerp(const Vector4<T>& aVal, const Vector4<T> aMin, const Vector4<T> aMax)
+		static Vector4<T> Lerp(const Vector4<T>& aVal, const Vector4<T> aMin, const Vector4<T> aMax)
 		{
-			Vector3<T> r;
+			Vector4<T> r;
 			r.x = Math::Lerp(aVal.x, aMin.x, aMax.x);
 			r.y = Math::Lerp(aVal.y, aMin.y, aMax.y);
 			r.z = Math::Lerp(aVal.z, aMin.z, aMax.z);
-			r.z = Math::Lerp(aVal.w, aMin.w, aMax.w);
+			r.w = Math::Lerp(aVal.w, aMin.w, aMax.w);
 
 			return r;
 		}

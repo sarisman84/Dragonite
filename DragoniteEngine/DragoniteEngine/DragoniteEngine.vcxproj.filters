@@ -35,6 +35,25 @@
     <ClInclude Include="Core\Graphics\Camera.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\DXIncludes.h" />
+    <ClInclude Include="Core\Graphics\Models\Model.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Models\ModelFactory.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Textures\Texture.h">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Textures\TextureFactory.h">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Models\Material.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Runtime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -49,6 +68,21 @@
     </ClCompile>
     <ClCompile Include="Core\Graphics\Camera.cpp">
       <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Models\ModelFactory.cpp">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Textures\Texture.cpp">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Textures\TextureFactory.cpp">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Models\Material.cpp">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Runtime.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,5 +101,36 @@
     <Filter Include="Core\CU\Math">
       <UniqueIdentifier>{098d4b65-7581-4fab-b825-904e3fb89438}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics\Models">
+      <UniqueIdentifier>{5ecc379e-ab24-45d2-95fe-5f948e53cab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Textures">
+      <UniqueIdentifier>{343ce0d6-5c22-4071-b665-bc957ff9aca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Shaders">
+      <UniqueIdentifier>{a6923737-88ed-4742-997e-e1c02cd86da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Shaders\Framework">
+      <UniqueIdentifier>{ba587d66-0216-4dc5-a325-14097345610c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Core\Graphics\Shaders\Unlit_VS.hlsl">
+      <Filter>Core\Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\Unlit_PS.hlsl">
+      <Filter>Core\Graphics\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\Graphics\Shaders\Framework\ShaderStruct.hlsli">
+      <Filter>Core\Graphics\Shaders\Framework</Filter>
+    </None>
+    <None Include="Core\Graphics\Shaders\Framework\CBufferDefs.hlsli">
+      <Filter>Core\Graphics\Shaders\Framework</Filter>
+    </None>
+    <None Include="Core\Graphics\Shaders\Framework\TextureDefs.hlsli">
+      <Filter>Core\Graphics\Shaders\Framework</Filter>
+    </None>
   </ItemGroup>
 </Project>

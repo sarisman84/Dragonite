@@ -10,6 +10,7 @@ namespace Dragonite
 
 	struct PerspectiveProfile : public CameraProfile
 	{
+		PerspectiveProfile(const float myFOV, const float myNearPlane, const float myFarPlane);
 		float myNearPlane, myFarPlane;
 		float myFOV;
 
@@ -24,7 +25,7 @@ namespace Dragonite
 		Camera();
 		~Camera();
 		inline Transform& GetTransform() { return myTransform; }
-		inline CameraProfile* GetProfile() { return myProfile; }
+		inline CameraProfile*& GetProfile() { return myProfile; }
 	private:
 		Transform myTransform;
 		CameraProfile* myProfile;

@@ -13,9 +13,10 @@ namespace Dragonite
 
 		Vector2() = default;
 
-		Vector2(T anX, T anY) : x(anX), y(anY), data(&anX)
+		Vector2(T anX, T anY)
 		{
-
+			x = anX;
+			y = anY;
 		}
 
 		Vector2(T* aNewVector) : data(aNewVector), x(aNewVector[0]), y(aNewVector[1]) {}

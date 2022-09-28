@@ -12,15 +12,7 @@ namespace Dragonite
 		Vector3f myRotation;
 		Vector3f myScale;
 
-	private:
-		Transform* myParent;
-
-		std::vector<Transform*> myChildren;
-
 		Matrix4x4f GetMatrix();
-		Matrix4x4f GetLocalMatrix();
-
-
 		void SetParent(Transform* aTransform);
 
 		/// <summary>
@@ -35,10 +27,25 @@ namespace Dragonite
 		/// <param name="aMatrix">An incoming matrix</param>
 		void ApplyMatrix(const Matrix4x4f& aMatrix);
 
-
-
 		inline Transform* GetParent() noexcept { return myParent; }
 		inline std::vector<Transform*> GetChildren() noexcept { return myChildren; }
+	private:
+		Transform* myParent;
+
+		std::vector<Transform*> myChildren;
+		Matrix4x4f GetLocalMatrix();
+
+
+
+
+
+
+
+
+
+
+
+
 	};
 }
 

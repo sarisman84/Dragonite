@@ -7,16 +7,22 @@
 #include <unordered_map>
 
 #include "CU/CommonData.h"
-
+#include <chrono>
 
 #define DDLVISIBLE __declspec(dllexport)
 
+
+
 namespace Dragonite
 {
-	namespace GraphicsAPI
-	{
-		class GraphicsPipeline;
-	}
+	
+	using Time = std::chrono::time_point<std::chrono::steady_clock>;
+
+
+	using Clock = std::chrono::high_resolution_clock;
+
+	class GraphicsPipeline;
+	
 
 	struct ApplicationDesc
 	{
@@ -33,6 +39,7 @@ namespace Dragonite
 
 	class RuntimeHandler
 	{
+		friend GraphicsPipeline;
 		friend class Application;
 	public:
 		RuntimeHandler() = default;
@@ -72,14 +79,13 @@ namespace Dragonite
 		DDLVISIBLE ~Application();
 
 		int DDLVISIBLE ExecuteRuntime();
-		inline DDLVISIBLE RuntimeHandler& GetInstance() { return myRuntimeHandler; }
+		inline DDLVISIBLE RuntimeHandler& GetPollingStation() { return myRuntimeHandler; }
 		DDLVISIBLE LRESULT CALLBACK LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	private:
 		bool myRuntimeState;
-
 		HWND myInstance;
 		RuntimeHandler myRuntimeHandler;
-		GraphicsAPI::GraphicsPipeline* myPipeline;
+		GraphicsPipeline* myPipeline;
 	};
 
 
