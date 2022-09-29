@@ -142,10 +142,10 @@ LRESULT Dragonite::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 Dragonite::RuntimeHandler::~RuntimeHandler()
 {
-	for (auto& el : myUniqueDataMembers)
+	/*for (auto& el : myUniqueDataMembers)
 	{
 		if (el.second)
 			delete el.second;
-	}
+	}*/
 	myUniqueDataMembers.clear();
 }

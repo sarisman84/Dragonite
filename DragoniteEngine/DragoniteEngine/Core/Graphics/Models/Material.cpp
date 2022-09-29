@@ -12,8 +12,10 @@ Dragonite::Material(
 	},
 	{
 		"Unlit"
-	}
-);
+	},
+	L"Textures/CanardPolicierAnglais.dds",
+	Color(1, 1, 1, 1)
+	);
 
 
 Dragonite::Material::Material(const char* aShader)
@@ -23,10 +25,15 @@ Dragonite::Material::Material(const char* aShader)
 	myVSInfo.myInputLayout.push_back({ "TEXCOORD", DXGI_FORMAT_R32G32_FLOAT, D3D11_INPUT_PER_VERTEX_DATA });
 
 	myPSInfo.myPixelShader = aShader;
+
+	myTexture = L"";
+	myColor = Color(1, 1, 1, 1);
 }
 
-Dragonite::Material::Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc)
+Dragonite::Material::Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc, std::wstring aTexture, Color aColor)
 {
 	myVSInfo = aVSDesc;
 	myPSInfo = aPSDesc;
+	myTexture = aTexture;
+	myColor = aColor;
 }

@@ -121,11 +121,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
-      <ShaderModel>6.5</ShaderModel>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,11 +145,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
-      <ShaderModel>6.5</ShaderModel>
+      <ShaderModel>5.0</ShaderModel>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -162,6 +162,27 @@
     <ClInclude Include="Core\CU\Math\Vector3.h" />
     <ClInclude Include="Core\CU\Math\Vector4.h" />
     <ClInclude Include="Core\CU\Transform.h" />
+    <ClInclude Include="Core\External\DirectX\DDSTextureLoader11.h" />
+    <ClInclude Include="Core\External\STB\stb_connected_components.h" />
+    <ClInclude Include="Core\External\STB\stb_c_lexer.h" />
+    <ClInclude Include="Core\External\STB\stb_divide.h" />
+    <ClInclude Include="Core\External\STB\stb_ds.h" />
+    <ClInclude Include="Core\External\STB\stb_dxt.h" />
+    <ClInclude Include="Core\External\STB\stb_easy_font.h" />
+    <ClInclude Include="Core\External\STB\stb_herringbone_wang_tile.h" />
+    <ClInclude Include="Core\External\STB\stb_hexwave.h" />
+    <ClInclude Include="Core\External\STB\stb_image.h" />
+    <ClInclude Include="Core\External\STB\stb_image_resize.h" />
+    <ClInclude Include="Core\External\STB\stb_image_write.h" />
+    <ClInclude Include="Core\External\STB\stb_include.h" />
+    <ClInclude Include="Core\External\STB\stb_leakcheck.h" />
+    <ClInclude Include="Core\External\STB\stb_perlin.h" />
+    <ClInclude Include="Core\External\STB\stb_rect_pack.h" />
+    <ClInclude Include="Core\External\STB\stb_sprintf.h" />
+    <ClInclude Include="Core\External\STB\stb_textedit.h" />
+    <ClInclude Include="Core\External\STB\stb_tilemap_editor.h" />
+    <ClInclude Include="Core\External\STB\stb_truetype.h" />
+    <ClInclude Include="Core\External\STB\stb_voxel_render.h" />
     <ClInclude Include="Core\Graphics\Camera.h" />
     <ClInclude Include="Core\Graphics\DXIncludes.h" />
     <ClInclude Include="Core\Graphics\GraphicsAPI.h" />
@@ -176,6 +197,8 @@
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\CU\Transform.cpp" />
+    <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp" />
+    <ClCompile Include="Core\External\STB\stb_vorbis.c" />
     <ClCompile Include="Core\Graphics\Camera.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsAPI.cpp" />
     <ClCompile Include="Core\Graphics\Models\Material.cpp" />
@@ -191,8 +214,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.5</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.5</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
@@ -201,8 +222,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.5</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.5</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>

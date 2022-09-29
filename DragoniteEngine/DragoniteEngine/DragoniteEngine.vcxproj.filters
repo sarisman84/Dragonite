@@ -54,6 +54,69 @@
     <ClInclude Include="Core\Runtime.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_c_lexer.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_connected_components.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_divide.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_ds.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_dxt.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_easy_font.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_herringbone_wang_tile.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_hexwave.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_image.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_image_resize.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_image_write.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_include.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_leakcheck.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_perlin.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_rect_pack.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_sprintf.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_textedit.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_tilemap_editor.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_truetype.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\STB\stb_voxel_render.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\DirectX\DDSTextureLoader11.h">
+      <Filter>Core\External\DirectX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -84,6 +147,12 @@
     <ClCompile Include="Core\Runtime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\External\STB\stb_vorbis.c">
+      <Filter>Core\External\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp">
+      <Filter>Core\External\DirectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -112,6 +181,15 @@
     </Filter>
     <Filter Include="Core\Graphics\Shaders\Framework">
       <UniqueIdentifier>{ba587d66-0216-4dc5-a325-14097345610c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External">
+      <UniqueIdentifier>{bf0f2afd-ef9d-4d24-a48e-a148003a7329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\STB">
+      <UniqueIdentifier>{65879386-1787-40c3-a5d1-6abd2a26ed02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\DirectX">
+      <UniqueIdentifier>{788cf4f3-d82b-415b-99c8-3658223f608a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

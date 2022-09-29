@@ -6,12 +6,16 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+
+#define DDLVISIBLE __declspec(dllexport)
+
 namespace Dragonite
 {
 	class Camera;
 	class Application;
 	class ModelFactory;
-	struct ModelInstance;
+	class TextureFactory;
+	class ModelInstance;
 
 	enum class TextureSampleType
 	{
@@ -41,6 +45,7 @@ namespace Dragonite
 		bool Initialize(Application* anApplication, HWND aWindowHandle);
 		void Render();
 
+		inline Application* GetApplication() { return myApplicationPtr; }
 		inline Device& GetDevice() { return myDevice; }
 		inline DeviceContext& GetContext() { return myContext; }
 
@@ -72,6 +77,7 @@ namespace Dragonite
 
 		Application* myApplicationPtr;
 		ModelFactory* myModelFactory;
+		TextureFactory* myTextureFactory;
 		Camera* myActiveCamera;
 
 		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
@@ -84,9 +90,9 @@ namespace Dragonite
 	public:
 		RenderInterface(GraphicsPipeline& aPipeline);
 
-		void DrawElement(std::shared_ptr<ModelInstance> anInstance);
+		DDLVISIBLE void DrawElement(std::shared_ptr<ModelInstance> anInstance);
 
-		inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
+		DDLVISIBLE inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
 
 	private:
 		GraphicsPipeline& myPipeline;

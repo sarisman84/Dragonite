@@ -1,9 +1,14 @@
 #include "ModelFactory.h"
 #include <fstream>
 #include <string>
+#include <iterator>
 #include <d3d11.h>
 
+
+#include "../Textures/TextureFactory.h"
+
 #include "../GraphicsAPI.h"
+#include "../../Application.h"
 
 
 
@@ -22,8 +27,8 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	auto device = myPipeline->GetDevice();
 	std::string vsData;
 
-	auto ins = std::shared_ptr<ModelInstance>();
-
+	auto ins = std::make_shared<ModelInstance>();
+	if (!ins) return nullptr;
 	ins->myModel = myFactoryData[aPrimitiveType];
 	if (!ins->myModel) return nullptr;
 
@@ -49,6 +54,8 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	}
 
 
+	ins->myTexture = myPipeline->GetApplication()->GetPollingStation().Get<TextureFactory>()->LoadTexture(aMaterial.myTexture.c_str());
+
 
 	return ins;
 }
@@ -60,56 +67,56 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 
 	unsigned int indices[36] =
 	{
-	0, 1, 2,
-	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
-	8, 9, 10,
-	8, 10, 11,
-	12, 13, 14,
-	12, 14, 15,
-	16, 17, 18,
-	16, 18, 19,
-	20, 21, 22,
-	20, 22, 23
+	  0, 1, 2,
+	  0, 2, 3,
+	  4, 5, 6,
+	  4, 6, 7,
+	  8, 9, 10,
+	  8, 10, 11,
+	  12, 13, 14,
+	  12, 14, 15,
+	  16, 17, 18,
+	  16, 18, 19,
+	  20, 21, 22,
+	  20, 22, 23
 	};
 
-	Vertex vertices[24] = {
-		Vertex::Position(0.5f, -0.5f, 0.5f, 1.0f).UV(0,1),
-		Vertex::Position(0.5f, 0.5f, 0.5f, 1.0f).UV(0,0),
-		Vertex::Position(-0.5f, 0.5f, 0.5f, 1.0f).UV(1,0),
-		Vertex::Position(-0.5f, -0.5f, 0.5f, 1.0f).UV(1,1),
+	Vertex vertices[36] = {
 
-		Vertex::Position(-0.5f, -0.5f, 0.5f, 1.0f).UV(0,1),
-		Vertex::Position(-0.5f, 0.5f, 0.5f, 1.0f).UV(0,0),
-		Vertex::Position(-0.5f, 0.5f, -0.5f, 1.0f).UV(1,0),
-		Vertex::Position(-0.5f, -0.5f, -0.5f, 1.0f).UV(1,1),
+		Vertex::Position(0.5f,  -0.5f,  0.5f,  1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(0.5f,   0.5f,  0.5f,  1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f,  0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(-0.5f, -0.5f,  0.5f,  1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(-0.5f, -0.5f,  0.5f,  1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(-0.5f,  0.5f,  0.5f,  1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f, -0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(-0.5f, -0.5f, -0.5f , 1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(-0.5f, -0.5f, -0.5f , 1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(-0.5f,  0.5f, -0.5f,  1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(0.5f,   0.5f, -0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(0.5f,  -0.5f, -0.5f,  1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(0.5f,  -0.5f, -0.5f,  1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(0.5f,   0.5f, -0.5f,  1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(0.5f,   0.5f,  0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(0.5f,  -0.5f,  0.5f,  1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(0.5f,   0.5f,  0.5f,  1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(0.5f,   0.5f, -0.5f,  1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f, -0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f,  0.5f,  1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(-0.5f, -0.5f,  0.5f,  1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(-0.5f, -0.5f, -0.5f , 1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(0.5f,  -0.5f, -0.5f,  1.0f).UV(1.0f, 0.0f),
+		Vertex::Position(0.5f,  -0.5f,  0.5f,  1.0f).UV(1.0f, 1.0f)
 
-		Vertex::Position(-0.5f, -0.5f, -0.5f, 1.0f).UV(0,1),
-		Vertex::Position(-0.5f, 0.5f, -0.5f, 1.0f).UV(0,0),
-		Vertex::Position(0.5f, 0.5f, -0.5f, 1.0f).UV(1,0),
-		Vertex::Position(0.5f, -0.5f, -0.5f, 1.0f).UV(1,1),
 
-		Vertex::Position(0.5f, -0.5f, 0.5f, 1.0f).UV(0,1),
-		Vertex::Position(0.5f, 0.5f, -0.5f, 1.0f).UV(0,0),
-		Vertex::Position(-0.5f, 0.5f, 0.5f, 1.0f).UV(1,0),
-		Vertex::Position(0.5f, -0.5f, 0.5f, 1.0f).UV(1,1),
 
-		Vertex::Position(0.5f, 0.5f, 0.5f, 1.0f).UV(0,1),
-		Vertex::Position(0.5f, 0.5f, -0.5f, 1.0f).UV(0,0),
-		Vertex::Position(-0.5f, 0.5f, -0.5f, 1.0f).UV(1,0),
-		Vertex::Position(-0.5f, 0.5f, 0.5f, 1.0f).UV(1,1),
 
-		Vertex::Position(-0.5f, -0.5f, 0.5f, 1.0f).UV(0,1),
-		Vertex::Position(-0.5f, -0.5f, -0.5f, 1.0f).UV(0,0),
-		Vertex::Position(0.5f, -0.5f, -0.5f, 1.0f).UV(1,0),
-		Vertex::Position(0.5f, -0.5f, 0.5f, 1.0f).UV(1,1),
 	};
 
 
 
-	DataBufferDesc vertexBufferDesc(vertices, D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER);
-	DataBufferDesc indexBufferDesc(indices, D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER);
+	DataBufferDesc vertexBufferDesc(vertices, sizeof(vertices), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER);
+	DataBufferDesc indexBufferDesc(indices, sizeof(indices), D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER);
 
 	if (FAILED(GraphicsPipeline::CreateBuffer(myPipeline->GetDevice(), model->myVertexBuffer, vertexBufferDesc)))
 		return nullptr;
@@ -118,19 +125,25 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 
 	model->myIndexCount = 36;
 
-	return ModelRef();
+	return model;
 }
 
 HRESULT Dragonite::ModelFactory::CreateVSInstance(Device aDevice, const char* aPath, VertexShader& aShader, std::string& someData)
 {
 	typedef std::istreambuf_iterator<char> ShaderIterator;
-
-	std::ifstream file;
 	std::string path = "Shaders/" + std::string(aPath) + "_VS.cso";
-	file.open(path, std::ios::binary);
-	someData = { ShaderIterator(file), ShaderIterator() };
+	std::ifstream file(path, std::ios::binary);
 
-	return aDevice->CreateVertexShader(someData.data(), someData.size(), nullptr, &aShader);
+	if (!file || file.fail())
+		return E_ACCESSDENIED;
+
+	bool hasFailed = file.is_open();
+	someData = { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
+	file.close();
+	hasFailed = file.is_open();
+
+	HRESULT r = aDevice->CreateVertexShader(someData.data(), someData.size(), nullptr, &aShader);
+	return r;
 }
 
 HRESULT Dragonite::ModelFactory::CreatePSInstance(Device aDevice, const char* aPath, PixelShader& aShader)

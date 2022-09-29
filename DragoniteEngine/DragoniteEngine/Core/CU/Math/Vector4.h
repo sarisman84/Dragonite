@@ -1,191 +1,80 @@
 #pragma once
 #include "MathFunctions.h"
 #include <array>
+
+#include "Vector3.h"
+
 namespace Dragonite
 {
-	template<typename T>
-	struct Vector4
+
+	template <class T> class Vector4
 	{
-		union
+	public:
+		T x;
+		T y;
+		T z;
+		T w;
+
+		Vector4<T>() : x(0), y(0), z(0), w(0) {}
+		Vector4<T>(const T& aX, const T& aY, const T& aZ, const T& aW) : x(aX), y(aY), z(aZ), w(aW) {}
+		Vector4<T>(const Vector3<T>& aVec, const T& aW) : x(aVec.x), y(aVec.y), z(aVec.z), w(aW) {}
+		Vector4<T>(const Vector4<T>& aVector) = default;
+		Vector4<T>& operator=(const Vector4<T>& aVector4) = default;
+		Vector4<T> operator-() const { return Vector4<T>(-x, -y, -z, -w); }
+		bool operator==(const Vector4<T>& aVector)
 		{
-			T x, y, z, w;
-			std::array<T, 4> data;
-		};
-
-		Vector4() = default;
-
-		Vector4(T anX, T anY, T anZ, T anW)
+			return (x == aVector.x) && (y == aVector.y) && (z == aVector.z) && (w == aVector.w);
+		}
+		bool operator!=(const Vector4<T>& aVector) { return !(*this == aVector); }
+		~Vector4<T>() = default;
+		T LengthSqr() const { return x * x + y * y + z * z + w * w; }
+		T Length() const { return sqrt(LengthSqr()); }
+		Vector4<T> GetNormalized() const
 		{
-			data[0] = anX;
-			data[1] = anY;
-			data[2] = anZ;
-			data[3] = anW;
+			if (x == 0 && y == 0 && z == 0 && w == 0)
+				return Vector4<T>();
+			return Vector4<T>(x / Length(), y / Length(), z / Length(), w / Length());
 		}
-
-		Vector4(T* aNewVector)
-		{
-			data = aNewVector;
-		}
-
-
-		Vector4(const Vector4<T>& aVal)
-		{
-
-			data = aVal.data;
-		}
-
-
-		void operator=(const Vector4<T>& aVal)
-		{
-
-			data = aVal.data;
-		}
-
-		Vector4<T> operator+(const Vector4<T>& someData)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				r.data[i] = data[i] + someData.data[i];
-			}
-			return r;
-		}
-
-
-		Vector4<T> operator-(const Vector4<T>& someData)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				r.data[i] = data[i] - someData.data[i];
-			}
-			return r;
-		}
-
-
-		void operator*=(const Vector4<T>& someData)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				data[i] *= someData.data[i];
-			}
-			return r;
-		}
-
-
-		void operator*=(const T& aScalar)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				data[i] *= aScalar;
-			}
-			return r;
-		}
-
-
-		void operator+=(const Vector4<T>& someData)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				data[i] += someData.data[i];
-			}
-			return r;
-		}
-
-
-		void operator-=(const Vector4<T>& someData)
-		{
-			Vector4<T> r;
-			for (size_t i = 0; i < 4; i++)
-			{
-				data[i] -= someData.data[i];
-			}
-			return r;
-		}
-
-
-
-
-		float Length() {
-			return sqrtf(static_cast<float>(x) * static_cast<float>(x) + static_cast<float>(y) * static_cast<float>(y) + static_cast<float>(z) * static_cast<float>(z) + static_cast<float>(w) * static_cast<float>(w));
-		}
-
-
-
 		void Normalize()
 		{
-			const T magnitude = (x * x) + (y * y) + (z * z) + (w * w);
-
-			const T inversedMagnitude = T(1) / sqrt(magnitude);
-			x = x * inversedMagnitude;
-			y = y * inversedMagnitude;
-			z = z * inversedMagnitude;
-			w = w * inversedMagnitude;
+			if (x == 0 && y == 0 && z == 0 && w == 0)
+				return;
+			T length = Length();
+			x /= length;
+			y /= length;
+			z /= length;
+			w /= length;
 		}
-
-
-		static float Dot(const Vector4<T> aLhs, const Vector4<T> aRhs)
-		{
-			return (aLhs.x * aRhs.x) + (aLhs.y * aRhs.y) + (aLhs.z * aRhs.z) + (aLhs.w * aRhs.w);
-		}
-
-
-
-
-
-
-		static void Clamp(Vector4<T>& aVal, const Vector4<T> aMin, const Vector4<T> aMax)
-		{
-			Math::Clamp(aVal.x, aMin.x, aMax.x);
-			Math::Clamp(aVal.y, aMin.y, aMax.y);
-			Math::Clamp(aVal.z, aMin.z, aMax.z);
-			Math::Clamp(aVal.w, aMin.w, aMax.w);
-		}
-
-
-		static Vector4<T> Lerp(const Vector4<T>& aVal, const Vector4<T> aMin, const Vector4<T> aMax)
-		{
-			Vector4<T> r;
-			r.x = Math::Lerp(aVal.x, aMin.x, aMax.x);
-			r.y = Math::Lerp(aVal.y, aMin.y, aMax.y);
-			r.z = Math::Lerp(aVal.z, aMin.z, aMax.z);
-			r.w = Math::Lerp(aVal.w, aMin.w, aMax.w);
-
-			return r;
-		}
-
+		T Dot(const Vector4<T>& aVector) const { return x * aVector.x + y * aVector.y + z * aVector.z + w * aVector.w; }
 	};
 
-	template <typename T>
-	Vector4<T> operator*(const T& aScalar, const Vector4<T>& aVector)
+	template <class T> Vector4<T> operator+(const Vector4<T>& aVector0, const Vector4<T>& aVector1)
 	{
-		return aVector * aScalar;
+		return Vector4<T>(aVector0.x + aVector1.x, aVector0.y + aVector1.y, aVector0.z + aVector1.z, aVector0.w + aVector1.w);
 	}
-
-	template <typename T>
-	Vector4<T> operator*(const Vector4<T>& aSelf,const Vector4<T>& someData)
+	template <class T> Vector4<T> operator-(const Vector4<T>& aVector0, const Vector4<T>& aVector1) { return aVector0 + (-aVector1); }
+	template <class T> Vector4<T> operator*(const Vector4<T>& aVector, const T& aScalar)
 	{
-		Vector4<T> r;
-		for (size_t i = 0; i < 4; i++)
-		{
-			r.data[i] = aSelf.data[i] * someData.data[i];
-		}
-		return r;
+		return Vector4<T>(aVector.x * aScalar, aVector.y * aScalar, aVector.z * aScalar, aVector.w * aScalar);
 	}
-
-	template <typename T>
-	Vector4<T> operator*(const Vector4<T>& aSelf, const T& aScalar)
+	template <class T> Vector4<T> operator*(const T& aScalar, const Vector4<T>& aVector) { return aVector * aScalar; }
+	template <class T> Vector4<T> operator/(const Vector4<T>& aVector, const T& aScalar) { return aVector * (T(1) / aScalar); }
+	template <class T> void operator+=(Vector4<T>& aVector0, const Vector4<T>& aVector1)
 	{
-		Vector4<T> r;
-		for (size_t i = 0; i < 4; i++)
-		{
-			r.data[i] = aSelf.data[i] * aScalar;
-		}
-		return r;
+		aVector0.x += aVector1.x;
+		aVector0.y += aVector1.y;
+		aVector0.z += aVector1.z;
+		aVector0.w += aVector1.w;
 	}
+	template <class T> void operator-=(Vector4<T>& aVector0, const Vector4<T>& aVector1) { aVector0 += (-aVector1); }
+	template <class T> void operator*=(Vector4<T>& aVector, const T& aScalar)
+	{
+		aVector.x *= aScalar;
+		aVector.y *= aScalar;
+		aVector.z *= aScalar;
+		aVector.w *= aScalar;
+	}
+	template <class T> void operator/=(Vector4<T>& aVector, const T& aScalar) { aVector *= (T(1) / aScalar); }
 
 
 

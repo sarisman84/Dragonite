@@ -4,13 +4,27 @@ Dragonite::PerspectiveProfile::PerspectiveProfile(const float aFOV, const float 
 {
 }
 
-Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateViewMatrix()
+Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateProjectionMatrix()
 {
 	Matrix4x4f result;
 	result(1, 1) = 1 / (tanf(myFOV / 2.0f));
 	result(2, 2) = (1920.0f / 1080.0f) * (1 / (tanf(myFOV / 2.0f))); //TODO: Get access to resolution information
 	result(3, 3) = myFarPlane / (myFarPlane - myNearPlane);
-	result(3, 4) = -(myNearPlane * myFarPlane) / (myFarPlane - myNearPlane);
+	result(3, 4) = 1.0f;
+	result(4, 3) = -(myNearPlane * myFarPlane) / (myFarPlane - myNearPlane);
+	result(4, 4) = 0;
+
+	/*
+			projectionMatrix(1, 1) = 1.f / (float)(tan(aHorizontalFovInDeg / 2.f));
+            projectionMatrix(2, 2) = ((float)aRes.x / (float)aRes.y) * (float)(1.f / (tan(aHorizontalFovInDeg / 2.f)));
+            projectionMatrix(3, 3) = aFarPlane / (aFarPlane - aNearPlane);
+            projectionMatrix(3, 4) = 1.f;
+            projectionMatrix(4, 3) = (-aNearPlane * aFarPlane) / (aFarPlane - aNearPlane);
+            projectionMatrix(4, 4) = 0;
+
+            return projectionMatrix;
+	*/
+
 	return result;
 }
 

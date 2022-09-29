@@ -4,6 +4,8 @@
 #include "Material.h"
 #include <unordered_map>
 
+#define DDLVISIBLE __declspec(dllexport)
+
 namespace Dragonite
 {
 
@@ -18,7 +20,7 @@ namespace Dragonite
 		ModelFactory() = default;
 		bool Initialize(GraphicsPipeline* aPipeline);
 
-		std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial);
+		DDLVISIBLE std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial);
 	private:
 		//VVV Model Definitions
 		ModelRef CreateUnitCube();

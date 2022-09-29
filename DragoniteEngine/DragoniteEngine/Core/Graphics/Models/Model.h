@@ -44,13 +44,14 @@ namespace Dragonite
 
 	typedef std::shared_ptr<Model> ModelRef;
 
-	struct ModelInstance
+	class ModelInstance
 	{
+	public:
 		friend class GraphicsPipeline;
 		friend class ModelFactory;
 		ModelRef myModel;
 		Transform myTransform;
-		Texture myTexture;
+		TextureRef myTexture;
 	private:
 		VertexShader
 			myVertexShader;

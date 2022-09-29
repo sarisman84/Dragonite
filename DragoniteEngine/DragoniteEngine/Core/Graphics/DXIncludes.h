@@ -15,6 +15,7 @@ struct ID3D11PixelShader;
 struct ID3D11InputLayout;
 struct ID3D11ShaderResourceView;
 struct ID3D11Texture2D;
+struct ID3D11Resource;
 struct ID3D11SamplerState;
 struct ID3D11DepthStencilView;
 
@@ -22,7 +23,7 @@ enum D3D11_USAGE;
 enum D3D11_INPUT_CLASSIFICATION;
 enum D3D11_BIND_FLAG;
 enum D3D11_CPU_ACCESS_FLAG;
-
+enum DXGI_FORMAT;
 
 namespace Dragonite
 {
@@ -38,15 +39,17 @@ namespace Dragonite
 	typedef ComPtr<ID3D11Texture2D> DXTexture2D;
 	typedef ComPtr<ID3D11SamplerState> TextureSampler;
 	typedef ComPtr<ID3D11DepthStencilView> DepthStencil;
+	typedef ComPtr<ID3D11Resource> DXResource;
 
 	struct DataBufferDesc
 	{
 		template<typename T>
-		DataBufferDesc(T someData, D3D11_USAGE aUsage, D3D11_BIND_FLAG aBindFlag) {
-			myData = (void*)&someData;
-			mySize = sizeof(someData);
+		DataBufferDesc(T* someData, size_t aSize, D3D11_USAGE aUsage, D3D11_BIND_FLAG aBindFlag) {
+			myData = (void*)someData;
+			mySize = aSize;
 			myUsage = aUsage;
 			myBindFlag = aBindFlag;
+			myCPUFlags = 0;
 		}
 
 
@@ -55,6 +58,7 @@ namespace Dragonite
 			mySize = aSize;
 			myUsage = aUsage;
 			myBindFlag = aBindFlag;
+			myCPUFlags = 0;
 		}
 
 
@@ -78,7 +82,7 @@ namespace Dragonite
 		TextureBufferDesc(Vector2f aResolution, UINT aFormat, UINT aBindFlag)
 		{
 			myTextureRes = Vector2ui(
-				static_cast<unsigned int>(aResolution.x), 
+				static_cast<unsigned int>(aResolution.x),
 				static_cast<unsigned int>(aResolution.y)
 			);
 			myArraySize = 1;

@@ -2,6 +2,7 @@
 #include "../CU/CommonData.h"
 #include "../Application.h"
 #include "Models/ModelFactory.h"
+#include "Textures/TextureFactory.h"
 #include "Camera.h"
 #include <d3d11.h>
 #define REPORT_DX_WARNINGS
@@ -9,6 +10,7 @@
 Dragonite::GraphicsPipeline::GraphicsPipeline()
 {
 	myModelFactory = nullptr;
+	myTextureFactory = nullptr;
 }
 
 
@@ -17,6 +19,10 @@ Dragonite::GraphicsPipeline::~GraphicsPipeline()
 	if (myModelFactory)
 		delete myModelFactory;
 	myModelFactory = nullptr;
+
+	if (myTextureFactory)
+		delete myTextureFactory;
+	myTextureFactory = nullptr;
 }
 
 bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aWindowHandle)
@@ -33,10 +39,14 @@ bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aW
 		return false;
 
 
+	
 
 
-
-	DataBufferDesc bufferDesc(sizeof(FrameBufferData), D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE);
+	DataBufferDesc bufferDesc(
+		sizeof(FrameBufferData),
+		D3D11_USAGE_DYNAMIC,
+		D3D11_BIND_CONSTANT_BUFFER,
+		D3D11_CPU_ACCESS_WRITE);
 
 	if (FAILED(CreateBuffer(myDevice, myFrameBuffer, bufferDesc)))
 		return false;
@@ -55,8 +65,10 @@ bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aW
 	{
 		return false;
 	}
+	myTextureFactory = new TextureFactory(this);
 
 
+	myApplicationPtr->GetPollingStation().AddHandler(myTextureFactory);
 	myApplicationPtr->GetPollingStation().AddHandler(myModelFactory);
 
 	return true;
@@ -64,8 +76,8 @@ bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aW
 
 void Dragonite::GraphicsPipeline::Render()
 {
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	auto cpy = myElementsToDraw;
 	myElementsToDraw.clear();
@@ -75,13 +87,14 @@ void Dragonite::GraphicsPipeline::Render()
 	if (myActiveCamera)
 	{
 		FrameBufferData frameBufferData = {};
-		frameBufferData.myWorldToClipMatrix = myActiveCamera->GetProfile()->CalculateViewMatrix();
-		if (FAILED(SetBuffer(myContext, myFrameBuffer, &frameBufferData, sizeof(FrameBufferData))))
-		{
-			//TODO: Handle this error
-		}
-
-		myContext->VSGetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+		frameBufferData.myWorldToClipMatrix = myActiveCamera->WorldToClipSpace();
+		if (myFrameBuffer)
+			if (FAILED(SetBuffer(myContext, myFrameBuffer, &frameBufferData, sizeof(FrameBufferData))))
+			{
+				//TODO: Handle this error
+			}
+			else
+				myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 	}
 
 
@@ -92,16 +105,22 @@ void Dragonite::GraphicsPipeline::Render()
 		auto element = cpy.back();
 		cpy.pop_back();
 
+		
+
+		if (element->myTexture)
+			element->myTexture->Bind(myContext);
 
 		{
 			ObjectBufferData objectBufferData = {};
 			objectBufferData.myModelToWorldMatrix = element->myTransform.GetMatrix();
 
-			if (FAILED(SetBuffer(myContext, myObjectBuffer, &objectBufferData, sizeof(ObjectBufferData))))
-			{
-				//TODO: Handle this error
-			}
-			myContext->VSGetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+			if (myObjectBuffer)
+				if (FAILED(SetBuffer(myContext, myObjectBuffer, &objectBufferData, sizeof(ObjectBufferData))))
+				{
+					//TODO: Handle this error
+				}
+				else
+					myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
 		}
 
 		{
@@ -113,9 +132,12 @@ void Dragonite::GraphicsPipeline::Render()
 			myContext->IASetVertexBuffers(0, 1, element->myModel->myVertexBuffer.GetAddressOf(), &stride, &offset);
 			myContext->IASetIndexBuffer(element->myModel->myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
+			myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
+
 			myContext->VSSetShader(element->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(element->myPixelShader.Get(), nullptr, 0);
 		}
+
 
 
 		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
@@ -281,7 +303,7 @@ HRESULT Dragonite::GraphicsPipeline::SetBuffer(DeviceContext aContext, DataBuffe
 
 Dragonite::RenderInterface::RenderInterface(GraphicsPipeline& aPipeline) : myPipeline(aPipeline)
 {
-	
+
 }
 
 void Dragonite::RenderInterface::DrawElement(std::shared_ptr<ModelInstance> anInstance)

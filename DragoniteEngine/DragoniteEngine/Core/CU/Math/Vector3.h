@@ -3,179 +3,118 @@
 #include <array>
 namespace Dragonite
 {
-	template<typename T>
-	struct Vector3
+	template <class T> class Vector3
 	{
-		union
-		{
-			T x, y, z;
-			std::array<T, 3> data;
-		};
+	public:
+		static const Vector3<T> Zero;
+		static const Vector3<T> One;
+		static const Vector3<T> Up;
+		static const Vector3<T> Forward;
+		static const Vector3<T> Right;
 
-		Vector3() = default;
+		T x;
+		T y;
+		T z;
 
-		Vector3(T anX, T anY, T anZ)
+		Vector3<T>() : x(0), y(0), z(0) {}
+		Vector3<T>(const T& aX, const T& aY, const T& aZ) : x(aX), y(aY), z(aZ) {}
+		Vector3<T>(const Vector3<T>& aVector) = default;
+		Vector3<T>& operator=(const Vector3<T>& aVector3) = default;
+		Vector3<T> operator-() const { return Vector3<T>(-x, -y, -z); }
+
+		static Vector3<T> Lerp(const Vector3<T>& aStart, const Vector3<T>& aEnd, const float aT)
 		{
-			data[0] = anX;
-			data[1] = anY;
-			data[2] = anZ;
+			return (aStart + aT * (aEnd - aStart));
 		}
 
-		Vector3(T* aNewVector)
+		bool operator==(const Vector3<T>& aVector)
 		{
-			data = aNewVector;
+			return (x == aVector.x) && (y == aVector.y) && (z == aVector.z);
 		}
-
-
-		Vector3(const Vector3<T>& aVal)
+		bool operator!=(const Vector3<T>& aVector) { return !(*this == aVector); }
+		~Vector3<T>() = default;
+		T LengthSqr() const { return x * x + y * y + z * z; }
+		T Length() const { return sqrt(LengthSqr()); }
+		Vector3<T> GetNormalized() const
 		{
-
-			data = aVal.data;
+			if (x == 0 && y == 0 && z == 0)
+				return Vector3<T>();
+			return Vector3<T>(x / Length(), y / Length(), z / Length());
 		}
-
-
-		void operator=(const Vector3<T>& aVal)
+		void Normalize()
 		{
-			data = aVal.data;
+			if (x == 0 && y == 0 && z == 0)
+				return;
+			T length = Length();
+			x /= length;
+			y /= length;
+			z /= length;
 		}
-
-		Vector3<T> operator+(const Vector3<T>& someData)
+		T Dot(const Vector3<T>& aVector) const { return x * aVector.x + y * aVector.y + z * aVector.z; }
+		Vector3<T> Cross(const Vector3<T>& aVector) const
 		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				r = data[i] + someData.data[i];
-			}
-			return r;
+			return Vector3<T>(y * aVector.z - z * aVector.y, z * aVector.x - x * aVector.z, x * aVector.y - y * aVector.x);
 		}
-
-
-		Vector3<T> operator-(const Vector3<T>& someData)
+		T& operator[](size_t aValue)
 		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				r = data[i] - someData.data[i];
-			}
-			return r;
+			if (aValue == 0)
+				return x;
+			if (aValue == 1)
+				return y;
+			if (aValue == 2)
+				return z;
 		}
-
-
-
-
-		void operator+=(const Vector3<T>& someData)
+		const T& operator[](size_t aValue) const
 		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				data[i] += someData.data[i];
-			}
-			return r;
+			if (aValue == 0)
+				return x;
+			if (aValue == 1)
+				return y;
+			if (aValue == 2)
+				return z;
 		}
-
-
-		void operator-=(const Vector3<T>& someData)
-		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				data[i] -= someData.data[i];
-			}
-			return r;
-		}
-
-		void operator*=(const Vector3<T>& someData)
-		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				data[i] *= someData.data[i];
-			}
-			return r;
-		}
-
-		void operator*=(const T& aScalar)
-		{
-			Vector3<T> r;
-			for (size_t i = 0; i < 3; i++)
-			{
-				data[i] *= aScalar;
-			}
-			return r;
-		}
-
-
-		float Length() {
-			return sqrtf(static_cast<float>(x) * static_cast<float>(x) + static_cast<float>(y) * static_cast<float>(y) + static_cast<float>(z) * static_cast<float>(z));
-		}
-
-
-		static float Dot(const Vector3<T> aLhs, const Vector3<T> aRhs)
-		{
-			return (aLhs.x * aRhs.x) + (aLhs.y * aRhs.y) + (aLhs.z * aRhs.z);
-		}
-
-
-
-		static Vector3<T> Cross(const Vector3<T> aLhs, const Vector3<T> aRhs)
-		{
-			Vector3<T> r;
-			r.x = aLhs.y * aRhs.z - aLhs.z * aRhs.y;
-			r.y = aLhs.z * aRhs.x - aLhs.x * aRhs.z;
-			r.z = aLhs.x * aRhs.y - aLhs.y * aRhs.x;
-
-			return r;
-		}
-
-
-		static void Clamp(Vector3<T>& aVal, const Vector3<T> aMin, const Vector3<T> aMax)
-		{
-			Math::Clamp(aVal.x, aMin.x, aMax.x);
-			Math::Clamp(aVal.y, aMin.y, aMax.y);
-			Math::Clamp(aVal.z, aMin.z, aMax.z);
-		}
-
-
-		static Vector3<T> Lerp(const Vector3<T>& aVal, const Vector3<T> aMin, const Vector3<T> aMax)
-		{
-			Vector3<T> r;
-			r.x = Math::Lerp(aVal.x, aMin.x, aMax.x);
-			r.y = Math::Lerp(aVal.y, aMin.y, aMax.y);
-			r.z = Math::Lerp(aVal.z, aMin.z, aMax.z);
-
-			return r;
-		}
-
 	};
 
 
-	template <typename T>
-	Vector3<T> operator*(const T& aScalar, const Vector3<T>& aVector)
-	{
-		return aVector * aScalar;
-	}
 
-	template <typename T>
-	Vector3<T> operator*(const Vector3<T>& aSelf, const Vector3<T>& someData)
+	template <class T> Vector3<T> operator+(const Vector3<T>& aVector0, const Vector3<T>& aVector1)
 	{
-		Vector3<T> r;
-		for (size_t i = 0; i < 3; i++)
-		{
-			r.data[i] = aSelf.data[i] * someData.data[i];
-		}
-		return r;
+		return Vector3<T>(aVector0.x + aVector1.x, aVector0.y + aVector1.y, aVector0.z + aVector1.z);
 	}
+	template <class T> Vector3<T> operator-(const Vector3<T>& aVector0, const Vector3<T>& aVector1) { return aVector0 + (-aVector1); }
+	template <class T> Vector3<T> operator*(const Vector3<T>& aVector, const T& aScalar)
+	{
+		return Vector3<T>(aVector.x * aScalar, aVector.y * aScalar, aVector.z * aScalar);
+	}
+	template <class T> Vector3<T> operator*(const T& aScalar, const Vector3<T>& aVector) { return aVector * aScalar; }
+	template <class T> Vector3<T> operator/(const Vector3<T>& aVector, const T& aScalar) { return aVector * (T(1) / aScalar); }
+	template <class T> void operator+=(Vector3<T>& aVector0, const Vector3<T>& aVector1)
+	{
+		aVector0.x += aVector1.x;
+		aVector0.y += aVector1.y;
+		aVector0.z += aVector1.z;
+	}
+	template <class T> void operator-=(Vector3<T>& aVector0, const Vector3<T>& aVector1) { aVector0 += (-aVector1); }
+	template <class T> void operator*=(Vector3<T>& aVector, const T& aScalar)
+	{
+		aVector.x *= aScalar;
+		aVector.y *= aScalar;
+		aVector.z *= aScalar;
+	}
+	template <class T> void operator/=(Vector3<T>& aVector, const T& aScalar) { aVector *= (T(1) / aScalar); }
 
-	template <typename T>
-	Vector3<T> operator*(const Vector3<T>& aSelf, const T& aScalar)
-	{
-		Vector3<T> r;
-		for (size_t i = 0; i < 3; i++)
-		{
-			r.data[i] = aSelf.data[i] * aScalar;
-		}
-		return r;
-	}
+	typedef Vector3<float> Vector3f;
+
+	template<typename T>
+	const Vector3<T> Vector3<T>::Zero(0, 0, 0);
+	template<typename T>
+	const Vector3<T> Vector3<T>::One(1, 1, 1);
+	template<typename T>
+	const Vector3<T> Vector3<T>::Forward(0, 0, 1);
+	template<typename T>
+	const Vector3<T> Vector3<T>::Right(1, 0, 0);
+	template<typename T>
+	const Vector3<T> Vector3<T>::Up(0, 1, 0);
 
 	typedef Vector3<float> Vector3f;
 	typedef Vector3<int> Vector3i;

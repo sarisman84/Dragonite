@@ -4,7 +4,7 @@ namespace Dragonite
 {
 	struct CameraProfile
 	{
-		virtual Matrix4x4f CalculateViewMatrix() = 0;
+		virtual Matrix4x4f CalculateProjectionMatrix() = 0;
 	};
 
 
@@ -14,7 +14,7 @@ namespace Dragonite
 		float myNearPlane, myFarPlane;
 		float myFOV;
 
-		virtual Matrix4x4f CalculateViewMatrix() override;
+		virtual Matrix4x4f CalculateProjectionMatrix() override;
 	};
 
 
@@ -26,6 +26,7 @@ namespace Dragonite
 		~Camera();
 		inline Transform& GetTransform() { return myTransform; }
 		inline CameraProfile*& GetProfile() { return myProfile; }
+		inline Matrix4x4f WorldToClipSpace() { return Matrix4x4f::GetFastInverse(myTransform.GetMatrix()) * myProfile->CalculateProjectionMatrix(); }
 	private:
 		Transform myTransform;
 		CameraProfile* myProfile;

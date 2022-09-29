@@ -1,5 +1,6 @@
 #pragma once
 #include "../DXIncludes.h"
+#include <string>
 #include <vector>
 #include "../../CU/CommonData.h"
 
@@ -30,10 +31,10 @@ namespace Dragonite
 		friend class ModelFactory;
 	public:
 		Material(const char* aShader);
-		Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc);
+		Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc, std::wstring aTexture, Color aColor);
 
 		static Material defaultMaterial;
-		std::string myTexture;
+		std::wstring myTexture;
 		Color myColor;
 	private:
 		VertexShaderDesc myVSInfo;

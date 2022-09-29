@@ -178,6 +178,8 @@ namespace Dragonite
 		{
 			Matrix4x4<T> inv = aTransform;
 
+
+
 			auto t1 = aTransform.myRows[0].Dot(aTransform.myRows[3]);
 			auto t2 = aTransform.myRows[1].Dot(aTransform.myRows[3]);
 			auto t3 = aTransform.myRows[2].Dot(aTransform.myRows[3]);

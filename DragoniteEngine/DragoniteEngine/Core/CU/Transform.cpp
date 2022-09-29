@@ -11,16 +11,17 @@ Dragonite::Matrix4x4f Dragonite::Transform::GetMatrix()
 Dragonite::Matrix4x4f Dragonite::Transform::GetLocalMatrix()
 {
 	using Dragonite::Matrix4x4f;
-
+	Matrix4x4f r;
 	Matrix4x4f translationM = Matrix4x4f::CreateTranslationMatrix(myPosition);
 
-	Matrix4x4f rotationM = Matrix4x4f::CreateRotationAroundX(myRotation.x * Math::DegToRad);
+	Matrix4x4f rotationM;
+	rotationM *= Matrix4x4f::CreateRotationAroundX(myRotation.x * Math::DegToRad);
 	rotationM *= Matrix4x4f::CreateRotationAroundY(myRotation.y * Math::DegToRad);
 	rotationM *= Matrix4x4f::CreateRotationAroundZ(myRotation.z * Math::DegToRad);
 
 	Matrix4x4f scaleM = Matrix4x4f::CreateScaleMatrix(myScale);
-
-	return scaleM * rotationM * translationM;
+	r = scaleM * rotationM * translationM;
+	return r;
 }
 
 void Dragonite::Transform::SetParent(Transform* aTransform)
