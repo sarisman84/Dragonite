@@ -12,7 +12,7 @@
 namespace Dragonite
 {
 	class Camera;
-	class Application;
+	class Runtime;
 	class ModelFactory;
 	class TextureFactory;
 	class ModelInstance;
@@ -43,10 +43,10 @@ namespace Dragonite
 		GraphicsPipeline();
 		~GraphicsPipeline();
 
-		bool Initialize(Application* anApplication, HWND aWindowHandle);
+		bool Initialize(Runtime* anApplication, HWND aWindowHandle);
 		void Render();
 
-		inline Application* GetApplication() { return myApplicationPtr; }
+		inline Runtime* GetApplication() { return myApplicationPtr; }
 		inline Device& GetDevice() { return myDevice; }
 		inline DeviceContext& GetContext() { return myContext; }
 
@@ -80,7 +80,7 @@ namespace Dragonite
 		DataBuffer myFrameBuffer;
 		DataBuffer myObjectBuffer;
 
-		Application* myApplicationPtr;
+		Runtime* myApplicationPtr;
 		ModelFactory* myModelFactory;
 		TextureFactory* myTextureFactory;
 		Camera* myActiveCamera;

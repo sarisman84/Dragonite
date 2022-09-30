@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Core\Application.h">
+    <ClInclude Include="Core\Runtime.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\CU\CommonData.h">
@@ -51,7 +51,7 @@
     <ClInclude Include="Core\Graphics\Models\Material.h">
       <Filter>Core\Graphics\Models</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Runtime.h">
+    <ClInclude Include="Core\Scene.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\External\STB\stb_c_lexer.h">
@@ -144,17 +144,22 @@
     <ClInclude Include="Core\External\imgui\imstb_truetype.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ImGui\DragoniteGui.h" />
     <ClInclude Include="Core\External\imgui\imgui_impl_dx11.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Core\External\imgui\imgui_impl_win32.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Core\PollingStation.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ImGui\DragoniteGui.h">
+      <Filter>Core\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Core\Application.cpp">
+    <ClCompile Include="Core\Runtime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Graphics\GraphicsAPI.cpp">
@@ -178,7 +183,7 @@
     <ClCompile Include="Core\Graphics\Models\Material.cpp">
       <Filter>Core\Graphics\Models</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Runtime.cpp">
+    <ClCompile Include="Core\Scene.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\External\STB\stb_vorbis.c">
@@ -205,12 +210,17 @@
     <ClCompile Include="Core\External\imgui\imgui_widgets.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
     <ClCompile Include="Core\External\imgui\imgui_impl_dx11.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Core\External\imgui\imgui_impl_win32.cpp">
       <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ImGui\DragoniteGui.cpp">
+      <Filter>Core\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\PollingStation.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@
 
 Dragonite::Mouse::Mouse() = default;
 
-const bool Dragonite::Mouse::Init(Application* anApplication)
+const bool Dragonite::Mouse::Init(Runtime* anApplication)
 {
 	myApplicationIns = anApplication;
 	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicsPipeline>();
@@ -148,7 +148,7 @@ void Dragonite::Mouse::UpdateState(UINT aButton)
 	myUpState[buttonEvent] = aButton == WM_LBUTTONUP || aButton == WM_RBUTTONUP || aButton == WM_MBUTTONUP;
 }
 
-const bool Dragonite::InputManager::Init(Application* anApplication)
+const bool Dragonite::InputManager::Init(Runtime* anApplication)
 {
 	if (!myMouse.Init(anApplication))
 		return false;

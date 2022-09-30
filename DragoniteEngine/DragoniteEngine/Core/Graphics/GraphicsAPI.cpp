@@ -27,7 +27,7 @@ Dragonite::GraphicsPipeline::~GraphicsPipeline()
 	myTextureFactory = nullptr;
 }
 
-bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aWindowHandle)
+bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindowHandle)
 {
 	myClearColor = Color(0.25f, 0.25f, 0.85f, 1.0f);
 

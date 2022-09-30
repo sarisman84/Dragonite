@@ -6,7 +6,7 @@
 #include <bitset>
 namespace Dragonite
 {
-	class Application;
+	class Runtime;
 	class GraphicsPipeline;
 
 	enum class MouseKey : unsigned int
@@ -22,7 +22,7 @@ namespace Dragonite
 	{
 	public:
 		Mouse();
-		const bool Init(Application* anApplication);
+		const bool Init(Runtime* anApplication);
 
 		const bool GetButton(MouseKey aKey);
 		const bool GetButtonDown(MouseKey aKey);
@@ -53,7 +53,7 @@ namespace Dragonite
 		std::bitset<3> myUpState;
 		std::bitset<3> myPreviousUpState;
 
-		Application* myApplicationIns;
+		Runtime* myApplicationIns;
 		GraphicsPipeline* myGraphicsPipeline;
 
 	};
@@ -69,7 +69,7 @@ namespace Dragonite
 
 
 
-		const bool Init(Application* anApplication);
+		const bool Init(Runtime* anApplication);
 
 		inline Mouse& GetMouse() { return myMouse; }
 	private:
