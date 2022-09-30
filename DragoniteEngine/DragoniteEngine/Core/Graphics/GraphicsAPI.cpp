@@ -7,6 +7,8 @@
 #include <d3d11.h>
 #define REPORT_DX_WARNINGS
 
+#pragma warning (disable: 4267)
+
 Dragonite::GraphicsPipeline::GraphicsPipeline()
 {
 	myModelFactory = nullptr;
@@ -39,7 +41,7 @@ bool Dragonite::GraphicsPipeline::Initialize(Application* anApplication, HWND aW
 		return false;
 
 
-	
+
 
 
 	DataBufferDesc bufferDesc(
@@ -105,7 +107,7 @@ void Dragonite::GraphicsPipeline::Render()
 		auto element = cpy.back();
 		cpy.pop_back();
 
-		
+
 
 		if (element->myTexture)
 			element->myTexture->Bind(myContext);

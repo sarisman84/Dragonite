@@ -45,7 +45,7 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 
 	for (auto& IPElement : aMaterial.myVSInfo.myInputLayout)
 	{
-		layout.push_back(D3D11_INPUT_ELEMENT_DESC{ IPElement.myInputName, 0, (DXGI_FORMAT)IPElement.myFormat, 0 D3D11_APPEND_ALIGNED_ELEMENT, 0,IPElement.myClassification,0 });
+		layout.push_back(D3D11_INPUT_ELEMENT_DESC{ IPElement.myInputName, 0, (DXGI_FORMAT)IPElement.myFormat, 0, D3D11_APPEND_ALIGNED_ELEMENT,IPElement.myClassification,0 });
 	}
 
 	if (FAILED(device->CreateInputLayout(layout.data(), layout.size(), vsData.data(), vsData.size(), &ins->myInputLayout)))

@@ -4,8 +4,7 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Runtime.h"
 
-
-
+#include "Utilities/Input.h"
 
 const bool Dragonite::Application::CreateInstance(const ApplicationDesc& anApplicationDesc, Application** anOutput)
 {
@@ -71,6 +70,11 @@ int Dragonite::Application::ExecuteRuntime()
 
 	myRuntimeHandler.AddHandler(&myInterface);
 
+	InputManager input;
+	input.Init(this);
+	myRuntimeHandler.AddHandler(&input);
+
+
 	Runtime runtime;
 	runtime.myApplication = this;
 	runtime.myPollingStation = &myRuntimeHandler;
@@ -96,10 +100,13 @@ int Dragonite::Application::ExecuteRuntime()
 			}
 
 		}
+		myUpdateCB(deltaTime);
 		runtime.Update(deltaTime);
 		myPipeline->Render();
 
 		Time end = Clock::now();
+
+		
 
 		deltaTime = std::chrono::duration<float, std::ratio<1>>(end - start).count();
 	}
@@ -112,7 +119,9 @@ int Dragonite::Application::ExecuteRuntime()
 
 LRESULT Dragonite::Application::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return LRESULT();
+	myWndProcs(hWnd, message, wParam, lParam);
+
+	return 1;
 }
 
 LRESULT Dragonite::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

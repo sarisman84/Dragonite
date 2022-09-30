@@ -117,6 +117,12 @@
     <ClInclude Include="Core\External\DirectX\DDSTextureLoader11.h">
       <Filter>Core\External\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Utilities\Input.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\Function.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -152,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp">
       <Filter>Core\External\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utilities\Input.cpp">
+      <Filter>Core\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +199,9 @@
     </Filter>
     <Filter Include="Core\External\DirectX">
       <UniqueIdentifier>{788cf4f3-d82b-415b-99c8-3658223f608a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utilities">
+      <UniqueIdentifier>{13d65806-abb6-47fe-be0a-4487bd239892}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

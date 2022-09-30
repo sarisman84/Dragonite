@@ -116,6 +116,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +139,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,6 +194,8 @@
     <ClInclude Include="Core\Graphics\Textures\Texture.h" />
     <ClInclude Include="Core\Graphics\Textures\TextureFactory.h" />
     <ClInclude Include="Core\Runtime.h" />
+    <ClInclude Include="Core\Utilities\Function.h" />
+    <ClInclude Include="Core\Utilities\Input.h" />
     <ClInclude Include="framework.h" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +210,7 @@
     <ClCompile Include="Core\Graphics\Textures\Texture.cpp" />
     <ClCompile Include="Core\Graphics\Textures\TextureFactory.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
+    <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 
+#include "Utilities/Function.h"
 #include "CU/CommonData.h"
 #include <chrono>
 
@@ -15,14 +16,12 @@
 
 namespace Dragonite
 {
-	
+
 	using Time = std::chrono::time_point<std::chrono::steady_clock>;
-
-
 	using Clock = std::chrono::high_resolution_clock;
 
 	class GraphicsPipeline;
-	
+
 
 	struct ApplicationDesc
 	{
@@ -53,7 +52,7 @@ namespace Dragonite
 		inline Type* Get()
 		{
 			if (myUniqueDataMembers.count(typeid(Type).hash_code()) > 0)
-				return (Type*)myUniqueDataMembers[typeid(Type).hash_code()];
+				return std::static_pointer_cast<Type>(myUniqueDataMembers[typeid(Type).hash_code()]).get();
 			return nullptr;
 		}
 
@@ -61,11 +60,11 @@ namespace Dragonite
 		template<typename Type>
 		Type* AddHandler(Type* anInstance)
 		{
-			myUniqueDataMembers[typeid(Type).hash_code()] = anInstance;
+			myUniqueDataMembers[typeid(Type).hash_code()] = std::shared_ptr<Type>(anInstance);
 			return anInstance;
 		}
 
-		std::unordered_map<size_t, void*> myUniqueDataMembers;
+		std::unordered_map<size_t, std::shared_ptr<void>> myUniqueDataMembers;
 	};
 
 
@@ -81,11 +80,19 @@ namespace Dragonite
 		int DDLVISIBLE ExecuteRuntime();
 		inline DDLVISIBLE RuntimeHandler& GetPollingStation() { return myRuntimeHandler; }
 		DDLVISIBLE LRESULT CALLBACK LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& WndProcs() { return myWndProcs; }
+		inline Function<void(const float)>& UpdateCallbacks() { return myUpdateCB; }
 	private:
 		bool myRuntimeState;
 		HWND myInstance;
 		RuntimeHandler myRuntimeHandler;
 		GraphicsPipeline* myPipeline;
+
+		Function<void(const float)> myUpdateCB;
+		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
+
+
 	};
 
 

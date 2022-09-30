@@ -7,6 +7,7 @@ namespace Dragonite
 	class ModelInstance;
 	class Application;
 	class RenderInterface;
+	class InputManager;
 
 	class Runtime
 	{
@@ -20,6 +21,7 @@ namespace Dragonite
 		std::shared_ptr<ModelInstance> myCube;
 		Camera myCamera;
 		RenderInterface* myRenderInterface;
+		InputManager* myInputManager;
 	};
 }
 
