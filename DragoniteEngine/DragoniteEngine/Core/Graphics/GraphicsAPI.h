@@ -38,6 +38,7 @@ namespace Dragonite
 	class GraphicsPipeline
 	{
 		friend class RenderInterface;
+		friend class DragoniteGui;
 	public:
 		GraphicsPipeline();
 		~GraphicsPipeline();
@@ -50,6 +51,10 @@ namespace Dragonite
 		inline DeviceContext& GetContext() { return myContext; }
 
 		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
+
+
+		void DrawToNewRenderTarget(const RenderTarget& aTarget, const RasterizerState& aNewState = nullptr);
+		void DrawToBackBuffer();
 
 		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
 			return myTextureSamplers;

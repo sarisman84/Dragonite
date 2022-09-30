@@ -165,6 +165,15 @@
     <ClInclude Include="Core\CU\Math\Vector4.h" />
     <ClInclude Include="Core\CU\Transform.h" />
     <ClInclude Include="Core\External\DirectX\DDSTextureLoader11.h" />
+    <ClInclude Include="Core\External\imgui\imconfig.h" />
+    <ClInclude Include="Core\External\imgui\imgui.h" />
+    <ClInclude Include="Core\External\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Core\External\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Core\External\imgui\imgui_internal.h" />
+    <ClInclude Include="Core\External\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Core\External\imgui\imstb_textedit.h" />
+    <ClInclude Include="Core\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="Core\External\nlohmann\json.hpp" />
     <ClInclude Include="Core\External\STB\stb_connected_components.h" />
     <ClInclude Include="Core\External\STB\stb_c_lexer.h" />
     <ClInclude Include="Core\External\STB\stb_divide.h" />
@@ -193,6 +202,7 @@
     <ClInclude Include="Core\Graphics\Models\ModelFactory.h" />
     <ClInclude Include="Core\Graphics\Textures\Texture.h" />
     <ClInclude Include="Core\Graphics\Textures\TextureFactory.h" />
+    <ClInclude Include="Core\ImGui\DragoniteGui.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\Utilities\Function.h" />
     <ClInclude Include="Core\Utilities\Input.h" />
@@ -202,6 +212,13 @@
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\CU\Transform.cpp" />
     <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Core\External\STB\stb_vorbis.c" />
     <ClCompile Include="Core\Graphics\Camera.cpp" />
     <ClCompile Include="Core\Graphics\GraphicsAPI.cpp" />
@@ -209,6 +226,7 @@
     <ClCompile Include="Core\Graphics\Models\ModelFactory.cpp" />
     <ClCompile Include="Core\Graphics\Textures\Texture.cpp" />
     <ClCompile Include="Core\Graphics\Textures\TextureFactory.cpp" />
+    <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="dllmain.cpp" />

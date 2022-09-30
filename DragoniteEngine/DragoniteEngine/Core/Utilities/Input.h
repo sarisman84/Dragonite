@@ -11,9 +11,9 @@ namespace Dragonite
 
 	enum class MouseKey : unsigned int
 	{
-		Left = WM_LBUTTONDBLCLK | WM_LBUTTONDOWN | WM_LBUTTONUP, 
-		Right = WM_RBUTTONDBLCLK | WM_RBUTTONDOWN | WM_RBUTTONUP, 
-		Middle = WM_MBUTTONDBLCLK | WM_MBUTTONDOWN | WM_MBUTTONUP
+		Left = WM_LBUTTONDOWN | WM_LBUTTONUP,
+		Right = WM_RBUTTONDOWN | WM_RBUTTONDOWN,
+		Middle = WM_MBUTTONDOWN | WM_MBUTTONUP
 	};
 
 
@@ -28,6 +28,11 @@ namespace Dragonite
 		const bool GetButtonDown(MouseKey aKey);
 		const bool GetButtonUp(MouseKey aKey);
 
+
+		void ViewMouse(const bool aState);
+
+		void ResetPos();
+
 		Vector2f position;
 		Vector2f absPosition;
 		Vector2f delta;
@@ -36,11 +41,17 @@ namespace Dragonite
 		void EndFrame();
 		void Update(UINT aMessage, WPARAM aWParam, LPARAM anLParam);
 
+		void UpdateState(UINT aButton);
+
 		Vector2f myPreviousPos;
 
-		std::bitset<1000> myState;
-		std::bitset<1000> myPreviousState;
 
+		
+		std::bitset<3> myDownState;
+		std::bitset<3> myPreviousDownState;
+
+		std::bitset<3> myUpState;
+		std::bitset<3> myPreviousUpState;
 
 		Application* myApplicationIns;
 		GraphicsPipeline* myGraphicsPipeline;
@@ -51,7 +62,8 @@ namespace Dragonite
 
 
 
-	class InputManager {
+	class InputManager
+	{
 	public:
 		InputManager() = default;
 

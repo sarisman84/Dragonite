@@ -123,6 +123,34 @@
     <ClInclude Include="Core\Utilities\Function.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Core\External\nlohmann\json.hpp">
+      <Filter>Core\External\nlohmann/json</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imconfig.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imgui.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imgui_internal.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imstb_rectpack.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imstb_textedit.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imstb_truetype.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ImGui\DragoniteGui.h" />
+    <ClInclude Include="Core\External\imgui\imgui_impl_dx11.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\imgui_impl_win32.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -161,6 +189,28 @@
     </ClCompile>
     <ClCompile Include="Core\Utilities\Input.cpp">
       <Filter>Core\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui_demo.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui_draw.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui_tables.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui_widgets.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
+    <ClCompile Include="Core\External\imgui\imgui_impl_dx11.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\imgui_impl_win32.cpp">
+      <Filter>Core\External\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +252,12 @@
     </Filter>
     <Filter Include="Core\Utilities">
       <UniqueIdentifier>{13d65806-abb6-47fe-be0a-4487bd239892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\ImGui">
+      <UniqueIdentifier>{08f2db4c-f0e8-4dca-aefc-c7a19b6cddb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\nlohmann/json">
+      <UniqueIdentifier>{cddcefa2-836c-44bc-8fc0-03edb6d00bec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

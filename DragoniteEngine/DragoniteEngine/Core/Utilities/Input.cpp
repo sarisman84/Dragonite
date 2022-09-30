@@ -10,12 +10,12 @@ const bool Dragonite::Mouse::Init(Application* anApplication)
 	myApplicationIns = anApplication;
 	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicsPipeline>();
 
-	myApplicationIns->WndProcs() += [this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
+	myApplicationIns->OnWndProc() += [this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 	{
 		Update(aMessage, aWParam, anLParam);
 	};
 
-	myApplicationIns->UpdateCallbacks() += [this](const float aDt)
+	myApplicationIns->OnUpdate() += [this](const float aDt)
 	{
 		EndFrame();
 	};
@@ -26,23 +26,60 @@ const bool Dragonite::Mouse::Init(Application* anApplication)
 const bool Dragonite::Mouse::GetButton(MouseKey aKey)
 {
 	int key = static_cast<int>(aKey);
-	return myState[key];
+	UINT button = (key - WM_LBUTTONDOWN) / 3;
+	bool r = myDownState[button];
+	return r;
 }
 
 const bool Dragonite::Mouse::GetButtonDown(MouseKey aKey)
 {
 	int key = static_cast<int>(aKey);
-	bool result = myState[key] && !myPreviousState[key];
-	myPreviousState[key] = myState[key];
+	UINT button = (key - WM_LBUTTONDOWN) / 3;
+	bool result = myDownState[button] && !myPreviousDownState[button];
+	myPreviousDownState[button] = myDownState[button];
 	return result;
 }
 
 const bool Dragonite::Mouse::GetButtonUp(MouseKey aKey)
 {
 	int key = static_cast<int>(aKey);
-	bool result = !myState[key] && myPreviousState[key];
-	myPreviousState[key] = myState[key];
+	UINT button = (key - WM_LBUTTONDOWN) / 3;
+	bool result = !myUpState[button] && myPreviousUpState[button];
+	myPreviousUpState[button] = myUpState[button];
 	return result;
+}
+
+void Dragonite::Mouse::ViewMouse(const bool aState)
+{
+	if (aState)
+		while (ShowCursor(true) < 1);
+	else
+		while (ShowCursor(false) > 0);
+}
+
+void Dragonite::Mouse::ResetPos()
+{
+	RECT aRect;
+	if (GetClientRect(myApplicationIns->GetClientInstance(), &aRect))
+	{
+		float width = aRect.right - aRect.left;
+		float height = aRect.bottom - aRect.top;
+		myPreviousPos = { width / 2.0f ,height / 2.0f };
+		position = { width / 2.0f ,height / 2.0f };
+	}
+
+	if (GetWindowRect(myApplicationIns->GetClientInstance(), &aRect))
+	{
+		float width = aRect.right - aRect.left;
+		float height = aRect.bottom - aRect.top;
+		absPosition = { width / 2.0f ,height / 2.0f };
+
+		SetCursorPos(width / 2.0f, height / 2.0f);
+	}
+	delta = { 0,0 };
+
+
+
 }
 
 void Dragonite::Mouse::EndFrame()
@@ -74,6 +111,10 @@ const bool IsAMouseButtonEvent(const UINT aMessage)
 
 void Dragonite::Mouse::Update(UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 {
+
+
+
+
 	switch (aMessage)
 	{
 	case WM_MOUSEMOVE:
@@ -88,30 +129,23 @@ void Dragonite::Mouse::Update(UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 
 	if (IsAMouseButtonEvent(aMessage))
 	{
-		bool state = myState[aMessage];
-		switch (aMessage)
-		{
-
-		case WM_LBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-			state = true;
-			break;
-		case WM_LBUTTONUP:
-		case WM_RBUTTONUP:
-		case WM_MBUTTONUP:
-			state = false;
-			break;
-
-
-		default:
-			break;
-		}
-		myState[aMessage] = state;
+		UpdateState(aMessage);
 	}
 
 
 
+}
+
+void Dragonite::Mouse::UpdateState(UINT aButton)
+{
+	UINT buttonEvent = (aButton - WM_LBUTTONDOWN) / 3;
+
+
+
+
+
+	myDownState[buttonEvent] = aButton == WM_LBUTTONDOWN || aButton == WM_RBUTTONDOWN || aButton == WM_MBUTTONDOWN;
+	myUpState[buttonEvent] = aButton == WM_LBUTTONUP || aButton == WM_RBUTTONUP || aButton == WM_MBUTTONUP;
 }
 
 const bool Dragonite::InputManager::Init(Application* anApplication)

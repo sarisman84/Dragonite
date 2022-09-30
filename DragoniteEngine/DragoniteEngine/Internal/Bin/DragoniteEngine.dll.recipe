@@ -2,15 +2,15 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Git\Dragonite\DragoniteEngine\Bin\DragoniteEngine.dll</FullPath>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\DragoniteEngine.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>D:\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_PS.cso</FullPath>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_VS.cso</FullPath>
+      <FullPath>D:\Projects\Git\Dragonite\DragoniteEngine\Bin\Shaders\Unlit_VS.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

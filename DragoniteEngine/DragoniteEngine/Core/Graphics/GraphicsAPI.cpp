@@ -81,6 +81,8 @@ void Dragonite::GraphicsPipeline::Render()
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+	myApplicationPtr->OnPreRender()();
+
 	auto cpy = myElementsToDraw;
 	myElementsToDraw.clear();
 
@@ -145,6 +147,9 @@ void Dragonite::GraphicsPipeline::Render()
 		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
 
 	}
+
+
+	myApplicationPtr->OnRender()();
 
 
 	mySwapChain->Present(1, 0);
@@ -260,6 +265,19 @@ HRESULT Dragonite::GraphicsPipeline::InitializeSamplers()
 	return result;
 }
 
+
+void Dragonite::GraphicsPipeline::DrawToNewRenderTarget(const RenderTarget& aTarget, const RasterizerState& aNewState)
+{
+	myContext->OMSetRenderTargets(1, aTarget.GetAddressOf(), myDepthBuffer.Get());
+	myContext->ClearRenderTargetView(aTarget.Get(), &myClearColor);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	myContext->RSSetState(aNewState ? aNewState.Get() : nullptr);
+}
+
+void Dragonite::GraphicsPipeline::DrawToBackBuffer()
+{
+	DrawToNewRenderTarget(myBackBuffer);
+}
 
 HRESULT Dragonite::GraphicsPipeline::CreateBuffer(Device aDevice, DataBuffer& aBuffer, const DataBufferDesc& aDesc)
 {

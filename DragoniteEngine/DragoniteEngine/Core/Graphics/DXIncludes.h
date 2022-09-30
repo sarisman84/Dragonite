@@ -18,6 +18,7 @@ struct ID3D11Texture2D;
 struct ID3D11Resource;
 struct ID3D11SamplerState;
 struct ID3D11DepthStencilView;
+struct ID3D11RasterizerState;
 
 enum D3D11_USAGE;
 enum D3D11_INPUT_CLASSIFICATION;
@@ -40,6 +41,7 @@ namespace Dragonite
 	typedef ComPtr<ID3D11SamplerState> TextureSampler;
 	typedef ComPtr<ID3D11DepthStencilView> DepthStencil;
 	typedef ComPtr<ID3D11Resource> DXResource;
+	typedef ComPtr<ID3D11RasterizerState> RasterizerState;
 
 	struct DataBufferDesc
 	{

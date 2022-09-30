@@ -1,42 +1,148 @@
-#include "Application.h"
-#include "Runtime.h"
 #include <iostream>
+#include "Runtime.h"
+#include "Scene.h"
 
+#include "ImGui/DragoniteGui.h"
+#include "Core/PollingStation.h"
 #include "Graphics/GraphicsAPI.h"
-#include "Graphics/Models/ModelFactory.h"
-
-#include "Utilities/Function.h"
 #include "Utilities/Input.h"
 
-void Dragonite::Runtime::Awake()
+
+//const bool Dragonite::Runtime::CreateInstance(const ApplicationDesc& anApplicationDesc, Runtime** anOutput)
+//{
+//	*anOutput = new Runtime();
+//
+//
+//
+//	WNDCLASSEXW wcex = {};
+//	wcex.cbSize = sizeof(WNDCLASSEX);
+//	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+//	wcex.lpfnWndProc = WndProc;
+//	wcex.hInstance = anApplicationDesc.myHInstance;
+//	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+//	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW);
+//	wcex.lpszClassName = anApplicationDesc.myWinClassName;
+//
+//	RegisterClassExW(&wcex);
+//
+//	HWND hWnd = CreateWindow(anApplicationDesc.myWinClassName, anApplicationDesc.myApplicationName,
+//		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+//		CW_USEDEFAULT, CW_USEDEFAULT, anApplicationDesc.myInitialResolution.myWidth, anApplicationDesc.myInitialResolution.myHeight, nullptr, nullptr, anApplicationDesc.myHInstance, nullptr);
+//
+//	if (!hWnd)
+//	{
+//		MessageBox(NULL,
+//			_T("Call to CreateWindow failed!"),
+//			_T("Error"),
+//			NULL);
+//
+//		return false;
+//	}
+//
+//
+//
+//	ShowWindow(hWnd, anApplicationDesc.myNCmdShow);
+//	UpdateWindow(hWnd);
+//
+//	(*anOutput)->myInstance = hWnd;
+//
+//
+//	SetWindowLongPtr((*anOutput)->myInstance, GWLP_USERDATA, (LONG_PTR)(*anOutput));
+//
+//	(*anOutput)->myRuntimeState = true;
+//
+//	(*anOutput)->myPipeline = new GraphicsPipeline();
+//
+//	if (!(*anOutput)->myPipeline->Initialize(*anOutput, hWnd))
+//		return false;
+//
+//	return true;
+//}
+
+Dragonite::Runtime::Runtime() = default;
+
+Dragonite::Runtime::~Runtime()
 {
-	myRenderInterface = myPollingStation->Get<RenderInterface>();
-	auto MF = myPollingStation->Get<ModelFactory>();
-	myInputManager = myPollingStation->Get<InputManager>();
+	if (myGUIInterface)
+		delete myGUIInterface;
+	myGUIInterface = nullptr;
+};
 
-	myCamera.GetProfile() = new PerspectiveProfile(90.0f, 0.1f, 5000.0f);
-	myCamera.GetTransform().myPosition = { 0.0f, 0.0f, 0.0f };
-	myCamera.GetTransform().myScale = { 1,1,1 };
-	myCamera.GetTransform().myRotation = { 0,0,0 };
-
-	myRenderInterface->SetActiveCameraAs(myCamera);
-
-	myCube = MF->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
-
-	myCube->myTransform.myPosition = { 0.0f, 0.0f, 2.0f };
-	myCube->myTransform.myScale = { 1.0f, 1.0f, 1.0f };
-	myCube->myTransform.myRotation = { 0,0,0 };
+int Dragonite::Runtime::ExecuteRuntime(HWND* aWindowsIns)
+{
+	myInstance = aWindowsIns;
+	using std::chrono::high_resolution_clock;
 
 
+	RenderInterface myInterface(*myPipeline);
 
+	myRuntimeHandler->AddHandler(&myInterface);
+
+	InputManager input;
+	input.Init(this);
+	myRuntimeHandler->AddHandler(&input);
+
+
+	myGUIInterface = new DragoniteGui();
+	myGUIInterface->Init(this, myPipeline);
+
+
+	Scene scene;
+	scene.myApplication = this;
+	scene.myPollingStation = myRuntimeHandler;
+	scene.Awake();
+	MSG msg = { 0 };
+
+
+	float deltaTime = 0;
+	while (myRuntimeState)
+	{
+		Time start = Clock::now();
+		auto t_start = high_resolution_clock::now();
+
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT)
+			{
+				myRuntimeState = false;
+			}
+
+		}
+		myUpdateCB(deltaTime);
+		scene.Update(deltaTime);
+		myPipeline->Render();
+
+
+		Time end = Clock::now();
+
+
+
+		deltaTime = std::chrono::duration<float, std::ratio<1>>(end - start).count();
+	}
+
+
+
+
+	return (int)msg.wParam;
 }
 
-void Dragonite::Runtime::Update(const float aDt)
+LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (myInputManager->GetMouse().GetButton(MouseKey::Right))
-		myCamera.GetTransform().myRotation += Vector3f(myInputManager->GetMouse().delta.y, myInputManager->GetMouse().delta.x, 0.0f) * aDt;
+	if (message == WM_DESTROY)
+	{
+		myRuntimeState = false;
+		PostQuitMessage(0);
+		return 1;
+	}
 
+	myWndProcs(hWnd, message, wParam, lParam);
 
-	myCube->myTransform.myRotation += {0.0f, 45.0f * aDt, 0.0f};
-	myRenderInterface->DrawElement(myCube);
+	return 0;
 }
+
+
+
