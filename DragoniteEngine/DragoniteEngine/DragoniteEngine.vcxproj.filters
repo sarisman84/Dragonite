@@ -157,6 +157,15 @@
       <Filter>Core\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="APIInterface.h" />
+    <ClInclude Include="Core\Editor\GUIWindow.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\EditorSettings.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\MathLibrary.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -224,6 +233,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="APIInterface.cpp" />
+    <ClCompile Include="Core\Editor\GUIWindow.cpp">
+      <Filter>Core\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -270,6 +282,9 @@
     </Filter>
     <Filter Include="Core\External\nlohmann/json">
       <UniqueIdentifier>{cddcefa2-836c-44bc-8fc0-03edb6d00bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Editor">
+      <UniqueIdentifier>{e8b72862-c474-4601-b2ff-5c22a75e0d49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

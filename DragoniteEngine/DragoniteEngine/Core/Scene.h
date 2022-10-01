@@ -1,5 +1,7 @@
 #pragma once
 #include "Graphics/Camera.h"
+#include <vector>
+
 
 namespace Dragonite
 {
@@ -18,10 +20,12 @@ namespace Dragonite
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
-		std::shared_ptr<ModelInstance> myCube;
 		Camera myCamera;
 		RenderInterface* myRenderInterface;
 		InputManager* myInputManager;
+
+
+		std::vector<std::shared_ptr<ModelInstance>> myModelsToRender;
 	};
 }
 

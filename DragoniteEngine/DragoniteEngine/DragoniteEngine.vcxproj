@@ -156,6 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="APIInterface.h" />
+    <ClInclude Include="Core\CU\MathLibrary.h" />
+    <ClInclude Include="Core\Editor\EditorSettings.h" />
+    <ClInclude Include="Core\Editor\GUIWindow.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\CU\CommonData.h" />
     <ClInclude Include="Core\CU\Math\MathFunctions.h" />
@@ -212,6 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="APIInterface.cpp" />
+    <ClCompile Include="Core\Editor\GUIWindow.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\CU\Transform.cpp" />
     <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp" />
