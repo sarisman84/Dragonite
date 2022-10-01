@@ -7,8 +7,9 @@
 
 #include "../Textures/TextureFactory.h"
 
-#include "../GraphicsAPI.h"
-#include "../../Application.h"
+#include "Core/Graphics/GraphicsAPI.h"
+#include "Core/Runtime.h"
+#include "Core/PollingStation.h"
 
 
 
@@ -131,7 +132,7 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 HRESULT Dragonite::ModelFactory::CreateVSInstance(Device aDevice, const char* aPath, VertexShader& aShader, std::string& someData)
 {
 	typedef std::istreambuf_iterator<char> ShaderIterator;
-	std::string path = "Shaders/" + std::string(aPath) + "_VS.cso";
+	std::string path = "resources/shaders/" + std::string(aPath) + "_VS.cso";
 	std::ifstream file(path, std::ios::binary);
 
 	if (!file || file.fail())
@@ -152,7 +153,7 @@ HRESULT Dragonite::ModelFactory::CreatePSInstance(Device aDevice, const char* aP
 	std::string data;
 
 	std::ifstream file;
-	std::string path = "Shaders/" + std::string(aPath) + "_PS.cso";
+	std::string path = "resources/shaders/" + std::string(aPath) + "_PS.cso";
 	file.open(path, std::ios::binary);
 	data = { ShaderIterator(file), ShaderIterator() };
 

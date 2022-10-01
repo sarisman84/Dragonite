@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Projects\Git\Dragonite\DragoniteLauncher\x64\Debug\DragoniteLauncher.exe</FullPath>
+      <FullPath>D:\Git\Dragonite\bin\DragoniteLauncher.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

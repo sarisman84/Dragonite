@@ -16,6 +16,8 @@ Dragonite::DragoniteGui::~DragoniteGui()
 	ImGui::DestroyContext();
 };
 
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicsPipeline* aGraphicsPipeline)
 {
 	myApplicationIns = anAppIns;
@@ -32,13 +34,17 @@ void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicsPipeline* aGraphic
 
 	myApplicationIns->OnRender() += [this]()
 	{
+		BeginFrame();
 		EndFrame();
 	};
 	myApplicationIns->OnPreRender() += [this]()
 	{
-		BeginFrame();
+
 	};
 
+	myApplicationIns->OnWndProc() += [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+		ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+	};
 
 }
 

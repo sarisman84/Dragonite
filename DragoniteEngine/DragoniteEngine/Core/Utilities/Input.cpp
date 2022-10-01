@@ -1,7 +1,8 @@
 #include "Input.h"
 
-#include "Core/Application.h"
+#include "Core/Runtime.h"
 #include "Core/Graphics/GraphicsAPI.h"
+#include "Core/PollingStation.h"
 
 Dragonite::Mouse::Mouse() = default;
 
@@ -60,7 +61,7 @@ void Dragonite::Mouse::ViewMouse(const bool aState)
 void Dragonite::Mouse::ResetPos()
 {
 	RECT aRect;
-	if (GetClientRect(myApplicationIns->GetClientInstance(), &aRect))
+	if (GetClientRect(*myApplicationIns->GetClientInstance(), &aRect))
 	{
 		float width = aRect.right - aRect.left;
 		float height = aRect.bottom - aRect.top;
@@ -68,7 +69,7 @@ void Dragonite::Mouse::ResetPos()
 		position = { width / 2.0f ,height / 2.0f };
 	}
 
-	if (GetWindowRect(myApplicationIns->GetClientInstance(), &aRect))
+	if (GetWindowRect(*myApplicationIns->GetClientInstance(), &aRect))
 	{
 		float width = aRect.right - aRect.left;
 		float height = aRect.bottom - aRect.top;
@@ -139,10 +140,6 @@ void Dragonite::Mouse::Update(UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 void Dragonite::Mouse::UpdateState(UINT aButton)
 {
 	UINT buttonEvent = (aButton - WM_LBUTTONDOWN) / 3;
-
-
-
-
 
 	myDownState[buttonEvent] = aButton == WM_LBUTTONDOWN || aButton == WM_RBUTTONDOWN || aButton == WM_MBUTTONDOWN;
 	myUpState[buttonEvent] = aButton == WM_LBUTTONUP || aButton == WM_RBUTTONUP || aButton == WM_MBUTTONUP;

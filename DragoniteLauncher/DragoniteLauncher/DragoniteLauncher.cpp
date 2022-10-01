@@ -7,14 +7,14 @@
 #define NOMINMAX
 #include <Windows.h>
 #include "Application.h"
-
+#include "DLLParser.h"
 
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE,
 	_In_ LPWSTR,
-	_In_ int nCmdShow) 
+	_In_ int nCmdShow)
 {
 	using namespace Dragonite;
 
@@ -24,6 +24,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	desc.myInternalName = L"Dragonite_Engine";
 	desc.myWindowsName = L"Dragonite Engine";
 	desc.myResolution = Resolution{ 1920, 1080 };
+
+
 
 	Application app(desc);
 	if (!app) return 0;

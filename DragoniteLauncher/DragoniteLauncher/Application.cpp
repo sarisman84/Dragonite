@@ -1,7 +1,11 @@
 #include "Application.h"
+#include "DLLParser.h"
 
 Dragonite::Application::Application(const ApplicationDesc& aDesc)
 {
+
+
+
 	WNDCLASSEXW wcex = {};
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -25,39 +29,64 @@ Dragonite::Application::Application(const ApplicationDesc& aDesc)
 	mySelf = hWnd;
 
 
-	myEngineDLLIns = LoadLibrary(L"DragoniteEngine");
-
-	if (!myEngineDLLIns) return;
+	SetWindowLongPtr(mySelf, GWLP_USERDATA, (LONG_PTR)(this));
 
 
 	//GetProcAddress(myEngineDLLIns,)
+
+	myInterface = myDragoniteAPI.getInterface();
+
+	if (!myInterface) return;
+
+	myInterface->Initialize(mySelf);
+	myRuntimeState = true;
+}
+
+Dragonite::Application::~Application()
+{
 
 }
 
 int Dragonite::Application::ExecuteRuntime()
 {
 	MSG msg = {};
-	bool shouldRun = true;
-	while (shouldRun)
+	float deltaTime = 0;
+	while (myRuntimeState)
 	{
+		Time start = Clock::now();
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 			if (msg.message == WM_QUIT)
 			{
-				shouldRun = false;
+				myRuntimeState = false;
 			}
 		}
+		myInterface->Update(deltaTime);
+
+		Time end = Clock::now();
+		deltaTime = DeltaTime(end - start).count();
 	}
 	return (int)msg.wParam;
 }
 
+
+
+
 LRESULT Dragonite::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
+	Application* app = (Application*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	if (app)
+	{
+		app->GetDragoniteAPI()->LocalWndProc(hWnd, message, wParam, lParam);
+	}
+
 	switch (message)
 	{
 	case WM_DESTROY:
+		app->EndRuntime();
 		PostQuitMessage(0);
 		break;
 	default:

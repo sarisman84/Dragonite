@@ -6,14 +6,18 @@
 
 #include <unordered_map>
 
+#include "APIInterface.h"
 #include "Utilities/Function.h"
 #include "CU/CommonData.h"
 #include <chrono>
 
 
+#define DLLEXPORT _declspec(dllexport)
+#define DLLIMPORT _declspec(dllimport)
 
 
-void UpdateEngine();
+
+
 
 namespace Dragonite
 {
@@ -24,14 +28,17 @@ namespace Dragonite
 	class GraphicsPipeline;
 	class DragoniteGui;
 	class PollingStation;
+	class Scene;
 
 
-	class Runtime
+	class Runtime : public APIInterface
 	{
 	public:
-		int ExecuteRuntime(HWND* aWindowsIns);
-		//inline DDLVISIBLE PollingStation& GetPollingStation() { return myRuntimeHandler; }
-		LRESULT CALLBACK LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		Runtime();
+		~Runtime() override;
+
+		inline PollingStation& GetPollingStation() { return *myRuntimeHandler; }
+
 
 		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
 		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
@@ -40,11 +47,19 @@ namespace Dragonite
 
 		inline HWND* GetClientInstance() { return myInstance; }
 
+		bool Initialize(HWND& anInstance) override;
+		void Update(const float aDeltaTime) override;
+		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+
+
 	private:
+		static Runtime myRuntime;
 		bool myRuntimeState;
 		HWND* myInstance;
 		PollingStation* myRuntimeHandler;
 		GraphicsPipeline* myPipeline;
+		Scene* myScene;
+
 
 		Function<void(const float)> myUpdateCB;
 		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
@@ -53,9 +68,12 @@ namespace Dragonite
 
 		DragoniteGui* myGUIInterface;
 
+
+
+
 	};
 
 
-
+	
 }
-
+DLLEXPORT APIInterface* InitializeRuntime();

@@ -36,11 +36,11 @@ void Dragonite::Scene::Awake()
 void Dragonite::Scene::Update(const float aDt)
 {
 	auto& mouse = myInputManager->GetMouse();
-	if (myInputManager->GetMouse().GetButton(MouseKey::Right) && mouse.delta != Vector2f(0, 0))
+	if (myInputManager->GetMouse().GetButton(MouseKey::Right))
 	{
 		myCamera.GetTransform().myRotation += Vector3f(mouse.delta.y, mouse.delta.x, 0.0f) * 2.0f * aDt;
 		mouse.ResetPos();
-		
+
 	}
 
 

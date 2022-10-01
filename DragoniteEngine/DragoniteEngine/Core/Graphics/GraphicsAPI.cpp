@@ -1,6 +1,7 @@
 #include "GraphicsAPI.h"
 #include "../CU/CommonData.h"
-#include "../Application.h"
+#include "Core/Runtime.h"
+#include "Core/PollingStation.h"
 #include "Models/ModelFactory.h"
 #include "Textures/TextureFactory.h"
 #include "Camera.h"

@@ -156,6 +156,7 @@
     <ClInclude Include="Core\ImGui\DragoniteGui.h">
       <Filter>Core\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="APIInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -222,6 +223,7 @@
     <ClCompile Include="Core\PollingStation.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="APIInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -13,7 +13,7 @@ Dragonite::Material(
 	{
 		"Unlit"
 	},
-	L"Textures/CanardPolicierAnglais.dds",
+	L"resources/textures/CanardPolicierAnglais.dds",
 	Color(1, 1, 1, 1)
 	);
 
