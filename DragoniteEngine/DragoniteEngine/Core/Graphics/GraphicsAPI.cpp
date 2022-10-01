@@ -6,6 +6,7 @@
 #include "Textures/TextureFactory.h"
 #include "Camera.h"
 #include <d3d11.h>
+
 #define REPORT_DX_WARNINGS
 
 #pragma warning (disable: 4267)
@@ -79,10 +80,10 @@ bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindo
 
 void Dragonite::GraphicsPipeline::Render()
 {
+
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	myApplicationPtr->OnPreRender()();
+	
 
 	auto cpy = myElementsToDraw;
 	myElementsToDraw.clear();
@@ -144,14 +145,20 @@ void Dragonite::GraphicsPipeline::Render()
 		}
 
 
-
+		
 		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
 
 	}
 
 
-	myApplicationPtr->OnRender()();
 
+
+	
+	/*myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
+
+
+	myApplicationPtr->OnRender()();
 
 	mySwapChain->Present(1, 0);
 }

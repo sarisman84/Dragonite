@@ -61,7 +61,7 @@ void Dragonite::Mouse::ViewMouse(const bool aState)
 void Dragonite::Mouse::ResetPos()
 {
 	RECT aRect;
-	if (GetClientRect(*myApplicationIns->GetClientInstance(), &aRect))
+	if (GetClientRect(myApplicationIns->GetClientInstance(), &aRect))
 	{
 		float width = aRect.right - aRect.left;
 		float height = aRect.bottom - aRect.top;
@@ -69,7 +69,7 @@ void Dragonite::Mouse::ResetPos()
 		position = { width / 2.0f ,height / 2.0f };
 	}
 
-	if (GetWindowRect(*myApplicationIns->GetClientInstance(), &aRect))
+	if (GetWindowRect(myApplicationIns->GetClientInstance(), &aRect))
 	{
 		float width = aRect.right - aRect.left;
 		float height = aRect.bottom - aRect.top;

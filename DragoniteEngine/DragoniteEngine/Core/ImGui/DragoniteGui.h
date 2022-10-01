@@ -11,9 +11,9 @@ namespace Dragonite
 		~DragoniteGui();
 		void Init(Runtime* anAppIns, GraphicsPipeline* aGraphicsPipeline);
 
-		void BeginFrame();
+		void Render();
 
-		void EndFrame();
+
 
 
 		

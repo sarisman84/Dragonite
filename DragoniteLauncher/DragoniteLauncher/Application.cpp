@@ -61,6 +61,7 @@ int Dragonite::Application::ExecuteRuntime()
 			if (msg.message == WM_QUIT)
 			{
 				myRuntimeState = false;
+				goto exit;
 			}
 		}
 		myInterface->Update(deltaTime);
@@ -68,6 +69,7 @@ int Dragonite::Application::ExecuteRuntime()
 		Time end = Clock::now();
 		deltaTime = DeltaTime(end - start).count();
 	}
+exit:
 	return (int)msg.wParam;
 }
 

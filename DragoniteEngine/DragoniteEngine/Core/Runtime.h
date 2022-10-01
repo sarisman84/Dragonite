@@ -45,7 +45,7 @@ namespace Dragonite
 		inline Function<void()>& OnPreRender() { return myOnPreRenderCB; }
 		inline Function<void()>& OnRender() { return myOnRenderCB; }
 
-		inline HWND* GetClientInstance() { return myInstance; }
+		inline HWND& GetClientInstance() { return myInstance; }
 
 		bool Initialize(HWND& anInstance) override;
 		void Update(const float aDeltaTime) override;
@@ -55,7 +55,7 @@ namespace Dragonite
 	private:
 		static Runtime myRuntime;
 		bool myRuntimeState;
-		HWND* myInstance;
+		HWND myInstance;
 		PollingStation* myRuntimeHandler;
 		GraphicsPipeline* myPipeline;
 		Scene* myScene;
