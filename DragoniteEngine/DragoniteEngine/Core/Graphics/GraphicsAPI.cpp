@@ -83,7 +83,7 @@ void Dragonite::GraphicsPipeline::Render()
 
 	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	
+
 
 	auto cpy = myElementsToDraw;
 	myElementsToDraw.clear();
@@ -145,7 +145,7 @@ void Dragonite::GraphicsPipeline::Render()
 		}
 
 
-		
+
 		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
 
 	}
@@ -153,12 +153,12 @@ void Dragonite::GraphicsPipeline::Render()
 
 
 
-	
+
 	/*myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
 	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 
 
-	myApplicationPtr->OnRender()();
+	myApplicationPtr->OnRender()(this);
 
 	mySwapChain->Present(1, 0);
 }

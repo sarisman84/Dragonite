@@ -42,8 +42,7 @@ namespace Dragonite
 
 		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
 		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
-		inline Function<void()>& OnPreRender() { return myOnPreRenderCB; }
-		inline Function<void()>& OnRender() { return myOnRenderCB; }
+		inline Function<void(GraphicsPipeline*)>& OnRender() { return myOnRenderCB; }
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -63,7 +62,7 @@ namespace Dragonite
 
 		Function<void(const float)> myUpdateCB;
 		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
-		Function<void()> myOnPreRenderCB, myOnRenderCB;
+		Function<void(GraphicsPipeline*)> myOnRenderCB;
 
 
 		DragoniteGui* myGUIInterface;
@@ -74,6 +73,6 @@ namespace Dragonite
 	};
 
 
-	
+
 }
 DLLEXPORT APIInterface* InitializeRuntime();

@@ -7,6 +7,9 @@
 #include "Graphics/GraphicsAPI.h"
 #include "Utilities/Input.h"
 
+#include "Editor/EngineDebugger.h"
+#include "Editor/SceneEditor.h"
+
 
 Dragonite::Runtime Dragonite::Runtime::myRuntime;
 
@@ -68,7 +71,7 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 	myScene = new Scene();
 	myScene->myApplication = this;
 	myScene->myPollingStation = myRuntimeHandler;
-	
+	myRuntimeHandler->AddHandler(myScene);
 	
 
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
@@ -79,8 +82,14 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 	
 	myGUIInterface = new DragoniteGui();
 	myGUIInterface->Init(this, myPipeline);
+	myRuntimeHandler->AddHandler(myGUIInterface);
+
+	myGUIInterface->AddWindow(new EngineDebugger());
+	myGUIInterface->AddWindow(new SceneEditor());
 
 	myScene->Awake();
+
+	myRuntimeHandler->AddHandler(this);
 	return true;
 }
 

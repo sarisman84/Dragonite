@@ -51,9 +51,6 @@
     <ClInclude Include="Core\Graphics\Models\Material.h">
       <Filter>Core\Graphics\Models</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Scene.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\External\STB\stb_c_lexer.h">
       <Filter>Core\External\STB</Filter>
     </ClInclude>
@@ -144,12 +141,6 @@
     <ClInclude Include="Core\External\imgui\imstb_truetype.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\External\imgui\imgui_impl_dx11.h">
-      <Filter>Core\External\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\External\imgui\imgui_impl_win32.h">
-      <Filter>Core\External\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Core\PollingStation.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -165,6 +156,30 @@
     </ClInclude>
     <ClInclude Include="Core\CU\MathLibrary.h">
       <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\EngineDebugger.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\backends\imgui_impl_dx11.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\External\imgui\backends\imgui_impl_win32.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\SceneEditor.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Object.h">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Component.h">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Scene.h">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,9 +208,6 @@
     <ClCompile Include="Core\Graphics\Models\Material.cpp">
       <Filter>Core\Graphics\Models</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Scene.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\External\STB\stb_vorbis.c">
       <Filter>Core\External\STB</Filter>
     </ClCompile>
@@ -220,12 +232,6 @@
     <ClCompile Include="Core\External\imgui\imgui_widgets.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\External\imgui\imgui_impl_dx11.cpp">
-      <Filter>Core\External\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\External\imgui\imgui_impl_win32.cpp">
-      <Filter>Core\External\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Core\ImGui\DragoniteGui.cpp">
       <Filter>Core\Imgui</Filter>
     </ClCompile>
@@ -235,6 +241,27 @@
     <ClCompile Include="APIInterface.cpp" />
     <ClCompile Include="Core\Editor\GUIWindow.cpp">
       <Filter>Core\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\EngineDebugger.cpp">
+      <Filter>Core\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\External\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\SceneEditor.cpp">
+      <Filter>Core\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Object.cpp">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Scene.cpp">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +312,12 @@
     </Filter>
     <Filter Include="Core\Editor">
       <UniqueIdentifier>{e8b72862-c474-4601-b2ff-5c22a75e0d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI">
+      <UniqueIdentifier>{bd1018cf-1804-4f98-9aeb-1d2821593624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\Components">
+      <UniqueIdentifier>{89832a91-b096-45c4-b147-6d4bc6c76fd9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

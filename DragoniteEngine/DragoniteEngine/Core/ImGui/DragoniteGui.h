@@ -13,20 +13,22 @@ namespace Dragonite
 	public:
 		DragoniteGui();
 		~DragoniteGui();
-
-		
-
 		void Init(Runtime* anAppIns, GraphicsPipeline* aGraphicsPipeline);
 		void Render();
 
-
-
-
-		
+		void AddWindow(GUIWindow* aNewWindow);
 
 	private:
-		std::vector<std::shared_ptr<GUIWindow>> myGuiWindows;
+		void InitializeImgui();
 
+		void BeginDockingSpace();
+		void EndDockingSpace();
+
+
+
+
+		std::vector<bool> myCachedGuiWindowsStates;
+		std::vector<std::unique_ptr<GUIWindow>> myGuiWindows;
 		Runtime* myApplicationIns;
 		GraphicsPipeline* myGraphicsPipeline;
 	};

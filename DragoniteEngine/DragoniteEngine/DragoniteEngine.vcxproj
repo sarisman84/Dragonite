@@ -158,7 +158,11 @@
     <ClInclude Include="APIInterface.h" />
     <ClInclude Include="Core\CU\MathLibrary.h" />
     <ClInclude Include="Core\Editor\EditorSettings.h" />
+    <ClInclude Include="Core\Editor\EngineDebugger.h" />
     <ClInclude Include="Core\Editor\GUIWindow.h" />
+    <ClInclude Include="Core\Editor\SceneEditor.h" />
+    <ClInclude Include="Core\External\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Core\External\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\CU\CommonData.h" />
     <ClInclude Include="Core\CU\Math\MathFunctions.h" />
@@ -171,8 +175,6 @@
     <ClInclude Include="Core\External\DirectX\DDSTextureLoader11.h" />
     <ClInclude Include="Core\External\imgui\imconfig.h" />
     <ClInclude Include="Core\External\imgui\imgui.h" />
-    <ClInclude Include="Core\External\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="Core\External\imgui\imgui_impl_win32.h" />
     <ClInclude Include="Core\External\imgui\imgui_internal.h" />
     <ClInclude Include="Core\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="Core\External\imgui\imstb_textedit.h" />
@@ -208,22 +210,27 @@
     <ClInclude Include="Core\Graphics\Textures\TextureFactory.h" />
     <ClInclude Include="Core\ImGui\DragoniteGui.h" />
     <ClInclude Include="Core\PollingStation.h" />
-    <ClInclude Include="Core\Scene.h" />
+    <ClInclude Include="Core\RuntimeAPI\Component.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />
+    <ClInclude Include="Core\RuntimeAPI\Object.h" />
+    <ClInclude Include="Core\RuntimeAPI\Scene.h" />
     <ClInclude Include="Core\Utilities\Function.h" />
     <ClInclude Include="Core\Utilities\Input.h" />
     <ClInclude Include="framework.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="APIInterface.cpp" />
+    <ClCompile Include="Core\Editor\EngineDebugger.cpp" />
     <ClCompile Include="Core\Editor\GUIWindow.cpp" />
+    <ClCompile Include="Core\Editor\SceneEditor.cpp" />
+    <ClCompile Include="Core\External\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Core\External\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\CU\Transform.cpp" />
     <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp" />
     <ClCompile Include="Core\External\imgui\imgui.cpp" />
     <ClCompile Include="Core\External\imgui\imgui_demo.cpp" />
     <ClCompile Include="Core\External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Core\External\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Core\External\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Core\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="Core\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Core\External\STB\stb_vorbis.c" />
@@ -235,7 +242,9 @@
     <ClCompile Include="Core\Graphics\Textures\TextureFactory.cpp" />
     <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
     <ClCompile Include="Core\PollingStation.cpp" />
-    <ClCompile Include="Core\Scene.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Object.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Scene.cpp" />
     <ClCompile Include="Core\Utilities\Input.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>

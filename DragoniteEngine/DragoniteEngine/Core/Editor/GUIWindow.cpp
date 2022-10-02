@@ -1,6 +1,13 @@
 #include "GUIWindow.h"
 
-Dragonite::GUIWindow::GUIWindow(const char* aWindowName) : myWindowName(aWindowName)
+Dragonite::GUIWindow::GUIWindow(const char* aWindowName) : myWindowName(aWindowName), myActiveStateFlag(true)
 {
-	SetActive(true);
+}
+
+void Dragonite::GUIWindow::UpdateWindowState()
+{
+	if (myActiveStateFlag)
+		OnEnable();
+	else
+		OnDisable();
 }
