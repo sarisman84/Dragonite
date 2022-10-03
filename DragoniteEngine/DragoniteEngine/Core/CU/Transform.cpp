@@ -1,5 +1,29 @@
 #include "Transform.h"
 
+Dragonite::Transform::Transform() : myPosition({ 0,0,0 }), myScale({ 1,1,1 }), myRotation({ 0,0,0 }), myParent(nullptr)
+{
+}
+
+Dragonite::Transform::Transform(const Transform& someCopy)
+{
+	if (someCopy.myChildren.size() > 0)
+		myChildren = someCopy.myChildren;
+	myParent = someCopy.myParent;
+	myPosition = someCopy.myPosition;
+	myRotation = someCopy.myRotation;
+	myScale = someCopy.myScale;
+}
+
+void Dragonite::Transform::operator=(const Transform& someCopy)
+{
+	if (someCopy.myChildren.size() > 0)
+		myChildren = someCopy.myChildren;
+	myParent = someCopy.myParent;
+	myPosition = someCopy.myPosition;
+	myRotation = someCopy.myRotation;
+	myScale = someCopy.myScale;
+}
+
 Dragonite::Matrix4x4f Dragonite::Transform::GetMatrix()
 {
 	if (!myParent)

@@ -1,7 +1,8 @@
 #pragma once
 #include "DXIncludes.h"
-#include "../CU/CommonData.h"
-#include "../CU/Math/Matrix4x4.hpp"
+
+#include "Core/CU/CommonData.h"
+#include "Core/CU/Math/Matrix4x4.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -16,6 +17,8 @@ namespace Dragonite
 	class ModelFactory;
 	class TextureFactory;
 	class ModelInstance;
+	class BaseRenderer;
+	class  RenderFactory;
 
 	enum class TextureSampleType
 	{
@@ -39,6 +42,7 @@ namespace Dragonite
 	{
 		friend class RenderInterface;
 		friend class DragoniteGui;
+		friend RenderFactory;
 	public:
 		GraphicsPipeline();
 		~GraphicsPipeline();
@@ -53,7 +57,7 @@ namespace Dragonite
 		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
 
 
-		void DrawToNewRenderTarget(const RenderTarget& aTarget, const RasterizerState& aNewState = nullptr);
+		void DrawToNewRenderTarget(const RenderView& aTarget, const RasterizerState& aNewState = nullptr);
 		void DrawToBackBuffer();
 
 		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
@@ -73,18 +77,20 @@ namespace Dragonite
 		Device myDevice;
 		DeviceContext myContext;
 		SwapChain mySwapChain;
-		RenderTarget myBackBuffer;
+		RenderView myBackBuffer;
 		DepthStencil myDepthBuffer;
 		Color myClearColor;
 
 		DataBuffer myFrameBuffer;
 		DataBuffer myObjectBuffer;
 
+		RenderFactory* myRenderFactory;
 		Runtime* myApplicationPtr;
 		ModelFactory* myModelFactory;
 		TextureFactory* myTextureFactory;
 		Camera* myActiveCamera;
 
+		std::vector<std::unique_ptr<BaseRenderer>> myRenderers;
 		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
 		std::unordered_map<TextureSampleType, TextureSampler> myTextureSamplers;
 	};

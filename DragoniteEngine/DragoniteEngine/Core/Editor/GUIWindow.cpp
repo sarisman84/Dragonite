@@ -11,3 +11,5 @@ void Dragonite::GUIWindow::UpdateWindowState()
 	else
 		OnDisable();
 }
+
+

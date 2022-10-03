@@ -31,7 +31,7 @@ namespace Dragonite
 	typedef ComPtr<ID3D11Device> Device;
 	typedef	ComPtr<ID3D11DeviceContext> DeviceContext;
 	typedef ComPtr<IDXGISwapChain> SwapChain;
-	typedef ComPtr<ID3D11RenderTargetView> RenderTarget;
+	typedef ComPtr<ID3D11RenderTargetView> RenderView;
 	typedef ComPtr<ID3D11Buffer> DataBuffer;
 	typedef ComPtr<ID3D11VertexShader> VertexShader;
 	typedef ComPtr<ID3D11PixelShader> PixelShader;

@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Graphics/Camera.h"
 #include "Object.h"
 #include <vector>
 
@@ -18,13 +19,14 @@ namespace Dragonite
 		void Awake();
 		void Update(const float aDt);
 		inline std::vector<Object>& SceneObjects() noexcept { return myObjects; }
+		
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
 		RenderInterface* myRenderInterface;
 		InputManager* myInputManager;
 
-
+		Camera myCamera;
 		std::vector<Object> myObjects;
 	};
 }

@@ -20,6 +20,8 @@ namespace Dragonite
 		Vector3<T>(const T& aX, const T& aY, const T& aZ) : x(aX), y(aY), z(aZ) {}
 		Vector3<T>(const Vector3<T>& aVector) = default;
 		Vector3<T>& operator=(const Vector3<T>& aVector3) = default;
+
+
 		Vector3<T> operator-() const { return Vector3<T>(-x, -y, -z); }
 
 		static Vector3<T> Lerp(const Vector3<T>& aStart, const Vector3<T>& aEnd, const float aT)
@@ -120,5 +122,7 @@ namespace Dragonite
 	typedef Vector3<int> Vector3i;
 	typedef Vector3<double> Vector3d;
 	typedef Vector3<unsigned int> Vector3ui;
+
+
 }
 

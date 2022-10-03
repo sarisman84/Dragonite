@@ -14,6 +14,7 @@ namespace Dragonite
 		void OnEnable() override;
 		void OnDisable() override;
 	private:
+		std::vector<bool> mySelectedElements;
 		ModelFactory* myModelFactory;
 		Scene* myCurrentScene;
 	};

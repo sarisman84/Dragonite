@@ -31,6 +31,7 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	auto ins = std::make_shared<ModelInstance>();
 	if (!ins) return nullptr;
 	ins->myModel = myFactoryData[aPrimitiveType];
+	ins->myModelName = ins->myModel->myName;
 	if (!ins->myModel) return nullptr;
 
 	if (FAILED(CreateVSInstance(device, aMaterial.myVSInfo.myVertexShader, ins->myVertexShader, vsData)))
@@ -56,7 +57,7 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 
 
 	ins->myTexture = myPipeline->GetApplication()->GetPollingStation().Get<TextureFactory>()->LoadTexture(aMaterial.myTexture.c_str());
-
+	ins->myTextureName = ins->myTexture->myName;
 
 	return ins;
 }
@@ -125,6 +126,7 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 		return nullptr;
 
 	model->myIndexCount = 36;
+	model->myName = "Primitive Cube";
 
 	return model;
 }

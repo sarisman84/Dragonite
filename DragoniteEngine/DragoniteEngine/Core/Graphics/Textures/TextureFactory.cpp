@@ -31,6 +31,8 @@ Dragonite::TextureRef Dragonite::TextureFactory::LoadTexture(const wchar_t* aPat
 	TextureLoaderDesc desc = {};
 	TextureRef texture = std::make_shared<Texture>();
 
+	std::wstring name = aPath;
+	texture->myName = std::string(name.begin(), name.end()).c_str();
 	const size_t lastDot = path.find_last_of(L".");
 	std::wstring extension = path.substr(lastDot + 1);
 
@@ -51,7 +53,7 @@ Dragonite::TextureRef Dragonite::TextureFactory::LoadTexture(const wchar_t* aPat
 
 const bool LoadDDS(Dragonite::Device aDevice, const wchar_t* aPath, Dragonite::ShaderResourceV& aResourceView, Dragonite::Vector2i& anOutputResolution) {
 	using namespace Dragonite;
-	
+
 	DXTexture2D text2D;
 	D3D11_TEXTURE2D_DESC textInfo;
 	DXResource texture;

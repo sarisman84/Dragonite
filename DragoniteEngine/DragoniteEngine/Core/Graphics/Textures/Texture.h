@@ -27,6 +27,7 @@ namespace Dragonite
 	class Texture
 	{
 		friend class TextureFactory;
+		friend class ModelFactory;
 	public:
 		Texture();
 		~Texture();
@@ -43,6 +44,7 @@ namespace Dragonite
 		ShaderResourceV myResourceView;
 		Vector2i myResolution;
 		int mySlot;
+		const char* myName;
 	};
 
 	typedef std::shared_ptr<Texture> TextureRef;

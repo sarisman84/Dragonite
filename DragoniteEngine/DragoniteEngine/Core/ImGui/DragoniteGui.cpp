@@ -93,8 +93,8 @@ void Dragonite::DragoniteGui::InitializeImgui()
 		ImGui::Render();
 
 		aPipeline->myContext->OMSetRenderTargets(1, aPipeline->myBackBuffer.GetAddressOf(), aPipeline->myDepthBuffer.Get());
-		aPipeline->myContext->ClearRenderTargetView(aPipeline->myBackBuffer.Get(), &aPipeline->myClearColor);
-		aPipeline->myContext->ClearDepthStencilView(aPipeline->myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		/*aPipeline->myContext->ClearRenderTargetView(aPipeline->myBackBuffer.Get(), &aPipeline->myClearColor);
+		aPipeline->myContext->ClearDepthStencilView(aPipeline->myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -105,7 +105,8 @@ void Dragonite::DragoniteGui::InitializeImgui()
 	};
 
 
-	myApplicationIns->OnWndProc() += [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	myApplicationIns->OnWndProc() += [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
 	};
 }

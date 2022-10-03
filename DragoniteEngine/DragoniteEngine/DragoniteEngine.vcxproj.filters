@@ -181,6 +181,21 @@
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Core\External\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>Core\External\ImGui\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\RenderTargets\RenderFactory.h">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\RenderTargets\RenderTarget.h">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\EnumMap.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\BaseRenderer.h">
+      <Filter>Core\Graphics\Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -263,6 +278,18 @@
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Core\External\imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Core\External\ImGui\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\RenderTargets\RenderFactory.cpp">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\RenderTargets\RenderTarget.cpp">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utilities\EnumMap.cpp">
+      <Filter>Core\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -318,6 +345,15 @@
     </Filter>
     <Filter Include="Core\RuntimeAPI\Components">
       <UniqueIdentifier>{89832a91-b096-45c4-b147-6d4bc6c76fd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\ImGui\misc">
+      <UniqueIdentifier>{c8197343-3a03-494c-9e32-b32ab962b66b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\RenderTargets">
+      <UniqueIdentifier>{c34d47c4-a7f0-475e-97c1-b97e7cb1b737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Renderers">
+      <UniqueIdentifier>{4e9cca30-073b-4c53-8891-bc7c0d1b14b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

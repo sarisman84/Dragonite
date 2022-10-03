@@ -4,6 +4,8 @@
 #include "Core/PollingStation.h"
 #include "Models/ModelFactory.h"
 #include "Textures/TextureFactory.h"
+#include "BaseRenderer.h"
+#include "RenderTargets/RenderFactory.h"
 #include "Camera.h"
 #include <d3d11.h>
 
@@ -11,84 +13,10 @@
 
 #pragma warning (disable: 4267)
 
-Dragonite::GraphicsPipeline::GraphicsPipeline()
-{
-	myModelFactory = nullptr;
-	myTextureFactory = nullptr;
-}
 
 
-Dragonite::GraphicsPipeline::~GraphicsPipeline()
-{
-	if (myModelFactory)
-		delete myModelFactory;
-	myModelFactory = nullptr;
-
-	if (myTextureFactory)
-		delete myTextureFactory;
-	myTextureFactory = nullptr;
-}
-
-bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindowHandle)
-{
-	myClearColor = Color(0.25f, 0.25f, 0.85f, 1.0f);
-
-	if (FAILED(InitializeSwapChain(aWindowHandle)))
-		return false;
-
-	if (FAILED(InitializeBackBuffer()))
-		return false;
-
-	if (FAILED(InitializeSamplers()))
-		return false;
-
-
-
-
-
-	DataBufferDesc bufferDesc(
-		sizeof(FrameBufferData),
-		D3D11_USAGE_DYNAMIC,
-		D3D11_BIND_CONSTANT_BUFFER,
-		D3D11_CPU_ACCESS_WRITE);
-
-	if (FAILED(CreateBuffer(myDevice, myFrameBuffer, bufferDesc)))
-		return false;
-
-
-	bufferDesc.mySize = sizeof(ObjectBufferData);
-
-	if (FAILED(CreateBuffer(myDevice, myObjectBuffer, bufferDesc)))
-		return false;
-
-	myApplicationPtr = anApplication;
-	myApplicationPtr->GetPollingStation().AddHandler(this);
-
-	myModelFactory = new ModelFactory();
-	if (!myModelFactory->Initialize(this))
-	{
-		return false;
-	}
-	myTextureFactory = new TextureFactory(this);
-
-
-	myApplicationPtr->GetPollingStation().AddHandler(myTextureFactory);
-	myApplicationPtr->GetPollingStation().AddHandler(myModelFactory);
-
-	return true;
-}
-
-void Dragonite::GraphicsPipeline::Render()
-{
-
-	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-
-	auto cpy = myElementsToDraw;
-	myElementsToDraw.clear();
-
-	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+/*
+myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	if (myActiveCamera)
 	{
@@ -151,14 +79,100 @@ void Dragonite::GraphicsPipeline::Render()
 	}
 
 
+*/
+
+
+Dragonite::GraphicsPipeline::GraphicsPipeline()
+{
+	myModelFactory = nullptr;
+	myTextureFactory = nullptr;
+}
+
+
+Dragonite::GraphicsPipeline::~GraphicsPipeline()
+{
+	if (myModelFactory)
+		delete myModelFactory;
+	myModelFactory = nullptr;
+
+	if (myTextureFactory)
+		delete myTextureFactory;
+	myTextureFactory = nullptr;
+}
+
+bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindowHandle)
+{
+	myClearColor = Color(0.25f, 0.25f, 0.85f, 1.0f);
+	myRenderFactory = new RenderFactory();
+
+	if (FAILED(InitializeSwapChain(aWindowHandle)))
+		return false;
+
+	if (FAILED(InitializeBackBuffer()))
+		return false;
+
+	if (FAILED(InitializeSamplers()))
+		return false;
 
 
 
-	/*myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
+
+
+	DataBufferDesc bufferDesc(
+		sizeof(FrameBufferData),
+		D3D11_USAGE_DYNAMIC,
+		D3D11_BIND_CONSTANT_BUFFER,
+		D3D11_CPU_ACCESS_WRITE);
+
+	if (FAILED(CreateBuffer(myDevice, myFrameBuffer, bufferDesc)))
+		return false;
+
+
+	bufferDesc.mySize = sizeof(ObjectBufferData);
+
+	if (FAILED(CreateBuffer(myDevice, myObjectBuffer, bufferDesc)))
+		return false;
+
+	myApplicationPtr = anApplication;
+	myApplicationPtr->GetPollingStation().AddHandler(this);
+
+	myModelFactory = new ModelFactory();
+	if (!myModelFactory->Initialize(this))
+	{
+		return false;
+	}
+	myTextureFactory = new TextureFactory(this);
+	
+
+	myApplicationPtr->GetPollingStation().AddHandler(myTextureFactory);
+	myApplicationPtr->GetPollingStation().AddHandler(myModelFactory);
+	myApplicationPtr->GetPollingStation().AddHandler(myRenderFactory);
+
+	return true;
+}
+
+void Dragonite::GraphicsPipeline::Render()
+{
+
+	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
+	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+
+	
+	for (size_t i = 0; i < myRenderers.size(); i++)
+	{
+		auto cpy = myElementsToDraw;
+		myRenderers[i]->Render(cpy);
+	}
+	myElementsToDraw.clear();
 
 
 	myApplicationPtr->OnRender()(this);
+
+	
+
+
+	
 
 	mySwapChain->Present(1, 0);
 }
@@ -274,7 +288,7 @@ HRESULT Dragonite::GraphicsPipeline::InitializeSamplers()
 }
 
 
-void Dragonite::GraphicsPipeline::DrawToNewRenderTarget(const RenderTarget& aTarget, const RasterizerState& aNewState)
+void Dragonite::GraphicsPipeline::DrawToNewRenderTarget(const RenderView& aTarget, const RasterizerState& aNewState)
 {
 	myContext->OMSetRenderTargets(1, aTarget.GetAddressOf(), myDepthBuffer.Get());
 	myContext->ClearRenderTargetView(aTarget.Get(), &myClearColor);

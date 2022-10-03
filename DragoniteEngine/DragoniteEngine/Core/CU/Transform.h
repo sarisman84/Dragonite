@@ -12,6 +12,10 @@ namespace Dragonite
 		Vector3f myRotation;
 		Vector3f myScale;
 
+		Transform();
+		Transform(const Transform& someCopy);
+		void operator=(const Transform& someCopy);
+
 		Matrix4x4f GetMatrix();
 		void SetParent(Transform* aTransform);
 

@@ -40,6 +40,7 @@ namespace Dragonite
 			myVertexBuffer,
 			myIndexBuffer;
 		size_t myIndexCount;
+		const char* myName;
 	};
 
 	typedef std::shared_ptr<Model> ModelRef;
@@ -52,6 +53,8 @@ namespace Dragonite
 		ModelRef myModel;
 		Transform myTransform;
 		TextureRef myTexture;
+		const char* myModelName;
+		const char* myTextureName;
 	private:
 		VertexShader
 			myVertexShader;
