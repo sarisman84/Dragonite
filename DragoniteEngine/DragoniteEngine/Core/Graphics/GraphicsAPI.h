@@ -4,11 +4,12 @@
 #include "Core/CU/CommonData.h"
 #include "Core/CU/Math/Matrix4x4.hpp"
 
+
 #include <unordered_map>
 #include <vector>
 #include <memory>
 
-#define DDLVISIBLE __declspec(dllexport)
+
 
 namespace Dragonite
 {
@@ -18,7 +19,8 @@ namespace Dragonite
 	class TextureFactory;
 	class ModelInstance;
 	class BaseRenderer;
-	class  RenderFactory;
+	class RenderFactory;
+	class RenderTarget;
 
 	enum class TextureSampleType
 	{
@@ -40,6 +42,7 @@ namespace Dragonite
 
 	class GraphicsPipeline
 	{
+		friend class RenderTarget;
 		friend class RenderInterface;
 		friend class DragoniteGui;
 		friend RenderFactory;
@@ -48,17 +51,19 @@ namespace Dragonite
 		~GraphicsPipeline();
 
 		bool Initialize(Runtime* anApplication, HWND aWindowHandle);
+		void DrawInstructionsToBB();
+		void DrawInstructions(RenderView aView, DepthStencil aDepthBuffer = nullptr);
 		void Render();
+
+
+		Vector2f GetViewPort();
 
 		inline Runtime* GetApplication() { return myApplicationPtr; }
 		inline Device& GetDevice() { return myDevice; }
 		inline DeviceContext& GetContext() { return myContext; }
 
 		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
-
-
-		void DrawToNewRenderTarget(const RenderView& aTarget, const RasterizerState& aNewState = nullptr);
-		void DrawToBackBuffer();
+		inline std::vector<std::shared_ptr<ModelInstance>> GetInstructions() { return myElementsToDraw; };
 
 		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
 			return myTextureSamplers;
@@ -67,7 +72,11 @@ namespace Dragonite
 
 		static HRESULT CreateBuffer(Device aDevice, DataBuffer& aBuffer, const DataBufferDesc& aDesc);
 		static HRESULT CreateTexture(Device aDevice, DXTexture2D& aTexture, const TextureBufferDesc& aDesc);
-		static HRESULT SetBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize);
+		static HRESULT MapBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize);
+
+		void UpdateFrameBuffer();
+		void UpdateObjectBufferAt(std::shared_ptr<ModelInstance> anInstance);
+		void UpdateBufferAt(void* someData, const size_t aSize, std::shared_ptr<ModelInstance> anInstance, const int aSlot, DataBuffer& aBuffer, bool aBindVSFlag = true, bool aBindPSFlag = false);
 
 	private:
 		HRESULT InitializeSwapChain(HWND anInstance);
@@ -89,8 +98,8 @@ namespace Dragonite
 		ModelFactory* myModelFactory;
 		TextureFactory* myTextureFactory;
 		Camera* myActiveCamera;
+		RenderTarget* myActiveRenderTarget;
 
-		std::vector<std::unique_ptr<BaseRenderer>> myRenderers;
 		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
 		std::unordered_map<TextureSampleType, TextureSampler> myTextureSamplers;
 	};
@@ -101,9 +110,9 @@ namespace Dragonite
 	public:
 		RenderInterface(GraphicsPipeline& aPipeline);
 
-		DDLVISIBLE void DrawElement(std::shared_ptr<ModelInstance> anInstance);
+		void DrawElement(std::shared_ptr<ModelInstance> anInstance);
 
-		DDLVISIBLE inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
+		inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
 
 	private:
 		GraphicsPipeline& myPipeline;

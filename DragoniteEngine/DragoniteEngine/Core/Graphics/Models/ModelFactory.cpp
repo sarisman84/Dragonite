@@ -7,6 +7,9 @@
 
 #include "../Textures/TextureFactory.h"
 
+
+#include "Core/Graphics/Utilities/RenderUtils.h"
+
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Runtime.h"
 #include "Core/PollingStation.h"
@@ -34,11 +37,11 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	ins->myModelName = ins->myModel->myName;
 	if (!ins->myModel) return nullptr;
 
-	if (FAILED(CreateVSInstance(device, aMaterial.myVSInfo.myVertexShader, ins->myVertexShader, vsData)))
+	if (FAILED(RenderUtils::CreateVSInstance(device, aMaterial.myVSInfo.myVertexShader, ins->myVertexShader, vsData)))
 	{
 		return nullptr;
 	}
-	if (FAILED(CreatePSInstance(device, aMaterial.myPSInfo.myPixelShader, ins->myPixelShader)))
+	if (FAILED(RenderUtils::CreatePSInstance(device, aMaterial.myPSInfo.myPixelShader, ins->myPixelShader)))
 	{
 		return nullptr;
 	}
@@ -131,36 +134,7 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 	return model;
 }
 
-HRESULT Dragonite::ModelFactory::CreateVSInstance(Device aDevice, const char* aPath, VertexShader& aShader, std::string& someData)
-{
-	typedef std::istreambuf_iterator<char> ShaderIterator;
-	std::string path = "resources/shaders/" + std::string(aPath) + "_VS.cso";
-	std::ifstream file(path, std::ios::binary);
 
-	if (!file || file.fail())
-		return E_ACCESSDENIED;
-
-	bool hasFailed = file.is_open();
-	someData = { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
-	file.close();
-	hasFailed = file.is_open();
-
-	HRESULT r = aDevice->CreateVertexShader(someData.data(), someData.size(), nullptr, &aShader);
-	return r;
-}
-
-HRESULT Dragonite::ModelFactory::CreatePSInstance(Device aDevice, const char* aPath, PixelShader& aShader)
-{
-	typedef std::istreambuf_iterator<char> ShaderIterator;
-	std::string data;
-
-	std::ifstream file;
-	std::string path = "resources/shaders/" + std::string(aPath) + "_PS.cso";
-	file.open(path, std::ios::binary);
-	data = { ShaderIterator(file), ShaderIterator() };
-
-	return aDevice->CreatePixelShader(data.data(), data.size(), nullptr, &aShader);
-}
 
 
 

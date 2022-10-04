@@ -1,7 +1,8 @@
 #pragma once
+
 #include <wrl/client.h>
-#include "../CU/Math/Vector2.h"
 #include <dxgicommon.h>
+#include "Core/CU/Math/Vector2.h"
 
 using Microsoft::WRL::ComPtr;
 

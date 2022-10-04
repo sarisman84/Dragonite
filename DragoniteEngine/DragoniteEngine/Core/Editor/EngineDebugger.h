@@ -9,6 +9,7 @@ namespace Dragonite
 		void OnWindowRender() override;
 		void OnEnable() override;
 		void OnDisable() override;
+		void OnWindowInit() override;
 	};
 }
 

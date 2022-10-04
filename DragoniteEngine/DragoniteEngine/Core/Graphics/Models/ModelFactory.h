@@ -25,11 +25,6 @@ namespace Dragonite
 		//VVV Model Definitions
 		ModelRef CreateUnitCube();
 
-		//VVV Helper Methods
-
-		HRESULT CreateVSInstance(Device aDevice, const char* aPath, VertexShader& aShader, std::string& someExtraData);
-		HRESULT CreatePSInstance(Device aDevice, const char* aPath, PixelShader& aShader);
-
 
 
 

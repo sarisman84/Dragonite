@@ -1,6 +1,15 @@
 #pragma once
 #include "Core/Graphics/DXIncludes.h"
 #include "Core/CU/Math/Vector2.h"
+
+#include <vector>
+#include <memory>
+#include "Core/Editor/EditorSettings.h"
+
+
+
+#pragma warning(disable: 4244)
+
 namespace Dragonite
 {
 	struct RenderTargetDesc
@@ -11,20 +20,31 @@ namespace Dragonite
 		UINT myMipLevels;
 		UINT myArraySize;
 		UINT myUseage;
-		UINT myBindFlags;
 		UINT myCPUAccessFlags;
 		UINT myMiscFlags;
+
+		
+
 	};
 
 
+	class GraphicsPipeline;
 
-	struct RenderTarget
+	class RenderTarget
 	{
+	protected:
 		RenderView myRenderView;
 		ShaderResourceV myResourceView;
+		GraphicsPipeline* myPipeline;
+		void InternalInit(const RenderTargetDesc& aDesc);
 
-
-		static RenderTarget* CreateTarget(Device aDeivice, const RenderTargetDesc& aDesc);
+	public:
+		RenderTarget();
+		RenderTarget(GraphicsPipeline* aPipeline, const RenderTargetDesc& aDesc);
+		~RenderTarget();
+		
+		virtual const bool OnRender() = 0;
+		const bool RenderThisTarget(DepthStencil aDepthStenci = nullptr);
 	};
 }
 

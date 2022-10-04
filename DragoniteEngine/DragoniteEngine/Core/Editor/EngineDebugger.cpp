@@ -18,3 +18,7 @@ void Dragonite::EngineDebugger::OnEnable()
 void Dragonite::EngineDebugger::OnDisable()
 {
 }
+
+void Dragonite::EngineDebugger::OnWindowInit()
+{
+}

@@ -12,6 +12,7 @@ namespace Dragonite
 	class GUIWindow
 	{
 	public:
+		virtual void OnWindowInit() = 0;
 		virtual void OnWindowRender() = 0;
 		virtual void OnEnable() = 0;
 		virtual void OnDisable() = 0;
@@ -30,7 +31,10 @@ namespace Dragonite
 		void UpdateWindowState();
 		GUIWindow(const char* aWindowName);
 
-		inline void Init(PollingStation* aStation) noexcept { myPollingStation = aStation; }
+		inline void Init(PollingStation* aStation) noexcept {
+			myPollingStation = aStation;
+			OnWindowInit();
+		}
 
 	protected:
 		PollingStation* myPollingStation;

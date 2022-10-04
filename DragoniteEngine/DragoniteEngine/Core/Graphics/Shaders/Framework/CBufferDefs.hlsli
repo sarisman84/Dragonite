@@ -7,3 +7,9 @@ cbuffer ObjectBuffer : register(b1)
 {
     float4x4 modelToWorld;
 }
+
+cbuffer RenderIDBuffer : register(b2)
+{
+    float id;
+    float3 padding;
+}

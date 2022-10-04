@@ -7,6 +7,12 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
+      <FullPath>D:\Projects\Git\Dragonite\bin\resources\shaders\RenderID_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Projects\Git\Dragonite\bin\resources\shaders\RenderID_VS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\Projects\Git\Dragonite\bin\resources\shaders\Unlit_PS.cso</FullPath>
     </ContentFile>
     <ContentFile>

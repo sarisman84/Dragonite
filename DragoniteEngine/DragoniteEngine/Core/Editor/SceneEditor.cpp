@@ -3,9 +3,11 @@
 #include "Core/Graphics/Models/ModelFactory.h"
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
+#include "Core/Graphics/GraphicsAPI.h"
 #include <string>
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
+#include "Core/Graphics/RenderTargets/RenderFactory.h"
 
 
 int DefaultStringResize(ImGuiInputTextCallbackData* data)
@@ -22,13 +24,11 @@ int DefaultStringResize(ImGuiInputTextCallbackData* data)
 
 Dragonite::SceneEditor::SceneEditor() : GUIWindow("Hierachy")
 {
+
 }
 
 void Dragonite::SceneEditor::OnWindowRender()
 {
-	//Lazy load the nessesary elements
-	myCurrentScene = !myCurrentScene ? myPollingStation->Get<Scene>() : myCurrentScene;
-	myModelFactory = !myModelFactory ? myPollingStation->Get<ModelFactory>() : myModelFactory;
 
 	if (!myCurrentScene) return;
 
@@ -49,74 +49,50 @@ void Dragonite::SceneEditor::OnWindowRender()
 		mySelectedElements.push_back(false);
 	}
 
-	ImGui::BeginListBox("Objects");
-	int index = 0;
-	bool isSomethingSelected = false;
-	auto& sceneObjs = myCurrentScene->SceneObjects();
-	for (size_t i = 0; i < sceneObjs.size(); i++)
+
+
 	{
-		bool val = mySelectedElements[i];
-		auto& object = sceneObjs[i];
-		std::string name = sceneObjs[i].Name();
-		name += std::string("##") + std::to_string(i);
+		std::string name = "Camera";
+		name += std::string("##") + std::to_string(0);
+		static bool val;
 		ImGui::Selectable(name.c_str(), &val);
-		mySelectedElements[i] = val;
-
-		if (mySelectedElements[i] && !isSomethingSelected)
-			isSomethingSelected = true;
-	}
-
-	ImGui::EndListBox();
+		if (val)
+			FocusElement(0);
 
 
+		int index = 0;
 
-	if (isSomethingSelected)
-	{
-		ImGui::Begin("Property");
-		for (size_t i = 0; i < mySelectedElements.size(); i++)
+		auto& sceneObjs = myCurrentScene->SceneObjects();
+		for (size_t i = 0; i < sceneObjs.size(); i++)
 		{
-			if (mySelectedElements[i])
-			{
-				std::string name = sceneObjs[i].Name();
-				name += std::string("##") + std::to_string(i);
-				if (ImGui::CollapsingHeader(name.c_str()))
-				{
-					ImGui::InputText("Name", &sceneObjs[i].Name(), 0, DefaultStringResize);
-					ImGui::Indent();
-					std::string name = "Transform";
-					name += std::string("##") + sceneObjs[i].Name() + std::to_string(i);
-					if (ImGui::CollapsingHeader(name.c_str()))
-					{
-						ImGui::Indent();
-						ImGui::DragFloat3("Position", (float*)&sceneObjs[i].GetTransform().myPosition, 0.1f);
-						ImGui::DragFloat3("Rotation", (float*)&sceneObjs[i].GetTransform().myRotation, 0.1f);
-						ImGui::DragFloat3("Size", (float*)&sceneObjs[i].GetTransform().myScale, 0.1f);
-						ImGui::Unindent();
-					}
+			val = false;
+			auto& object = sceneObjs[i];
+			std::string name = sceneObjs[i].Name();
+			name += std::string("##") + std::to_string(i);
+			ImGui::Selectable(name.c_str(), &val);
+			if (val)
+				FocusElement(i + 1);
+			val = false;
 
-					int compIndex = 0;
-					for (auto& comp : sceneObjs[i].Components())
-					{
-						name = "Component";
-						name += std::to_string(compIndex++);
-						name += std::string("##") + sceneObjs[i].Name() + std::to_string(i);
-						if (ImGui::CollapsingHeader(name.c_str()))
-						{
-							ImGui::Indent();
-							comp->OnInspectorGUI();
-							ImGui::Unindent();
-						}
-
-					}
-
-					ImGui::Unindent();
-				}
-
-
-			}
 		}
-		ImGui::End();
 	}
+
+
+
+
+
+
+
+	ImGui::Begin("Property");
+	if (IsInspectingFocusedElement())
+	{
+		if (myFocusedElement == 0)
+			InspectCamera(myCurrentScene->GetCamera());
+		else
+			InspectFocusedElement(myCurrentScene);
+	}
+	ImGui::End();
+
 
 }
 
@@ -126,6 +102,123 @@ void Dragonite::SceneEditor::OnEnable()
 
 void Dragonite::SceneEditor::OnDisable()
 {
+}
+
+void Dragonite::SceneEditor::FocusElement(const int anElementToFocus)
+{
+	if (anElementToFocus < 0 || anElementToFocus >= mySelectedElements.size()) return;
+
+	for (size_t i = 0; i < mySelectedElements.size(); i++)
+	{
+		mySelectedElements[i] = false;
+	}
+
+
+	mySelectedElements[anElementToFocus] = true;
+	myFocusedElement = anElementToFocus;
+}
+
+const bool Dragonite::SceneEditor::IsInspectingFocusedElement()
+{
+	return myFocusedElement < 0 || myFocusedElement >= mySelectedElements.size() ? false : mySelectedElements[myFocusedElement];
+}
+
+void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
+{
+	int focusedElement = myFocusedElement - 1;
+	auto& sceneObjs = aScene->SceneObjects();
+	std::string name = sceneObjs[focusedElement].Name();
+	name += std::string("##") + std::to_string(focusedElement);
+	ImGui::InputText("Name", &sceneObjs[focusedElement].Name(), 0, DefaultStringResize);
+	if (ImGui::BeginListBox(std::string("##" + name).c_str(), ImVec2(300, 250)))
+	{
+
+
+		std::string name = "Transform";
+		name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
+		if (ImGui::CollapsingHeader(name.c_str()))
+		{
+			ImGui::Indent();
+			ImGui::DragFloat3("Position", (float*)&sceneObjs[focusedElement].GetTransform().myPosition, 0.1f);
+			ImGui::DragFloat3("Rotation", (float*)&sceneObjs[focusedElement].GetTransform().myRotation, 0.1f);
+			ImGui::DragFloat3("Size", (float*)&sceneObjs[focusedElement].GetTransform().myScale, 0.1f);
+			ImGui::Unindent();
+		}
+
+		int compIndex = 0;
+		for (auto& comp : sceneObjs[focusedElement].Components())
+		{
+			name = "Component";
+			name += std::to_string(compIndex++);
+			name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
+			if (ImGui::CollapsingHeader(name.c_str()))
+			{
+				ImGui::Indent();
+				comp->OnInspectorGUI();
+				ImGui::Unindent();
+			}
+
+		}
+
+
+		ImGui::EndListBox();
+
+	}
+}
+
+void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
+{
+	std::string name = "Camera";
+	name += std::string("##") + std::to_string(0);
+	if (ImGui::BeginListBox(std::string("##" + name).c_str(), ImVec2(300, 250)))
+	{
+
+		auto& cam = aCamera;
+		std::string cmpName = "Transform";
+		cmpName += std::string("##") + name;
+		if (ImGui::CollapsingHeader(cmpName.c_str()))
+		{
+
+
+			ImGui::Indent();
+			ImGui::DragFloat3("Position", (float*)&cam.GetTransform().myPosition, 0.1f);
+			ImGui::DragFloat3("Rotation", (float*)&cam.GetTransform().myRotation, 0.1f);
+			ImGui::Unindent();
+		}
+
+		cmpName = "Camera";
+		cmpName += std::string("##") + name;
+		if (ImGui::CollapsingHeader(cmpName.c_str()))
+		{
+
+			auto perspectiveProfile = dynamic_cast<PerspectiveProfile*>(cam.GetProfile());
+
+			ImGui::Indent();
+			ImGui::DragFloat("FOV", (float*)&perspectiveProfile->myFOV, 0.1f);
+			ImGui::DragFloat("Near Plane", (float*)&perspectiveProfile->myNearPlane, 0.1f);
+			ImGui::DragFloat("Far Plane", (float*)&perspectiveProfile->myFarPlane, 0.1f);
+			ImGui::Checkbox("View Render ID", &myRenderID.ViewRenderID());
+			ImGui::Unindent();
+		}
+
+
+
+		ImGui::EndListBox();
+	}
+}
+
+void Dragonite::SceneEditor::OnWindowInit()
+{
+	mySelectedElements.push_back(false); //Add Camera here
+	myRenderID = RenderID(myPollingStation->Get<GraphicsPipeline>());
+
+	myCurrentScene = myPollingStation->Get<Scene>();
+	myModelFactory = myPollingStation->Get<ModelFactory>();
+
+	myRenderID.SetupRenderID(myCurrentScene);
+	myPollingStation->Get<RenderFactory>()->RegisterTarget(myRenderID);
+
+
 }
 
 

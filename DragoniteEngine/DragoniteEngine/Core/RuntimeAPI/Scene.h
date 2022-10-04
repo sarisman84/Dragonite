@@ -19,7 +19,7 @@ namespace Dragonite
 		void Awake();
 		void Update(const float aDt);
 		inline std::vector<Object>& SceneObjects() noexcept { return myObjects; }
-		
+		inline Camera& GetCamera() { return myCamera; }
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;

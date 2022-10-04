@@ -14,3 +14,15 @@ struct DefaultPixelOutput
 {
     float4 color : SV_TARGET;
 };
+
+
+struct SimpleVertexInput
+{
+    float4 position : POSITION;
+};
+
+struct SimplePixelInput
+{
+    float4 position : POSITION;
+};
+

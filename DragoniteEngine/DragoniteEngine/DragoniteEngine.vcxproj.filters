@@ -196,6 +196,12 @@
     <ClInclude Include="Core\Graphics\BaseRenderer.h">
       <Filter>Core\Graphics\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Editor\RenderID.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\Utilities\RenderUtils.h">
+      <Filter>Core\Graphics\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -290,6 +296,12 @@
     <ClCompile Include="Core\Utilities\EnumMap.cpp">
       <Filter>Core\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Editor\RenderID.cpp">
+      <Filter>Core\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\Utilities\RenderUtils.cpp">
+      <Filter>Core\Graphics\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -355,12 +367,21 @@
     <Filter Include="Core\Graphics\Renderers">
       <UniqueIdentifier>{4e9cca30-073b-4c53-8891-bc7c0d1b14b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics\Utilities">
+      <UniqueIdentifier>{b1f812a0-563a-4f3a-9e49-de538df51f0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Core\Graphics\Shaders\Unlit_VS.hlsl">
       <Filter>Core\Graphics\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Core\Graphics\Shaders\Unlit_PS.hlsl">
+      <Filter>Core\Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\RenderID_PS.hlsl">
+      <Filter>Core\Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\RenderID_VS.hlsl">
       <Filter>Core\Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

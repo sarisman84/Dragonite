@@ -36,11 +36,15 @@ namespace Dragonite
 	{
 		friend class GraphicsPipeline;
 		friend class ModelFactory;
+		friend class RenderID;
 		DataBuffer
 			myVertexBuffer,
 			myIndexBuffer;
 		size_t myIndexCount;
 		const char* myName;
+
+
+
 	};
 
 	typedef std::shared_ptr<Model> ModelRef;
@@ -50,6 +54,7 @@ namespace Dragonite
 	public:
 		friend class GraphicsPipeline;
 		friend class ModelFactory;
+		friend class RenderID;
 		ModelRef myModel;
 		Transform myTransform;
 		TextureRef myTexture;

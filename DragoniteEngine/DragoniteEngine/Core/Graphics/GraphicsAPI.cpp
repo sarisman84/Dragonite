@@ -5,6 +5,7 @@
 #include "Models/ModelFactory.h"
 #include "Textures/TextureFactory.h"
 #include "BaseRenderer.h"
+#include "RenderTargets/RenderTarget.h"
 #include "RenderTargets/RenderFactory.h"
 #include "Camera.h"
 #include <d3d11.h>
@@ -16,67 +17,7 @@
 
 
 /*
-myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	if (myActiveCamera)
-	{
-		FrameBufferData frameBufferData = {};
-		frameBufferData.myWorldToClipMatrix = myActiveCamera->WorldToClipSpace();
-		if (myFrameBuffer)
-			if (FAILED(SetBuffer(myContext, myFrameBuffer, &frameBufferData, sizeof(FrameBufferData))))
-			{
-				//TODO: Handle this error
-			}
-			else
-				myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
-	}
-
-
-
-
-	while (!cpy.empty())
-	{
-		auto element = cpy.back();
-		cpy.pop_back();
-
-
-
-		if (element->myTexture)
-			element->myTexture->Bind(myContext);
-
-		{
-			ObjectBufferData objectBufferData = {};
-			objectBufferData.myModelToWorldMatrix = element->myTransform.GetMatrix();
-
-			if (myObjectBuffer)
-				if (FAILED(SetBuffer(myContext, myObjectBuffer, &objectBufferData, sizeof(ObjectBufferData))))
-				{
-					//TODO: Handle this error
-				}
-				else
-					myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
-		}
-
-		{
-			myContext->IASetInputLayout(element->myInputLayout.Get());
-
-			unsigned int stride = sizeof(Vertex);
-			unsigned int offset = 0;
-
-			myContext->IASetVertexBuffers(0, 1, element->myModel->myVertexBuffer.GetAddressOf(), &stride, &offset);
-			myContext->IASetIndexBuffer(element->myModel->myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-			myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
-
-			myContext->VSSetShader(element->myVertexShader.Get(), nullptr, 0);
-			myContext->PSSetShader(element->myPixelShader.Get(), nullptr, 0);
-		}
-
-
-
-		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
-
-	}
 
 
 */
@@ -84,6 +25,7 @@ myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 Dragonite::GraphicsPipeline::GraphicsPipeline()
 {
+	myRenderFactory = nullptr;
 	myModelFactory = nullptr;
 	myTextureFactory = nullptr;
 }
@@ -98,6 +40,10 @@ Dragonite::GraphicsPipeline::~GraphicsPipeline()
 	if (myTextureFactory)
 		delete myTextureFactory;
 	myTextureFactory = nullptr;
+
+	if (myRenderFactory)
+		delete myRenderFactory;
+	myRenderFactory = nullptr;
 }
 
 bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindowHandle)
@@ -141,9 +87,15 @@ bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindo
 	{
 		return false;
 	}
-	myTextureFactory = new TextureFactory(this);
-	
 
+	myRenderFactory = new RenderFactory();
+	if (!myRenderFactory->Init(this))
+	{
+		return false;
+	}
+	myTextureFactory = new TextureFactory(this);
+
+	myApplicationPtr->GetPollingStation().AddHandler(myRenderFactory);
 	myApplicationPtr->GetPollingStation().AddHandler(myTextureFactory);
 	myApplicationPtr->GetPollingStation().AddHandler(myModelFactory);
 	myApplicationPtr->GetPollingStation().AddHandler(myRenderFactory);
@@ -151,36 +103,89 @@ bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindo
 	return true;
 }
 
+void Dragonite::GraphicsPipeline::DrawInstructionsToBB()
+{
+	DrawInstructions(myBackBuffer, myDepthBuffer);
+}
+
+void Dragonite::GraphicsPipeline::DrawInstructions(RenderView aView, DepthStencil aDepthBuffer)
+{
+	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	myContext->OMSetRenderTargets(1, aView.GetAddressOf(), aDepthBuffer ? aDepthBuffer.Get() : nullptr);
+	myContext->ClearRenderTargetView(aView.Get(), &myClearColor);
+	if (aDepthBuffer)
+		myContext->ClearDepthStencilView(aDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	
+	UpdateFrameBuffer();
+	auto cpy = myElementsToDraw;
+	while (!cpy.empty())
+	{
+		auto element = cpy.back();
+		cpy.pop_back();
+
+
+		myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
+		if (element->myTexture)
+			element->myTexture->Bind(myContext);
+
+		UpdateObjectBufferAt(element);
+
+		{
+			myContext->IASetInputLayout(element->myInputLayout.Get());
+
+			unsigned int stride = sizeof(Vertex);
+			unsigned int offset = 0;
+
+			myContext->IASetVertexBuffers(0, 1, element->myModel->myVertexBuffer.GetAddressOf(), &stride, &offset);
+			myContext->IASetIndexBuffer(element->myModel->myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+
+
+			myContext->VSSetShader(element->myVertexShader.Get(), nullptr, 0);
+			myContext->PSSetShader(element->myPixelShader.Get(), nullptr, 0);
+		}
+
+
+
+		myContext->DrawIndexed(element->myModel->myIndexCount, 0, 0);
+
+	}
+}
+
 void Dragonite::GraphicsPipeline::Render()
 {
-
-	myContext->ClearRenderTargetView(myBackBuffer.Get(), &myClearColor);
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-
 	
-	for (size_t i = 0; i < myRenderers.size(); i++)
+
+	bool setRenderTargetToViewport = false;
+	if (myActiveRenderTarget)
+		setRenderTargetToViewport = myActiveRenderTarget->RenderThisTarget();
+	if (!setRenderTargetToViewport)
 	{
-		auto cpy = myElementsToDraw;
-		myRenderers[i]->Render(cpy);
+		DrawInstructionsToBB();
 	}
+
+
 	myElementsToDraw.clear();
-
-
 	myApplicationPtr->OnRender()(this);
-
-	
-
-
-	
-
 	mySwapChain->Present(1, 0);
 }
 
+Dragonite::Vector2f Dragonite::GraphicsPipeline::GetViewPort()
+{
+	UINT amm = 1;
+	D3D11_VIEWPORT ports;
+	myContext->RSGetViewports(&amm, &ports);
+
+	if (amm <= 0) return Vector2f();
+
+	return Vector2f(ports.Width, ports.Height);
+}
+
+
+
 HRESULT Dragonite::GraphicsPipeline::InitializeSwapChain(HWND anInstance)
 {
-
-
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -288,18 +293,7 @@ HRESULT Dragonite::GraphicsPipeline::InitializeSamplers()
 }
 
 
-void Dragonite::GraphicsPipeline::DrawToNewRenderTarget(const RenderView& aTarget, const RasterizerState& aNewState)
-{
-	myContext->OMSetRenderTargets(1, aTarget.GetAddressOf(), myDepthBuffer.Get());
-	myContext->ClearRenderTargetView(aTarget.Get(), &myClearColor);
-	myContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	myContext->RSSetState(aNewState ? aNewState.Get() : nullptr);
-}
 
-void Dragonite::GraphicsPipeline::DrawToBackBuffer()
-{
-	DrawToNewRenderTarget(myBackBuffer);
-}
 
 HRESULT Dragonite::GraphicsPipeline::CreateBuffer(Device aDevice, DataBuffer& aBuffer, const DataBufferDesc& aDesc)
 {
@@ -331,7 +325,7 @@ HRESULT Dragonite::GraphicsPipeline::CreateTexture(Device aDevice, DXTexture2D& 
 	return aDevice->CreateTexture2D(&textureDesc, nullptr, &aTexture);
 }
 
-HRESULT Dragonite::GraphicsPipeline::SetBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize)
+HRESULT Dragonite::GraphicsPipeline::MapBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize)
 {
 	if (!someData || aDataSize <= 0) return E_INVALIDARG;
 
@@ -341,6 +335,60 @@ HRESULT Dragonite::GraphicsPipeline::SetBuffer(DeviceContext aContext, DataBuffe
 	aContext->Unmap(aBuffer.Get(), 0);
 
 	return S_OK;
+}
+
+void Dragonite::GraphicsPipeline::UpdateFrameBuffer()
+{
+	// TODO: insert return statement here
+
+	if (myActiveCamera)
+	{
+		FrameBufferData frameBufferData = {};
+		frameBufferData.myWorldToClipMatrix = myActiveCamera->WorldToClipSpace();
+		if (myFrameBuffer)
+			if (FAILED(MapBuffer(myContext, myFrameBuffer, &frameBufferData, sizeof(FrameBufferData))))
+			{
+				//TODO: Handle this error
+			}
+			else
+				myContext->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+	}
+}
+
+void Dragonite::GraphicsPipeline::UpdateObjectBufferAt(std::shared_ptr<ModelInstance> anInstance)
+{
+	ObjectBufferData objectBufferData = {};
+	objectBufferData.myModelToWorldMatrix = anInstance->myTransform.GetMatrix();
+
+	if (myObjectBuffer)
+		if (FAILED(MapBuffer(myContext, myObjectBuffer, &objectBufferData, sizeof(ObjectBufferData))))
+		{
+			//TODO: Handle this error
+		}
+		else
+			myContext->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+}
+
+void Dragonite::GraphicsPipeline::UpdateBufferAt(
+	void* someData, 
+	const size_t aSize, 
+	std::shared_ptr<ModelInstance> anInstance, 
+	const int aSlot, 
+	DataBuffer& aBuffer, 
+	bool aBindVSFlag, 
+	bool aBindPSFlag
+)
+{
+
+	if (someData)
+		if (FAILED(MapBuffer(myContext, aBuffer, someData, aSize)))
+		{
+			return;
+		}
+	if (aBindVSFlag)
+		myContext->VSSetConstantBuffers(aSlot, 1, aBuffer.GetAddressOf());
+	if(aBindPSFlag)
+		myContext->VSSetConstantBuffers(aSlot, 1, aBuffer.GetAddressOf());
 }
 
 Dragonite::RenderInterface::RenderInterface(GraphicsPipeline& aPipeline) : myPipeline(aPipeline)

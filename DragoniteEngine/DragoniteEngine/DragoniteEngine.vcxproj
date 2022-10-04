@@ -160,6 +160,7 @@
     <ClInclude Include="Core\Editor\EditorSettings.h" />
     <ClInclude Include="Core\Editor\EngineDebugger.h" />
     <ClInclude Include="Core\Editor\GUIWindow.h" />
+    <ClInclude Include="Core\Editor\RenderID.h" />
     <ClInclude Include="Core\Editor\SceneEditor.h" />
     <ClInclude Include="Core\External\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Core\External\imgui\backends\imgui_impl_win32.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Core\Graphics\BaseRenderer.h" />
     <ClInclude Include="Core\Graphics\RenderTargets\RenderFactory.h" />
     <ClInclude Include="Core\Graphics\RenderTargets\RenderTarget.h" />
+    <ClInclude Include="Core\Graphics\Utilities\RenderUtils.h" />
     <ClInclude Include="Core\Runtime.h" />
     <ClInclude Include="Core\CU\CommonData.h" />
     <ClInclude Include="Core\CU\Math\MathFunctions.h" />
@@ -227,12 +229,14 @@
     <ClCompile Include="APIInterface.cpp" />
     <ClCompile Include="Core\Editor\EngineDebugger.cpp" />
     <ClCompile Include="Core\Editor\GUIWindow.cpp" />
+    <ClCompile Include="Core\Editor\RenderID.cpp" />
     <ClCompile Include="Core\Editor\SceneEditor.cpp" />
     <ClCompile Include="Core\External\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Core\External\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Core\External\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="Core\Graphics\RenderTargets\RenderFactory.cpp" />
     <ClCompile Include="Core\Graphics\RenderTargets\RenderTarget.cpp" />
+    <ClCompile Include="Core\Graphics\Utilities\RenderUtils.cpp" />
     <ClCompile Include="Core\Runtime.cpp" />
     <ClCompile Include="Core\CU\Transform.cpp" />
     <ClCompile Include="Core\External\DirectX\DDSTextureLoader11.cpp" />
@@ -258,6 +262,18 @@
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Core\Graphics\Shaders\RenderID_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\RenderID_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Core\Graphics\Shaders\Unlit_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

@@ -4,6 +4,10 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <bitset>
+
+
+#pragma warning (disable: 4244)
+
 namespace Dragonite
 {
 	class Runtime;
