@@ -22,12 +22,14 @@ bool Dragonite::ModelFactory::Initialize(GraphicsPipeline* aPipeline)
 	myPipeline = aPipeline;
 
 	myFactoryData[PrimitiveType::Cube] = CreateUnitCube();
+	myFactoryData[PrimitiveType::Screen] = CreateScreenMesh();
 
 	return true;
 }
 
 std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial)
 {
+	static int currentID = 1;
 	auto device = myPipeline->GetDevice();
 	std::string vsData;
 
@@ -61,7 +63,7 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 
 	ins->myTexture = myPipeline->GetApplication()->GetPollingStation().Get<TextureFactory>()->LoadTexture(aMaterial.myTexture.c_str());
 	ins->myTextureName = ins->myTexture->myName;
-
+	ins->myID = currentID++;
 	return ins;
 }
 
@@ -130,6 +132,38 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitCube()
 
 	model->myIndexCount = 36;
 	model->myName = "Primitive Cube";
+
+	return model;
+}
+
+Dragonite::ModelRef Dragonite::ModelFactory::CreateScreenMesh()
+{
+	ModelRef model = std::make_shared<Model>();
+
+	unsigned int indices[6] = 
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	Vertex vertices[4] =
+	{
+		Vertex::Position(-0.5f, -0.5f, 0, 1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f, 0, 1.0f).UV(0.0f, 1.0f),
+		Vertex::Position( 0.5f,  0.5f, 0, 1.0f).UV(1.0f, 1.0f),
+		Vertex::Position( 0.5f, -0.5f, 0, 1.0f).UV(1.0f, 0.0f)
+	};
+
+	DataBufferDesc vertexBufferDesc(vertices, sizeof(vertices), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER);
+	DataBufferDesc indexBufferDesc(indices, sizeof(indices), D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER);
+
+	if (FAILED(GraphicsPipeline::CreateBuffer(myPipeline->GetDevice(), model->myVertexBuffer, vertexBufferDesc)))
+		return nullptr;
+	if (FAILED(GraphicsPipeline::CreateBuffer(myPipeline->GetDevice(), model->myIndexBuffer, indexBufferDesc)))
+		return nullptr;
+
+	model->myIndexCount = 6;
+	model->myName = "Fullscreen Mesh";
 
 	return model;
 }

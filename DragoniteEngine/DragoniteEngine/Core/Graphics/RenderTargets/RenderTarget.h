@@ -41,7 +41,7 @@ namespace Dragonite
 	public:
 		RenderTarget();
 		RenderTarget(GraphicsPipeline* aPipeline, const RenderTargetDesc& aDesc);
-		~RenderTarget();
+		virtual ~RenderTarget();
 		
 		virtual const bool OnRender() = 0;
 		const bool RenderThisTarget(DepthStencil aDepthStenci = nullptr);

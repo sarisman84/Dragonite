@@ -29,7 +29,7 @@ namespace Dragonite
 
 	enum class PrimitiveType
 	{
-		Cube, Sphere
+		Cube, Sphere, Screen
 	};
 
 	class Model
@@ -60,6 +60,7 @@ namespace Dragonite
 		TextureRef myTexture;
 		const char* myModelName;
 		const char* myTextureName;
+		unsigned int myID;
 	private:
 		VertexShader
 			myVertexShader;

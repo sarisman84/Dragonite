@@ -1,12 +1,13 @@
 #pragma once
 #include "GUIWindow.h"
 #include "Core/Editor/RenderID.h"
+
 namespace Dragonite
 {
 	class ModelFactory;
 	class Scene;
 	class Camera;
-
+	class Mouse;
 	class SceneEditor :public GUIWindow
 	{
 	public:
@@ -19,6 +20,7 @@ namespace Dragonite
 
 	private:
 		void FocusElement(const int anElementToFocus);
+		void ResetFocus();
 		const bool IsInspectingFocusedElement();
 
 
@@ -30,7 +32,7 @@ namespace Dragonite
 		ModelFactory* myModelFactory;
 		Scene* myCurrentScene;
 		RenderID myRenderID;
-
+		Mouse* myMouseInput;
 
 	};
 

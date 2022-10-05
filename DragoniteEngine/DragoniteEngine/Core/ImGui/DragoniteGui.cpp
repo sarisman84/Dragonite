@@ -6,6 +6,7 @@
 #include "Core/External/imgui/imgui.h"
 #include "Core/External/imgui/backends/imgui_impl_dx11.h"
 #include "Core/External/imgui/backends/imgui_impl_win32.h"
+#include "Core/External/imgui/ImGuizmo.h"
 
 #include <d3d11.h>
 
@@ -89,6 +90,7 @@ void Dragonite::DragoniteGui::InitializeImgui()
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 		Render();
 		ImGui::Render();
 

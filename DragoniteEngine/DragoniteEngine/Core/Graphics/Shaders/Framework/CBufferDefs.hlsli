@@ -10,6 +10,6 @@ cbuffer ObjectBuffer : register(b1)
 
 cbuffer RenderIDBuffer : register(b2)
 {
-    float id;
+    unsigned int id;
     float3 padding;
 }

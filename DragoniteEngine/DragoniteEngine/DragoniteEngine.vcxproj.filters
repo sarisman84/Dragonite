@@ -202,6 +202,9 @@
     <ClInclude Include="Core\Graphics\Utilities\RenderUtils.h">
       <Filter>Core\Graphics\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Core\External\imgui\ImGuizmo.h">
+      <Filter>Core\External\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -302,6 +305,9 @@
     <ClCompile Include="Core\Graphics\Utilities\RenderUtils.cpp">
       <Filter>Core\Graphics\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Core\External\imgui\ImGuizmo.cpp">
+      <Filter>Core\External\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -381,7 +387,10 @@
     <FxCompile Include="Core\Graphics\Shaders\RenderID_PS.hlsl">
       <Filter>Core\Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Core\Graphics\Shaders\RenderID_VS.hlsl">
+    <FxCompile Include="Core\Graphics\Shaders\Fullscreen_VS.hlsl">
+      <Filter>Core\Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\FullscreenUnlit_PS.hlsl">
       <Filter>Core\Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

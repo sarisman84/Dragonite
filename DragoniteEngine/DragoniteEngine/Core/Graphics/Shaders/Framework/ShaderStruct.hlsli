@@ -16,13 +16,14 @@ struct DefaultPixelOutput
 };
 
 
-struct SimpleVertexInput
+struct VertexIndex
 {
-    float4 position : POSITION;
+    unsigned int index : SV_VertexID;
 };
 
-struct SimplePixelInput
+struct RenderIDOut
 {
-    float4 position : POSITION;
+    unsigned int targetID : SV_TARGET;
 };
+
 

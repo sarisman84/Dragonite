@@ -45,7 +45,7 @@ Dragonite::RenderTarget::RenderTarget(GraphicsPipeline* aPipeline, const RenderT
 	assert(myPipeline != nullptr);
 
 	InternalInit(aDesc);
-	
+
 
 };
 
@@ -55,11 +55,10 @@ const bool Dragonite::RenderTarget::RenderThisTarget(DepthStencil aDepthStencil)
 {
 	if (!myPipeline || !myRenderView) return false;
 
-
-	myPipeline->myContext->OMSetRenderTargets(1, myRenderView.GetAddressOf(), aDepthStencil ? aDepthStencil.Get() : myPipeline->myDepthBuffer.Get());
-	myPipeline->myContext->ClearRenderTargetView(myRenderView.Get(), &myPipeline->myClearColor);
-	myPipeline->myContext->ClearDepthStencilView(aDepthStencil ? aDepthStencil.Get() : myPipeline->myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
+	auto og = myPipeline->ClearColor();
+	myPipeline->ClearColor() = Color{ 0,0,0,0.0f };
+	myPipeline->SwitchRenderTarget(myRenderView, aDepthStencil);
+	myPipeline->ClearColor() = og;
 	return OnRender();
 }
 

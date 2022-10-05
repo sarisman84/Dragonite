@@ -51,14 +51,10 @@ bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindo
 	myClearColor = Color(0.25f, 0.25f, 0.85f, 1.0f);
 	myRenderFactory = new RenderFactory();
 
-	if (FAILED(InitializeSwapChain(aWindowHandle)))
-		return false;
-
-	if (FAILED(InitializeBackBuffer()))
-		return false;
-
-	if (FAILED(InitializeSamplers()))
-		return false;
+	assert(SUCCEEDED(InitializeSwapChain(aWindowHandle)));
+	assert(SUCCEEDED(InitializeBackBuffer()));
+	assert(SUCCEEDED(InitializeSamplers()));
+	assert(SUCCEEDED(InitializeBlendStates()));
 
 
 
@@ -103,6 +99,19 @@ bool Dragonite::GraphicsPipeline::Initialize(Runtime* anApplication, HWND aWindo
 	return true;
 }
 
+void Dragonite::GraphicsPipeline::SetBlendState(const BlendStateType aType)
+{
+	myContext->OMSetBlendState(myBlendStates[aType].Get(), nullptr, 0xffffffff);
+}
+
+void Dragonite::GraphicsPipeline::SwitchRenderTarget(RenderView aView, DepthStencil aDepthBuffer)
+{
+	myContext->OMSetRenderTargets(1, aView.GetAddressOf(), aDepthBuffer ? aDepthBuffer.Get() : nullptr);
+	myContext->ClearRenderTargetView(aView.Get(), &myClearColor);
+	if (aDepthBuffer)
+		myContext->ClearDepthStencilView(aDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
 void Dragonite::GraphicsPipeline::DrawInstructionsToBB()
 {
 	DrawInstructions(myBackBuffer, myDepthBuffer);
@@ -111,12 +120,9 @@ void Dragonite::GraphicsPipeline::DrawInstructionsToBB()
 void Dragonite::GraphicsPipeline::DrawInstructions(RenderView aView, DepthStencil aDepthBuffer)
 {
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	myContext->OMSetRenderTargets(1, aView.GetAddressOf(), aDepthBuffer ? aDepthBuffer.Get() : nullptr);
-	myContext->ClearRenderTargetView(aView.Get(), &myClearColor);
-	if (aDepthBuffer)
-		myContext->ClearDepthStencilView(aDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	SwitchRenderTarget(aView, aDepthBuffer);
 
-	
+
 	UpdateFrameBuffer();
 	auto cpy = myElementsToDraw;
 	while (!cpy.empty())
@@ -155,11 +161,11 @@ void Dragonite::GraphicsPipeline::DrawInstructions(RenderView aView, DepthStenci
 
 void Dragonite::GraphicsPipeline::Render()
 {
-	
+
 
 	bool setRenderTargetToViewport = false;
 	if (myActiveRenderTarget)
-		setRenderTargetToViewport = myActiveRenderTarget->RenderThisTarget();
+		setRenderTargetToViewport = myActiveRenderTarget->RenderThisTarget(myDepthBuffer);
 	if (!setRenderTargetToViewport)
 	{
 		DrawInstructionsToBB();
@@ -183,6 +189,58 @@ Dragonite::Vector2f Dragonite::GraphicsPipeline::GetViewPort()
 }
 
 
+
+HRESULT Dragonite::GraphicsPipeline::InitializeBlendStates()
+{
+	HRESULT result = S_OK;
+	D3D11_BLEND_DESC blendStateDescription = {};
+
+	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	result = myDevice->CreateBlendState(&blendStateDescription, myBlendStates[BlendStateType::None].GetAddressOf());
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	blendStateDescription = {};
+	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	result = myDevice->CreateBlendState(&blendStateDescription, myBlendStates[BlendStateType::Alpha].GetAddressOf());
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	blendStateDescription = {};
+	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	result = myDevice->CreateBlendState(&blendStateDescription, myBlendStates[BlendStateType::Additive].GetAddressOf());
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	return result;
+}
 
 HRESULT Dragonite::GraphicsPipeline::InitializeSwapChain(HWND anInstance)
 {
@@ -370,12 +428,11 @@ void Dragonite::GraphicsPipeline::UpdateObjectBufferAt(std::shared_ptr<ModelInst
 }
 
 void Dragonite::GraphicsPipeline::UpdateBufferAt(
-	void* someData, 
-	const size_t aSize, 
-	std::shared_ptr<ModelInstance> anInstance, 
-	const int aSlot, 
-	DataBuffer& aBuffer, 
-	bool aBindVSFlag, 
+	void* someData,
+	const size_t aSize,
+	const int aSlot,
+	DataBuffer& aBuffer,
+	bool aBindVSFlag,
 	bool aBindPSFlag
 )
 {
@@ -387,8 +444,8 @@ void Dragonite::GraphicsPipeline::UpdateBufferAt(
 		}
 	if (aBindVSFlag)
 		myContext->VSSetConstantBuffers(aSlot, 1, aBuffer.GetAddressOf());
-	if(aBindPSFlag)
-		myContext->VSSetConstantBuffers(aSlot, 1, aBuffer.GetAddressOf());
+	if (aBindPSFlag)
+		myContext->PSSetConstantBuffers(aSlot, 1, aBuffer.GetAddressOf());
 }
 
 Dragonite::RenderInterface::RenderInterface(GraphicsPipeline& aPipeline) : myPipeline(aPipeline)

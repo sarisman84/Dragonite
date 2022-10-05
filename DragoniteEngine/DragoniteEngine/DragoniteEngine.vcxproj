@@ -164,6 +164,7 @@
     <ClInclude Include="Core\Editor\SceneEditor.h" />
     <ClInclude Include="Core\External\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Core\External\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Core\External\imgui\ImGuizmo.h" />
     <ClInclude Include="Core\External\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="Core\Graphics\BaseRenderer.h" />
     <ClInclude Include="Core\Graphics\RenderTargets\RenderFactory.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="Core\Editor\SceneEditor.cpp" />
     <ClCompile Include="Core\External\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Core\External\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Core\External\imgui\ImGuizmo.cpp" />
     <ClCompile Include="Core\External\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="Core\Graphics\RenderTargets\RenderFactory.cpp" />
     <ClCompile Include="Core\Graphics\RenderTargets\RenderTarget.cpp" />
@@ -262,17 +264,23 @@
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Core\Graphics\Shaders\RenderID_PS.hlsl">
+    <FxCompile Include="Core\Graphics\Shaders\FullscreenUnlit_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Core\Graphics\Shaders\RenderID_VS.hlsl">
+    <FxCompile Include="Core\Graphics\Shaders\Fullscreen_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Core\Graphics\Shaders\RenderID_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Core\Graphics\Shaders\Unlit_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

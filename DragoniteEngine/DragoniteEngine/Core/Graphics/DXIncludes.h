@@ -19,6 +19,8 @@ struct ID3D11Texture2D;
 struct ID3D11Resource;
 struct ID3D11SamplerState;
 struct ID3D11DepthStencilView;
+struct ID3D11DepthStencilState;
+struct ID3D11BlendState;
 struct ID3D11RasterizerState;
 
 enum D3D11_USAGE;
@@ -43,6 +45,16 @@ namespace Dragonite
 	typedef ComPtr<ID3D11DepthStencilView> DepthStencil;
 	typedef ComPtr<ID3D11Resource> DXResource;
 	typedef ComPtr<ID3D11RasterizerState> RasterizerState;
+	typedef ComPtr<ID3D11BlendState> BlendState;
+	typedef ComPtr<ID3D11DepthStencilState> DepthStencilState;
+
+
+	typedef ID3D11Texture2D DXTexture2DRaw;
+	typedef ID3D11Buffer DataBufferRaw;
+	typedef ID3D11DepthStencilView DepthStencilRaw;
+	typedef ID3D11RenderTargetView RenderViewRaw;
+	typedef ID3D11ShaderResourceView ShaderResourceVRaw;
+	typedef ID3D11Resource DXResourceRaw;
 
 	struct DataBufferDesc
 	{

@@ -39,3 +39,28 @@ Dragonite::Camera::~Camera()
 
 	myProfile = nullptr;
 }
+
+Dragonite::OrthographicProfile::OrthographicProfile(Vector2f& aViewPort, const float aNearPlane, const float aFarPlane) : 
+	myCurrentViewPort(aViewPort), myNearPlane(aNearPlane), myFarPlane(aFarPlane) {}
+
+Dragonite::Matrix4x4f Dragonite::OrthographicProfile::CalculateProjectionMatrix()
+{
+	Matrix4x4f result;
+	const float n = myNearPlane;
+	const float f = myFarPlane;
+
+	const float l = 0;
+	const float r = myCurrentViewPort.x;
+	const float b = 0;
+	const float t = myCurrentViewPort.y;
+
+	result(1, 1) = 2 / (r - l);
+	result(2, 2) = 2 / (b - t);
+	result(3, 3) = 1 / (n - f);
+
+	result(4, 1) = -(r + l) / (r - l);
+	result(4, 2) = -(b + t) / (b - t);
+	result(4, 3) = -(n + f) / (n - f);
+
+	return result;
+}

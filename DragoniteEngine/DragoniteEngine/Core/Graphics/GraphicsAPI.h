@@ -24,7 +24,12 @@ namespace Dragonite
 
 	enum class TextureSampleType
 	{
-		Default
+		Default, Count
+	};
+
+	enum class BlendStateType
+	{
+		Alpha, Additive, None, Count
 	};
 
 	struct FrameBufferData
@@ -51,6 +56,10 @@ namespace Dragonite
 		~GraphicsPipeline();
 
 		bool Initialize(Runtime* anApplication, HWND aWindowHandle);
+
+		void SetBlendState(const BlendStateType aType);
+		void SwitchRenderTarget(RenderView aView, DepthStencil aDepthBuffer = nullptr);
+
 		void DrawInstructionsToBB();
 		void DrawInstructions(RenderView aView, DepthStencil aDepthBuffer = nullptr);
 		void Render();
@@ -62,8 +71,14 @@ namespace Dragonite
 		inline Device& GetDevice() { return myDevice; }
 		inline DeviceContext& GetContext() { return myContext; }
 
+
+
 		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
 		inline std::vector<std::shared_ptr<ModelInstance>> GetInstructions() { return myElementsToDraw; };
+		inline RenderView& GetBackBuffer() { return myBackBuffer; }
+		inline DepthStencil& GetDefaultDepthBuffer() { return myDepthBuffer; }
+		inline Color& ClearColor() { return myClearColor; }
+
 
 		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
 			return myTextureSamplers;
@@ -76,9 +91,10 @@ namespace Dragonite
 
 		void UpdateFrameBuffer();
 		void UpdateObjectBufferAt(std::shared_ptr<ModelInstance> anInstance);
-		void UpdateBufferAt(void* someData, const size_t aSize, std::shared_ptr<ModelInstance> anInstance, const int aSlot, DataBuffer& aBuffer, bool aBindVSFlag = true, bool aBindPSFlag = false);
+		void UpdateBufferAt(void* someData, const size_t aSize, const int aSlot, DataBuffer& aBuffer, bool aBindVSFlag = true, bool aBindPSFlag = false);
 
 	private:
+		HRESULT InitializeBlendStates();
 		HRESULT InitializeSwapChain(HWND anInstance);
 		HRESULT InitializeBackBuffer();
 		HRESULT InitializeSamplers();
@@ -102,6 +118,7 @@ namespace Dragonite
 
 		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
 		std::unordered_map<TextureSampleType, TextureSampler> myTextureSamplers;
+		std::unordered_map<BlendStateType, BlendState> myBlendStates;
 	};
 
 

@@ -3,11 +3,13 @@
 #include "Core/Graphics/Models/ModelFactory.h"
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
+#include "Core/Utilities/Input.h"
 #include "Core/Graphics/GraphicsAPI.h"
 #include <string>
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Graphics/RenderTargets/RenderFactory.h"
+#include "Core/Utilities/Input.h"
 
 
 int DefaultStringResize(ImGuiInputTextCallbackData* data)
@@ -47,6 +49,9 @@ void Dragonite::SceneEditor::OnWindowRender()
 
 		myCurrentScene->SceneObjects().push_back(newObject);
 		mySelectedElements.push_back(false);
+
+
+		FocusElement(mySelectedElements.size() - 1);
 	}
 
 
@@ -76,11 +81,25 @@ void Dragonite::SceneEditor::OnWindowRender()
 
 		}
 	}
-
-
-
-
-
+	static int lastFoundElement = 0;
+	if (myMouseInput->GetButtonDown(MouseKey::Left))
+	{
+		int element = 0;
+		if (myRenderID.TryGetElement(myMouseInput, element))
+		{
+			FocusElement(element);
+			lastFoundElement = element;
+		}
+		else
+		{
+			ResetFocus();
+			lastFoundElement = 0;
+		}
+	}
+	
+	ImGui::Begin("Render ID Debugger");
+	ImGui::Text("Hover Element: %i", lastFoundElement);
+	ImGui::End();
 
 
 	ImGui::Begin("Property");
@@ -118,6 +137,11 @@ void Dragonite::SceneEditor::FocusElement(const int anElementToFocus)
 	myFocusedElement = anElementToFocus;
 }
 
+void Dragonite::SceneEditor::ResetFocus()
+{
+	myFocusedElement = -1;
+}
+
 const bool Dragonite::SceneEditor::IsInspectingFocusedElement()
 {
 	return myFocusedElement < 0 || myFocusedElement >= mySelectedElements.size() ? false : mySelectedElements[myFocusedElement];
@@ -132,11 +156,9 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 	ImGui::InputText("Name", &sceneObjs[focusedElement].Name(), 0, DefaultStringResize);
 	if (ImGui::BeginListBox(std::string("##" + name).c_str(), ImVec2(300, 250)))
 	{
-
-
 		std::string name = "Transform";
 		name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
-		if (ImGui::CollapsingHeader(name.c_str()))
+		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Indent();
 			ImGui::DragFloat3("Position", (float*)&sceneObjs[focusedElement].GetTransform().myPosition, 0.1f);
@@ -151,7 +173,7 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 			name = "Component";
 			name += std::to_string(compIndex++);
 			name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
-			if (ImGui::CollapsingHeader(name.c_str()))
+			if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::Indent();
 				comp->OnInspectorGUI();
@@ -164,6 +186,17 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 		ImGui::EndListBox();
 
 	}
+
+	auto& cam = aScene->GetCamera();
+
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::Manipulate(
+		&cam.ViewMatrix(),
+		&cam.Profile()->CalculateProjectionMatrix(),
+		ImGuizmo::TRANSLATE, ImGuizmo::LOCAL,
+		&sceneObjs[focusedElement].GetTransform().GetMatrix());
+
 }
 
 void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
@@ -191,7 +224,7 @@ void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
 		if (ImGui::CollapsingHeader(cmpName.c_str()))
 		{
 
-			auto perspectiveProfile = dynamic_cast<PerspectiveProfile*>(cam.GetProfile());
+			auto perspectiveProfile = dynamic_cast<PerspectiveProfile*>(cam.Profile());
 
 			ImGui::Indent();
 			ImGui::DragFloat("FOV", (float*)&perspectiveProfile->myFOV, 0.1f);
@@ -218,6 +251,14 @@ void Dragonite::SceneEditor::OnWindowInit()
 	myRenderID.SetupRenderID(myCurrentScene);
 	myPollingStation->Get<RenderFactory>()->RegisterTarget(myRenderID);
 
+	if (myCurrentScene)
+		for (size_t i = 0; i < myCurrentScene->SceneObjects().size(); i++)
+		{
+			mySelectedElements.push_back(false);
+		}
+
+
+	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
 
 }
 

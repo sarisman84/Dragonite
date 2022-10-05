@@ -397,6 +397,11 @@ namespace Dragonite
 			}
 		}
 
+
+		float* operator&() {
+			return (float*)myData;
+		}
+
 		friend Matrix4x4<T> operator+(const Matrix4x4<T>& aLhs, const Matrix4x4<T>& aRhs)
 		{
 			Matrix4x4<T> m(aLhs);

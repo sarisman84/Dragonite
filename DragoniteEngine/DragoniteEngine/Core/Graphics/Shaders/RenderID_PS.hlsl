@@ -2,11 +2,18 @@
 #include "Framework/TextureDefs.hlsli"
 #include "Framework/CBufferDefs.hlsli"
 
-DefaultPixelOutput main(SimplePixelInput input)
+RenderIDOut main(DefaultPixelInputType input)
 {
-    DefaultPixelOutput result;
+    RenderIDOut result;
 	
-    result.color = float4(id, 0.0f, 0.0f, 1.0f);
+    
+    
+    
+    result.targetID = id;
+    
+    
+    //if (id >= 0.25f)
+    //    result.color = float4(1, 1, 1, 1);
     
     return result;
 
