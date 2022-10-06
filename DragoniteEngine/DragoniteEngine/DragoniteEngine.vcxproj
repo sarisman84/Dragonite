@@ -157,6 +157,9 @@
   <ItemGroup>
     <ClInclude Include="APIInterface.h" />
     <ClInclude Include="Core\CU\MathLibrary.h" />
+    <ClInclude Include="Core\Editor\AssetBrowser.h" />
+    <ClInclude Include="Core\Editor\Commands\Command.h" />
+    <ClInclude Include="Core\Editor\Commands\MenuCommand.h" />
     <ClInclude Include="Core\Editor\EditorSettings.h" />
     <ClInclude Include="Core\Editor\EngineDebugger.h" />
     <ClInclude Include="Core\Editor\GUIWindow.h" />
@@ -228,6 +231,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="APIInterface.cpp" />
+    <ClCompile Include="Core\Editor\AssetBrowser.cpp" />
+    <ClCompile Include="Core\Editor\Commands\MenuCommand.cpp" />
     <ClCompile Include="Core\Editor\EngineDebugger.cpp" />
     <ClCompile Include="Core\Editor\GUIWindow.cpp" />
     <ClCompile Include="Core\Editor\RenderID.cpp" />

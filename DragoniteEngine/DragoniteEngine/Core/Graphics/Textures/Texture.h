@@ -1,7 +1,8 @@
 #pragma once
-#include "../DXIncludes.h"
+#include "Core/Graphics/DXIncludes.h"
 #include "../../CU/Math/Vector2.h"
 
+#include <d3d11.h>
 #include <memory>
 
 namespace Dragonite
@@ -35,6 +36,7 @@ namespace Dragonite
 		inline const Vector2i GetResolution() const noexcept { return myResolution; }
 
 
+		inline ShaderResourceV GetData() { return myResourceView; }
 
 		bool Init(GraphicsPipeline* aPipeline,const TextureLoaderDesc& aDesc);
 		void Bind(DeviceContext& someContext);

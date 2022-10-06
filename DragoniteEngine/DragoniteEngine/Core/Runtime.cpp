@@ -9,6 +9,7 @@
 
 #include "Editor/EngineDebugger.h"
 #include "Editor/SceneEditor.h"
+#include "Editor//AssetBrowser.h"
 
 
 Dragonite::Runtime Dragonite::Runtime::myRuntime;
@@ -87,6 +88,7 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 
 	myGUIInterface->AddWindow(new EngineDebugger());
 	myGUIInterface->AddWindow(new SceneEditor());
+	myGUIInterface->AddWindow(new AssetBrowser());
 
 	
 

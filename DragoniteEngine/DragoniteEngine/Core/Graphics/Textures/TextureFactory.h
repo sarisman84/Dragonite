@@ -9,7 +9,7 @@
 
 namespace Dragonite
 {
-	
+
 
 	class GraphicsPipeline;
 	class TextureFactory
@@ -22,7 +22,7 @@ namespace Dragonite
 	private:
 
 
-		const bool LoadTexture_Impl(TextureRef& anOutput, const wchar_t* aPath, const TextureLoaderDesc& aDesc);
+		const bool LoadTexture_Impl(TextureRef& anOutput, const wchar_t* aPath, TextureLoaderDesc& aDesc);
 
 
 		std::unordered_map<std::wstring, TextureRef> myLoadedTextures;

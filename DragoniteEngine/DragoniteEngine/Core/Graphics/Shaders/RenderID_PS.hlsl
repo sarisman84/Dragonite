@@ -11,7 +11,6 @@ RenderIDOut main(DefaultPixelInputType input)
     
     result.targetID = id;
     
-    
     //if (id >= 0.25f)
     //    result.color = float4(1, 1, 1, 1);
     

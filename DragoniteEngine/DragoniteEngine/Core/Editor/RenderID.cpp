@@ -65,7 +65,7 @@ const bool Dragonite::RenderID::OnRender()
 	auto myElementsToDraw = myPipeline->GetInstructions();
 
 
-	myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
+	
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	myPipeline->UpdateFrameBuffer();
@@ -98,6 +98,7 @@ const bool Dragonite::RenderID::OnRender()
 
 			myContext->VSSetShader(element->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(myWriteRenderIDPixelShader.Get(), nullptr, 0);
+			myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
 		}
 
 
@@ -183,9 +184,11 @@ const bool Dragonite::RenderID::TryGetElement(Mouse* someScreenCoordPos, int& an
 void Dragonite::RenderID::DrawRenderID()
 {
 	auto myContext = myPipeline->GetContext();
+	auto myTextureSamplers = myPipeline->GetTextureSamplers();
 
 	myPipeline->SetBlendState(BlendStateType::Alpha);
 	myPipeline->SwitchRenderTarget(myPipeline->GetBackBuffer(), myPipeline->GetDefaultDepthBuffer());
+
 
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	myContext->PSSetShaderResources(0, 1, myResourceView.GetAddressOf());
@@ -198,6 +201,7 @@ void Dragonite::RenderID::DrawRenderID()
 
 		myContext->VSSetShader(myRenderIDVertexShader.Get(), nullptr, 0);
 		myContext->PSSetShader(myReadRenderIDPixelShader.Get(), nullptr, 0);
+		myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
 	}
 
 

@@ -131,7 +131,7 @@ void Dragonite::GraphicsPipeline::DrawInstructions(RenderView aView, DepthStenci
 		cpy.pop_back();
 
 
-		myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
+		
 		if (element->myTexture)
 			element->myTexture->Bind(myContext);
 
@@ -150,6 +150,7 @@ void Dragonite::GraphicsPipeline::DrawInstructions(RenderView aView, DepthStenci
 
 			myContext->VSSetShader(element->myVertexShader.Get(), nullptr, 0);
 			myContext->PSSetShader(element->myPixelShader.Get(), nullptr, 0);
+			myContext->PSSetSamplers(0, 1, &myTextureSamplers[TextureSampleType::Default]);
 		}
 
 

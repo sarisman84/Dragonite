@@ -205,6 +205,15 @@
     <ClInclude Include="Core\External\imgui\ImGuizmo.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Editor\AssetBrowser.h">
+      <Filter>Core\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\Commands\MenuCommand.h">
+      <Filter>Core\Editor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\Commands\Command.h">
+      <Filter>Core\Editor\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -308,6 +317,12 @@
     <ClCompile Include="Core\External\imgui\ImGuizmo.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Editor\AssetBrowser.cpp">
+      <Filter>Core\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\Commands\MenuCommand.cpp">
+      <Filter>Core\Editor\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -375,6 +390,9 @@
     </Filter>
     <Filter Include="Core\Graphics\Utilities">
       <UniqueIdentifier>{b1f812a0-563a-4f3a-9e49-de538df51f0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Editor\Commands">
+      <UniqueIdentifier>{e05442c6-3417-475f-9d75-eabd5cca9227}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -82,7 +82,7 @@ void Dragonite::SceneEditor::OnWindowRender()
 		}
 	}
 	static int lastFoundElement = 0;
-	if (myMouseInput->GetButtonDown(MouseKey::Left))
+	if (myMouseInput->GetButtonDown(MouseKey::Left) && !ImGuizmo::IsOver() && !ImGui::IsWindowHovered())
 	{
 		int element = 0;
 		if (myRenderID.TryGetElement(myMouseInput, element))
@@ -96,7 +96,7 @@ void Dragonite::SceneEditor::OnWindowRender()
 			lastFoundElement = 0;
 		}
 	}
-	
+
 	ImGui::Begin("Render ID Debugger");
 	ImGui::Text("Hover Element: %i", lastFoundElement);
 	ImGui::End();

@@ -72,18 +72,25 @@ const bool LoadDDS(Dragonite::Device aDevice, const wchar_t* aPath, Dragonite::S
 	return true;
 }
 
-const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath, Dragonite::TextureRef& anOutput, const Dragonite::TextureLoaderDesc& aDesc)
+const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath, Dragonite::TextureRef& anOutput, Dragonite::TextureLoaderDesc& aDesc)
 {
 	int width, height, channels;
 
-	char path[sizeof(aPath)];
+	const auto size = wcslen(aPath);
+	char path[1000];
 	size_t r;
-	wcstombs_s(&r, path, aPath, sizeof(aPath));
+	wcstombs_s(&r, path, aPath, size);
+
+
 
 	unsigned char* img = stbi_load(path, &width, &height, &channels, 0);
-	if (!img) return false;
+	
+	if (img == nullptr) return false;
 
 
+
+	aDesc.myResolution.x = width;
+	aDesc.myResolution.y = height;
 
 	if (channels == 3)
 	{
@@ -106,7 +113,7 @@ const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath,
 
 }
 
-const bool Dragonite::TextureFactory::LoadTexture_Impl(TextureRef& anOutput, const wchar_t* aPath, const TextureLoaderDesc& aDesc)
+const bool Dragonite::TextureFactory::LoadTexture_Impl(TextureRef& anOutput, const wchar_t* aPath, TextureLoaderDesc& aDesc)
 {
 	bool result = false;
 

@@ -58,7 +58,7 @@ void Dragonite::DragoniteGui::AddWindow(GUIWindow* aNewWindow)
 	myCachedGuiWindowsStates.push_back(false);
 	myGuiWindows.push_back(std::unique_ptr<GUIWindow>(aNewWindow));
 	auto& ins = myGuiWindows.back();
-	ins->Init(&myApplicationIns->GetPollingStation());
+	ins->Init(&myApplicationIns->GetPollingStation(), this);
 	ins->SetActive(true);
 }
 
@@ -172,6 +172,19 @@ void Dragonite::DragoniteGui::BeginDockingSpace()
 void Dragonite::DragoniteGui::EndDockingSpace()
 {
 	ImGui::End();
+}
+
+Dragonite::GUIWindow* Dragonite::DragoniteGui::GetWindow(const char* aName)
+{
+	auto it = std::find_if(myGuiWindows.begin(), myGuiWindows.end(), [aName](std::unique_ptr<GUIWindow>& aWindow) -> bool
+		{
+			const char* name = aWindow->Name();
+			return strcmp(name, aName);
+		});
+
+	if (it != myGuiWindows.end())
+		return it->get();
+	return nullptr;
 }
 
 

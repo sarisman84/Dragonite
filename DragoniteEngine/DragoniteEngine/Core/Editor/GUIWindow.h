@@ -8,7 +8,7 @@
 namespace Dragonite
 {
 
-
+	class DragoniteGui;
 	class GUIWindow
 	{
 	public:
@@ -31,12 +31,14 @@ namespace Dragonite
 		void UpdateWindowState();
 		GUIWindow(const char* aWindowName);
 
-		inline void Init(PollingStation* aStation) noexcept {
+		inline void Init(PollingStation* aStation, DragoniteGui* aDragoniteGuiAPI) noexcept {
 			myPollingStation = aStation;
+			myDragoniteGuiAPI = aDragoniteGuiAPI;
 			OnWindowInit();
 		}
 
 	protected:
+		DragoniteGui* myDragoniteGuiAPI;
 		PollingStation* myPollingStation;
 		const char* myWindowName;
 	private:

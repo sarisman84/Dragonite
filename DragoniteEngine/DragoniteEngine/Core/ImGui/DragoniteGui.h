@@ -24,7 +24,7 @@ namespace Dragonite
 		void BeginDockingSpace();
 		void EndDockingSpace();
 
-
+		GUIWindow* GetWindow(const char* aName);
 
 
 		std::vector<bool> myCachedGuiWindowsStates;
