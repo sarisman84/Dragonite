@@ -10,6 +10,7 @@ namespace Dragonite
 		void OnEnable() override;
 		void OnDisable() override;
 		void OnWindowInit() override;
+		const bool IsBeingInteracted() override;
 	};
 }
 

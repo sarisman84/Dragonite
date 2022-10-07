@@ -17,7 +17,7 @@ namespace Dragonite
 	public:
 		TextureFactory(GraphicsPipeline* aPipeline);
 
-		TextureRef LoadTexture(const wchar_t* aPath, const bool aUseSRGB = true, const bool aGenerateMipMaps = true);
+		TextureRef& LoadTexture(const wchar_t* aPath, const bool aUseSRGB = true, const bool aGenerateMipMaps = true);
 
 	private:
 

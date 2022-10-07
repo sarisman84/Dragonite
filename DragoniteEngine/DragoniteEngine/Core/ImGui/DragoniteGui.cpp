@@ -28,18 +28,53 @@ void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicsPipeline* aGraphic
 
 	InitializeImgui();
 
+	myGuiWindows.push_back(std::unique_ptr<GUIWindow>(nullptr));
+	myCachedGuiWindowsStates.push_back(false);
+
 }
 
 void Dragonite::DragoniteGui::Render()
 {
 	BeginDockingSpace();
-	for (size_t i = 0; i < myGuiWindows.size(); i++)
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("View"))
+		{
+			for (size_t i = 1; i < myCachedGuiWindowsStates.size(); i++)
+			{
+				bool selected = false;
+				ImGui::MenuItem(myGuiWindows[i]->Name(), "", &selected);
+
+				if (selected)
+				{
+					auto& window = myGuiWindows[i];
+					window->SetActive(!window->IsActive());
+				}
+
+			}
+			ImGui::EndMenu();
+		}
+	
+
+
+		ImGui::EndMainMenuBar();
+	}
+
+
+	bool isAnyWindowInteracted = false;
+	for (size_t i = 1; i < myGuiWindows.size(); i++)
 	{
 		auto& window = myGuiWindows[i];
 		myCachedGuiWindowsStates[i] = window->IsActive();
 		if (!window->IsActive()) continue;
 		ImGui::Begin(window->Name(), &window->IsActive());
+
+		if (!isAnyWindowInteracted)
+			isAnyWindowInteracted = window->IsBeingInteracted();
+
 		window->OnWindowRender();
+
 		ImGui::End();
 
 
@@ -48,6 +83,8 @@ void Dragonite::DragoniteGui::Render()
 			window->UpdateWindowState();
 		}
 	}
+
+	myIsCurrentlyOnImGuiFlag = isAnyWindowInteracted;
 
 	EndDockingSpace();
 
@@ -133,6 +170,7 @@ void Dragonite::DragoniteGui::BeginDockingSpace()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
 	}
 	else
 	{
@@ -174,17 +212,19 @@ void Dragonite::DragoniteGui::EndDockingSpace()
 	ImGui::End();
 }
 
-Dragonite::GUIWindow* Dragonite::DragoniteGui::GetWindow(const char* aName)
+std::unique_ptr<Dragonite::GUIWindow>& Dragonite::DragoniteGui::GetWindow(const char* aName)
 {
 	auto it = std::find_if(myGuiWindows.begin(), myGuiWindows.end(), [aName](std::unique_ptr<GUIWindow>& aWindow) -> bool
 		{
+			if (!aWindow.get()) return false;
+
 			const char* name = aWindow->Name();
-			return strcmp(name, aName);
+			return strcmp(name, aName) == 0;
 		});
 
 	if (it != myGuiWindows.end())
-		return it->get();
-	return nullptr;
+		return *it;
+	return myGuiWindows[0];
 }
 
 

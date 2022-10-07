@@ -17,6 +17,9 @@ namespace Dragonite
 		void Render();
 
 		void AddWindow(GUIWindow* aNewWindow);
+		std::unique_ptr<GUIWindow>& GetWindow(const char* aName);
+
+		inline const bool IsHoveringOverAWindow() const noexcept { return myIsCurrentlyOnImGuiFlag; }
 
 	private:
 		void InitializeImgui();
@@ -24,7 +27,7 @@ namespace Dragonite
 		void BeginDockingSpace();
 		void EndDockingSpace();
 
-		GUIWindow* GetWindow(const char* aName);
+		bool myIsCurrentlyOnImGuiFlag;
 
 
 		std::vector<bool> myCachedGuiWindowsStates;

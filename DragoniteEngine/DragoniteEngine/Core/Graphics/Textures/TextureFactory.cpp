@@ -16,9 +16,10 @@
 Dragonite::TextureFactory::TextureFactory(GraphicsPipeline* aPipeline)
 {
 	myPipeline = aPipeline;
+	myLoadedTextures[L"null"] = nullptr;
 }
 
-Dragonite::TextureRef Dragonite::TextureFactory::LoadTexture(const wchar_t* aPath, const bool aUseSRGB, const bool aGenerateMipMaps)
+Dragonite::TextureRef& Dragonite::TextureFactory::LoadTexture(const wchar_t* aPath, const bool aUseSRGB, const bool aGenerateMipMaps)
 {
 
 	std::wstring path(aPath);
@@ -42,12 +43,12 @@ Dragonite::TextureRef Dragonite::TextureFactory::LoadTexture(const wchar_t* aPat
 	desc.myTargetSlot = 0; //TODO: Setup Normal, Material and Albedo slots here.
 
 	if (!LoadTexture_Impl(texture, aPath, desc))
-		return nullptr;
+		return myLoadedTextures[L"null"];
 
 
 	myLoadedTextures[path] = texture;
 
-	return texture;
+	return myLoadedTextures[path];
 }
 
 
@@ -84,13 +85,18 @@ const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath,
 
 
 	unsigned char* img = stbi_load(path, &width, &height, &channels, 0);
-	
+
 	if (img == nullptr) return false;
 
 
 
+	auto e = stbi_failure_reason();
+
 	aDesc.myResolution.x = width;
 	aDesc.myResolution.y = height;
+
+
+
 
 	if (channels == 3)
 	{
@@ -102,10 +108,14 @@ const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath,
 			imageData[4 * i + 2] = img[3 * i + 2];
 			imageData[4 * i + 3] = 255;
 		}
+
+		aDesc.myRgbaPixels = imageData.data();
+
 		return anOutput->Init(aPipeline, aDesc);
 	}
 	else if (channels == 4)
 	{
+		aDesc.myRgbaPixels = img;
 		return anOutput->Init(aPipeline, aDesc);
 	}
 	else

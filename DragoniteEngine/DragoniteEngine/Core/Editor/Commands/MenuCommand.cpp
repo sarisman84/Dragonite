@@ -123,3 +123,20 @@ void Dragonite::PopupMenu::Execute(void* someData)
 void Dragonite::PopupMenu::Undo()
 {
 }
+
+Dragonite::DragCommand::DragCommand() : Command()
+{
+}
+
+void Dragonite::DragCommand::Execute(void* someData)
+{
+	if (!myData)
+	{
+		myData = someData;
+	}
+
+}
+
+void Dragonite::DragCommand::Undo()
+{
+}

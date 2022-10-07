@@ -57,9 +57,13 @@ namespace Dragonite
 	template<typename TComponent>
 	inline std::shared_ptr<TComponent> Object::GetComponent()
 	{
-		auto it = std::find_if(myComponents.begin(), myComponents.end(), [](Component* aComponent) { return typeid(aComponent) == typeid(TComponent); });
+		auto it = std::find_if(myComponents.begin(), myComponents.end(), [](std::shared_ptr<Component> aComponent)
+			{
+				auto val = std::dynamic_pointer_cast<TComponent>(aComponent);
+				return val;
+			});
 		if (it == myComponents.end()) return nullptr;
-		return *it;
+		return std::dynamic_pointer_cast<TComponent>(*it);
 	}
 
 }

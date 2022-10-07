@@ -4,6 +4,7 @@ Dragonite::GUIWindow::GUIWindow(const char* aWindowName) : myWindowName(aWindowN
 {
 }
 
+
 void Dragonite::GUIWindow::UpdateWindowState()
 {
 	if (myActiveStateFlag)

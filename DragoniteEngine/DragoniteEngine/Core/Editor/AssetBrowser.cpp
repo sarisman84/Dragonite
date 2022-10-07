@@ -3,6 +3,13 @@
 
 #include "Core/Graphics/Textures/TextureFactory.h"
 #include "Core/RuntimeAPI/Scene.h"
+#include "Core/ImGui/DragoniteGui.h"
+#include "Core/Editor/SceneEditor.h"
+
+#include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/Components/ModelRenderer.h"
+
+#include "Core/Graphics/Models/Model.h"
 
 Dragonite::AssetBrowser::AssetBrowser() : GUIWindow("Project")
 {
@@ -47,6 +54,7 @@ void Dragonite::AssetBrowser::OnWindowInit()
 			myDeleteFolderCommand->Execute(&path);
 		});
 
+	myDragCommand.reset(new DragCommand());
 
 	myScene = myPollingStation->Get<Scene>();
 	myTextureFactory = myPollingStation->Get<TextureFactory>();
@@ -58,18 +66,74 @@ void Dragonite::AssetBrowser::OnWindowInit()
 	myJsonIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/paper-clip.dds");
 
 
+	mySelectedFolderDir = myAssetBrowserDirectory;
+	mySceneEditor = (SceneEditor*)myDragoniteGuiAPI->GetWindow("Hierachy").get();
 	/*myCurrentScene = myPollingStation->Get<Scene>();
 	myModelFactory = myPollingStation->Get<ModelFactory>();*/
+
+
+	/*mySceneEditor->OnFocusedElement() = [this](Object& anElementToFocus)
+	{
+		if (mySelectedAsset != Directory() &&
+			mySelectedAsset.path().filename().extension() == ".png" ||
+			mySelectedAsset.path().filename().extension() == ".dds")
+		{
+			auto renderer = anElementToFocus.GetComponent<ModelRenderer>();
+			renderer->Model()->myTexture = myTextureFactory->LoadTexture(mySelectedAsset.path().wstring().c_str());
+
+			mySelectedAsset = Directory();
+		}
+	};*/
 }
 
 void Dragonite::AssetBrowser::OnWindowRender()
 {
+	auto extension = mySelectedAsset.path().filename().extension();
+	bool isDDS = extension == ".dds";
+	bool isShader = extension == ".cso";
+	bool isDirectory = mySelectedAsset.is_directory();
+	bool isImage = isDDS || extension == ".png";
+
+
+	//if (ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.5f) && isImage && mySceneEditor->IsInspectingFocusedElement() && mySelectedAsset != Directory())
+	//{
+	//	auto& r = myTextureFactory->LoadTexture(mySelectedAsset.path().wstring().c_str());
+	//	auto& image = r ? r : myUnknownArtAssetIcon;
+	//	myDragCommand->Execute(&image);
+	//	mySelectedAsset = Directory();
+	//}
+
 
 	RenderFolderStructure();
 	RenderFolderContents();
 	myCreateFolderWindow->Execute(&mySelectedFolderDirToEdit);
 	myDeleteFolderCommand->ApplyCommand();
 	myCreateFolderCommand->ApplyCommand();
+
+
+	if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && mySelectedAsset != Directory() && IsBeingInteracted())
+	{
+		if (isImage)
+		{
+			auto obj = mySceneEditor->GetInspectedObject();
+			if (obj)
+			{
+				auto& r = myTextureFactory->LoadTexture(mySelectedAsset.path().wstring().c_str());
+				auto& texture = r ? r : myUnknownArtAssetIcon;
+
+				auto renderer = obj->GetComponent<ModelRenderer>();
+				renderer->Model()->myTexture = texture;
+			}
+
+		}
+
+		mySelectedAsset = Directory();
+	}
+
+
+
+
+
 }
 
 void Dragonite::AssetBrowser::OnEnable()
@@ -80,6 +144,15 @@ void Dragonite::AssetBrowser::OnDisable()
 {
 }
 
+const bool Dragonite::AssetBrowser::IsBeingInteracted()
+{
+	return ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused() ||
+		myFolderContentFocus ||
+		myFolderStructureFocus;
+}
+
 void Dragonite::AssetBrowser::RenderFolderStructure()
 {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_None | ImGuiWindowFlags_MenuBar;
@@ -88,14 +161,23 @@ void Dragonite::AssetBrowser::RenderFolderStructure()
 	ImGui::BeginChild(id, ImVec2(250, 0), false, flags);
 
 
+
 	if (ImGui::BeginMenuBar())
 	{
 		ImGui::LabelText("##FolderAssets", myAssetBrowserDirectory.path().string().c_str());
 		myFolderMenu->ParentTo("##FolderAssets");
 		myFolderMenu->Execute(&myAssetBrowserDirectory);
 		ImGui::EndMenuBar();
+		myFolderStructureFocus = ImGui::IsWindowHovered() ||
+			ImGui::IsWindowFocused() ||
+			ImGui::IsAnyItemFocused() ||
+			ImGui::IsItemFocused();
 	}
 
+	myFolderStructureFocus = ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused() ||
+		ImGui::IsItemFocused();
 
 	RenderFolderStructure(myAssetBrowserDirectory);
 	ImGui::EndChild();
@@ -104,7 +186,7 @@ void Dragonite::AssetBrowser::RenderFolderStructure()
 
 const bool ContainsDirectoryIn(std::filesystem::directory_entry anEntry)
 {
-	
+
 	for (auto& entry : std::filesystem::directory_iterator(anEntry))
 	{
 		if (entry.is_directory())
@@ -115,7 +197,6 @@ const bool ContainsDirectoryIn(std::filesystem::directory_entry anEntry)
 
 void Dragonite::AssetBrowser::RenderFolderStructure(Directory anEntry, const bool anIndentFlag)
 {
-	static std::unordered_map<std::string, bool> myTreeState;
 	static bool isSelected = false;
 	if (anIndentFlag)
 		ImGui::Indent();
@@ -123,13 +204,7 @@ void Dragonite::AssetBrowser::RenderFolderStructure(Directory anEntry, const boo
 	{
 		if (entry.is_directory())
 		{
-
-
 			ImGui::PushID(entry.path().filename().string().c_str());
-
-
-
-			
 
 			if (ContainsDirectoryIn(entry))
 			{
@@ -171,11 +246,44 @@ void Dragonite::AssetBrowser::RenderFolderContents()
 
 	ImGui::BeginChild(id, ImVec2(0, 0), false, flags);
 
+	myFolderContentFocus = ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused();
+
 	if (ImGui::BeginMenuBar())
 	{
-		ImGui::LabelText("##FolderAssets", mySelectedFolderDir.path().string().c_str());
-		myFolderMenu->ParentTo("##FolderAssets");
-		myFolderMenu->Execute(&mySelectedFolderDir);
+		auto dirs = GetAllDirectoriesOfPath(mySelectedFolderDir.path().string());
+
+		Directory prevDir = myAssetBrowserDirectory;
+		for (auto& dir : dirs)
+		{
+			auto path = dir.path().string();
+			auto prevPath = prevDir.path().string();
+
+			if (prevDir == myAssetBrowserDirectory)
+				path = prevPath + "\\";
+			else
+			{
+				size_t pos = path.find(prevPath);
+				if (pos != std::string::npos)
+				{
+					path.erase(pos, prevPath.length());
+				}
+
+			}
+
+
+			static bool selected;
+			ImGui::Selectable(path.c_str(), &selected, ImGuiSelectableFlags_None, ImVec2(7 * path.length(), 0));
+			myFolderMenu->Execute(&mySelectedFolderDir);
+			ImGui::SameLine();
+			if (selected)
+				mySelectedFolderDir = dir;
+
+			selected = false;
+			prevDir = dir;
+		}
+
 		ImGui::EndMenuBar();
 	}
 
@@ -208,15 +316,24 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 		auto f = file;
 		auto extension = file.path().filename().extension();
 		ShaderResourceV image;
-		if (extension == ".dds" || extension == ".png")
+
+		bool isDDS = extension == ".dds";
+		bool isShader = extension == ".cso";
+		bool isDirectory = file.is_directory();
+		bool isImage = isDDS || extension == ".png";
+
+
+
+		if (isImage)
 		{
-			image = myTextureFactory->LoadTexture(file.path().wstring().c_str())->GetData();
+			auto r = myTextureFactory->LoadTexture(file.path().wstring().c_str());
+			image = r ? r->GetData() : myUnknownArtAssetIcon->GetData();
 		}
-		else if (extension == ".cso")
+		else if (isShader)
 		{
 			image = myUnknownArtAssetIcon->GetData();
 		}
-		else if (file.is_directory())
+		else if (isDirectory)
 		{
 			image = myFolderIcon->GetData();
 
@@ -233,11 +350,13 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 			if (ImGui::ImageButton(file.path().string().c_str(), image.Get(), iconSize))
 			{
 				if (file.is_directory())
-					mySelectedFolderDir = file;
-				else
 				{
-
+					mySelectedFolderDir = file;
+					myTreeState[file.path().string()] = true;
 				}
+
+				else
+					mySelectedAsset = file;
 			}
 			myFolderMenu->Execute(&f);
 			auto str = file.path().filename().string();
@@ -272,15 +391,63 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 	}
 }
 
-void Dragonite::AssetBrowser::DisplayFolderCommands(Directory anDirectoryToEdit)
+
+
+std::vector<std::string> split(std::string s, std::string delimiter) {
+	size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+	std::string token;
+	std::vector<std::string> res;
+
+	while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+	{
+		token = s.substr(pos_start, pos_end - pos_start);
+		pos_start = pos_end + delim_len;
+		res.push_back(token);
+	}
+
+	res.push_back(s.substr(pos_start));
+	return res;
+}
+
+
+std::vector<Dragonite::AssetBrowser::Directory> Dragonite::AssetBrowser::GetAllDirectoriesOfPath(Path aPath)
 {
+	std::vector<Directory> r;
+	std::string delimiter = "\\";
+
+	/*auto workDirs = split(aWorkingDir.path().string(), delimiter);*/
 
 
+
+	auto dirs = split(aPath.string(), delimiter);
+
+	if (dirs.size() <= 1)
+	{
+		Directory rDir;
+		rDir.assign(aPath);
+		r.push_back(rDir);
+		return r;
+	}
+
+
+	for (size_t i = 0; i < dirs.size(); i++)
+	{
+		std::string finalDir;
+		for (size_t d = 0; d < i + 1; d++)
+		{
+			finalDir += dirs[d] + "\\";
+		}
+		Directory rDir;
+		rDir.assign(finalDir);
+		r.push_back(rDir);
+
+	}
+
+
+
+
+	return r;
 
 }
 
-void Dragonite::AssetBrowser::DefineFolderCommands()
-{
 
-
-}

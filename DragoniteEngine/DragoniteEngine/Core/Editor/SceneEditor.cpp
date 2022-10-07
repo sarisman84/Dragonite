@@ -10,6 +10,8 @@
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Graphics/RenderTargets/RenderFactory.h"
 #include "Core/Utilities/Input.h"
+#include "Core/ImGui/DragoniteGui.h"
+
 
 
 int DefaultStringResize(ImGuiInputTextCallbackData* data)
@@ -82,20 +84,26 @@ void Dragonite::SceneEditor::OnWindowRender()
 		}
 	}
 	static int lastFoundElement = 0;
-	if (myMouseInput->GetButtonDown(MouseKey::Left) && !ImGuizmo::IsOver() && !ImGui::IsWindowHovered())
-	{
-		int element = 0;
-		if (myRenderID.TryGetElement(myMouseInput, element))
+
+	auto s = myDragoniteGuiAPI->IsHoveringOverAWindow();
+	if (!s)
+		if (myMouseInput->GetButtonDown(MouseKey::Left))
 		{
-			FocusElement(element);
-			lastFoundElement = element;
+			int element = 0;
+			if (myRenderID.TryGetElement(myMouseInput, element))
+			{
+				FocusElement(element);
+				lastFoundElement = element;
+			}
+			else
+			{
+				ResetFocus();
+				lastFoundElement = 0;
+			}
 		}
-		else
-		{
-			ResetFocus();
-			lastFoundElement = 0;
-		}
-	}
+
+
+
 
 	ImGui::Begin("Render ID Debugger");
 	ImGui::Text("Hover Element: %i", lastFoundElement);
@@ -103,6 +111,10 @@ void Dragonite::SceneEditor::OnWindowRender()
 
 
 	ImGui::Begin("Property");
+	myPropertyFocus = ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused();
+
 	if (IsInspectingFocusedElement())
 	{
 		if (myFocusedElement == 0)
@@ -142,6 +154,13 @@ void Dragonite::SceneEditor::ResetFocus()
 	myFocusedElement = -1;
 }
 
+Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
+{
+	if (myFocusedElement == -1 || myFocusedElement == 0)
+		return nullptr;
+	return &myCurrentScene->SceneObjects()[myFocusedElement - 1];
+}
+
 const bool Dragonite::SceneEditor::IsInspectingFocusedElement()
 {
 	return myFocusedElement < 0 || myFocusedElement >= mySelectedElements.size() ? false : mySelectedElements[myFocusedElement];
@@ -162,10 +181,15 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 		{
 			ImGui::Indent();
 			ImGui::DragFloat3("Position", (float*)&sceneObjs[focusedElement].GetTransform().myPosition, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
 			ImGui::DragFloat3("Rotation", (float*)&sceneObjs[focusedElement].GetTransform().myRotation, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
 			ImGui::DragFloat3("Size", (float*)&sceneObjs[focusedElement].GetTransform().myScale, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
 			ImGui::Unindent();
 		}
+
+		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 
 		int compIndex = 0;
 		for (auto& comp : sceneObjs[focusedElement].Components())
@@ -177,9 +201,11 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 			{
 				ImGui::Indent();
 				comp->OnInspectorGUI();
+				myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 				ImGui::Unindent();
-			}
 
+			}
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 		}
 
 
@@ -191,11 +217,20 @@ void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
 
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-	ImGuizmo::Manipulate(
+	if (ImGuizmo::Manipulate(
 		&cam.ViewMatrix(),
 		&cam.Profile()->CalculateProjectionMatrix(),
 		ImGuizmo::TRANSLATE, ImGuizmo::LOCAL,
-		&sceneObjs[focusedElement].GetTransform().GetMatrix());
+		&sceneObjs[focusedElement].GetTransform().GetMatrix()))
+	{
+		myPropertyFocus = true;
+	}
+
+	myPropertyFocus = myPropertyFocus ||
+		(ImGuizmo::IsUsing()) ||
+		ImGui::IsItemFocused() ||
+		ImGui::IsItemHovered();
+
 
 }
 
@@ -215,9 +250,12 @@ void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
 
 			ImGui::Indent();
 			ImGui::DragFloat3("Position", (float*)&cam.GetTransform().myPosition, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 			ImGui::DragFloat3("Rotation", (float*)&cam.GetTransform().myRotation, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 			ImGui::Unindent();
 		}
+		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 
 		cmpName = "Camera";
 		cmpName += std::string("##") + name;
@@ -228,11 +266,15 @@ void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
 
 			ImGui::Indent();
 			ImGui::DragFloat("FOV", (float*)&perspectiveProfile->myFOV, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 			ImGui::DragFloat("Near Plane", (float*)&perspectiveProfile->myNearPlane, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 			ImGui::DragFloat("Far Plane", (float*)&perspectiveProfile->myFarPlane, 0.1f);
+			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 			ImGui::Checkbox("View Render ID", &myRenderID.ViewRenderID());
 			ImGui::Unindent();
 		}
+		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 
 
 
@@ -260,6 +302,14 @@ void Dragonite::SceneEditor::OnWindowInit()
 
 	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
 
+}
+
+const bool Dragonite::SceneEditor::IsBeingInteracted()
+{
+	return ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused() ||
+		myPropertyFocus;
 }
 
 

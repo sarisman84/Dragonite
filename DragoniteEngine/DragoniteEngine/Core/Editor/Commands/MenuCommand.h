@@ -24,12 +24,8 @@ namespace Dragonite
 		std::function<void(void*)> myCallback;
 		bool myActiveState;
 	};
-
-
-
 	class FolderCommand : public Command
 	{
-		
 	public:
 		enum class Type
 		{
@@ -46,14 +42,9 @@ namespace Dragonite
 		std::string myTargetPath;
 		Type myType;
 	};
-
-
-
 	class PopupMenu : public Command
 	{
-
 	public:
-		
 		PopupMenu();
 		~PopupMenu() = default;
 		template<typename Func>
@@ -64,14 +55,44 @@ namespace Dragonite
 		void Undo() override;
 	private:
 		const char* myLastImGuiID;
-		std::vector<std::tuple<const char*,std::function<void(void*)>>> myMenuElements;
+		std::vector<std::tuple<const char*, std::function<void(void*)>>> myMenuElements;
 	};
+
+	class DragCommand : public Command
+	{
+	public:
+		DragCommand();
+
+		template<typename TVal>
+		TVal Release();
+		// Inherited via Command
+		void Execute(void* someData) override;
+		void Undo() override;
+
+		inline const bool IsDragging() const noexcept { return myData; }
+
+	private:
+		void* myData;
+	};
+
+
 
 	template<typename Func>
 	inline void PopupMenu::AddMenuElement(const char* aName, const Func& aCallback)
 	{
 		auto val = std::make_tuple(aName, aCallback);
 		myMenuElements.push_back(val);
+	}
+
+	template<typename TVal>
+	inline TVal DragCommand::Release()
+	{
+
+		if (!myData) return TVal();
+
+		TVal r = *(TVal*)myData;
+		myData = nullptr;
+		return r;
 	}
 
 }

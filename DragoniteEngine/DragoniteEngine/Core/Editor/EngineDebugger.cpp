@@ -22,3 +22,10 @@ void Dragonite::EngineDebugger::OnDisable()
 void Dragonite::EngineDebugger::OnWindowInit()
 {
 }
+
+const bool Dragonite::EngineDebugger::IsBeingInteracted()
+{
+	return  ImGui::IsWindowHovered() ||
+		ImGui::IsWindowFocused() ||
+		ImGui::IsAnyItemFocused();;
+}

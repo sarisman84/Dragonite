@@ -37,12 +37,16 @@ namespace Dragonite
 			OnWindowInit();
 		}
 
+		virtual const bool IsBeingInteracted() = 0;
+
+
 	protected:
 		DragoniteGui* myDragoniteGuiAPI;
 		PollingStation* myPollingStation;
 		const char* myWindowName;
 	private:
 		bool myActiveStateFlag;
+		
 
 
 	};
