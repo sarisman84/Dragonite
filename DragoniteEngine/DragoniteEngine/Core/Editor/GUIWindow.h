@@ -3,19 +3,17 @@
 #include "Core/PollingStation.h"
 #include "Core/External/imgui/imgui.h"
 #include "Core/External/imgui/ImGuizmo.h"
+#include "Core/PollingStation.h"
+#include <memory>
 
 
 namespace Dragonite
 {
-
 	class DragoniteGui;
 	class GUIWindow
 	{
 	public:
-		virtual void OnWindowInit() = 0;
-		virtual void OnWindowRender() = 0;
-		virtual void OnEnable() = 0;
-		virtual void OnDisable() = 0;
+
 
 
 
@@ -30,6 +28,7 @@ namespace Dragonite
 
 		void UpdateWindowState();
 		GUIWindow(const char* aWindowName);
+		virtual ~GUIWindow() = default;
 
 		inline void Init(PollingStation* aStation, DragoniteGui* aDragoniteGuiAPI) noexcept {
 			myPollingStation = aStation;
@@ -37,19 +36,30 @@ namespace Dragonite
 			OnWindowInit();
 		}
 
-		virtual const bool IsBeingInteracted() = 0;
 
+		void UpdateWindow();
+
+		GUIWindow* CreateEditorWindow(GUIWindow* aWindowType, const bool anIsChildElementFlag = false);
 
 	protected:
+		virtual void OnWindowInit() = 0;
+		virtual void OnWindowUpdate() = 0;
+		virtual void OnEnable() = 0;
+		virtual void OnDisable() = 0;
+
 		DragoniteGui* myDragoniteGuiAPI;
 		PollingStation* myPollingStation;
 		const char* myWindowName;
 	private:
+		std::vector<std::unique_ptr<GUIWindow>> mySubWindowElements;
 		bool myActiveStateFlag;
-		
+		bool myIsChildElementFlag;
+		unsigned int myGUID;
+
 
 
 	};
+
 }
 
 

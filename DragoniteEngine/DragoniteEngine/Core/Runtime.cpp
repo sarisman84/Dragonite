@@ -57,40 +57,39 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 
 	myInstance = anInstance;
 
-	myPipeline = new GraphicsPipeline();
+	myPipeline = new GraphicalInterface();
 
-	
 
-	if (!myPipeline->Initialize(this, anInstance)) return false;
 
-	
+	if (!myPipeline->Init(anInstance, myRuntimeHandler)) return false;
+
+
 
 
 	myRuntimeHandler->AddHandler(myPipeline);
-	myRuntimeHandler->AddHandler(new RenderInterface(*myPipeline));
 
 	myScene = new Scene();
 	myScene->myApplication = this;
 	myScene->myPollingStation = myRuntimeHandler;
 	myRuntimeHandler->AddHandler(myScene);
-	
+
 
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
 
 	if (!IM->Init(this)) return false;
 	myScene->myInputManager = IM;
 
-	
+
 	myGUIInterface = new DragoniteGui();
 	myGUIInterface->Init(this, myPipeline);
 	myRuntimeHandler->AddHandler(myGUIInterface);
 	myScene->Awake();
 
-	myGUIInterface->AddWindow(new EngineDebugger());
-	myGUIInterface->AddWindow(new SceneEditor());
-	myGUIInterface->AddWindow(new AssetBrowser());
+	myGUIInterface->CreateEditorWindow(new EngineDebugger());
+	myGUIInterface->CreateEditorWindow(new SceneEditor());
 
-	
+
+
 
 	myRuntimeHandler->AddHandler(this);
 	return true;
@@ -99,7 +98,8 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 void Dragonite::Runtime::Update(const float aDeltaTime)
 {
 	myUpdateCB(aDeltaTime);
-	myScene->Update(aDeltaTime);
+	if (myScene)
+		myScene->Update(aDeltaTime);
 	myPipeline->Render();
 
 }

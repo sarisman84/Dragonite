@@ -1,6 +1,6 @@
 #pragma once
-#include "DXIncludes.h"
-
+#include "DirectX11/DXInterface.h"
+#include "Models/Material.h"
 #include "Core/CU/CommonData.h"
 #include "Core/CU/Math/Matrix4x4.hpp"
 
@@ -8,7 +8,8 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-
+#include "Textures/Texture.h"
+#include <functional>
 
 
 namespace Dragonite
@@ -21,16 +22,7 @@ namespace Dragonite
 	class BaseRenderer;
 	class RenderFactory;
 	class RenderTarget;
-
-	enum class TextureSampleType
-	{
-		Default, Count
-	};
-
-	enum class BlendStateType
-	{
-		Alpha, Additive, None, Count
-	};
+	class PollingStation;
 
 	struct FrameBufferData
 	{
@@ -42,98 +34,118 @@ namespace Dragonite
 		Matrix4x4f myModelToWorldMatrix;
 	};
 
-
-
-
-	class GraphicsPipeline
+	struct RenderInstructions
 	{
-		friend class RenderTarget;
-		friend class RenderInterface;
-		friend class DragoniteGui;
-		friend RenderFactory;
+		unsigned int myShaderInstructionsID;
+
+		DataBuffer myVertexBuffer;
+		DataBuffer myIndexBuffer;
+		Matrix4x4f myModelMatrix;
+		TextureRef myTexture;
+		unsigned int myIndexCount;
+		unsigned int myID;
+	};
+
+
+	struct CameraInstructions
+	{
+		Matrix4x4f myViewMatrix;
+		Matrix4x4f myProjectionMatrix;
+	};
+
+	struct ShaderInstructions
+	{
+		ShaderInstructions();
+		Material myMaterial;
+		InputLayout myInputLayout;
+		VertexShader myVertexShader;
+		PixelShader myPixelShader;
+		int myIndex;
+
+
+		bool operator==(const ShaderInstructions& aCpy);
+		bool operator!=(const ShaderInstructions& aCpy);
+	};
+
+
+
+
+	struct Renderer
+	{
+		Renderer();
+		virtual void OnRender(
+			std::vector<RenderInstructions> someInstructions,
+			CameraInstructions aCameraInstruction,
+			ShaderInstructions someShaderInstructions,
+			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr) = 0;
+
+	protected:
+		DataBuffer myObjectBuffer, myFrameBuffer;
+	};
+
+
+	struct ForwardRenderer :public Renderer
+	{
+		ForwardRenderer();
+		// Inherited via Renderer
+		virtual void OnRender(
+			std::vector<RenderInstructions> someInstructions,
+			CameraInstructions aCameraInstruction,
+			ShaderInstructions someShaderInstructions,
+			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr) override;
+
+	};
+
+
+
+
+
+	class GraphicalInterface
+	{
+		friend class Runtime;
 	public:
-		GraphicsPipeline();
-		~GraphicsPipeline();
+		~GraphicalInterface();
+		void SetActiveCameraAs(Camera& aNewCamera);
 
-		bool Initialize(Runtime* anApplication, HWND aWindowHandle);
-
-		void SetBlendState(const BlendStateType aType);
-		void SwitchRenderTarget(RenderView aView, DepthStencil aDepthBuffer = nullptr);
-
-		void DrawInstructionsToBB();
-		void DrawInstructions(RenderView aView, DepthStencil aDepthBuffer = nullptr);
-		void Render();
-
-
-		Vector2f GetViewPort();
-
-		inline Runtime* GetApplication() { return myApplicationPtr; }
-		inline Device& GetDevice() { return myDevice; }
-		inline DeviceContext& GetContext() { return myContext; }
-
-
-
-		inline void SetActiveCameraAs(Camera* aCamera) noexcept { myActiveCamera = aCamera; }
-		inline std::vector<std::shared_ptr<ModelInstance>> GetInstructions() { return myElementsToDraw; };
-		inline RenderView& GetBackBuffer() { return myBackBuffer; }
-		inline DepthStencil& GetDefaultDepthBuffer() { return myDepthBuffer; }
-		inline Color& ClearColor() { return myClearColor; }
-
-
-		inline std::unordered_map<TextureSampleType, TextureSampler>& GetTextureSamplers() noexcept {
-			return myTextureSamplers;
+		inline void RegisterRenderCall(const std::function<void()>& aCallback)
+		{
+			myExtraRenderCalls.push_back(aCallback);
 		}
 
+		inline PollingStation* GetPollingStation() { return myPollingStation; }
+		inline void DrawToBackBuffer(const bool aNewVal) { myRenderToBackBufferFlag = aNewVal; }
 
-		static HRESULT CreateBuffer(Device aDevice, DataBuffer& aBuffer, const DataBufferDesc& aDesc);
-		static HRESULT CreateTexture(Device aDevice, DXTexture2D& aTexture, const TextureBufferDesc& aDesc);
-		static HRESULT MapBuffer(DeviceContext aContext, DataBuffer& aBuffer, void* someData, size_t aDataSize);
+		void AddRenderInstructions(const RenderInstructions& anInstruction);
+		unsigned int AddShaderInstructions(const Material& aMaterial, VertexShader aVS, PixelShader aPS, InputLayout anInputLayout);
+		inline std::vector<ShaderInstructions> GetShaderInstructions() const noexcept { return myShaderInstructions; }
 
-		void UpdateFrameBuffer();
-		void UpdateObjectBufferAt(std::shared_ptr<ModelInstance> anInstance);
-		void UpdateBufferAt(void* someData, const size_t aSize, const int aSlot, DataBuffer& aBuffer, bool aBindVSFlag = true, bool aBindPSFlag = false);
+		void DrawInstructions(
+			ShaderInstructions aShaderInstruciton,
+			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr);
+		void DrawInstructions(
+			VertexShader aVS, PixelShader aPS, InputLayout anIL,
+			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr
+		);
+
+		void DrawInstructions(std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr);
 
 	private:
-		HRESULT InitializeBlendStates();
-		HRESULT InitializeSwapChain(HWND anInstance);
-		HRESULT InitializeBackBuffer();
-		HRESULT InitializeSamplers();
+		const bool Init(HWND anInstance, PollingStation* aPollingStation);
+		void Render();
 
-		Device myDevice;
-		DeviceContext myContext;
-		SwapChain mySwapChain;
-		RenderView myBackBuffer;
-		DepthStencil myDepthBuffer;
-		Color myClearColor;
-
-		DataBuffer myFrameBuffer;
-		DataBuffer myObjectBuffer;
-
-		RenderFactory* myRenderFactory;
-		Runtime* myApplicationPtr;
-		ModelFactory* myModelFactory;
-		TextureFactory* myTextureFactory;
+		bool myRenderToBackBufferFlag;
 		Camera* myActiveCamera;
-		RenderTarget* myActiveRenderTarget;
+		PollingStation* myPollingStation;
 
-		std::vector<std::shared_ptr<ModelInstance>> myElementsToDraw;
-		std::unordered_map<TextureSampleType, TextureSampler> myTextureSamplers;
-		std::unordered_map<BlendStateType, BlendState> myBlendStates;
+		Renderer* myPrimaryRenderer;
+		std::vector<std::function<void()>> myExtraRenderCalls;
+		std::vector<RenderInstructions> myRenderInstructions;
+
+		std::vector<ShaderInstructions> myShaderInstructions;
+
 	};
 
 
-	class RenderInterface
-	{
-	public:
-		RenderInterface(GraphicsPipeline& aPipeline);
-
-		void DrawElement(std::shared_ptr<ModelInstance> anInstance);
-
-		inline void SetActiveCameraAs(Camera& aCameraRef) { myPipeline.SetActiveCameraAs(&aCameraRef); }
-
-	private:
-		GraphicsPipeline& myPipeline;
-	};
 
 
 

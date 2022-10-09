@@ -1,5 +1,5 @@
 #pragma once
-#include "../DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
 
 #include <memory>
 #include <unordered_map>
@@ -11,11 +11,11 @@ namespace Dragonite
 {
 
 
-	class GraphicsPipeline;
+	class GraphicalInterface;
 	class TextureFactory
 	{
 	public:
-		TextureFactory(GraphicsPipeline* aPipeline);
+		TextureFactory(GraphicalInterface* aPipeline);
 
 		TextureRef& LoadTexture(const wchar_t* aPath, const bool aUseSRGB = true, const bool aGenerateMipMaps = true);
 
@@ -27,7 +27,7 @@ namespace Dragonite
 
 		std::unordered_map<std::wstring, TextureRef> myLoadedTextures;
 
-		GraphicsPipeline* myPipeline;
+		GraphicalInterface* myPipeline;
 	};
 }
 

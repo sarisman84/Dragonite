@@ -35,7 +35,6 @@
     <ClInclude Include="Core\Graphics\Camera.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\DXIncludes.h" />
     <ClInclude Include="Core\Graphics\Models\Model.h">
       <Filter>Core\Graphics\Models</Filter>
     </ClInclude>
@@ -199,9 +198,6 @@
     <ClInclude Include="Core\Editor\RenderID.h">
       <Filter>Core\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Utilities\RenderUtils.h">
-      <Filter>Core\Graphics\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Core\External\imgui\ImGuizmo.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
@@ -213,6 +209,21 @@
     </ClInclude>
     <ClInclude Include="Core\Editor\Commands\Command.h">
       <Filter>Core\Editor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\DirectX11\DXInterface.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\DirectX11\DXIncludes.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\DirectX11\DXUtilities.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\SceneEditor\Viewport.h">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\SceneEditor\PropertyEditor.h">
+      <Filter>Core\Editor\SceneEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,9 +322,6 @@
     <ClCompile Include="Core\Editor\RenderID.cpp">
       <Filter>Core\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Utilities\RenderUtils.cpp">
-      <Filter>Core\Graphics\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Core\External\imgui\ImGuizmo.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
@@ -322,6 +330,18 @@
     </ClCompile>
     <ClCompile Include="Core\Editor\Commands\MenuCommand.cpp">
       <Filter>Core\Editor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\DirectX11\DXInterface.cpp">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\DirectX11\DXUtilities.cpp">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\SceneEditor\Viewport.cpp">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\SceneEditor\PropertyEditor.cpp">
+      <Filter>Core\Editor\SceneEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -393,6 +413,12 @@
     </Filter>
     <Filter Include="Core\Editor\Commands">
       <UniqueIdentifier>{e05442c6-3417-475f-9d75-eabd5cca9227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\DirectX11">
+      <UniqueIdentifier>{b5f269cc-a865-43c1-a1ad-9f647ab02b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Editor\SceneEditor">
+      <UniqueIdentifier>{9c9cc7c4-1385-4cc7-a03a-6ff12a865ddd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

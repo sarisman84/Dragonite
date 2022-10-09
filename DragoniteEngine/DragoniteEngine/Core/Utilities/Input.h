@@ -11,7 +11,7 @@
 namespace Dragonite
 {
 	class Runtime;
-	class GraphicsPipeline;
+	class GraphicalInterface;
 
 	enum class MouseKey : unsigned int
 	{
@@ -58,7 +58,7 @@ namespace Dragonite
 		std::bitset<3> myPreviousUpState;
 
 		Runtime* myApplicationIns;
-		GraphicsPipeline* myGraphicsPipeline;
+		GraphicalInterface* myGraphicsPipeline;
 
 	};
 

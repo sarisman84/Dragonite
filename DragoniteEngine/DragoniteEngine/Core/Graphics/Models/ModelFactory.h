@@ -11,14 +11,14 @@ namespace Dragonite
 
 
 
-	class GraphicsPipeline;
+	class GraphicalInterface;
 
 
 	class ModelFactory
 	{
 	public:
 		ModelFactory() = default;
-		bool Initialize(GraphicsPipeline* aPipeline);
+		bool Initialize(GraphicalInterface* aPipeline);
 
 		DDLVISIBLE std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial);
 	private:
@@ -28,7 +28,7 @@ namespace Dragonite
 
 
 
-		GraphicsPipeline* myPipeline;
+		GraphicalInterface* myPipeline;
 		std::unordered_map<PrimitiveType, ModelRef> myFactoryData;
 
 

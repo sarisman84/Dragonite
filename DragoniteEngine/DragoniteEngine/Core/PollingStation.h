@@ -5,10 +5,10 @@
 namespace Dragonite
 {
 	class Runtime;
-	class GraphicsPipeline;
+	class GraphicalInterface;
 	class PollingStation
 	{
-		friend GraphicsPipeline;
+		friend GraphicalInterface;
 		friend Runtime;
 	public:
 		PollingStation() = default;

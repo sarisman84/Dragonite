@@ -1,5 +1,5 @@
 #pragma once
-#include "../DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
 #include <string>
 #include <vector>
 #include "../../CU/CommonData.h"
@@ -28,6 +28,7 @@ namespace Dragonite
 
 	struct Material
 	{
+		friend struct ShaderInstructions;
 		friend class ModelFactory;
 	public:
 		Material(const char* aShader);

@@ -9,7 +9,7 @@ Dragonite::Mouse::Mouse() = default;
 const bool Dragonite::Mouse::Init(Runtime* anApplication)
 {
 	myApplicationIns = anApplication;
-	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicsPipeline>();
+	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicalInterface>();
 
 	myApplicationIns->OnWndProc() += [this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 	{

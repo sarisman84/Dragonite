@@ -6,7 +6,7 @@
 
 namespace Dragonite
 {
-	class RenderInterface;
+	class GraphicalInterface;
 	class ModelFactory;
 	class ModelInstance;
 	class ModelRenderer : public Component
@@ -15,11 +15,11 @@ namespace Dragonite
 		void Awake() override;
 		void Update(const float aDt) override;
 		void OnInspectorGUI() override;
-		inline std::shared_ptr<ModelInstance>& Model() { return myModel; }
+		inline std::shared_ptr<ModelInstance>& Model() { return myModelInstance; }
 	private:
 		ModelFactory* myModelFactory;
-		RenderInterface* myRenderInterface;
-		std::shared_ptr<ModelInstance> myModel;
+		GraphicalInterface* myRenderInterface;
+		std::shared_ptr<ModelInstance> myModelInstance;
 
 	
 	};

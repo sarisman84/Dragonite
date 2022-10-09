@@ -6,11 +6,10 @@ namespace Dragonite
 	{
 	public:
 		EngineDebugger();
-		void OnWindowRender() override;
+		void OnWindowUpdate() override;
 		void OnEnable() override;
 		void OnDisable() override;
 		void OnWindowInit() override;
-		const bool IsBeingInteracted() override;
 	};
 }
 

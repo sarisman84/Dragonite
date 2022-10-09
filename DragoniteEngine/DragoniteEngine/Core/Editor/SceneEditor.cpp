@@ -12,117 +12,156 @@
 #include "Core/Utilities/Input.h"
 #include "Core/ImGui/DragoniteGui.h"
 
+#include "SceneEditor/Viewport.h"
+#include "SceneEditor/PropertyEditor.h"
+#include "AssetBrowser.h"
 
 
-int DefaultStringResize(ImGuiInputTextCallbackData* data)
-{
-	if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-	{
-		ImVector<char>* my_str = (ImVector<char>*)data->UserData;
-		IM_ASSERT(my_str->begin() == data->Buf);
-		my_str->resize(data->BufSize); // NB: On resizing calls, generally data->BufSize == data->BufTextLen + 1
-		data->Buf = my_str->begin();
-	}
-	return 0;
-}
 
-Dragonite::SceneEditor::SceneEditor() : GUIWindow("Hierachy")
+
+Dragonite::SceneEditor::SceneEditor() : GUIWindow("Scene Editor")
 {
 
 }
 
-void Dragonite::SceneEditor::OnWindowRender()
+Dragonite::SceneEditor::~SceneEditor()
+{
+	myViewport = nullptr;
+	myPropertyEditor = nullptr;
+}
+
+void Dragonite::SceneEditor::OnWindowUpdate()
 {
 
-	if (!myCurrentScene) return;
 
-	if (ImGui::Button("Add Object"))
+	//if (!myCurrentScene) return;
+
+	//if (ImGui::Button("Add Object"))
+	//{
+	//	//myCurrentScene->SceneObjects().push_back(myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial));
+
+	//	Object newObject = Object("New GameObject");
+	//	newObject.Init(myPollingStation);
+	//	newObject.GetTransform().myPosition = { 0,0, 1 };
+
+	//	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
+
+	//	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
+
+
+	//	myCurrentScene->SceneObjects().push_back(newObject);
+	//	mySelectedElements.push_back(false);
+
+
+	//	FocusElement(mySelectedElements.size() - 1);
+	//}
+
+
+
+	//{
+	//	std::string name = "Camera";
+	//	name += std::string("##") + std::to_string(0);
+	//	static bool val;
+	//	ImGui::Selectable(name.c_str(), &val);
+	//	if (val)
+	//		FocusElement(0);
+
+
+	//	int index = 0;
+
+	//	auto& sceneObjs = myCurrentScene->SceneObjects();
+	//	for (size_t i = 0; i < sceneObjs.size(); i++)
+	//	{
+	//		val = false;
+	//		auto& object = sceneObjs[i];
+	//		std::string name = sceneObjs[i].Name();
+	//		name += std::string("##") + std::to_string(i);
+	//		ImGui::Selectable(name.c_str(), &val);
+	//		if (val)
+	//			FocusElement(i + 1);
+	//		val = false;
+
+	//	}
+	//}
+	//static int lastFoundElement = 0;
+
+	//auto s = true;
+	//if (!s)
+	//	if (myMouseInput->GetButtonDown(MouseKey::Left))
+	//	{
+	//		int element = 0;
+	//		if (myRenderID.TryGetElement(myMouseInput, element))
+	//		{
+	//			FocusElement(element);
+	//			lastFoundElement = element;
+	//		}
+	//		else
+	//		{
+	//			ResetFocus();
+	//			lastFoundElement = 0;
+	//		}
+	//	}
+
+
+
+
+	//ImGui::Begin("Render ID Debugger");
+	//ImGui::Text("Hover Element: %i", lastFoundElement);
+	//ImGui::End();
+
+
+	//ImGui::Begin("Property");
+	//myPropertyFocus = ImGui::IsWindowHovered() ||
+	//	ImGui::IsWindowFocused() ||
+	//	ImGui::IsAnyItemFocused();
+
+	//if (IsInspectingFocusedElement())
+	//{
+	//	if (myFocusedElement == 0)
+	//		InspectCamera(myCurrentScene->GetCamera());
+	//	else
+	//		InspectFocusedElement(myCurrentScene);
+	//}
+	//ImGui::End();
+
+
+
+
+
+	ImGui::Text("Selected Element: %i", myFocusedElement);
+	if (ImGui::Button("Create New GameObject"))
 	{
-		//myCurrentScene->SceneObjects().push_back(myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial));
-
-		Object newObject = Object("New GameObject");
-		newObject.Init(myPollingStation);
-		newObject.GetTransform().myPosition = { 0,0, 1 };
-
-		auto modelRenderer = newObject.AddComponent<ModelRenderer>();
-
-		modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
-
-
-		myCurrentScene->SceneObjects().push_back(newObject);
-		mySelectedElements.push_back(false);
-
-
-		FocusElement(mySelectedElements.size() - 1);
+		InitializeNewObject();
 	}
 
-
-
+	auto& objs = myCurrentScene->SceneObjects();
+	for (size_t i = 0; i < objs.size(); i++)
 	{
-		std::string name = "Camera";
-		name += std::string("##") + std::to_string(0);
-		static bool val;
-		ImGui::Selectable(name.c_str(), &val);
-		if (val)
-			FocusElement(0);
+		bool selected = false;
 
-
-		int index = 0;
-
-		auto& sceneObjs = myCurrentScene->SceneObjects();
-		for (size_t i = 0; i < sceneObjs.size(); i++)
-		{
-			val = false;
-			auto& object = sceneObjs[i];
-			std::string name = sceneObjs[i].Name();
-			name += std::string("##") + std::to_string(i);
-			ImGui::Selectable(name.c_str(), &val);
-			if (val)
-				FocusElement(i + 1);
-			val = false;
-
+		ImGui::Selectable(objs[i].Name().c_str(), &selected);
+		if (selected) {
+			myFocusedElement = i;
 		}
 	}
-	static int lastFoundElement = 0;
-
-	auto s = myDragoniteGuiAPI->IsHoveringOverAWindow();
-	if (!s)
-		if (myMouseInput->GetButtonDown(MouseKey::Left))
-		{
-			int element = 0;
-			if (myRenderID.TryGetElement(myMouseInput, element))
-			{
-				FocusElement(element);
-				lastFoundElement = element;
-			}
-			else
-			{
-				ResetFocus();
-				lastFoundElement = 0;
-			}
-		}
 
 
 
 
-	ImGui::Begin("Render ID Debugger");
-	ImGui::Text("Hover Element: %i", lastFoundElement);
-	ImGui::End();
+	if (!myViewport || !myPropertyEditor) return;
 
+	myViewport->DisplayMouseCoordinateInViewport(myMouseInput);
 
-	ImGui::Begin("Property");
-	myPropertyFocus = ImGui::IsWindowHovered() ||
-		ImGui::IsWindowFocused() ||
-		ImGui::IsAnyItemFocused();
-
-	if (IsInspectingFocusedElement())
-	{
-		if (myFocusedElement == 0)
-			InspectCamera(myCurrentScene->GetCamera());
-		else
-			InspectFocusedElement(myCurrentScene);
+	if (myMouseInput->GetButtonDown(MouseKey::Left) && myViewport->IsBeingFocused()) {
+		int anID = -1;
+		myViewport->TryGetObjectID(myMouseInput, anID);
+		myFocusedElement = anID;
 	}
-	ImGui::End();
+
+
+
+
+
 
 
 }
@@ -135,182 +174,58 @@ void Dragonite::SceneEditor::OnDisable()
 {
 }
 
-void Dragonite::SceneEditor::FocusElement(const int anElementToFocus)
-{
-	if (anElementToFocus < 0 || anElementToFocus >= mySelectedElements.size()) return;
-
-	for (size_t i = 0; i < mySelectedElements.size(); i++)
-	{
-		mySelectedElements[i] = false;
-	}
-
-
-	mySelectedElements[anElementToFocus] = true;
-	myFocusedElement = anElementToFocus;
-}
-
-void Dragonite::SceneEditor::ResetFocus()
-{
-	myFocusedElement = -1;
-}
 
 Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 {
-	if (myFocusedElement == -1 || myFocusedElement == 0)
+	if (myFocusedElement < 0 || myFocusedElement > myCurrentScene->SceneObjects().size())
 		return nullptr;
-	return &myCurrentScene->SceneObjects()[myFocusedElement - 1];
+	return &myCurrentScene->SceneObjects()[myFocusedElement];
 }
 
-const bool Dragonite::SceneEditor::IsInspectingFocusedElement()
+void Dragonite::SceneEditor::InitializeNewObject()
 {
-	return myFocusedElement < 0 || myFocusedElement >= mySelectedElements.size() ? false : mySelectedElements[myFocusedElement];
-}
+	if (!myCurrentScene) return;
 
-void Dragonite::SceneEditor::InspectFocusedElement(Scene* aScene)
-{
-	int focusedElement = myFocusedElement - 1;
-	auto& sceneObjs = aScene->SceneObjects();
-	std::string name = sceneObjs[focusedElement].Name();
-	name += std::string("##") + std::to_string(focusedElement);
-	ImGui::InputText("Name", &sceneObjs[focusedElement].Name(), 0, DefaultStringResize);
-	if (ImGui::BeginListBox(std::string("##" + name).c_str(), ImVec2(300, 250)))
-	{
-		std::string name = "Transform";
-		name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
-		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::Indent();
-			ImGui::DragFloat3("Position", (float*)&sceneObjs[focusedElement].GetTransform().myPosition, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
-			ImGui::DragFloat3("Rotation", (float*)&sceneObjs[focusedElement].GetTransform().myRotation, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
-			ImGui::DragFloat3("Size", (float*)&sceneObjs[focusedElement].GetTransform().myScale, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered() || ImGui::IsAnyItemHovered();
-			ImGui::Unindent();
-		}
+	std::string name = "New GameObject ";
+	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
+	Object newObject = Object(name.c_str());
+	newObject.Init(myPollingStation);
+	newObject.GetTransform().myPosition = { 0,0, 1 };
 
-		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
+	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
 
-		int compIndex = 0;
-		for (auto& comp : sceneObjs[focusedElement].Components())
-		{
-			name = "Component";
-			name += std::to_string(compIndex++);
-			name += std::string("##") + sceneObjs[focusedElement].Name() + std::to_string(focusedElement);
-			if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				ImGui::Indent();
-				comp->OnInspectorGUI();
-				myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-				ImGui::Unindent();
-
-			}
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-		}
+	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
 
-		ImGui::EndListBox();
+	myCurrentScene->SceneObjects().push_back(newObject);
 
-	}
-
-	auto& cam = aScene->GetCamera();
-
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-	if (ImGuizmo::Manipulate(
-		&cam.ViewMatrix(),
-		&cam.Profile()->CalculateProjectionMatrix(),
-		ImGuizmo::TRANSLATE, ImGuizmo::LOCAL,
-		&sceneObjs[focusedElement].GetTransform().GetMatrix()))
-	{
-		myPropertyFocus = true;
-	}
-
-	myPropertyFocus = myPropertyFocus ||
-		(ImGuizmo::IsUsing()) ||
-		ImGui::IsItemFocused() ||
-		ImGui::IsItemHovered();
-
+	myFocusedElement = myCurrentScene->SceneObjects().size() - 1;
 
 }
 
-void Dragonite::SceneEditor::InspectCamera(Camera& aCamera)
-{
-	std::string name = "Camera";
-	name += std::string("##") + std::to_string(0);
-	if (ImGui::BeginListBox(std::string("##" + name).c_str(), ImVec2(300, 250)))
-	{
-
-		auto& cam = aCamera;
-		std::string cmpName = "Transform";
-		cmpName += std::string("##") + name;
-		if (ImGui::CollapsingHeader(cmpName.c_str()))
-		{
-
-
-			ImGui::Indent();
-			ImGui::DragFloat3("Position", (float*)&cam.GetTransform().myPosition, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-			ImGui::DragFloat3("Rotation", (float*)&cam.GetTransform().myRotation, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-			ImGui::Unindent();
-		}
-		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-
-		cmpName = "Camera";
-		cmpName += std::string("##") + name;
-		if (ImGui::CollapsingHeader(cmpName.c_str()))
-		{
-
-			auto perspectiveProfile = dynamic_cast<PerspectiveProfile*>(cam.Profile());
-
-			ImGui::Indent();
-			ImGui::DragFloat("FOV", (float*)&perspectiveProfile->myFOV, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-			ImGui::DragFloat("Near Plane", (float*)&perspectiveProfile->myNearPlane, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-			ImGui::DragFloat("Far Plane", (float*)&perspectiveProfile->myFarPlane, 0.1f);
-			myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
-			ImGui::Checkbox("View Render ID", &myRenderID.ViewRenderID());
-			ImGui::Unindent();
-		}
-		myPropertyFocus = myPropertyFocus || ImGui::IsItemFocused() || ImGui::IsItemHovered();
 
 
 
-		ImGui::EndListBox();
-	}
-}
 
 void Dragonite::SceneEditor::OnWindowInit()
 {
-	mySelectedElements.push_back(false); //Add Camera here
-	myRenderID = RenderID(myPollingStation->Get<GraphicsPipeline>());
+
+	myViewport = dynamic_cast<Viewport*>(GUIWindow::CreateEditorWindow(new Viewport()));
+	myPropertyEditor = dynamic_cast<PropertyEditor*>(GUIWindow::CreateEditorWindow(new PropertyEditor()));
+	auto assetBrowser = dynamic_cast<AssetBrowser*>(GUIWindow::CreateEditorWindow(new AssetBrowser()));
+	assetBrowser->RegisterSceneEditor(this);
+	myViewport->RegisterSceneEditor(this);
+	myPropertyEditor->RegisterSceneEditor(this);
+	//GUIWindow::CreateEditorWindow(Inspector());
+	//GUIWindow::CreateEditorWindow(Hierachy());
 
 	myCurrentScene = myPollingStation->Get<Scene>();
 	myModelFactory = myPollingStation->Get<ModelFactory>();
-
-	myRenderID.SetupRenderID(myCurrentScene);
-	myPollingStation->Get<RenderFactory>()->RegisterTarget(myRenderID);
-
-	if (myCurrentScene)
-		for (size_t i = 0; i < myCurrentScene->SceneObjects().size(); i++)
-		{
-			mySelectedElements.push_back(false);
-		}
-
-
 	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
 
 }
 
-const bool Dragonite::SceneEditor::IsBeingInteracted()
-{
-	return ImGui::IsWindowHovered() ||
-		ImGui::IsWindowFocused() ||
-		ImGui::IsAnyItemFocused() ||
-		myPropertyFocus;
-}
+
 
 
 

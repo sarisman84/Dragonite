@@ -8,6 +8,8 @@
 #include "Core/External/imgui/backends/imgui_impl_win32.h"
 #include "Core/External/imgui/ImGuizmo.h"
 
+#include "Core/Graphics/DirectX11/DXInterface.h"
+
 #include <d3d11.h>
 
 Dragonite::DragoniteGui::DragoniteGui() = default;
@@ -21,7 +23,7 @@ Dragonite::DragoniteGui::~DragoniteGui()
 
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicsPipeline* aGraphicsPipeline)
+void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicalInterface* aGraphicsPipeline)
 {
 	myApplicationIns = anAppIns;
 	myGraphicsPipeline = aGraphicsPipeline;
@@ -29,7 +31,6 @@ void Dragonite::DragoniteGui::Init(Runtime* anAppIns, GraphicsPipeline* aGraphic
 	InitializeImgui();
 
 	myGuiWindows.push_back(std::unique_ptr<GUIWindow>(nullptr));
-	myCachedGuiWindowsStates.push_back(false);
 
 }
 
@@ -41,7 +42,7 @@ void Dragonite::DragoniteGui::Render()
 	{
 		if (ImGui::BeginMenu("View"))
 		{
-			for (size_t i = 1; i < myCachedGuiWindowsStates.size(); i++)
+			for (size_t i = 1; i < myGuiWindows.size(); i++)
 			{
 				bool selected = false;
 				ImGui::MenuItem(myGuiWindows[i]->Name(), "", &selected);
@@ -55,7 +56,7 @@ void Dragonite::DragoniteGui::Render()
 			}
 			ImGui::EndMenu();
 		}
-	
+
 
 
 		ImGui::EndMainMenuBar();
@@ -66,38 +67,13 @@ void Dragonite::DragoniteGui::Render()
 	for (size_t i = 1; i < myGuiWindows.size(); i++)
 	{
 		auto& window = myGuiWindows[i];
-		myCachedGuiWindowsStates[i] = window->IsActive();
-		if (!window->IsActive()) continue;
-		ImGui::Begin(window->Name(), &window->IsActive());
-
-		if (!isAnyWindowInteracted)
-			isAnyWindowInteracted = window->IsBeingInteracted();
-
-		window->OnWindowRender();
-
-		ImGui::End();
-
-
-		if (myCachedGuiWindowsStates[i] != window->IsActive())
-		{
-			window->UpdateWindowState();
-		}
+		window->UpdateWindow();
 	}
-
-	myIsCurrentlyOnImGuiFlag = isAnyWindowInteracted;
 
 	EndDockingSpace();
 
 }
 
-void Dragonite::DragoniteGui::AddWindow(GUIWindow* aNewWindow)
-{
-	myCachedGuiWindowsStates.push_back(false);
-	myGuiWindows.push_back(std::unique_ptr<GUIWindow>(aNewWindow));
-	auto& ins = myGuiWindows.back();
-	ins->Init(&myApplicationIns->GetPollingStation(), this);
-	ins->SetActive(true);
-}
 
 void Dragonite::DragoniteGui::InitializeImgui()
 {
@@ -110,7 +86,7 @@ void Dragonite::DragoniteGui::InitializeImgui()
 	io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports | ImGuiBackendFlags_RendererHasViewports;
 
 	ImGui_ImplWin32_Init(myApplicationIns->GetClientInstance());
-	ImGui_ImplDX11_Init(myGraphicsPipeline->GetDevice().Get(), myGraphicsPipeline->GetContext().Get());
+	ImGui_ImplDX11_Init(DXInterface::Device.Get(), DXInterface::Context.Get());
 	ImGui::StyleColorsDark();
 
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -120,28 +96,28 @@ void Dragonite::DragoniteGui::InitializeImgui()
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-
-	myApplicationIns->OnRender() += [this](GraphicsPipeline* aPipeline)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		ImGuizmo::BeginFrame();
-		Render();
-		ImGui::Render();
-
-		aPipeline->myContext->OMSetRenderTargets(1, aPipeline->myBackBuffer.GetAddressOf(), aPipeline->myDepthBuffer.Get());
-		/*aPipeline->myContext->ClearRenderTargetView(aPipeline->myBackBuffer.Get(), &aPipeline->myClearColor);
-		aPipeline->myContext->ClearDepthStencilView(aPipeline->myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
-
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	myApplicationIns->GetPollingStation().Get<GraphicalInterface>()->RegisterRenderCall([this]()
 		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-		}
-	};
+			ImGuiIO& io = ImGui::GetIO();
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+			ImGuizmo::BeginFrame();
+			Render();
+			ImGui::Render();
+
+			DXInterface::Context->OMSetRenderTargets(1, DXInterface::GetBackBuffer().GetAddressOf(), DXInterface::GetDepthBuffer().Get());
+			/*aPipeline->myContext->ClearRenderTargetView(aPipeline->myBackBuffer.Get(), &aPipeline->myClearColor);
+			aPipeline->myContext->ClearDepthStencilView(aPipeline->myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
+
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
+		});
+
 
 
 	myApplicationIns->OnWndProc() += [this](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -210,6 +186,14 @@ void Dragonite::DragoniteGui::BeginDockingSpace()
 void Dragonite::DragoniteGui::EndDockingSpace()
 {
 	ImGui::End();
+}
+
+void Dragonite::DragoniteGui::CreateEditorWindow(GUIWindow* aWindowType)
+{
+	myGuiWindows.push_back(std::unique_ptr<GUIWindow>(aWindowType));
+	auto& ins = myGuiWindows.back();
+	ins->Init(&myApplicationIns->GetPollingStation(), this);
+	ins->SetActive(true);
 }
 
 std::unique_ptr<Dragonite::GUIWindow>& Dragonite::DragoniteGui::GetWindow(const char* aName)

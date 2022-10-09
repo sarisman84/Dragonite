@@ -14,7 +14,7 @@
 void Dragonite::Scene::Awake()
 {
 	auto mf = myPollingStation->Get<ModelFactory>();
-	myRenderInterface = myPollingStation->Get<RenderInterface>();
+	myRenderInterface = myPollingStation->Get<GraphicalInterface>();
 	myCamera.Profile() = new PerspectiveProfile(90.0f, 0.1f, 1000.0f);
 	myCamera.GetTransform().myPosition = { 0,0,-7.0f };
 	myCamera.GetTransform().myScale = { 1,1,1 };
@@ -24,9 +24,7 @@ void Dragonite::Scene::Awake()
 	float pos = -cubeCount / 2;
 	for (; cubeCount >= 0; cubeCount--)
 	{
-
-		
-		Object newObject = Object("New GameObject");
+		Object newObject = Object((std::string("New GameObject") + std::to_string(cubeCount)).c_str());
 		newObject.Init(myPollingStation);
 		newObject.GetTransform().myPosition = { pos,0, 1 };
 

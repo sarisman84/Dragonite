@@ -1,13 +1,13 @@
 #pragma once
-#include "Core/Graphics/DXIncludes.h"
-#include "../../CU/Math/Vector2.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
+#include "Core/CU/Math/Vector2.h"
 
 #include <d3d11.h>
 #include <memory>
 
 namespace Dragonite
 {
-	class GraphicsPipeline;
+	class GraphicalInterface;
 	struct TextureLoaderDesc
 	{
 		enum class LoaderType
@@ -38,7 +38,7 @@ namespace Dragonite
 
 		inline ShaderResourceV GetData() { return myResourceView; }
 
-		bool Init(GraphicsPipeline* aPipeline,const TextureLoaderDesc& aDesc);
+		bool Init(GraphicalInterface* aPipeline,const TextureLoaderDesc& aDesc);
 		void Bind(DeviceContext& someContext);
 
 

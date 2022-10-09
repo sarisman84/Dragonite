@@ -1,11 +1,11 @@
 #pragma once
 #include <memory>
-#include "../DXIncludes.h"
-#include "../../CU/Math/Vector4.h"
-#include "../../CU/Math/Vector2.h"
-#include "../../CU/Transform.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
+#include "Core/CU/Math/Vector4.h"
+#include "Core/CU/Math/Vector2.h"
+#include "Core/CU/Transform.h"
 
-#include "../Textures/Texture.h"
+#include "Core/Graphics/Textures/Texture.h"
 namespace Dragonite
 {
 	struct Vertex
@@ -34,7 +34,8 @@ namespace Dragonite
 
 	class Model
 	{
-		friend class GraphicsPipeline;
+	public:
+		friend class GraphicalInterface;
 		friend class ModelFactory;
 		friend class RenderID;
 		DataBuffer
@@ -52,7 +53,7 @@ namespace Dragonite
 	class ModelInstance
 	{
 	public:
-		friend class GraphicsPipeline;
+		friend class GraphicalInterface;
 		friend class ModelFactory;
 		friend class RenderID;
 		ModelRef myModel;
@@ -60,13 +61,6 @@ namespace Dragonite
 		TextureRef myTexture;
 		const char* myModelName;
 		const char* myTextureName;
-		unsigned int myID;
-	private:
-		VertexShader
-			myVertexShader;
-		PixelShader
-			myPixelShader;
-		InputLayout
-			myInputLayout;
+		unsigned int myShaderInstructionsID;
 	};
 }

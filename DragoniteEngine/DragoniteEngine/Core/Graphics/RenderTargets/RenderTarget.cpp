@@ -1,5 +1,6 @@
 #include "RenderTarget.h"
-#include "Core/Graphics/DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXInterface.h"
 #include <d3d11.h>
 #include <cassert>
 
@@ -29,17 +30,17 @@ void Dragonite::RenderTarget::InternalInit(const RenderTargetDesc& aDesc)
 
 	DXTexture2D texture;
 
-	result = myPipeline->myDevice->CreateTexture2D(&desc, nullptr, &texture);
+	result = DXInterface::Device->CreateTexture2D(&desc, nullptr, &texture);
 	assert(SUCCEEDED(result));
-	result = myPipeline->myDevice->CreateShaderResourceView(texture.Get(), nullptr, &myResourceView);
+	result = DXInterface::Device->CreateShaderResourceView(texture.Get(), nullptr, &myResourceView);
 	assert(SUCCEEDED(result));
-	result = myPipeline->myDevice->CreateRenderTargetView(texture.Get(), nullptr, &myRenderView);
+	result = DXInterface::Device->CreateRenderTargetView(texture.Get(), nullptr, &myRenderView);
 	assert(SUCCEEDED(result));
 }
 
 Dragonite::RenderTarget::RenderTarget() : myPipeline(nullptr) {};
 
-Dragonite::RenderTarget::RenderTarget(GraphicsPipeline* aPipeline, const RenderTargetDesc& aDesc)
+Dragonite::RenderTarget::RenderTarget(GraphicalInterface* aPipeline, const RenderTargetDesc& aDesc)
 {
 	myPipeline = aPipeline;
 	assert(myPipeline != nullptr);
@@ -49,17 +50,5 @@ Dragonite::RenderTarget::RenderTarget(GraphicsPipeline* aPipeline, const RenderT
 
 };
 
-Dragonite::RenderTarget::~RenderTarget() = default;
-
-const bool Dragonite::RenderTarget::RenderThisTarget(DepthStencil aDepthStencil)
-{
-	if (!myPipeline || !myRenderView) return false;
-
-	auto og = myPipeline->ClearColor();
-	myPipeline->ClearColor() = Color{ 0,0,0,0.0f };
-	myPipeline->SwitchRenderTarget(myRenderView, aDepthStencil);
-	myPipeline->ClearColor() = og;
-	return OnRender();
-}
 
 

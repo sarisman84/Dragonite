@@ -6,19 +6,19 @@
 namespace Dragonite
 {
 	class RenderTarget;
-	class GraphicsPipeline;
+	class GraphicalInterface;
 
 	class RenderFactory
 	{
 	public:
 		RenderFactory() = default;
 
-		bool Init(GraphicsPipeline* aPipeline);
+		bool Init(GraphicalInterface* aPipeline);
 
 		void RegisterTarget(RenderTarget& aTarget);
 
 	private:
-		GraphicsPipeline* myPipeline;
+		GraphicalInterface* myPipeline;
 	};
 
 }

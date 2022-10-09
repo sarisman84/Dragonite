@@ -4,7 +4,7 @@ Dragonite::EngineDebugger::EngineDebugger() : GUIWindow("Engine Debugger")
 {
 }
 
-void Dragonite::EngineDebugger::OnWindowRender()
+void Dragonite::EngineDebugger::OnWindowUpdate()
 {
 	ImGui::Text("Frames per second: %.1f", ImGui::GetIO().Framerate);
 
@@ -23,9 +23,3 @@ void Dragonite::EngineDebugger::OnWindowInit()
 {
 }
 
-const bool Dragonite::EngineDebugger::IsBeingInteracted()
-{
-	return  ImGui::IsWindowHovered() ||
-		ImGui::IsWindowFocused() ||
-		ImGui::IsAnyItemFocused();;
-}

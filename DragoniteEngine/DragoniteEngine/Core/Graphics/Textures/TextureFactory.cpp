@@ -3,6 +3,7 @@
 #include "Core/Runtime.h"
 
 #include "../../External/DirectX/DDSTextureLoader11.h"
+#include "Core/Graphics/DirectX11/DXInterface.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../External/STB/stb_image.h"
@@ -13,7 +14,7 @@
 
 
 
-Dragonite::TextureFactory::TextureFactory(GraphicsPipeline* aPipeline)
+Dragonite::TextureFactory::TextureFactory(GraphicalInterface* aPipeline)
 {
 	myPipeline = aPipeline;
 	myLoadedTextures[L"null"] = nullptr;
@@ -73,7 +74,7 @@ const bool LoadDDS(Dragonite::Device aDevice, const wchar_t* aPath, Dragonite::S
 	return true;
 }
 
-const bool LoadPNG(Dragonite::GraphicsPipeline* aPipeline, const wchar_t* aPath, Dragonite::TextureRef& anOutput, Dragonite::TextureLoaderDesc& aDesc)
+const bool LoadPNG(Dragonite::GraphicalInterface* aPipeline, const wchar_t* aPath, Dragonite::TextureRef& anOutput, Dragonite::TextureLoaderDesc& aDesc)
 {
 	int width, height, channels;
 
@@ -136,7 +137,7 @@ const bool Dragonite::TextureFactory::LoadTexture_Impl(TextureRef& anOutput, con
 		result = LoadPNG(myPipeline, aPath, anOutput, aDesc);
 		break;
 	case Dragonite::TextureLoaderDesc::LoaderType::DDS:
-		result = LoadDDS(myPipeline->GetDevice(), aPath, anOutput->myResourceView, anOutput->myResolution);
+		result = LoadDDS(DXInterface::Device, aPath, anOutput->myResourceView, anOutput->myResolution);
 		anOutput->mySlot = aDesc.myTargetSlot;
 		break;
 	default:

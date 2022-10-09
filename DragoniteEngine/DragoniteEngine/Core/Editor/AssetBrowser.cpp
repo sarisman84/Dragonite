@@ -15,6 +15,11 @@ Dragonite::AssetBrowser::AssetBrowser() : GUIWindow("Project")
 {
 }
 
+Dragonite::AssetBrowser::~AssetBrowser()
+{
+	
+}
+
 void Dragonite::AssetBrowser::OnWindowInit()
 {
 	myAssetBrowserDirectory.assign("resources");
@@ -86,7 +91,7 @@ void Dragonite::AssetBrowser::OnWindowInit()
 	};*/
 }
 
-void Dragonite::AssetBrowser::OnWindowRender()
+void Dragonite::AssetBrowser::OnWindowUpdate()
 {
 	auto extension = mySelectedAsset.path().filename().extension();
 	bool isDDS = extension == ".dds";
@@ -111,7 +116,7 @@ void Dragonite::AssetBrowser::OnWindowRender()
 	myCreateFolderCommand->ApplyCommand();
 
 
-	if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && mySelectedAsset != Directory() && IsBeingInteracted())
+	if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && mySelectedAsset != Directory())
 	{
 		if (isImage)
 		{
@@ -144,14 +149,11 @@ void Dragonite::AssetBrowser::OnDisable()
 {
 }
 
-const bool Dragonite::AssetBrowser::IsBeingInteracted()
+void Dragonite::AssetBrowser::RegisterSceneEditor(SceneEditor* anEditor)
 {
-	return ImGui::IsWindowHovered() ||
-		ImGui::IsWindowFocused() ||
-		ImGui::IsAnyItemFocused() ||
-		myFolderContentFocus ||
-		myFolderStructureFocus;
+	mySceneEditor = anEditor;
 }
+
 
 void Dragonite::AssetBrowser::RenderFolderStructure()
 {

@@ -2,6 +2,7 @@
 #include <d3d11.h>
 
 #include "../GraphicsAPI.h"
+#include "Core/Graphics/DirectX11/DXInterface.h"
 
 Dragonite::Texture::Texture()
 {
@@ -12,7 +13,7 @@ Dragonite::Texture::~Texture()
 }
 
 
-const bool GenerateMipMap(Dragonite::GraphicsPipeline* aPipeline, Dragonite::ShaderResourceV& aResourceView, D3D11_TEXTURE2D_DESC& aDesc, Dragonite::DXTexture2D aTexture2D, unsigned char* rgbaPixels, int width, int height)
+const bool GenerateMipMap(Dragonite::GraphicalInterface* aPipeline, Dragonite::ShaderResourceV& aResourceView, D3D11_TEXTURE2D_DESC& aDesc, Dragonite::DXTexture2D aTexture2D, unsigned char* rgbaPixels, int width, int height)
 {
 	HRESULT result;
 
@@ -21,22 +22,22 @@ const bool GenerateMipMap(Dragonite::GraphicsPipeline* aPipeline, Dragonite::Sha
 	aDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	aDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-	result = aPipeline->GetDevice()->CreateTexture2D(&aDesc, nullptr, &aTexture2D);
+	result = Dragonite::DXInterface::Device->CreateTexture2D(&aDesc, nullptr, &aTexture2D);
 	if (FAILED(result))
 		return false;
 
-	result = aPipeline->GetDevice()->CreateShaderResourceView(aTexture2D.Get(), NULL, &aResourceView);
+	result = Dragonite::DXInterface::Device->CreateShaderResourceView(aTexture2D.Get(), NULL, &aResourceView);
 	if (FAILED(result))
 		return false;
 
-	aPipeline->GetContext()->UpdateSubresource(aTexture2D.Get(), 0, nullptr, (void*)rgbaPixels, width * 4, width * height * 4);
-	aPipeline->GetContext()->GenerateMips(aResourceView.Get());
+	Dragonite::DXInterface::Context->UpdateSubresource(aTexture2D.Get(), 0, nullptr, (void*)rgbaPixels, width * 4, width * height * 4);
+	Dragonite::DXInterface::Context->GenerateMips(aResourceView.Get());
 	return true;
 }
 
-bool Dragonite::Texture::Init(GraphicsPipeline* aPipeline, const TextureLoaderDesc& aDesc)
+bool Dragonite::Texture::Init(GraphicalInterface* aPipeline, const TextureLoaderDesc& aDesc)
 {
-	Device device = aPipeline->GetDevice();
+	Device device = DXInterface::Device;
 	DXTexture2D texture;
 
 	D3D11_TEXTURE2D_DESC desc = {};
@@ -61,7 +62,7 @@ bool Dragonite::Texture::Init(GraphicsPipeline* aPipeline, const TextureLoaderDe
 	{
 		desc.MipLevels = 1;
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		
+
 		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		desc.MiscFlags = 0;
 
@@ -81,7 +82,7 @@ bool Dragonite::Texture::Init(GraphicsPipeline* aPipeline, const TextureLoaderDe
 			return false;
 		}
 	}
-	
+
 
 
 	return true;

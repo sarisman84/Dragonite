@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Graphics/DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
 #include "Core/CU/Math/Vector2.h"
 
 #include <vector>
@@ -28,23 +28,19 @@ namespace Dragonite
 	};
 
 
-	class GraphicsPipeline;
+	class GraphicalInterface;
 
 	class RenderTarget
 	{
 	protected:
 		RenderView myRenderView;
 		ShaderResourceV myResourceView;
-		GraphicsPipeline* myPipeline;
+		GraphicalInterface* myPipeline;
 		void InternalInit(const RenderTargetDesc& aDesc);
-
+		virtual void Render() = 0;
 	public:
 		RenderTarget();
-		RenderTarget(GraphicsPipeline* aPipeline, const RenderTargetDesc& aDesc);
-		virtual ~RenderTarget();
-		
-		virtual const bool OnRender() = 0;
-		const bool RenderThisTarget(DepthStencil aDepthStenci = nullptr);
+		RenderTarget(GraphicalInterface* aPipeline, const RenderTargetDesc& aDesc);
 	};
 }
 

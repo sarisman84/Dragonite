@@ -8,22 +8,31 @@
 void Dragonite::ModelRenderer::Awake()
 {
 	myModelFactory = myPollingStation->Get<ModelFactory>();
-	myRenderInterface = myPollingStation->Get<RenderInterface>();
+	myRenderInterface = myPollingStation->Get<GraphicalInterface>();
 }
 
 void Dragonite::ModelRenderer::Update(const float aDt)
 {
-	if (!myModel) return;
-	myModel->myTransform = myObject->GetTransform();
-	myRenderInterface->DrawElement(myModel);
+	if (!myModelInstance || !myObject) return;
+
+	RenderInstructions instruction;
+	instruction.myTexture = myModelInstance->myTexture;
+	instruction.myModelMatrix = myObject->GetTransform().GetMatrix();
+	instruction.myIndexBuffer = myModelInstance->myModel->myIndexBuffer;
+	instruction.myIndexCount = myModelInstance->myModel->myIndexCount;
+	instruction.myVertexBuffer = myModelInstance->myModel->myVertexBuffer;
+	instruction.myShaderInstructionsID = myModelInstance->myShaderInstructionsID;
+	instruction.myID = myObject->UUID();
+
+	myRenderInterface->AddRenderInstructions(instruction);
 
 }
 
 void Dragonite::ModelRenderer::OnInspectorGUI()
 {
 
-	ImGui::Text("Model: %s", myModel->myModelName);
-	ImGui::Text("Texture: %s", myModel->myTextureName);
+	ImGui::Text("Model: %s", myModelInstance->myModelName);
+	ImGui::Text("Texture: %s", myModelInstance->myTextureName);
 
 
 }

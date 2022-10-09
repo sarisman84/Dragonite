@@ -9,7 +9,7 @@ namespace Dragonite
 	class PollingStation;
 	class ModelInstance;
 	class Runtime;
-	class RenderInterface;
+	class GraphicalInterface;
 	class InputManager;
 
 	class Scene
@@ -23,7 +23,7 @@ namespace Dragonite
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
-		RenderInterface* myRenderInterface;
+		GraphicalInterface* myRenderInterface;
 		InputManager* myInputManager;
 
 		Camera myCamera;

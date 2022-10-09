@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Graphics/DXIncludes.h"
+#include "Core/Graphics/DirectX11/DXIncludes.h"
 #include "Core/Graphics/RenderTargets/RenderTarget.h"
 #include "Core/CU/Math/Vector3.h"
 #include "Core/CU/Math/Vector2.h"
@@ -18,20 +18,13 @@ namespace Dragonite
 	{
 	public:
 		RenderID();
-		~RenderID() override; 
-		RenderID(GraphicsPipeline* aPipeline);
+		RenderID(GraphicalInterface* aPipeline);
 
-		void SetupRenderID(Scene* aCurrentScene);
-		const bool OnRender() override;
-
-		inline bool& ViewRenderID() { return myViewRenderID; }
-
+		void RefreshRenderView(Vector2f aViewportResolution);
 		const bool TryGetElement(Mouse* someScreenCoordPos, int& anOutputElement);
-
+		const bool TryGetElement(const Vector2f& someScreenCoordPos, const Vector2f& aViewport, int& anOutputElement);
+		void Render() override;
 	private:
-		void DrawRenderID();
-
-
 		struct RenderIDBuffer
 		{
 			unsigned int myID;
@@ -39,14 +32,13 @@ namespace Dragonite
 		};
 		VertexShader myRenderIDVertexShader;
 		PixelShader myWriteRenderIDPixelShader;
-		PixelShader myReadRenderIDPixelShader;
 
 		DataBuffer myRenderIDBuffer;
-
-		CameraProfile* myOriginalProfile;
-		CameraProfile* myOrthographicProfile;
 		Scene* myScene;
 		bool myViewRenderID;
+
+
+
 	};
 }
 

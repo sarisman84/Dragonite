@@ -3,7 +3,7 @@
 #include "RenderFactory.h"
 
 #pragma comment(lib, "d3d11.lib")
-bool Dragonite::RenderFactory::Init(GraphicsPipeline* aPipeline)
+bool Dragonite::RenderFactory::Init(GraphicalInterface* aPipeline)
 {
     if (!aPipeline) return false;
     myPipeline = aPipeline;
@@ -14,7 +14,7 @@ bool Dragonite::RenderFactory::Init(GraphicsPipeline* aPipeline)
 
 void Dragonite::RenderFactory::RegisterTarget(RenderTarget& aTarget)
 {
-    myPipeline->myActiveRenderTarget = &aTarget;
+  
 }
 
 

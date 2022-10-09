@@ -1,9 +1,13 @@
 #include "Object.h"
 
-Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true) {}
+Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true) 
+{
+	GenerateID();
+}
 
 Dragonite::Object::Object(const char* aName) : myName(aName), myActiveState(true)
 {
+	GenerateID();
 }
 
 Dragonite::Object::~Object() = default;
@@ -21,6 +25,7 @@ Dragonite::Object::Object(const Object& aCpy)
 		comp->myObject = this;
 		comp->myPollingStation = myPollingStation;
 	}
+	myUUID = aCpy.myUUID;
 }
 
 void Dragonite::Object::operator=(const Object& aCpy)
@@ -36,6 +41,7 @@ void Dragonite::Object::operator=(const Object& aCpy)
 		comp->myObject = this;
 		comp->myPollingStation = myPollingStation;
 	}
+	myUUID = aCpy.myUUID;
 }
 
 void Dragonite::Object::Update(const float aDt)
@@ -45,4 +51,10 @@ void Dragonite::Object::Update(const float aDt)
 	{
 		comp->Update(aDt);
 	}
+}
+
+void Dragonite::Object::GenerateID()
+{
+	static unsigned int id = 0;
+	myUUID = id++;
 }

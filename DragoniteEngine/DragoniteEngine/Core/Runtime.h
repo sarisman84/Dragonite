@@ -25,7 +25,7 @@ namespace Dragonite
 	using Time = std::chrono::time_point<std::chrono::steady_clock>;
 	using Clock = std::chrono::high_resolution_clock;
 
-	class GraphicsPipeline;
+	class GraphicalInterface;
 	class DragoniteGui;
 	class PollingStation;
 	class Scene;
@@ -42,7 +42,7 @@ namespace Dragonite
 
 		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
 		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
-		inline Function<void(GraphicsPipeline*)>& OnRender() { return myOnRenderCB; }
+		inline Function<void(GraphicalInterface*)>& OnRender() { return myOnRenderCB; }
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -56,13 +56,13 @@ namespace Dragonite
 		bool myRuntimeState;
 		HWND myInstance;
 		PollingStation* myRuntimeHandler;
-		GraphicsPipeline* myPipeline;
+		GraphicalInterface* myPipeline;
 		Scene* myScene;
 
 
 		Function<void(const float)> myUpdateCB;
 		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
-		Function<void(GraphicsPipeline*)> myOnRenderCB;
+		Function<void(GraphicalInterface*)> myOnRenderCB;
 
 
 		DragoniteGui* myGUIInterface;

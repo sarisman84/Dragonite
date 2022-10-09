@@ -28,13 +28,13 @@ namespace Dragonite
 		typedef std::filesystem::path Path;
 	public:
 		AssetBrowser();
+		~AssetBrowser() override;
 		void OnWindowInit() override;
-		void OnWindowRender() override;
+		void OnWindowUpdate() override;
 		void OnEnable() override;
 		void OnDisable() override;
 
-		const bool IsBeingInteracted() override;
-
+		void RegisterSceneEditor(SceneEditor* anEditor);
 
 	private:
 		void RenderFolderStructure();
