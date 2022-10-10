@@ -201,9 +201,6 @@
     <ClInclude Include="Core\External\imgui\ImGuizmo.h">
       <Filter>Core\External\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Editor\AssetBrowser.h">
-      <Filter>Core\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Editor\Commands\MenuCommand.h">
       <Filter>Core\Editor\Commands</Filter>
     </ClInclude>
@@ -223,6 +220,9 @@
       <Filter>Core\Editor\SceneEditor</Filter>
     </ClInclude>
     <ClInclude Include="Core\Editor\SceneEditor\PropertyEditor.h">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\AssetBrowser.h">
       <Filter>Core\Editor\SceneEditor</Filter>
     </ClInclude>
   </ItemGroup>
@@ -325,9 +325,6 @@
     <ClCompile Include="Core\External\imgui\ImGuizmo.cpp">
       <Filter>Core\External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Editor\AssetBrowser.cpp">
-      <Filter>Core\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Editor\Commands\MenuCommand.cpp">
       <Filter>Core\Editor\Commands</Filter>
     </ClCompile>
@@ -341,6 +338,9 @@
       <Filter>Core\Editor\SceneEditor</Filter>
     </ClCompile>
     <ClCompile Include="Core\Editor\SceneEditor\PropertyEditor.cpp">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Editor\AssetBrowser.cpp">
       <Filter>Core\Editor\SceneEditor</Filter>
     </ClCompile>
   </ItemGroup>

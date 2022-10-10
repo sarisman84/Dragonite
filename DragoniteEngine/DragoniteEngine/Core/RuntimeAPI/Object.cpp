@@ -55,6 +55,6 @@ void Dragonite::Object::Update(const float aDt)
 
 void Dragonite::Object::GenerateID()
 {
-	static unsigned int id = 0;
+	static unsigned int id = 1;
 	myUUID = id++;
 }

@@ -2,8 +2,16 @@
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/RuntimeAPI/Scene.h"
 #include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/Components/ModelRenderer.h"
+
+#include "Core/Editor/SceneEditor.h"
+#include "Core/Editor/AssetBrowser.h"
 
 #include "Core/Utilities/Input.h"
+
+#include "Core/Graphics/Models/ModelFactory.h"
+#include "Core/Graphics/Textures/TextureFactory.h"
+
 
 #include <d3d11.h>
 
@@ -17,19 +25,26 @@ Dragonite::Viewport::~Viewport()
 
 const bool Dragonite::Viewport::TryGetObjectID(Mouse* aMouse, int& anId)
 {
-	auto viewport = DXInterface::GetViewportResolution();
-	auto pos = aMouse->position - myMinRegion;
-	bool r = myRenderID.TryGetElement(pos, myCurrentResolution, anId);
+	bool r = false;
+	if (!myIsManipulatingFlag)
+	{
+
+		r = myRenderID.TryGetElement(GetLocalMousePos(aMouse), anId);
+		myLastValidElement = anId;
+	}
+	else
+		anId = myLastValidElement;
 	myFoundID = anId;
 
 	return r;
 }
 
-void Dragonite::Viewport::DisplayMouseCoordinateInViewport(Mouse* aMouse)
+void Dragonite::Viewport::DisplayDebugInfo(Mouse* aMouse)
 {
 
 	//ImGui::OpenPopup("mouse_coordinates");
-	if (ImGui::CollapsingHeader("Debug")) {
+	if (ImGui::CollapsingHeader("Debug"))
+	{
 		ImGui::Indent();
 		auto pos = aMouse->position - myMinRegion;
 		ImGui::Text("Mouse Position, (%0.0f, %0.0f)", aMouse->position.x, aMouse->position.y);
@@ -37,6 +52,8 @@ void Dragonite::Viewport::DisplayMouseCoordinateInViewport(Mouse* aMouse)
 		ImGui::Text("Min Region (%0.0f, %0.0f)", myMinRegion.x, myMinRegion.y);
 		ImGui::Text("Resolution (%0.0f, %0.0f)", myCurrentResolution.x, myCurrentResolution.y);
 		ImGui::Text("Found ID: %i", myFoundID);
+		ImGui::Checkbox("View RenderID", &myRenderID.ViewRenderID());
+
 		ImGui::Unindent();
 	}
 
@@ -45,9 +62,35 @@ void Dragonite::Viewport::DisplayMouseCoordinateInViewport(Mouse* aMouse)
 
 }
 
+const Dragonite::Vector2f Dragonite::Viewport::GetLocalMousePos(Mouse* aMouse)
+{
+	auto viewport = DXInterface::GetViewportResolution();
+	auto pos = aMouse->position - myMinRegion;
+	return pos;
+}
+
+void Dragonite::Viewport::ManipulateObject(Dragonite::Scene* aScene, Dragonite::Object* anObject)
+{
+	myIsManipulatingFlag = false;
+	auto& cam = aScene->GetCamera();
+	Matrix4x4f view = cam.ViewMatrix();
+	Matrix4x4f proj = cam.Profile()->CalculateProjectionMatrix();
+	Matrix4x4f transform = anObject->GetTransform().GetMatrix();
+	ImGuizmo::SetRect(myMinRegion.x, myMinRegion.y, myCurrentResolution.x, myCurrentResolution.y);
+	ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
+
+	if (ImGuizmo::IsUsing())
+	{
+		myIsManipulatingFlag = true;
+		anObject->GetTransform().SetMatrix(transform);
+	}
+
+}
+
 void Dragonite::Viewport::OnWindowInit()
 {
 	myGraphicsInterface = myPollingStation->Get<GraphicalInterface>();
+	myTextureFactory = myPollingStation->Get<TextureFactory>();
 	myCurrentScene = myPollingStation->Get<Scene>();
 	myRenderID = RenderID(myGraphicsInterface);
 
@@ -79,6 +122,8 @@ void Dragonite::Viewport::OnWindowInit()
 	assert(SUCCEEDED(result));
 
 
+
+	myRenderID.ViewRenderID() = true;
 }
 
 
@@ -96,15 +141,59 @@ void Dragonite::Viewport::OnWindowUpdate()
 	myPreviousResolution = myCurrentResolution;
 
 
-	myAspectRatio = (resolution.y / resolution.x) * (ImGui::GetWindowHeight() / resolution.y) * 1.75f;
-	myCurrentResolution = resolution * myAspectRatio;
+	myAspectRatio = (ImGui::GetWindowContentRegionWidth() / ImGui::GetWindowHeight());
+	myCurrentResolution = (Vector2f(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()) / myAspectRatio) * 1.5f;
+
+	myRenderID.SetTotalElementCount(static_cast<float>(mySceneEditor->GetCurrentScene()->SceneObjects().size()));
 	myRenderID.Render();
 	DXInterface::SwitchRenderTarget(myViewportTarget, DXInterface::GetDepthBuffer());
-	myGraphicsInterface->DrawInstructions();
+	if (myRenderID.ViewRenderID())
+		myRenderID.RenderIDTexture();
+	else
+		myGraphicsInterface->DrawInstructions();
 	DXInterface::SwitchRenderTarget(DXInterface::GetBackBuffer(), DXInterface::GetDepthBuffer());
+	myRenderID.SetViewport(myCurrentResolution, Vector2f(0, 0));
 	ImGui::Image(myViewportResource.Get(), ImVec2(myCurrentResolution.x, myCurrentResolution.y));
 
-	myFocusFlag = ImGui::IsWindowFocused();
+
+	auto assetBrowser = mySceneEditor->GetAssetBrowser();
+
+
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload* load = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM", ImGuiDragDropFlags_SourceExtern);
+
+
+		mySceneEditor->TryGetNewElement();
+
+
+		auto foundObj = mySceneEditor->GetInspectedObject();
+		if (load && load->IsDelivery() && foundObj)
+		{
+			std::filesystem::directory_entry* file = (std::filesystem::directory_entry*)load->Data;
+
+			if (file->path().filename().extension() == ".dds" ||
+				file->path().filename().extension() == ".png")
+			{
+				std::shared_ptr<ModelRenderer> renderer = foundObj->GetComponent<ModelRenderer>();
+				renderer->Model()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+			}
+
+
+		}
+
+		ImGui::EndDragDropTarget();
+
+	}
+
+
+
+	auto obj = mySceneEditor->GetInspectedObject();
+	if (obj)
+		ManipulateObject(myCurrentScene, obj);
+
+
 
 }
 

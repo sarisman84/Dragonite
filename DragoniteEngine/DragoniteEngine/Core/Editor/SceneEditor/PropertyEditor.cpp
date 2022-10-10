@@ -109,11 +109,15 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 	{
 		std::string name("Component_");
 		name += std::to_string(i);
-		ImGui::Indent();
+		
 		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Indent();
 			InspectComponent(components[i].get());
-		ImGui::Unindent();
-	}
+			ImGui::Unindent();
+		}
+		}
+			
 
 
 

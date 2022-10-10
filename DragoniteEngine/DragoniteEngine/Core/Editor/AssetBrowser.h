@@ -13,6 +13,7 @@ namespace Dragonite
 	class Scene;
 	class SceneEditor;
 	class Texture;
+	class Mouse;
 
 	class ModalWindow;
 	class FolderCommand;
@@ -35,7 +36,7 @@ namespace Dragonite
 		void OnDisable() override;
 
 		void RegisterSceneEditor(SceneEditor* anEditor);
-
+		inline const char* GetDragID() { return myDragID; }
 	private:
 		void RenderFolderStructure();
 		void RenderFolderStructure(Directory anEntry, const bool anIndentFlag = false);
@@ -71,6 +72,9 @@ namespace Dragonite
 		TextureFactory* myTextureFactory;
 		Scene* myScene;
 		SceneEditor* mySceneEditor;
+		Mouse* myMouseInput;
+
+		const char* myDragID = "asset_Drag";
 	};
 }
 

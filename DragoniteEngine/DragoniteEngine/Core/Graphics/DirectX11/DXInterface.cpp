@@ -30,6 +30,7 @@ const bool Dragonite::DXInterface::Init(HWND anInstance)
 		return false;
 	}
 
+
 	AlphaBlend aBlend = AlphaBlend();
 	if (FAILED(CreateBlendState(BLEND_ALPHA, &aBlend)))
 	{
@@ -107,14 +108,7 @@ const HRESULT Dragonite::DXInterface::CreateSampler(const unsigned int aKey, Sam
 	return Device->CreateSamplerState(aSamplerDesc, myInstance.mySamplers[aKey].GetAddressOf());
 }
 
-const HRESULT Dragonite::DXInterface::CreateViewPort(const unsigned int aKey, Viewport* aViewport)
-{
-	if (!aViewport) return E_INVALIDARG;
 
-	myInstance.myViewports[aKey] = aViewport;
-
-	return S_OK;
-}
 
 const HRESULT Dragonite::DXInterface::CreateBlendState(const unsigned int aKey, D3D11_BLEND_DESC* aDesc)
 {
@@ -192,14 +186,21 @@ const HRESULT Dragonite::DXInterface::CreatePSInstance(const char* aPath, PixelS
 	return Device->CreatePixelShader(data.data(), data.size(), nullptr, &aShader);
 }
 
-const HRESULT Dragonite::DXInterface::SetViewport(const unsigned int aKey)
+const HRESULT Dragonite::DXInterface::SetViewport(const Vector2f& aNewViewport, const Vector2f& aTopLeftCoord, const float aMinDepth, const float aMaxDepth)
 {
-	if (myInstance.myViewports.count(aKey) <= 0) return E_NOT_SET;
-	Context->RSSetViewports(1, myInstance.myViewports[aKey]);
+	D3D11_VIEWPORT newViewport;
+	newViewport.TopLeftX = aTopLeftCoord.x;
+	newViewport.TopLeftY = aTopLeftCoord.y;
+	newViewport.Width = aNewViewport.x;
+	newViewport.Height = aNewViewport.y;
+	newViewport.MinDepth = aMinDepth;
+	newViewport.MaxDepth = aMaxDepth;
+	
+	Context->RSSetViewports(1, &newViewport);
 	return S_OK;
 }
 
-const Dragonite::Vector2f Dragonite::DXInterface::GetViewportResolution(const unsigned int aKey)
+const Dragonite::Vector2f Dragonite::DXInterface::GetViewportResolution()
 {
 	D3D11_VIEWPORT port;
 	UINT amm = 1;
@@ -282,14 +283,7 @@ const HRESULT Dragonite::DXInterface::InitializeBackBuffer()
 		return E_INVALIDARG;
 	}
 
-
-	Viewport port(Vector2f(), Vector2f(textureDesc.Width, textureDesc.Height));
-	if (FAILED(CreateViewPort(VIEWPORT_MAIN, &port))) {
-		return E_INVALIDARG;
-	}
-
-
-	SetViewport(VIEWPORT_MAIN);
+	SetViewport(Vector2f(textureDesc.Width, textureDesc.Height));
 
 	return S_OK;
 }

@@ -6,12 +6,15 @@ DefaultPixelOutput main(DefaultPixelInputType input)
 {
     DefaultPixelOutput result;
 	
-   
+    unsigned int id = (unsigned int) aTexture.Sample(aUINTSampler, input.uv.xy).r;
     
-    result.color = aTexture.Sample(aSampler, input.uv.xy).rgba;
+
     
-    if(result.color.r == 0)
+    if (id == 0)
         discard;
+    
+    
+    result.color.r = (float) id / 11.0f;
     
     return result;
 

@@ -36,7 +36,6 @@ namespace Dragonite
 		static const HRESULT InitializeSwapChain(HWND anInstance = nullptr);
 
 		static const HRESULT CreateSampler(const unsigned int aKey, SamplerDesc* aSamplerDesc);
-		static const HRESULT CreateViewPort(const unsigned int aKey, Viewport* aViewport);
 		static const HRESULT CreateBlendState(const unsigned int aKey, D3D11_BLEND_DESC* aDesc);
 		static const HRESULT CreateBuffer(DataBuffer& aBuffer, BufferDesc* someBufferDesc);
 		static const HRESULT CreateTexture(DXTexture2D& aTexture, D3D11_TEXTURE2D_DESC* someTextureDesc);
@@ -45,8 +44,8 @@ namespace Dragonite
 		static const HRESULT CreatePSInstance(const char* aPath, PixelShader& aShader);
 
 		static const HRESULT ModifyBuffer(DataBuffer& aBuffer, Data&& someData);
-		static const HRESULT SetViewport(const unsigned int aKey = VIEWPORT_MAIN);
-		static const Vector2f GetViewportResolution(const unsigned int aKey = VIEWPORT_MAIN);
+		static const HRESULT SetViewport(const Vector2f& aNewViewport, const Vector2f& aTopLeftCoord = Vector2f(0, 0), const float aMinDepth = 0.0f, const float aMaxDepth = 1.0f);
+		static const Vector2f GetViewportResolution();
 		static TextureSampler GetSampler(unsigned int aKey = 0);
 		static DepthStencil GetDepthBuffer() { return myInstance.myDepthBuffer; }
 		static RenderView GetBackBuffer() { return myInstance.myBackBuffer; }

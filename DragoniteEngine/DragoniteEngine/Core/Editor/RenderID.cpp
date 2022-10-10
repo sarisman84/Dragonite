@@ -23,6 +23,7 @@ Dragonite::RenderID::RenderID(GraphicalInterface* aPipeline) : RenderTarget(aPip
 	//Create VS and PS Instances
 	assert(SUCCEEDED(DXInterface::CreateVSInstance("Fullscreen", myRenderIDVertexShader, vsData)));
 	assert(SUCCEEDED(DXInterface::CreatePSInstance("RenderID", myWriteRenderIDPixelShader)));
+	assert(SUCCEEDED(DXInterface::CreatePSInstance("FullscreenUnlit", myReadRenderIDPixelShader)));
 
 	auto desc = BufferDesc(
 		sizeof(RenderIDBuffer),
@@ -35,6 +36,17 @@ Dragonite::RenderID::RenderID(GraphicalInterface* aPipeline) : RenderTarget(aPip
 
 
 
+}
+
+void Dragonite::RenderID::SetTotalElementCount(const float anElementCount)
+{
+	myElementCount = anElementCount;
+}
+
+void Dragonite::RenderID::SetViewport(Vector2f aResolution, Vector2f anTopLeftOrigin)
+{
+	myCurrentResolution = aResolution;
+	myTopLeftOrigin = anTopLeftOrigin;
 }
 
 
@@ -58,9 +70,8 @@ void Dragonite::RenderID::RefreshRenderView(Vector2f aViewportResolution)
 
 const bool Dragonite::RenderID::TryGetElement(Mouse* someScreenCoordPos, int& anOutputElement)
 {
-	auto viewport = DXInterface::GetViewportResolution();
-	if (someScreenCoordPos->position.x < 0 || someScreenCoordPos->position.x > viewport.x - 1 ||
-		someScreenCoordPos->position.y < 0 || someScreenCoordPos->position.y > viewport.y - 1)
+	if (someScreenCoordPos->position.x < 0 || someScreenCoordPos->position.x > myCurrentResolution.x - 1 ||
+		someScreenCoordPos->position.y < 0 || someScreenCoordPos->position.y > myCurrentResolution.y - 1)
 	{
 		anOutputElement = 0;
 		return false;
@@ -122,10 +133,10 @@ const bool Dragonite::RenderID::TryGetElement(Mouse* someScreenCoordPos, int& an
 
 
 
-const bool Dragonite::RenderID::TryGetElement(const Vector2f& someScreenCoordPos, const Vector2f& aViewport, int& anOutputElement)
+const bool Dragonite::RenderID::TryGetElement(const Vector2f& someScreenCoordPos, int& anOutputElement)
 {
-	if (someScreenCoordPos.x < 0 || someScreenCoordPos.x > aViewport.x - 1 ||
-		someScreenCoordPos.y < 0 || someScreenCoordPos.y > aViewport.y - 1)
+	if (someScreenCoordPos.x < 0 || someScreenCoordPos.x > myCurrentResolution.x - 1 ||
+		someScreenCoordPos.y < 0 || someScreenCoordPos.y > myCurrentResolution.y - 1)
 	{
 		anOutputElement = 0;
 		return false;
@@ -156,7 +167,6 @@ const bool Dragonite::RenderID::TryGetElement(const Vector2f& someScreenCoordPos
 	textDesc.Width = 1;
 	textDesc.Height = 1;
 
-	float aspectRatio = aViewport.y / aViewport.x;
 
 	srcBox.left = someScreenCoordPos.x;
 	srcBox.right = (someScreenCoordPos.x + 1);
@@ -191,11 +201,18 @@ void Dragonite::RenderID::Render()
 	auto og = DXInterface::ClearColor;
 	DXInterface::ClearColor = Color(0, 0, 0, 0);
 	DXInterface::SwitchRenderTarget(myRenderView, DXInterface::GetDepthBuffer());
+
+
+	auto originalResolution = DXInterface::GetViewportResolution();
+
+	DXInterface::SetViewport(myCurrentResolution, myTopLeftOrigin);
+
 	myPipeline->DrawInstructions(
 		myPipeline->GetShaderInstructions()[0].myVertexShader,
 		myWriteRenderIDPixelShader,
 		myPipeline->GetShaderInstructions()[0].myInputLayout,
-		[this](RenderInstructions anInstruction) mutable {
+		[this](RenderInstructions anInstruction) mutable
+		{
 
 			RenderIDBuffer data;
 			data.myID = anInstruction.myID;
@@ -204,4 +221,29 @@ void Dragonite::RenderID::Render()
 
 		});
 	DXInterface::ClearColor = og;
+	DXInterface::SetViewport(originalResolution);
+
+}
+
+void Dragonite::RenderID::RenderIDTexture()
+{
+	auto originalResolution = DXInterface::GetViewportResolution();
+	DXInterface::SetViewport(myCurrentResolution, myTopLeftOrigin, 0, myElementCount);
+
+
+	DXInterface::Context->PSSetShaderResources(0, 1, myResourceView.GetAddressOf());
+	
+
+
+	DXInterface::Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DXInterface::Context->IASetInputLayout(nullptr);
+	DXInterface::Context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
+	DXInterface::Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+	DXInterface::Context->VSSetShader(myRenderIDVertexShader.Get(), nullptr, 0);
+	DXInterface::Context->GSSetShader(nullptr, nullptr, 0);
+	DXInterface::Context->PSSetShader(myReadRenderIDPixelShader.Get(), nullptr, 0);
+	DXInterface::Context->PSSetSamplers(1, 1, DXInterface::GetSampler(0).GetAddressOf());
+
+	DXInterface::Context->Draw(3, 0);
+	DXInterface::SetViewport(originalResolution);
 }

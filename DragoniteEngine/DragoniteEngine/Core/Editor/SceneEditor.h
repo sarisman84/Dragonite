@@ -12,6 +12,7 @@ namespace Dragonite
 	class Object;
 	class Viewport;
 	class PropertyEditor;
+	class AssetBrowser;
 	class SceneEditor :public GUIWindow
 	{
 	public:
@@ -26,11 +27,13 @@ namespace Dragonite
 
 		void InitializeNewObject();
 
+		inline Scene* GetCurrentScene() { return myCurrentScene; }
+		inline Viewport* GetViewport() { return myViewport; }
+		inline AssetBrowser* GetAssetBrowser() { return myAssetBrowser; }
+
+		void TryGetNewElement();
+
 	private:
-		
-
-
-
 		int myFocusedElement;
 		ModelFactory* myModelFactory;
 		Scene* myCurrentScene;
@@ -38,7 +41,7 @@ namespace Dragonite
 		Mouse* myMouseInput;
 		PropertyEditor* myPropertyEditor;
 		Viewport* myViewport;
-
+		AssetBrowser* myAssetBrowser;
 
 	};
 

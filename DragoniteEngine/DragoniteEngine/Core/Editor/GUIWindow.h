@@ -13,10 +13,6 @@ namespace Dragonite
 	class GUIWindow
 	{
 	public:
-
-
-
-
 		inline void SetActive(const bool aNewState)
 		{
 			myActiveStateFlag = aNewState;
@@ -37,6 +33,9 @@ namespace Dragonite
 		}
 
 
+		const bool IsBeingHovered() const noexcept;
+		const bool IsBeingFocused() const noexcept;
+
 		void UpdateWindow();
 
 		GUIWindow* CreateEditorWindow(GUIWindow* aWindowType, const bool anIsChildElementFlag = false);
@@ -55,6 +54,8 @@ namespace Dragonite
 		bool myActiveStateFlag;
 		bool myIsChildElementFlag;
 		unsigned int myGUID;
+
+		bool myFocusFlag, myHoveredFlag;
 
 
 

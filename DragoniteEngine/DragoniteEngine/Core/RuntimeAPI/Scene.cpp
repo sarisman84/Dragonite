@@ -20,11 +20,12 @@ void Dragonite::Scene::Awake()
 	myCamera.GetTransform().myScale = { 1,1,1 };
 	myRenderInterface->SetActiveCameraAs(myCamera);
 
+	int index = 0;
 	int cubeCount = 10;
 	float pos = -cubeCount / 2;
 	for (; cubeCount >= 0; cubeCount--)
 	{
-		Object newObject = Object((std::string("New GameObject") + std::to_string(cubeCount)).c_str());
+		Object newObject = Object((std::string("New GameObject [") + std::to_string(index++) + "]").c_str());
 		newObject.Init(myPollingStation);
 		newObject.GetTransform().myPosition = { pos,0, 1 };
 

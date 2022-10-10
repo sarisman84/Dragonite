@@ -19,19 +19,31 @@ namespace Dragonite
 	public:
 		RenderID();
 		RenderID(GraphicalInterface* aPipeline);
-
+		void SetTotalElementCount(const float anElementCount);
+		void SetViewport(Vector2f aResolution, Vector2f anTopLeftOrigin);
 		void RefreshRenderView(Vector2f aViewportResolution);
 		const bool TryGetElement(Mouse* someScreenCoordPos, int& anOutputElement);
-		const bool TryGetElement(const Vector2f& someScreenCoordPos, const Vector2f& aViewport, int& anOutputElement);
+		const bool TryGetElement(const Vector2f& someScreenCoordPos, int& anOutputElement);
 		void Render() override;
+		bool& ViewRenderID() { return myViewRenderID; }
+		void RenderIDTexture();
 	private:
+		
 		struct RenderIDBuffer
 		{
 			unsigned int myID;
 			Vector3f myPadding;
 		};
+
+		float myElementCount;
+		Vector2f myTopLeftOrigin;
+		Vector2f myCurrentResolution;
+
+
 		VertexShader myRenderIDVertexShader;
 		PixelShader myWriteRenderIDPixelShader;
+		PixelShader myReadRenderIDPixelShader;
+
 
 		DataBuffer myRenderIDBuffer;
 		Scene* myScene;

@@ -1,15 +1,20 @@
 #include "AssetBrowser.h"
 #include "Commands/MenuCommand.h"
 
-#include "Core/Graphics/Textures/TextureFactory.h"
-#include "Core/RuntimeAPI/Scene.h"
 #include "Core/ImGui/DragoniteGui.h"
-#include "Core/Editor/SceneEditor.h"
+#include "Core/Utilities/Input.h"
 
+#include "Core/Editor/SceneEditor.h"
+#include "Core/Editor/SceneEditor/Viewport.h"
+
+
+#include "Core/RuntimeAPI/Scene.h"
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 
 #include "Core/Graphics/Models/Model.h"
+#include "Core/Graphics/Textures/TextureFactory.h"
+
 
 Dragonite::AssetBrowser::AssetBrowser() : GUIWindow("Project")
 {
@@ -17,7 +22,7 @@ Dragonite::AssetBrowser::AssetBrowser() : GUIWindow("Project")
 
 Dragonite::AssetBrowser::~AssetBrowser()
 {
-	
+
 }
 
 void Dragonite::AssetBrowser::OnWindowInit()
@@ -63,7 +68,7 @@ void Dragonite::AssetBrowser::OnWindowInit()
 
 	myScene = myPollingStation->Get<Scene>();
 	myTextureFactory = myPollingStation->Get<TextureFactory>();
-
+	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
 
 
 	myFolderIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/open-folder.dds");
@@ -73,6 +78,7 @@ void Dragonite::AssetBrowser::OnWindowInit()
 
 	mySelectedFolderDir = myAssetBrowserDirectory;
 	mySceneEditor = (SceneEditor*)myDragoniteGuiAPI->GetWindow("Hierachy").get();
+
 	/*myCurrentScene = myPollingStation->Get<Scene>();
 	myModelFactory = myPollingStation->Get<ModelFactory>();*/
 
@@ -115,29 +121,8 @@ void Dragonite::AssetBrowser::OnWindowUpdate()
 	myDeleteFolderCommand->ApplyCommand();
 	myCreateFolderCommand->ApplyCommand();
 
-
-	if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && mySelectedAsset != Directory())
-	{
-		if (isImage)
-		{
-			auto obj = mySceneEditor->GetInspectedObject();
-			if (obj)
-			{
-				auto& r = myTextureFactory->LoadTexture(mySelectedAsset.path().wstring().c_str());
-				auto& texture = r ? r : myUnknownArtAssetIcon;
-
-				auto renderer = obj->GetComponent<ModelRenderer>();
-				renderer->Model()->myTexture = texture;
-			}
-
-		}
-
-		mySelectedAsset = Directory();
-	}
-
-
-
-
+	if (!mySceneEditor) return;
+	auto viewport = mySceneEditor->GetViewport();
 
 }
 
@@ -296,6 +281,7 @@ void Dragonite::AssetBrowser::RenderFolderContents()
 
 void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool anIndentFlag, const int aDepth)
 {
+	static Directory fileEntry;
 	if (!anEntry.exists()) return;
 
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -357,9 +343,18 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 					myTreeState[file.path().string()] = true;
 				}
 
-				else
-					mySelectedAsset = file;
 			}
+
+			if (ImGui::BeginDragDropSource())
+			{
+				fileEntry = file;
+				ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", &fileEntry, sizeof(std::filesystem::directory_entry));
+
+				ImGui::Image(image.Get(), iconSize);
+
+				ImGui::EndDragDropSource();
+			}
+
 			myFolderMenu->Execute(&f);
 			auto str = file.path().filename().string();
 

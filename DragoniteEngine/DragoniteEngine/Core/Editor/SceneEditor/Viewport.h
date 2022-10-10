@@ -8,6 +8,10 @@ namespace Dragonite
 	class Scene;
 	class GraphicalInterface;
 	class Mouse;
+	class Object;
+
+
+	class TextureFactory;
 
 	class Viewport : public GUIWindow
 	{
@@ -16,9 +20,10 @@ namespace Dragonite
 		~Viewport() override;
 		const bool TryGetObjectID(Mouse* aMouse, int& anId);
 		inline void RegisterSceneEditor(SceneEditor* anEditor) { mySceneEditor = anEditor; }
-		inline const bool IsBeingFocused() const noexcept { return myFocusFlag; }
-		void DisplayMouseCoordinateInViewport(Mouse* aMouse);
+		void DisplayDebugInfo(Mouse* aMouse);
 
+		const Vector2f GetLocalMousePos(Mouse* aMouse);
+		void ManipulateObject(Dragonite::Scene* aScene, Dragonite::Object* anObject);
 	protected:
 		void OnWindowInit() override;
 		void OnWindowUpdate() override;
@@ -32,8 +37,10 @@ namespace Dragonite
 		Vector2f myMinRegion;
 		Vector2f myCurrentResolution;
 		Vector2f myPreviousResolution;
+
+		int myLastValidElement;
+		bool myIsManipulatingFlag;
 		float myAspectRatio;
-		bool myFocusFlag;
 
 
 		GraphicalInterface* myGraphicsInterface;
@@ -43,6 +50,7 @@ namespace Dragonite
 		RenderView myViewportTarget;
 		ShaderResourceV myViewportResource;
 		SceneEditor* mySceneEditor;
+		TextureFactory* myTextureFactory;
 
 	};
 

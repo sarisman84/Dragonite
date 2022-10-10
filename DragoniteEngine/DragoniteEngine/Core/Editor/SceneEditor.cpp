@@ -28,101 +28,11 @@ Dragonite::SceneEditor::~SceneEditor()
 {
 	myViewport = nullptr;
 	myPropertyEditor = nullptr;
+	myAssetBrowser = nullptr;
 }
 
 void Dragonite::SceneEditor::OnWindowUpdate()
 {
-
-
-	//if (!myCurrentScene) return;
-
-	//if (ImGui::Button("Add Object"))
-	//{
-	//	//myCurrentScene->SceneObjects().push_back(myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial));
-
-	//	Object newObject = Object("New GameObject");
-	//	newObject.Init(myPollingStation);
-	//	newObject.GetTransform().myPosition = { 0,0, 1 };
-
-	//	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
-
-	//	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
-
-
-	//	myCurrentScene->SceneObjects().push_back(newObject);
-	//	mySelectedElements.push_back(false);
-
-
-	//	FocusElement(mySelectedElements.size() - 1);
-	//}
-
-
-
-	//{
-	//	std::string name = "Camera";
-	//	name += std::string("##") + std::to_string(0);
-	//	static bool val;
-	//	ImGui::Selectable(name.c_str(), &val);
-	//	if (val)
-	//		FocusElement(0);
-
-
-	//	int index = 0;
-
-	//	auto& sceneObjs = myCurrentScene->SceneObjects();
-	//	for (size_t i = 0; i < sceneObjs.size(); i++)
-	//	{
-	//		val = false;
-	//		auto& object = sceneObjs[i];
-	//		std::string name = sceneObjs[i].Name();
-	//		name += std::string("##") + std::to_string(i);
-	//		ImGui::Selectable(name.c_str(), &val);
-	//		if (val)
-	//			FocusElement(i + 1);
-	//		val = false;
-
-	//	}
-	//}
-	//static int lastFoundElement = 0;
-
-	//auto s = true;
-	//if (!s)
-	//	if (myMouseInput->GetButtonDown(MouseKey::Left))
-	//	{
-	//		int element = 0;
-	//		if (myRenderID.TryGetElement(myMouseInput, element))
-	//		{
-	//			FocusElement(element);
-	//			lastFoundElement = element;
-	//		}
-	//		else
-	//		{
-	//			ResetFocus();
-	//			lastFoundElement = 0;
-	//		}
-	//	}
-
-
-
-
-	//ImGui::Begin("Render ID Debugger");
-	//ImGui::Text("Hover Element: %i", lastFoundElement);
-	//ImGui::End();
-
-
-	//ImGui::Begin("Property");
-	//myPropertyFocus = ImGui::IsWindowHovered() ||
-	//	ImGui::IsWindowFocused() ||
-	//	ImGui::IsAnyItemFocused();
-
-	//if (IsInspectingFocusedElement())
-	//{
-	//	if (myFocusedElement == 0)
-	//		InspectCamera(myCurrentScene->GetCamera());
-	//	else
-	//		InspectFocusedElement(myCurrentScene);
-	//}
-	//ImGui::End();
 
 
 
@@ -140,7 +50,8 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 		bool selected = false;
 
 		ImGui::Selectable(objs[i].Name().c_str(), &selected);
-		if (selected) {
+		if (selected)
+		{
 			myFocusedElement = i;
 		}
 	}
@@ -150,13 +61,15 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 	if (!myViewport || !myPropertyEditor) return;
 
-	myViewport->DisplayMouseCoordinateInViewport(myMouseInput);
+	myViewport->DisplayDebugInfo(myMouseInput);
 
-	if (myMouseInput->GetButtonDown(MouseKey::Left) && myViewport->IsBeingFocused()) {
-		int anID = -1;
-		myViewport->TryGetObjectID(myMouseInput, anID);
-		myFocusedElement = anID;
+	if (myMouseInput->GetButtonDown(MouseKey::Left) && myViewport->IsBeingFocused())
+	{
+		TryGetNewElement();
 	}
+
+
+
 
 
 
@@ -177,9 +90,10 @@ void Dragonite::SceneEditor::OnDisable()
 
 Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 {
-	if (myFocusedElement < 0 || myFocusedElement > myCurrentScene->SceneObjects().size())
+	auto el = myFocusedElement - 1;
+	if (el < 0 || el > myCurrentScene->SceneObjects().size())
 		return nullptr;
-	return &myCurrentScene->SceneObjects()[myFocusedElement];
+	return &myCurrentScene->SceneObjects()[el];
 }
 
 void Dragonite::SceneEditor::InitializeNewObject()
@@ -203,17 +117,24 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 }
 
+void Dragonite::SceneEditor::TryGetNewElement()
+{
+	int anID = -1;
+	myViewport->TryGetObjectID(myMouseInput, anID);
+	myFocusedElement = anID;
+}
+
 
 
 
 
 void Dragonite::SceneEditor::OnWindowInit()
 {
-
+	myAssetBrowser = dynamic_cast<AssetBrowser*>(GUIWindow::CreateEditorWindow(new AssetBrowser()));
 	myViewport = dynamic_cast<Viewport*>(GUIWindow::CreateEditorWindow(new Viewport()));
 	myPropertyEditor = dynamic_cast<PropertyEditor*>(GUIWindow::CreateEditorWindow(new PropertyEditor()));
-	auto assetBrowser = dynamic_cast<AssetBrowser*>(GUIWindow::CreateEditorWindow(new AssetBrowser()));
-	assetBrowser->RegisterSceneEditor(this);
+
+	myAssetBrowser->RegisterSceneEditor(this);
 	myViewport->RegisterSceneEditor(this);
 	myPropertyEditor->RegisterSceneEditor(this);
 	//GUIWindow::CreateEditorWindow(Inspector());

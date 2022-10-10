@@ -9,8 +9,26 @@ Dragonite::GUIWindow::GUIWindow(const char* aWindowName) : myWindowName(aWindowN
 	myGUID = guid++;
 }
 
+const bool Dragonite::GUIWindow::IsBeingHovered() const noexcept
+{
+	return myHoveredFlag;
+}
+
+const bool Dragonite::GUIWindow::IsBeingFocused() const noexcept
+{
+	return myFocusFlag;
+}
+
 void Dragonite::GUIWindow::UpdateWindow()
 {
+	
+
+	for (auto& window : mySubWindowElements)
+	{
+		window->UpdateWindow();
+	}
+
+
 	if (myActiveStateFlag)
 	{
 		auto name = std::string(myWindowName) + "##";
@@ -19,6 +37,7 @@ void Dragonite::GUIWindow::UpdateWindow()
 		{
 			ImGui::PushID(name.c_str());
 			ImGui::BeginChild(ImGui::GetID(name.c_str()));
+
 			OnWindowUpdate();
 			ImGui::EndChild();
 			ImGui::PopID();
@@ -27,6 +46,8 @@ void Dragonite::GUIWindow::UpdateWindow()
 		else
 		{
 			ImGui::Begin(name.c_str(), &myActiveStateFlag);
+			myFocusFlag = ImGui::IsWindowFocused();
+			myHoveredFlag = ImGui::IsWindowHovered();
 			OnWindowUpdate();
 			ImGui::End();
 		}
@@ -34,10 +55,7 @@ void Dragonite::GUIWindow::UpdateWindow()
 	}
 
 
-	for (auto& window : mySubWindowElements)
-	{
-		window->UpdateWindow();
-	}
+	
 
 }
 
