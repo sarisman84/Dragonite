@@ -22,6 +22,10 @@ namespace Dragonite
 		std::shared_ptr<ModelInstance> myModelInstance;
 
 	
+
+		// Inherited via Component
+		virtual std::string GetName() override;
+
 	};
 }
 

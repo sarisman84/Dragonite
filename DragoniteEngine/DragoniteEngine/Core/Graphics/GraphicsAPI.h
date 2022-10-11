@@ -14,7 +14,7 @@
 
 namespace Dragonite
 {
-	class Camera;
+	class CameraInterface;
 	class Runtime;
 	class ModelFactory;
 	class TextureFactory;
@@ -105,7 +105,7 @@ namespace Dragonite
 		friend class Runtime;
 	public:
 		~GraphicalInterface();
-		void SetActiveCameraAs(Camera& aNewCamera);
+		void SetActiveCameraAs(CameraInterface& aNewCamera);
 
 		inline void RegisterRenderCall(const std::function<void()>& aCallback)
 		{
@@ -118,6 +118,8 @@ namespace Dragonite
 		void AddRenderInstructions(const RenderInstructions& anInstruction);
 		unsigned int AddShaderInstructions(const Material& aMaterial, VertexShader aVS, PixelShader aPS, InputLayout anInputLayout);
 		inline std::vector<ShaderInstructions> GetShaderInstructions() const noexcept { return myShaderInstructions; }
+
+		inline const bool ContainsShaderInstructions() { return !myShaderInstructions.empty(); }
 
 		void DrawInstructions(
 			ShaderInstructions aShaderInstruciton,
@@ -134,7 +136,7 @@ namespace Dragonite
 		void Render();
 
 		bool myRenderToBackBufferFlag;
-		Camera* myActiveCamera;
+		CameraInterface* myActiveCamera;
 		PollingStation* myPollingStation;
 
 		Renderer* myPrimaryRenderer;

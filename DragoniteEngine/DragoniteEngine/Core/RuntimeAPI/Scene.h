@@ -1,7 +1,8 @@
 #pragma once
-#include "Core/Graphics/Camera.h"
+#include "Core/Graphics/CameraInterface.h"
 #include "Object.h"
 #include <vector>
+#include <string>
 
 
 namespace Dragonite
@@ -16,18 +17,26 @@ namespace Dragonite
 	{
 		friend Runtime;
 	public:
-		void Awake();
+		void OnSceneInit();
 		void Update(const float aDt);
 		inline std::vector<Object>& SceneObjects() noexcept { return myObjects; }
-		inline Camera& GetCamera() { return myCamera; }
+
+		inline std::string& Name() { return myName; }
+
+		inline CameraInterface*& GetCamera() { return myViewportInterface; }
+
+		inline const bool IsCameraPrimary(const unsigned int anID) { return myPrimaryCameraID == anID; }
+		inline void SetPrimaryCameraID(const unsigned int anID) { myPrimaryCameraID = anID; }
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
 		GraphicalInterface* myRenderInterface;
 		InputManager* myInputManager;
-
-		Camera myCamera;
+		CameraInterface* myViewportInterface;
 		std::vector<Object> myObjects;
+		std::string myName;
+
+		unsigned int myPrimaryCameraID;
 	};
 }
 

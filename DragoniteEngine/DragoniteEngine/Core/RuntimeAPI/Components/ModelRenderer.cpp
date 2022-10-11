@@ -36,3 +36,8 @@ void Dragonite::ModelRenderer::OnInspectorGUI()
 
 
 }
+
+std::string Dragonite::ModelRenderer::GetName()
+{
+	return "Model Renderer";
+}

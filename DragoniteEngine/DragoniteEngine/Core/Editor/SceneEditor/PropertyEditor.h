@@ -1,6 +1,9 @@
 #pragma once
 #include "Core/Editor/GUIWindow.h"
 
+
+int DefaultStringResize(ImGuiInputTextCallbackData* data);
+
 namespace Dragonite
 {
 	class Component;

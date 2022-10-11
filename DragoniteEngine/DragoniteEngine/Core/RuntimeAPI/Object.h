@@ -34,6 +34,7 @@ namespace Dragonite
 		inline std::string& Name() { return myName; }
 		inline std::vector<std::shared_ptr<Component>> Components() const noexcept { return myComponents; }
 
+		void Awake();
 		void Update(const float aDt);
 
 		inline unsigned int UUID() { return myUUID; }

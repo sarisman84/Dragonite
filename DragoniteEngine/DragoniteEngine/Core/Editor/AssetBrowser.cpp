@@ -303,13 +303,22 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 		ImGui::PushID(count);
 		auto f = file;
 		auto extension = file.path().filename().extension();
+
+
+
 		ShaderResourceV image;
 
 		bool isDDS = extension == ".dds";
 		bool isShader = extension == ".cso";
 		bool isDirectory = file.is_directory();
 		bool isImage = isDDS || extension == ".png";
+		bool isScene = extension == ".json";
 
+		if (!isDirectory && !isImage && !isScene)
+		{
+			ImGui::PopID();
+			continue;
+		}
 
 
 		if (isImage)
@@ -317,19 +326,20 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 			auto r = myTextureFactory->LoadTexture(file.path().wstring().c_str());
 			image = r ? r->GetData() : myUnknownArtAssetIcon->GetData();
 		}
-		else if (isShader)
-		{
-			image = myUnknownArtAssetIcon->GetData();
-		}
 		else if (isDirectory)
 		{
 			image = myFolderIcon->GetData();
 
 		}
-		else
+		else if (isScene)
 		{
 			image = myJsonIcon->GetData();
 		}
+		else
+		{
+			image = myUnknownArtAssetIcon->GetData();
+		}
+
 
 
 

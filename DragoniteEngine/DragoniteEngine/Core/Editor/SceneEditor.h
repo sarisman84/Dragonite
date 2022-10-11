@@ -2,6 +2,7 @@
 #include "GUIWindow.h"
 #include <functional>
 #include <memory>
+#include <shobjidl.h> 
 
 namespace Dragonite
 {
@@ -34,6 +35,12 @@ namespace Dragonite
 		void TryGetNewElement();
 
 	private:
+		static bool OpenFileExplorer(std::string& aPath, const _FILEOPENDIALOGOPTIONS anOptionsFlag, bool aSaveFile = false);
+
+
+		void SaveSceneDefinition();
+
+
 		int myFocusedElement;
 		ModelFactory* myModelFactory;
 		Scene* myCurrentScene;

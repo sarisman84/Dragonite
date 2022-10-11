@@ -32,7 +32,7 @@
     <ClInclude Include="Core\CU\Math\Vector2.h">
       <Filter>Core\CU\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Camera.h">
+    <ClInclude Include="Core\Graphics\CameraInterface.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Graphics\Models\Model.h">
@@ -174,9 +174,6 @@
     <ClInclude Include="Core\RuntimeAPI\Component.h">
       <Filter>Core\RuntimeAPI</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RuntimeAPI\Scene.h">
-      <Filter>Core\RuntimeAPI</Filter>
-    </ClInclude>
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
@@ -225,6 +222,18 @@
     <ClInclude Include="Core\Editor\AssetBrowser.h">
       <Filter>Core\Editor\SceneEditor</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\SceneManagement\SceneBuilder.h">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.h">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Scene.h">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\Camera.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -237,7 +246,7 @@
     <ClCompile Include="Core\CU\Transform.cpp">
       <Filter>Core\CU</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Camera.cpp">
+    <ClCompile Include="Core\Graphics\CameraInterface.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Core\Graphics\Models\ModelFactory.cpp">
@@ -301,9 +310,6 @@
     <ClCompile Include="Core\RuntimeAPI\Object.cpp">
       <Filter>Core\RuntimeAPI</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RuntimeAPI\Scene.cpp">
-      <Filter>Core\RuntimeAPI</Filter>
-    </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
@@ -342,6 +348,16 @@
     </ClCompile>
     <ClCompile Include="Core\Editor\AssetBrowser.cpp">
       <Filter>Core\Editor\SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Scene.cpp">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -419,6 +435,9 @@
     </Filter>
     <Filter Include="Core\Editor\SceneEditor">
       <UniqueIdentifier>{9c9cc7c4-1385-4cc7-a03a-6ff12a865ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\SceneManagement">
+      <UniqueIdentifier>{80dcdd14-e936-4bed-9f77-9bcb1ff27806}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

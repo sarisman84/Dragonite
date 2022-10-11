@@ -2,6 +2,8 @@
 #include "Core/Editor/GUIWindow.h"
 #include "Core/Editor/RenderID.h"
 #include "Core/Graphics/DirectX11/DXIncludes.h"
+
+#include "Core/Graphics/CameraInterface.h"
 namespace Dragonite
 {
 	class SceneEditor;
@@ -30,6 +32,9 @@ namespace Dragonite
 		void OnEnable() override;
 		void OnDisable() override;
 	private:
+		void RenderViewport();
+		void DetectAssetDrop();
+
 		int myFoundID;
 
 
@@ -42,7 +47,8 @@ namespace Dragonite
 		bool myIsManipulatingFlag;
 		float myAspectRatio;
 
-
+		PerspectiveProfile myPerspectiveProfile;
+		CameraInterface myEditorCameraInterface;
 		GraphicalInterface* myGraphicsInterface;
 		Scene* myCurrentScene;
 		RenderID myRenderID;
@@ -51,6 +57,7 @@ namespace Dragonite
 		ShaderResourceV myViewportResource;
 		SceneEditor* mySceneEditor;
 		TextureFactory* myTextureFactory;
+		
 
 	};
 

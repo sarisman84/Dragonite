@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "Core/PollingStation.h"
 namespace Dragonite
 {
@@ -13,6 +14,7 @@ namespace Dragonite
 		virtual void Awake() = 0;
 		virtual void Update(const float aDt) = 0;
 		virtual void OnInspectorGUI() = 0;
+		virtual std::string GetName() = 0;
 	protected:
 		Object* myObject;
 		bool myActiveState;

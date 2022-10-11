@@ -18,9 +18,11 @@ namespace Dragonite
 	};
 
 	//API implementation is based from this: https://blog.benoitblanchon.fr/getprocaddress-like-a-boss/
+	//Reads an DLL and parses it to the APIInterface.
 	class DragoniteAPI {
 	private:
 		DLLParser myParser{ L"DragoniteEngine.dll" };
+		
 		static APIInterface* InitializeRuntime() {};
 	public:
 		decltype(InitializeRuntime)* getInterface = myParser["?InitializeRuntime@@YAPEAUAPIInterface@@XZ"];
@@ -59,6 +61,9 @@ namespace Dragonite
 		DragoniteAPI myDragoniteAPI;
 		HWND mySelf;
 	};
+
+
+
 }
 
 

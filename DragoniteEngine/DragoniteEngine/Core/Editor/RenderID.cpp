@@ -9,7 +9,7 @@
 #include "Core/Runtime.h"
 #include "Core/PollingStation.h"
 
-#include "Core/Graphics/Camera.h"
+#include "Core/Graphics/CameraInterface.h"
 #include "Core/Utilities/Input.h"
 
 #include <d3d11.h>
@@ -206,20 +206,20 @@ void Dragonite::RenderID::Render()
 	auto originalResolution = DXInterface::GetViewportResolution();
 
 	DXInterface::SetViewport(myCurrentResolution, myTopLeftOrigin);
+	if (myPipeline->ContainsShaderInstructions())
+		myPipeline->DrawInstructions(
+			myPipeline->GetShaderInstructions()[0].myVertexShader,
+			myWriteRenderIDPixelShader,
+			myPipeline->GetShaderInstructions()[0].myInputLayout,
+			[this](RenderInstructions anInstruction) mutable
+			{
 
-	myPipeline->DrawInstructions(
-		myPipeline->GetShaderInstructions()[0].myVertexShader,
-		myWriteRenderIDPixelShader,
-		myPipeline->GetShaderInstructions()[0].myInputLayout,
-		[this](RenderInstructions anInstruction) mutable
-		{
+				RenderIDBuffer data;
+				data.myID = anInstruction.myID;
+				DXInterface::ModifyBuffer(myRenderIDBuffer, Data(&data));
+				DXInterface::Context->PSSetConstantBuffers(2, 1, myRenderIDBuffer.GetAddressOf());
 
-			RenderIDBuffer data;
-			data.myID = anInstruction.myID;
-			DXInterface::ModifyBuffer(myRenderIDBuffer, Data(&data));
-			DXInterface::Context->PSSetConstantBuffers(2, 1, myRenderIDBuffer.GetAddressOf());
-
-		});
+			});
 	DXInterface::ClearColor = og;
 	DXInterface::SetViewport(originalResolution);
 
@@ -232,7 +232,7 @@ void Dragonite::RenderID::RenderIDTexture()
 
 
 	DXInterface::Context->PSSetShaderResources(0, 1, myResourceView.GetAddressOf());
-	
+
 
 
 	DXInterface::Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

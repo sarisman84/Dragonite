@@ -1,8 +1,11 @@
 #include "SceneEditor.h"
 #include "Core/RuntimeAPI/Scene.h"
 #include "Core/Graphics/Models/ModelFactory.h"
+
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
+#include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
+
 #include "Core/Utilities/Input.h"
 #include "Core/Graphics/GraphicsAPI.h"
 #include <string>
@@ -15,6 +18,7 @@
 #include "SceneEditor/Viewport.h"
 #include "SceneEditor/PropertyEditor.h"
 #include "AssetBrowser.h"
+
 
 
 
@@ -34,17 +38,23 @@ Dragonite::SceneEditor::~SceneEditor()
 void Dragonite::SceneEditor::OnWindowUpdate()
 {
 
-
-
-
-
-	ImGui::Text("Selected Element: %i", myFocusedElement);
 	if (ImGui::Button("Create New GameObject"))
 	{
 		InitializeNewObject();
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("Save"))
+	{
+		ImGui::OpenPopup("Save...");
+
+	}
+	SaveSceneDefinition();
+
+
+
 
 	auto& objs = myCurrentScene->SceneObjects();
+	ImGui::Indent();
 	for (size_t i = 0; i < objs.size(); i++)
 	{
 		bool selected = false;
@@ -55,6 +65,8 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 			myFocusedElement = i;
 		}
 	}
+	ImGui::Unindent();
+
 
 
 
@@ -91,7 +103,7 @@ void Dragonite::SceneEditor::OnDisable()
 Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 {
 	auto el = myFocusedElement - 1;
-	if (el < 0 || el > myCurrentScene->SceneObjects().size())
+	if (el < 0 || el >= myCurrentScene->SceneObjects().size())
 		return nullptr;
 	return &myCurrentScene->SceneObjects()[el];
 }
@@ -113,7 +125,7 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 	myCurrentScene->SceneObjects().push_back(newObject);
 
-	myFocusedElement = myCurrentScene->SceneObjects().size() - 1;
+	myFocusedElement = myCurrentScene->SceneObjects().size();
 
 }
 
@@ -122,6 +134,167 @@ void Dragonite::SceneEditor::TryGetNewElement()
 	int anID = -1;
 	myViewport->TryGetObjectID(myMouseInput, anID);
 	myFocusedElement = anID;
+}
+
+bool Dragonite::SceneEditor::OpenFileExplorer(std::string& aPath, const _FILEOPENDIALOGOPTIONS anOptionsFlag, bool aSaveFile)
+{
+	std::string selectedFile;
+	//  CREATE FILE OBJECT INSTANCE
+	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(f_SysHr))
+		return false;
+
+
+	PWSTR f_Path;
+	if (aSaveFile)
+	{
+		IFileSaveDialog* f_FileSystem;
+		f_SysHr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&f_FileSystem));
+		if (FAILED(f_SysHr))
+		{
+			CoUninitialize();
+			return false;
+		}
+
+
+		//  SHOW OPEN FILE DIALOG WINDOW
+		f_SysHr = f_FileSystem->Show(NULL);
+		if (FAILED(f_SysHr))
+		{
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		//  RETRIEVE FILE NAME FROM THE SELECTED ITEM
+		IShellItem* f_Files;
+		f_SysHr = f_FileSystem->GetResult(&f_Files);
+		if (FAILED(f_SysHr))
+		{
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		//  STORE AND CONVERT THE FILE NAME
+		f_SysHr = f_Files->GetDisplayName(SIGDN_PARENTRELATIVE, &f_Path);
+		if (FAILED(f_SysHr))
+		{
+			f_Files->Release();
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		f_Files->Release();
+		f_FileSystem->Release();
+	}
+	else
+	{
+		// CREATE FileOpenDialog OBJECT
+		IFileOpenDialog* f_FileSystem;
+		f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
+		if (FAILED(f_SysHr))
+		{
+			CoUninitialize();
+			return false;
+		}
+		f_FileSystem->SetOptions(anOptionsFlag);
+
+
+		//  SHOW OPEN FILE DIALOG WINDOW
+		f_SysHr = f_FileSystem->Show(NULL);
+		if (FAILED(f_SysHr))
+		{
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		//  RETRIEVE FILE NAME FROM THE SELECTED ITEM
+		IShellItem* f_Files;
+		f_SysHr = f_FileSystem->GetResult(&f_Files);
+		if (FAILED(f_SysHr))
+		{
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+		//  STORE AND CONVERT THE FILE NAME
+		f_SysHr = f_Files->GetDisplayName(anOptionsFlag == FOS_PICKFOLDERS ? SIGDN_FILESYSPATH : SIGDN_PARENTRELATIVE, &f_Path);
+		if (FAILED(f_SysHr))
+		{
+			f_Files->Release();
+			f_FileSystem->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		//  SUCCESS, CLEAN UP
+		f_Files->Release();
+		f_FileSystem->Release();
+	}
+
+
+
+
+
+
+
+
+
+
+	//  FORMAT AND STORE THE FILE PATH
+	std::wstring path(f_Path);
+	std::string c(path.begin(), path.end());
+	aPath = c;
+
+	//  FORMAT STRING FOR EXECUTABLE NAME
+	const size_t slash = aPath.find_last_of("/\\");
+	selectedFile = aPath.substr(slash + 1);
+
+	//  SUCCESS, CLEAN UP
+	CoTaskMemFree(f_Path);
+	//f_Files->Release();
+	//f_FileSystem->Release();
+	CoUninitialize();
+	return true;
+}
+
+void Dragonite::SceneEditor::SaveSceneDefinition()
+{
+	static std::string name = "New Scene";
+	static std::string entry;
+	if (ImGui::BeginPopupModal("Save..."))
+	{
+
+
+		ImGui::InputText("Name", &name, 0, DefaultStringResize);
+
+
+		if (ImGui::Button("Select Directory"))
+		{
+			OpenFileExplorer(entry, FOS_PICKFOLDERS);
+		}
+
+
+		if (ImGui::IsKeyDown(ImGuiKey_Escape))
+		{
+			ImGui::CloseCurrentPopup();
+			name = "New Scene";
+		}
+
+		if (ImGui::Button("Save") || ImGui::IsKeyDown(ImGuiKey_Enter))
+		{
+			ImGui::CloseCurrentPopup();
+			name = "New Scene";
+			myCurrentScene->Name() = name;
+			entry += "\\" + name + ".json";
+			SceneBuilder::SaveScene(entry.c_str(), *myCurrentScene);
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 

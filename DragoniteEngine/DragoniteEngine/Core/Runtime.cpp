@@ -83,7 +83,7 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 	myGUIInterface = new DragoniteGui();
 	myGUIInterface->Init(this, myPipeline);
 	myRuntimeHandler->AddHandler(myGUIInterface);
-	myScene->Awake();
+	/*myScene->Awake();*/
 
 	myGUIInterface->CreateEditorWindow(new EngineDebugger());
 	myGUIInterface->CreateEditorWindow(new SceneEditor());

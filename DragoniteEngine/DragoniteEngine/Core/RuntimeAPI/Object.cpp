@@ -44,6 +44,15 @@ void Dragonite::Object::operator=(const Object& aCpy)
 	myUUID = aCpy.myUUID;
 }
 
+void Dragonite::Object::Awake()
+{
+	auto cpy = myComponents;
+	for (auto& comp : cpy)
+	{
+		comp->Awake();
+	}
+}
+
 void Dragonite::Object::Update(const float aDt)
 {
 	auto cpy = myComponents;
