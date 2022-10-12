@@ -4,6 +4,7 @@
 #include "Core/Graphics/DirectX11/DXIncludes.h"
 
 #include "Core/Graphics/CameraInterface.h"
+#include <memory>
 namespace Dragonite
 {
 	class SceneEditor;
@@ -11,6 +12,9 @@ namespace Dragonite
 	class GraphicalInterface;
 	class Mouse;
 	class Object;
+	class TextureFactory;
+	class Texture;
+
 
 
 	class TextureFactory;
@@ -34,6 +38,7 @@ namespace Dragonite
 	private:
 		void RenderViewport();
 		void DetectAssetDrop();
+		void RenderTopBar();
 
 		int myFoundID;
 
@@ -57,6 +62,12 @@ namespace Dragonite
 		ShaderResourceV myViewportResource;
 		SceneEditor* mySceneEditor;
 		TextureFactory* myTextureFactory;
+
+
+		std::shared_ptr<Texture>
+			myPlayIcon,
+			myStopIcon,
+			mySaveIcon;
 		
 
 	};

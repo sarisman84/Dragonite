@@ -42,11 +42,10 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 	{
 		InitializeNewObject();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Save"))
+	if (mySaveSceneFlag)
 	{
 		ImGui::OpenPopup("Save...");
-
+		mySaveSceneFlag = false;
 	}
 	SaveSceneDefinition();
 
@@ -136,6 +135,11 @@ void Dragonite::SceneEditor::TryGetNewElement()
 	int anID = -1;
 	myViewport->TryGetObjectID(myMouseInput, anID);
 	myFocusedElement = anID;
+}
+
+void Dragonite::SceneEditor::SaveScene()
+{
+	mySaveSceneFlag = true;
 }
 
 bool Dragonite::SceneEditor::OpenFileExplorer(std::string& aPath, const _FILEOPENDIALOGOPTIONS anOptionsFlag, bool aSaveFile)
@@ -265,7 +269,7 @@ bool Dragonite::SceneEditor::OpenFileExplorer(std::string& aPath, const _FILEOPE
 
 void Dragonite::SceneEditor::SaveSceneDefinition()
 {
-	static std::string name = "New Scene";
+	static std::string name = myCurrentScene->Name();
 	static std::string entry;
 	if (ImGui::BeginPopupModal("Save..."))
 	{

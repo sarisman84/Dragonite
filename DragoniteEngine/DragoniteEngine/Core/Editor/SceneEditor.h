@@ -33,6 +33,7 @@ namespace Dragonite
 		inline AssetBrowser* GetAssetBrowser() { return myAssetBrowser; }
 
 		void TryGetNewElement();
+		void SaveScene();
 
 	private:
 		static bool OpenFileExplorer(std::string& aPath, const _FILEOPENDIALOGOPTIONS anOptionsFlag, bool aSaveFile = false);
@@ -40,7 +41,7 @@ namespace Dragonite
 
 		void SaveSceneDefinition();
 
-
+		bool mySaveSceneFlag;
 		int myFocusedElement;
 		ModelFactory* myModelFactory;
 		Scene* myCurrentScene;

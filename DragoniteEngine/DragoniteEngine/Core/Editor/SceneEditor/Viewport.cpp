@@ -130,6 +130,11 @@ void Dragonite::Viewport::OnWindowInit()
 	assert(SUCCEEDED(result));
 
 	myRenderID.ViewRenderID() = false;
+
+	mySaveIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/load.png");
+	myPlayIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/play-button.png");
+	myStopIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/pause-button.png");
+
 }
 
 
@@ -146,6 +151,7 @@ void Dragonite::Viewport::OnWindowUpdate()
 	ImGuizmo::DrawGrid(&myEditorCameraInterface.ViewMatrix(), &myEditorCameraInterface.Profile()->CalculateProjectionMatrix(), &Matrix4x4f(), 1.0f);
 
 	RenderViewport();
+	RenderTopBar();
 	DetectAssetDrop();
 
 	auto obj = mySceneEditor->GetInspectedObject();
@@ -247,4 +253,44 @@ void Dragonite::Viewport::DetectAssetDrop()
 		ImGui::EndDragDropTarget();
 
 	}
+}
+
+void Dragonite::Viewport::RenderTopBar()
+{
+
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+	const float PAD = 10.0f;
+	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+	ImVec2 work_size = viewport->WorkSize;
+	ImVec2 window_pos, window_pos_pivot;
+	window_pos.x = ImGui::GetWindowPos().x + ImGui::GetWindowWidth() / 2.0f;
+	window_pos.y = ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y + PAD;
+	window_pos_pivot.x = 0.5f;
+	window_pos_pivot.y = 0.0f;
+	ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	window_flags |= ImGuiWindowFlags_NoMove;
+
+	ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+	if (ImGui::Begin("Top Bar", NULL, window_flags))
+	{
+		if (ImGui::ImageButton("play", myPlayIcon->GetData().Get(), ImVec2(16, 16)))
+		{
+
+		}
+		ImGui::SameLine();
+		if (ImGui::ImageButton("stop", myStopIcon->GetData().Get(), ImVec2(16, 16)))
+		{
+			
+		}
+		ImGui::SameLine();
+		if (ImGui::ImageButton("save", mySaveIcon->GetData().Get(), ImVec2(16, 16)))
+		{
+			mySceneEditor->SaveScene();
+		}
+	}
+	ImGui::End();
 }
