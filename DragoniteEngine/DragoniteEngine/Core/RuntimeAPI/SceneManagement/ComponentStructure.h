@@ -7,11 +7,12 @@
 
 namespace Dragonite
 {
+	class Object;
 	class Scene;
 	struct BuildData
 	{
 		Scene& myCurrentScene;
-
+		Object& myObject;
 	};
 
 

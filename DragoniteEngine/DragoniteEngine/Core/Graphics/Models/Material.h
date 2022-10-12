@@ -31,12 +31,16 @@ namespace Dragonite
 		friend struct ShaderInstructions;
 		friend class ModelFactory;
 	public:
-		Material(const char* aShader);
-		Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc, std::wstring aTexture, Color aColor);
-
-		static Material defaultMaterial;
+		Material();
+		Material(const char* aShader, const char* aName);
+		Material(const VertexShaderDesc& aVSDesc, const PixelShaderDesc& aPSDesc, std::wstring aTexture, Color aColor, const char* aName);
 		std::wstring myTexture;
 		Color myColor;
+		const char* myName;
+
+
+		inline static const char* defaultMaterial = "unlit";
+
 	private:
 		VertexShaderDesc myVSInfo;
 		PixelShaderDesc myPSInfo;

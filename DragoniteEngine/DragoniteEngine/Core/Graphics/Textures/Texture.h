@@ -4,6 +4,7 @@
 
 #include <d3d11.h>
 #include <memory>
+#include <string>
 
 namespace Dragonite
 {
@@ -23,7 +24,7 @@ namespace Dragonite
 	};
 
 
-	
+
 
 	class Texture
 	{
@@ -38,15 +39,17 @@ namespace Dragonite
 
 		inline ShaderResourceV GetData() { return myResourceView; }
 
-		bool Init(GraphicalInterface* aPipeline,const TextureLoaderDesc& aDesc);
+		bool Init(GraphicalInterface* aPipeline, const TextureLoaderDesc& aDesc);
 		void Bind(DeviceContext& someContext);
 
+
+		inline std::wstring Name() const noexcept { return myName; }
 
 	private:
 		ShaderResourceV myResourceView;
 		Vector2i myResolution;
 		int mySlot;
-		const char* myName;
+		std::wstring myName;
 	};
 
 	typedef std::shared_ptr<Texture> TextureRef;

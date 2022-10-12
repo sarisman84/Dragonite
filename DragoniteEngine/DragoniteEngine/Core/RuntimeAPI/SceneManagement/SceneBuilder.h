@@ -3,15 +3,18 @@
 #include "ComponentStructure.h"
 
 
+#define JSONKEY inline static constexpr const char*
+
 namespace Dragonite
 {
-	inline static const char* sceneName = "sceneName";
-	inline static const char* sceneObjects = "objects";
-	inline static const char* objectComponents = "components";
-	inline static const char* componentType = "type";
-	inline static const char* componentData = "data";
-	inline static const char* objectTransform = "transform";
-	inline static const char* objectName = "name";
+	JSONKEY sceneName = "sceneName";
+	JSONKEY sceneObjects = "objects";
+	JSONKEY objectComponents = "components";
+	JSONKEY componentType = "type";
+	JSONKEY componentData = "data";
+	JSONKEY objectTransform = "transform";
+	JSONKEY objectName = "name";
+	JSONKEY objectID = "id";
 
 
 
@@ -28,8 +31,8 @@ namespace Dragonite
 		void ReadTransform(Dragonite::Object& anObject, nlohmann::json& anJsonIns);
 		void ReadComponents(Dragonite::Scene& aScene, Dragonite::Object& anObject, nlohmann::json& anJsonIns);
 		
-		nlohmann::json LoadAsset(const char* aPath);
-		nlohmann::json ForceLoadAsset(const char* aPath);
+		const bool LoadAsset(const char* aPath, nlohmann::json& anOutput);
+		const bool ForceLoadAsset(const char* aPath, nlohmann::json& anOutput);
 
 		static SceneBuilder myInstance;
 		std::unordered_map<std::string, ImportSetting> myImportSettings;

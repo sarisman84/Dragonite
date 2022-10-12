@@ -205,7 +205,7 @@ void Dragonite::GraphicalInterface::SetActiveCameraAs(CameraInterface& aNewCamer
 	myActiveCamera = &aNewCamera;
 }
 
-Dragonite::ShaderInstructions::ShaderInstructions() : myMaterial("unknown")
+Dragonite::ShaderInstructions::ShaderInstructions() : myMaterial("unknown", "unknown")
 {
 }
 

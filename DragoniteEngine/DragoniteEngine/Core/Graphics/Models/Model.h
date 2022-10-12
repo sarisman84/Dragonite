@@ -6,6 +6,8 @@
 #include "Core/CU/Transform.h"
 
 #include "Core/Graphics/Textures/Texture.h"
+
+#include <string>
 namespace Dragonite
 {
 	struct Vertex
@@ -35,9 +37,6 @@ namespace Dragonite
 	class Model
 	{
 	public:
-		friend class GraphicalInterface;
-		friend class ModelFactory;
-		friend class RenderID;
 		DataBuffer
 			myVertexBuffer,
 			myIndexBuffer;
@@ -53,14 +52,12 @@ namespace Dragonite
 	class ModelInstance
 	{
 	public:
-		friend class GraphicalInterface;
-		friend class ModelFactory;
-		friend class RenderID;
 		ModelRef myModel;
 		Transform myTransform;
 		TextureRef myTexture;
 		const char* myModelName;
-		const char* myTextureName;
+		const char* myMaterialName;
+		std::wstring myTextureName;
 		unsigned int myShaderInstructionsID;
 	};
 }

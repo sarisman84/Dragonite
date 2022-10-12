@@ -7,11 +7,14 @@
 #include <string>
 namespace Dragonite
 {
+	class Scene;
 	class Object
 	{
+		friend class SceneBuilder;
 	public:
 		Object();
-		Object(const char* aName);
+		Object(const char* aName, Scene* aCurrentScene);
+		Object(const char* aName, const unsigned int aUUID);
 		~Object();
 
 
@@ -65,7 +68,8 @@ namespace Dragonite
 	template<typename TComponent>
 	inline std::shared_ptr<TComponent> Object::GetComponent()
 	{
-		auto it = std::find_if(myComponents.begin(), myComponents.end(), [](std::shared_ptr<Component> aComponent)
+		auto it = std::find_if(myComponents.begin(), myComponents.end(), 
+			[](std::shared_ptr<Component> aComponent)
 			{
 				auto val = std::dynamic_pointer_cast<TComponent>(aComponent);
 				return val;

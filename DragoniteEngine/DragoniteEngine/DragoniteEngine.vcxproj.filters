@@ -352,12 +352,14 @@
     <ClCompile Include="Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp">
       <Filter>Core\RuntimeAPI\SceneManagement</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Scene.cpp">
       <Filter>Core\RuntimeAPI\SceneManagement</Filter>
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.cpp">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

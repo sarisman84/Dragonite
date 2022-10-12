@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <string>
+#include <cassert>
 
 
 
@@ -14,24 +15,31 @@ Dragonite::SceneBuilder Dragonite::SceneBuilder::myInstance;
 Dragonite::SceneBuilder::SceneBuilder()
 {
 	InitializeImportSettings(myImportSettings);
+	InitializeExportSettings(myExportSettings);
 }
 
 const bool Dragonite::SceneBuilder::LoadScene(const char* aPath, Dragonite::Scene& anOutput)
 {
-	auto file = myInstance.LoadAsset(aPath);
-
-
-	if (file.is_null()) false;
+	nlohmann::json file = nlohmann::json::object();
+	if (!myInstance.LoadAsset(aPath, file)) return false;
 
 	anOutput.Name() = file[sceneName];
 	auto objects = file[sceneObjects];
 
+	auto cpy = anOutput;
 	anOutput = Scene();
 	auto& pool = anOutput.SceneObjects();
+	anOutput.myInputManager = cpy.myInputManager;
+	anOutput.myPollingStation = cpy.myPollingStation;
+	anOutput.myApplication = cpy.myApplication;
 
 	for (auto& foundObject : objects)
 	{
-		Object object = Object(foundObject[objectName].get<std::string>().c_str());
+		unsigned int id = foundObject[objectID].get<unsigned int>();
+		Object object = Object(foundObject[objectName].get<std::string>().c_str(), id);
+		object.myPollingStation = anOutput.myPollingStation;
+		anOutput.myNextUUID = ++id;
+
 		myInstance.AssignTransform(object, foundObject[objectTransform]);
 		myInstance.AssignComponents(anOutput, object, foundObject[objectComponents]);
 		pool.push_back(object);
@@ -43,9 +51,7 @@ const bool Dragonite::SceneBuilder::LoadScene(const char* aPath, Dragonite::Scen
 
 const bool Dragonite::SceneBuilder::SaveScene(const char* aPath, Scene& anInput)
 {
-	auto newFile = myInstance.ForceLoadAsset(aPath);
-
-
+	nlohmann::json newFile;
 	newFile[sceneName] = anInput.Name();
 
 	newFile[sceneObjects] = nlohmann::json::array();
@@ -56,6 +62,7 @@ const bool Dragonite::SceneBuilder::SaveScene(const char* aPath, Scene& anInput)
 		newObject[objectComponents] = nlohmann::json::array();
 
 		newObject[objectName] = object.Name();
+		newObject[objectID] = object.UUID();
 		myInstance.ReadTransform(object, newObject[objectTransform]);
 		myInstance.ReadComponents(anInput, object, newObject[objectComponents]);
 
@@ -93,8 +100,12 @@ void Dragonite::SceneBuilder::AssignComponents(Dragonite::Scene& aScene, Dragoni
 	{
 		ImportSetting callback = myImportSettings[component[componentType]];
 
-		BuildData data{ aScene };
-		callback(component[componentData], data);
+		if (callback)
+		{
+			BuildData data{ aScene, anObject };
+			callback(component[componentData], data);
+		}
+
 	}
 }
 
@@ -129,42 +140,45 @@ void Dragonite::SceneBuilder::ReadComponents(Dragonite::Scene& aScene, Dragonite
 
 		newComp[componentType] = name.c_str();
 		newComp[componentData] = nlohmann::json::object();
-		ExportSetting callback = myExportSettings[component->GetName()];
+		ExportSetting callback = myExportSettings[newComp[componentType]];
 		if (callback)
 		{
-			BuildData data{ aScene };
+			BuildData data{ aScene, anObject };
 			callback(newComp[componentData], data);
 		}
-		
+
 		anJsonIns.push_back(newComp);
 	}
 }
 
-nlohmann::json Dragonite::SceneBuilder::LoadAsset(const char* aPath)
+const bool Dragonite::SceneBuilder::LoadAsset(const char* aPath, nlohmann::json& anOutput)
 {
 	std::ifstream ifs(aPath);
 
-	nlohmann::json jsonIns;
+
 	if (!ifs || ifs.fail())
 	{
-		return jsonIns;
+		return false;
 	}
 
-	jsonIns.parse(ifs);
-	return jsonIns;
+	anOutput = nlohmann::json::parse(ifs);
+
+
+	if (anOutput.empty())
+		return false;
+
+	return true;
 }
 
-nlohmann::json Dragonite::SceneBuilder::ForceLoadAsset(const char* aPath)
+const bool Dragonite::SceneBuilder::ForceLoadAsset(const char* aPath, nlohmann::json& anOutput)
 {
-	auto result = LoadAsset(aPath);
-
-	if (result.is_null())
+	if (!LoadAsset(aPath, anOutput))
 	{
 		std::ofstream ofs(aPath);
 		ofs << "{}";
 		ofs.close();
-		return LoadAsset(aPath);
+		return true;
 	}
 
-	return result;
+	return true;
 }

@@ -11,6 +11,11 @@
 
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 
+Dragonite::Scene::Scene()
+{
+	myNextUUID = 1;
+}
+
 void Dragonite::Scene::OnSceneInit()
 {
 	for (auto& object : myObjects)

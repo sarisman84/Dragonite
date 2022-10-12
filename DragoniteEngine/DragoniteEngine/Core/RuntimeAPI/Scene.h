@@ -15,8 +15,11 @@ namespace Dragonite
 
 	class Scene
 	{
+		friend class SceneBuilder;
 		friend Runtime;
 	public:
+		Scene();
+
 		void OnSceneInit();
 		void Update(const float aDt);
 		inline std::vector<Object>& SceneObjects() noexcept { return myObjects; }
@@ -27,6 +30,16 @@ namespace Dragonite
 
 		inline const bool IsCameraPrimary(const unsigned int anID) { return myPrimaryCameraID == anID; }
 		inline void SetPrimaryCameraID(const unsigned int anID) { myPrimaryCameraID = anID; }
+
+		inline const unsigned int GetNextID() noexcept
+		{
+			return myNextUUID++;
+		}
+
+		inline PollingStation* GetPollingStation() const noexcept { return myPollingStation; }
+		inline Runtime* GetRuntime() const noexcept { return myApplication; }
+		inline GraphicalInterface* GetGraphicsInterface() const noexcept { return myRenderInterface; }
+
 	private:
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
@@ -37,6 +50,10 @@ namespace Dragonite
 		std::string myName;
 
 		unsigned int myPrimaryCameraID;
+		unsigned int myNextUUID;
+
+		std::vector<unsigned int> ourUsedUUIDs;
+
 	};
 }
 

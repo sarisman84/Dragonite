@@ -28,11 +28,12 @@ void Dragonite::ModelRenderer::Update(const float aDt)
 
 }
 
+#include <filesystem>
 void Dragonite::ModelRenderer::OnInspectorGUI()
 {
-
+	
 	ImGui::Text("Model: %s", myModelInstance->myModelName);
-	ImGui::Text("Texture: %s", myModelInstance->myTextureName);
+	ImGui::Text("Texture: %s", std::filesystem::path(myModelInstance->myTexture->Name()).string().c_str());
 
 
 }

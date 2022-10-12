@@ -222,7 +222,14 @@ void Dragonite::Viewport::DetectAssetDrop()
 		{
 			std::filesystem::directory_entry* file = (std::filesystem::directory_entry*)load->Data;
 			auto extension = file->path().filename().extension();
-			if (foundObj)
+
+			if (extension == ".json")
+			{
+				auto path = file->path();
+				auto absPath = std::filesystem::absolute(file->path());
+				SceneBuilder::LoadScene(path.string().c_str(), *myCurrentScene);
+			}
+			else if (foundObj)
 			{
 
 				if (extension == ".dds" ||
@@ -232,10 +239,7 @@ void Dragonite::Viewport::DetectAssetDrop()
 					renderer->Model()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
 				}
 			}
-			else if (extension == ".json")
-			{
-				SceneBuilder::LoadScene(file->path().string().c_str(), *myCurrentScene);
-			}
+
 
 
 		}

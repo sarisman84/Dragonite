@@ -34,7 +34,7 @@ Dragonite::TextureRef& Dragonite::TextureFactory::LoadTexture(const wchar_t* aPa
 	TextureRef texture = std::make_shared<Texture>();
 
 	std::wstring name = aPath;
-	texture->myName = std::string(name.begin(), name.end()).c_str();
+	texture->myName = name.c_str();
 	const size_t lastDot = path.find_last_of(L".");
 	std::wstring extension = path.substr(lastDot + 1);
 

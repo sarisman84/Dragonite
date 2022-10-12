@@ -62,7 +62,7 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 		ImGui::Selectable(objs[i].Name().c_str(), &selected);
 		if (selected)
 		{
-			myFocusedElement = i;
+			myFocusedElement = objs[i].UUID();
 		}
 	}
 	ImGui::Unindent();
@@ -72,6 +72,8 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 
 	if (!myViewport || !myPropertyEditor) return;
+
+	ImGui::Spacing();
 
 	myViewport->DisplayDebugInfo(myMouseInput);
 
@@ -114,13 +116,13 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 	std::string name = "New GameObject ";
 	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
-	Object newObject = Object(name.c_str());
+	Object newObject = Object(name.c_str(), myCurrentScene);
 	newObject.Init(myPollingStation);
 	newObject.GetTransform().myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
 
-	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
+	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube,  Material::defaultMaterial);
 
 
 	myCurrentScene->SceneObjects().push_back(newObject);
@@ -281,16 +283,17 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 		if (ImGui::IsKeyDown(ImGuiKey_Escape))
 		{
 			ImGui::CloseCurrentPopup();
-			name = "New Scene";
+			name = myCurrentScene->Name();
 		}
 
 		if (ImGui::Button("Save") || ImGui::IsKeyDown(ImGuiKey_Enter))
 		{
 			ImGui::CloseCurrentPopup();
-			name = "New Scene";
+
 			myCurrentScene->Name() = name;
 			entry += "\\" + name + ".json";
 			SceneBuilder::SaveScene(entry.c_str(), *myCurrentScene);
+			name = myCurrentScene->Name();
 		}
 
 		ImGui::EndPopup();

@@ -3,13 +3,11 @@
 #include "Model.h"
 #include "Material.h"
 #include <unordered_map>
+#include <string>
 
-#define DDLVISIBLE __declspec(dllexport)
 
 namespace Dragonite
 {
-
-
 
 	class GraphicalInterface;
 
@@ -20,7 +18,8 @@ namespace Dragonite
 		ModelFactory() = default;
 		bool Initialize(GraphicalInterface* aPipeline);
 
-		DDLVISIBLE std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial);
+		std::shared_ptr<ModelInstance> GetModel(const PrimitiveType aPrimitiveType, const std::string& aMaterial, const std::wstring aTexture = L"resources/textures/CanardPolicierAnglais.dds");
+		std::shared_ptr<ModelInstance> GetModel(const std::string aModelName, const std::string& aMaterialName, const std::wstring aTexture = L"resources/textures/CanardPolicierAnglais.dds");
 	private:
 		//VVV Model Definitions
 		ModelRef CreateUnitCube();
@@ -29,7 +28,8 @@ namespace Dragonite
 
 
 		GraphicalInterface* myPipeline;
-		std::unordered_map<PrimitiveType, ModelRef> myFactoryData;
+		std::unordered_map<std::string, ModelRef> myFactoryModelData;
+		std::unordered_map<std::string, Material> myFactoryMaterialData;
 
 
 

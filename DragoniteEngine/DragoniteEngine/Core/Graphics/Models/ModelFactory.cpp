@@ -22,38 +22,71 @@ bool Dragonite::ModelFactory::Initialize(GraphicalInterface* aPipeline)
 {
 	myPipeline = aPipeline;
 
-	myFactoryData[PrimitiveType::Cube] = CreateUnitCube();
-	myFactoryData[PrimitiveType::Screen] = CreateScreenMesh();
+	auto cube = CreateUnitCube();
+	auto screen = CreateScreenMesh();
+
+	myFactoryModelData[cube->myName] = cube;
+	myFactoryModelData[screen->myName] = screen;
+
+	Material unlit = Dragonite::Material(
+		{
+			"Unlit",
+			{
+				{"POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT, D3D11_INPUT_PER_VERTEX_DATA },
+				{"TEXCOORD", DXGI_FORMAT_R32G32_FLOAT, D3D11_INPUT_PER_VERTEX_DATA }
+			}
+		},
+		{
+		"Unlit"
+		},
+		L"",
+		Color(1, 1, 1, 1),
+		"unlit"
+	);
+	myFactoryMaterialData[unlit.myName] = unlit;
 
 	return true;
 }
 
-std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(const PrimitiveType aPrimitiveType, const Material& aMaterial)
+std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(const PrimitiveType aPrimitiveType, const std::string& aMaterial, const std::wstring aTexture)
 {
-	static int currentID = 1;
+	switch (aPrimitiveType)
+	{
+	case PrimitiveType::Cube:
+		return GetModel("Primitive Cube", aMaterial);
+	default:
+		return nullptr;
+	}
+}
+
+std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(const std::string aModelName, const std::string& aMaterialName, const std::wstring aTexture)
+{
 	auto device = DXInterface::Device;
 	std::string vsData;
 
 	auto ins = std::make_shared<ModelInstance>();
 	if (!ins) return nullptr;
-	ins->myModel = myFactoryData[aPrimitiveType];
+	ins->myModel = myFactoryModelData[aModelName];
+
 	if (!ins->myModel) return nullptr;
-	ins->myModelName = ins->myModel->myName;
+
+	Material mat = myFactoryMaterialData[aMaterialName];
+	mat.myTexture = aTexture;
 	VertexShader vsShader;
 	PixelShader psShader;
 	InputLayout inputLayout;
-	if (FAILED(DXInterface::CreateVSInstance(aMaterial.myVSInfo.myVertexShader, vsShader, vsData)))
+	if (FAILED(DXInterface::CreateVSInstance(mat.myVSInfo.myVertexShader, vsShader, vsData)))
 	{
 		return nullptr;
 	}
-	if (FAILED(DXInterface::CreatePSInstance(aMaterial.myPSInfo.myPixelShader, psShader)))
+	if (FAILED(DXInterface::CreatePSInstance(mat.myPSInfo.myPixelShader, psShader)))
 	{
 		return nullptr;
 	}
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> layout;
 
-	for (auto& IPElement : aMaterial.myVSInfo.myInputLayout)
+	for (auto& IPElement : mat.myVSInfo.myInputLayout)
 	{
 		layout.push_back(D3D11_INPUT_ELEMENT_DESC{ IPElement.myInputName, 0, (DXGI_FORMAT)IPElement.myFormat, 0, D3D11_APPEND_ALIGNED_ELEMENT,IPElement.myClassification,0 });
 	}
@@ -63,12 +96,15 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 		return nullptr;
 	}
 
-	ins->myShaderInstructionsID = myPipeline->AddShaderInstructions(aMaterial, vsShader, psShader, inputLayout);
+	ins->myShaderInstructionsID = myPipeline->AddShaderInstructions(mat, vsShader, psShader, inputLayout);
 
 
 
-	ins->myTexture = myPipeline->GetPollingStation()->Get<TextureFactory>()->LoadTexture(aMaterial.myTexture.c_str());
-	ins->myTextureName = ins->myTexture->myName;
+	ins->myTexture = myPipeline->GetPollingStation()->Get<TextureFactory>()->LoadTexture(mat.myTexture.c_str());
+	ins->myTexture->myName = mat.myTexture;
+	ins->myTextureName = mat.myTexture;
+	ins->myMaterialName = mat.myName;
+	ins->myModelName = ins->myModel->myName;
 	return ins;
 }
 

@@ -1,13 +1,19 @@
 #include "Object.h"
+#include "Scene.h"
 
 Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true) 
 {
-	GenerateID();
+	myUUID = 0;
 }
 
-Dragonite::Object::Object(const char* aName) : myName(aName), myActiveState(true)
+Dragonite::Object::Object(const char* aName, Scene* aCurrentScene) : myName(aName), myActiveState(true)
 {
-	GenerateID();
+	myUUID = aCurrentScene->GetNextID();
+}
+
+Dragonite::Object::Object(const char* aName, const unsigned int aUUID) : myName(aName), myActiveState(true)
+{
+	myUUID = aUUID;
 }
 
 Dragonite::Object::~Object() = default;
