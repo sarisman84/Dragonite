@@ -1,7 +1,7 @@
 #include "Object.h"
 #include "Scene.h"
 
-Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true) 
+Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true)
 {
 	myUUID = 0;
 }
@@ -9,6 +9,7 @@ Dragonite::Object::Object() : myName("Empty Object"), myActiveState(true)
 Dragonite::Object::Object(const char* aName, Scene* aCurrentScene) : myName(aName), myActiveState(true)
 {
 	myUUID = aCurrentScene->GetNextID();
+	myCurrentScene = aCurrentScene;
 }
 
 Dragonite::Object::Object(const char* aName, const unsigned int aUUID) : myName(aName), myActiveState(true)
@@ -52,6 +53,7 @@ void Dragonite::Object::operator=(const Object& aCpy)
 
 void Dragonite::Object::Awake()
 {
+	myInitialTransform = myTransform;
 	auto cpy = myComponents;
 	for (auto& comp : cpy)
 	{
@@ -65,6 +67,26 @@ void Dragonite::Object::Update(const float aDt)
 	for (auto& comp : cpy)
 	{
 		comp->Update(aDt);
+	}
+}
+
+void Dragonite::Object::ConstantUpdate()
+{
+	auto cpy = myComponents;
+	for (auto& comp : cpy)
+	{
+		comp->ConstantUpdate();
+	}
+}
+
+void Dragonite::Object::OnDisable()
+{
+	myTransform = myInitialTransform;
+
+	auto cpy = myComponents;
+	for (auto& comp : cpy)
+	{
+		comp->OnDisable();
 	}
 }
 

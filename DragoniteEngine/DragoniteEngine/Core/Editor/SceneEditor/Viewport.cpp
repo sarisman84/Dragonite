@@ -135,6 +135,11 @@ void Dragonite::Viewport::OnWindowInit()
 	myPlayIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/play-button.png");
 	myStopIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/pause-button.png");
 
+
+	myCurrentScene->GetCamera() = &myEditorCameraInterface;
+	myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+
+
 }
 
 
@@ -189,20 +194,19 @@ void Dragonite::Viewport::RenderViewport()
 
 	myCurrentResolution = (Vector2f(resolution.x, resolution.y)) * (scaleVal);
 
-	myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+
 	myRenderID.SetTotalElementCount(static_cast<float>(mySceneEditor->GetCurrentScene()->SceneObjects().size()));
 	myRenderID.RefreshRenderView(myCurrentResolution);
 	myRenderID.Render();
 	DXInterface::SwitchRenderTarget(myViewportTarget, DXInterface::GetDepthBuffer());
-
 
 	if (myRenderID.ViewRenderID())
 		myRenderID.RenderIDTexture();
 	else
 		myGraphicsInterface->DrawInstructions();
 	DXInterface::SwitchRenderTarget(DXInterface::GetBackBuffer(), DXInterface::GetDepthBuffer());
-	auto cam = myCurrentScene->GetCamera();
-	myGraphicsInterface->SetActiveCameraAs(*cam);
+
+
 	myRenderID.SetViewport(myCurrentResolution, Vector2f(0, 0));
 	ImGui::Image(myViewportResource.Get(), ImVec2(myCurrentResolution.x, myCurrentResolution.y));
 
@@ -279,12 +283,12 @@ void Dragonite::Viewport::RenderTopBar()
 	{
 		if (ImGui::ImageButton("play", myPlayIcon->GetData().Get(), ImVec2(16, 16)))
 		{
-
+			myCurrentScene->Play();
 		}
 		ImGui::SameLine();
 		if (ImGui::ImageButton("stop", myStopIcon->GetData().Get(), ImVec2(16, 16)))
 		{
-			
+			myCurrentScene->Stop();
 		}
 		ImGui::SameLine();
 		if (ImGui::ImageButton("save", mySaveIcon->GetData().Get(), ImVec2(16, 16)))

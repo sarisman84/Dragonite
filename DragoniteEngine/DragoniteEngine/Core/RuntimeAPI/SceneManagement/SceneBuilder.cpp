@@ -26,12 +26,16 @@ const bool Dragonite::SceneBuilder::LoadScene(const char* aPath, Dragonite::Scen
 	anOutput.Name() = file[sceneName];
 	auto objects = file[sceneObjects];
 
+	anOutput.Stop();
 	auto cpy = anOutput;
 	anOutput = Scene();
+	anOutput.myCurrentState = false;
+
 	auto& pool = anOutput.SceneObjects();
 	anOutput.myInputManager = cpy.myInputManager;
 	anOutput.myPollingStation = cpy.myPollingStation;
 	anOutput.myApplication = cpy.myApplication;
+	anOutput.myRenderInterface = cpy.myRenderInterface;
 
 	for (auto& foundObject : objects)
 	{
@@ -51,6 +55,9 @@ const bool Dragonite::SceneBuilder::LoadScene(const char* aPath, Dragonite::Scen
 
 const bool Dragonite::SceneBuilder::SaveScene(const char* aPath, Scene& anInput)
 {
+	static nlohmann::json projectSettings = GetProjectSettings();
+
+
 	nlohmann::json newFile;
 	newFile[sceneName] = anInput.Name();
 
@@ -73,7 +80,34 @@ const bool Dragonite::SceneBuilder::SaveScene(const char* aPath, Scene& anInput)
 
 	ofs << newFile;
 
+	projectSettings[mainScene] = aPath;
+
+	SetProjectSettings(projectSettings);
+
 	return true;
+}
+
+nlohmann::json Dragonite::SceneBuilder::GetProjectSettings()
+{
+	std::ifstream fs("projectSettings.json");
+	if (fs.peek() == std::fstream::traits_type::eof())
+	{
+		fs.close();
+		std::ofstream ofs("projectSettings.json");
+		ofs << "{}";
+		ofs.close();
+		return GetProjectSettings();
+	}
+
+	nlohmann::json json = nlohmann::json::parse(fs);
+	return json;
+}
+
+void Dragonite::SceneBuilder::SetProjectSettings(nlohmann::json& someSettings)
+{
+	std::ofstream ofs("projectSettings.json");
+	ofs << someSettings;
+	ofs.close();
 }
 
 void Dragonite::SceneBuilder::AssignTransform(Dragonite::Object& anObject, nlohmann::json anJsonIns)

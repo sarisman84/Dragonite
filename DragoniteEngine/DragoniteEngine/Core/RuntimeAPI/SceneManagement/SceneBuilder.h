@@ -17,6 +17,8 @@ namespace Dragonite
 	JSONKEY objectID = "id";
 
 
+	JSONKEY mainScene = "main_scene";
+
 
 	class SceneBuilder
 	{
@@ -24,7 +26,13 @@ namespace Dragonite
 		SceneBuilder();
 		static const bool LoadScene(const char* aPath, Scene& anOutput);
 		static const bool SaveScene(const char* aPath, Scene& anInput);
+		static nlohmann::json GetProjectSettings();
+		static void SetProjectSettings(nlohmann::json& someSettings);
+		
 	private:
+	
+
+
 		void AssignTransform(Dragonite::Object& anObject, nlohmann::json anJsonIns);
 		void AssignComponents(Dragonite::Scene& aScene, Dragonite::Object& anObject, nlohmann::json anJsonIns);
 		
@@ -37,6 +45,8 @@ namespace Dragonite
 		static SceneBuilder myInstance;
 		std::unordered_map<std::string, ImportSetting> myImportSettings;
 		std::unordered_map<std::string, ExportSetting> myExportSettings;
+
+
 
 
 

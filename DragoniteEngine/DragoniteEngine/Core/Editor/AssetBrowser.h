@@ -66,7 +66,7 @@ namespace Dragonite
 		std::shared_ptr<Texture>
 			myFolderIcon,
 			myShaderIcon,
-			myUnknownArtAssetIcon,
+			myArtAssetIcon,
 			myJsonIcon;
 
 		TextureFactory* myTextureFactory;

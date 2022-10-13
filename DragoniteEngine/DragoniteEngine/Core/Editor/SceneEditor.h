@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <shobjidl.h> 
+#include <string>
 
 namespace Dragonite
 {
@@ -50,7 +51,6 @@ namespace Dragonite
 		PropertyEditor* myPropertyEditor;
 		Viewport* myViewport;
 		AssetBrowser* myAssetBrowser;
-
 	};
 
 }

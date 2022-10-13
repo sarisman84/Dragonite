@@ -46,7 +46,7 @@ namespace Dragonite
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
-		bool Initialize(HWND& anInstance) override;
+		bool Initialize(HWND& anInstance, const bool anInitializeAsEditorFlag = false) override;
 		void Update(const float aDeltaTime) override;
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 

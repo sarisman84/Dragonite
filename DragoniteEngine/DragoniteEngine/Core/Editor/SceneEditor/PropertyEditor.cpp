@@ -2,6 +2,7 @@
 #include "Core/Editor/SceneEditor.h"
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Component.h"
+#include "Core/RuntimeAPI/Components/TestComponent.h"
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 
@@ -79,10 +80,12 @@ Dragonite::PropertyEditor::PropertyEditor() : GUIWindow("Inspector")
 
 Dragonite::PropertyEditor::~PropertyEditor()
 {
+	
 }
 
 void Dragonite::PropertyEditor::OnWindowInit()
 {
+	RegisterComponent<TestComponent>();
 }
 
 void Dragonite::PropertyEditor::OnWindowUpdate()
@@ -119,6 +122,29 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 	}
 
 
+	ImGui::Spacing();
+
+
+
+	if (ImGui::Button("Add Component"))
+	{
+		ImGui::OpenPopup("add_component");
+	}
+
+	if (ImGui::BeginPopup("add_component"))
+	{
+		for (auto& comp : myRegisteredComponents)
+		{
+			if (ImGui::Button(comp.first.c_str()))
+			{
+				AddComponent(selectedObject, comp.first);
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		
+
+		ImGui::EndPopup();
+	}
 
 
 
@@ -131,6 +157,17 @@ void Dragonite::PropertyEditor::OnEnable()
 
 void Dragonite::PropertyEditor::OnDisable()
 {
+}
+
+void Dragonite::PropertyEditor::AddComponent(Object* anObjectToWorkWith, std::string aCompName)
+{
+	auto key = myRegisteredComponents[aCompName];
+
+	if (IsOfType<TestComponent>(key))
+	{
+		anObjectToWorkWith->AddComponent<TestComponent>();
+	}
+
 }
 
 void Dragonite::PropertyEditor::InspectComponent(Component* aComponent)

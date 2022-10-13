@@ -4,7 +4,7 @@
 
 struct APIInterface
 {
-	virtual bool Initialize(HWND& anInstance) = 0;
+	virtual bool Initialize(HWND& anInstance, const bool anInitializeAsEditorFlag = false) = 0;
 	virtual void Update(const float aDeltaTime) = 0;
 	virtual LRESULT CALLBACK LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
 

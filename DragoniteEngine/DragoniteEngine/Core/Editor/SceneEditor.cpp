@@ -9,6 +9,7 @@
 #include "Core/Utilities/Input.h"
 #include "Core/Graphics/GraphicsAPI.h"
 #include <string>
+#include <fstream>
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Graphics/RenderTargets/RenderFactory.h"
@@ -37,11 +38,58 @@ Dragonite::SceneEditor::~SceneEditor()
 
 void Dragonite::SceneEditor::OnWindowUpdate()
 {
-
-	if (ImGui::Button("Create New GameObject"))
+	static bool hasExecutedCommand = false;
+	if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && ImGui::IsWindowHovered())
 	{
-		InitializeNewObject();
+		ImGui::OpenPopup("context_menu");
 	}
+
+	if (ImGui::BeginPopup("context_menu"))
+	{
+		bool x = false;
+
+		ImGui::MenuItem("Create", "", &x);
+
+		if (ImGui::IsItemClicked())
+		{
+			ImGui::OpenPopup("create_context_menu");
+		}
+
+		if (ImGui::BeginPopup("create_context_menu"))
+		{
+			ImGui::MenuItem("Object", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeNewObject();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (hasExecutedCommand)
+		{
+			ImGui::CloseCurrentPopup();
+			hasExecutedCommand = false;
+		}
+
+
+
+		ImGui::EndPopup();
+	}
+
+
+
+
+
+
+	//if (ImGui::Button("Create New GameObject"))
+	//{
+	//	InitializeNewObject();
+	//}
 	if (mySaveSceneFlag)
 	{
 		ImGui::OpenPopup("Save...");
@@ -121,7 +169,7 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
 
-	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube,  Material::defaultMaterial);
+	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
 
 	myCurrentScene->SceneObjects().push_back(newObject);
@@ -139,6 +187,8 @@ void Dragonite::SceneEditor::TryGetNewElement()
 
 void Dragonite::SceneEditor::SaveScene()
 {
+	
+	myCurrentScene->Stop();
 	mySaveSceneFlag = true;
 }
 
@@ -242,14 +292,6 @@ bool Dragonite::SceneEditor::OpenFileExplorer(std::string& aPath, const _FILEOPE
 	}
 
 
-
-
-
-
-
-
-
-
 	//  FORMAT AND STORE THE FILE PATH
 	std::wstring path(f_Path);
 	std::string c(path.begin(), path.end());
@@ -274,6 +316,11 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 	if (ImGui::BeginPopupModal("Save..."))
 	{
 
+		if (ImGui::IsKeyDown(ImGuiKey_Escape))
+		{
+			ImGui::CloseCurrentPopup();
+			name = myCurrentScene->Name();
+		}
 
 		ImGui::InputText("Name", &name, 0, DefaultStringResize);
 
@@ -283,12 +330,7 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 			OpenFileExplorer(entry, FOS_PICKFOLDERS);
 		}
 
-
-		if (ImGui::IsKeyDown(ImGuiKey_Escape))
-		{
-			ImGui::CloseCurrentPopup();
-			name = myCurrentScene->Name();
-		}
+		ImGui::SameLine();
 
 		if (ImGui::Button("Save") || ImGui::IsKeyDown(ImGuiKey_Enter))
 		{
@@ -299,6 +341,9 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 			SceneBuilder::SaveScene(entry.c_str(), *myCurrentScene);
 			name = myCurrentScene->Name();
 		}
+
+
+		ImGui::Text("Target Directory: %s", entry.c_str());
 
 		ImGui::EndPopup();
 	}
@@ -323,6 +368,10 @@ void Dragonite::SceneEditor::OnWindowInit()
 	myCurrentScene = myPollingStation->Get<Scene>();
 	myModelFactory = myPollingStation->Get<ModelFactory>();
 	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
+
+
+	
+	
 
 }
 

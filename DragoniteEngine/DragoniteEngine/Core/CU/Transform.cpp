@@ -6,7 +6,7 @@ Dragonite::Transform::Transform() : myPosition({ 0,0,0 }), myScale({ 1,1,1 }), m
 
 Dragonite::Transform::Transform(const Transform& someCopy)
 {
-	if (someCopy.myChildren.size() > 0)
+	if (!someCopy.myChildren.empty())
 		myChildren = someCopy.myChildren;
 	myParent = someCopy.myParent;
 	myPosition = someCopy.myPosition;
@@ -16,7 +16,7 @@ Dragonite::Transform::Transform(const Transform& someCopy)
 
 void Dragonite::Transform::operator=(const Transform& someCopy)
 {
-	if (someCopy.myChildren.size() > 0)
+	if (!someCopy.myChildren.empty())
 		myChildren = someCopy.myChildren;
 	myParent = someCopy.myParent;
 	myPosition = someCopy.myPosition;

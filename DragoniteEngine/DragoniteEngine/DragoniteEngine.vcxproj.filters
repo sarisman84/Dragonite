@@ -234,6 +234,9 @@
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -360,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.cpp">
       <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

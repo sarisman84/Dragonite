@@ -15,16 +15,27 @@ namespace Dragonite
 		void Awake() override;
 		void Update(const float aDt) override;
 		void OnInspectorGUI() override;
+		void OnDisable() override;
+		void ConstantUpdate() override;
+		void OnCreate() override;
 		inline std::shared_ptr<ModelInstance>& Model() { return myModelInstance; }
 	private:
 		ModelFactory* myModelFactory;
 		GraphicalInterface* myRenderInterface;
 		std::shared_ptr<ModelInstance> myModelInstance;
 
-	
+		std::string GetName() override;
 
-		// Inherited via Component
-		virtual std::string GetName() override;
+
+
+
+
+		
+
+
+
+		
+
 
 	};
 }

@@ -13,6 +13,9 @@ namespace Dragonite
 		void Awake() override;
 		void Update(const float aDt) override;
 		void OnInspectorGUI() override;
+		void OnDisable() override;
+		void ConstantUpdate() override;
+		void OnCreate() override;
 		std::string GetName() override;
 
 		inline const unsigned int GetID() { return myCameraID; }
@@ -25,12 +28,24 @@ namespace Dragonite
 		float myNearPlane, myFarPlane;
 
 	private:
+		CameraInterface* myPreviousCameraInterface;
 		Scene* myCurrentScene;
-		PerspectiveProfile myPerspectiveProfile;
+		PerspectiveProfile* myPerspectiveProfile;
 		CameraInterface myInterface;
 		unsigned int myCameraID;
 
-		
+
+
+
+
+
+
+
+
+
+
+	
+
 	};
 }
 

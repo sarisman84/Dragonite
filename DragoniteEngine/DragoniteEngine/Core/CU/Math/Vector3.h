@@ -29,6 +29,43 @@ namespace Dragonite
 			return (aStart + aT * (aEnd - aStart));
 		}
 
+		static Vector3<T> Clamp(Vector3<T>& aValue, const T& aMinScalar, const T& aMaxScalar)
+		{
+			Math::Clamp(aValue.x, aMinScalar, aMaxScalar);
+			Math::Clamp(aValue.y, aMinScalar, aMaxScalar);
+			Math::Clamp(aValue.z, aMinScalar, aMaxScalar);
+
+			return aValue;
+		}
+
+		static Vector3<T> Clamp(Vector3<T>& aValue, const Vector3<T>& aMinValue, const T& aMaxScalar)
+		{
+			Math::Clamp(aValue.x, aMinValue.x, aMaxScalar);
+			Math::Clamp(aValue.y, aMinValue.y, aMaxScalar);
+			Math::Clamp(aValue.z, aMinValue.z, aMaxScalar);
+
+			return aValue;
+		}
+
+		static Vector3<T> Clamp(Vector3<T>& aValue, const T& aMinScalar, const Vector3<T>& aMaxValue)
+		{
+			Math::Clamp(aValue.x, aMinScalar, aMaxValue.x);
+			Math::Clamp(aValue.y, aMinScalar, aMaxValue.y);
+			Math::Clamp(aValue.z, aMinScalar, aMaxValue.z);
+
+			return aValue;
+		}
+
+		static Vector3<T> Clamp(Vector3<T>& aValue, const Vector3<T>& aMinValue, const Vector3<T>& aMaxValue)
+		{
+			Math::Clamp(aValue.x, aMinValue.x, aMaxValue.x);
+			Math::Clamp(aValue.y, aMinValue.y, aMaxValue.y);
+			Math::Clamp(aValue.z, aMinValue.z, aMaxValue.z);
+
+			return aValue;
+		}
+
+
 		bool operator==(const Vector3<T>& aVector)
 		{
 			return (x == aVector.x) && (y == aVector.y) && (z == aVector.z);

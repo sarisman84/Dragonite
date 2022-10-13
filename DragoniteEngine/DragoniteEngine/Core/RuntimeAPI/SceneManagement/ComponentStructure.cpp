@@ -3,6 +3,7 @@
 #include "Core/RuntimeAPI/Scene.h"
 
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
+#include "Core/RuntimeAPI/Components/TestComponent.h"
 #include "Core/Graphics/Models/ModelFactory.h"
 
 #include "Core/PollingStation.h"
@@ -24,6 +25,16 @@ void Dragonite::InitializeImportSettings(std::unordered_map<std::string, ImportS
 		mr->Model() = pollingStation->Get<ModelFactory>()->GetModel(model, material, texture);
 	};
 
+
+	someImportSettings["fancycomponent"] = [](const nlohmann::json& anInput, const BuildData& someBuildData)
+	{
+		
+		auto mr = someBuildData.myObject.AddComponent<TestComponent>();
+
+		mr->myMinScale = anInput["minSize"];
+		mr->myScaleSpeed = anInput["scaleSpeed"];
+	};
+
 }
 
 void Dragonite::InitializeExportSettings(std::unordered_map<std::string, ExportSetting>& someExportSettings)
@@ -37,4 +48,15 @@ void Dragonite::InitializeExportSettings(std::unordered_map<std::string, ExportS
 		anOutput["texture"] = model->myTexture->Name().c_str();
 		anOutput["material"] = model->myMaterialName;
 	};
+
+
+	someExportSettings["fancycomponent"] = [](nlohmann::json& anOutput, const BuildData& someBuildData)
+	{
+		auto mr = someBuildData.myObject.GetComponent<TestComponent>();
+		anOutput["scaleSpeed"] = mr->myScaleSpeed;
+		anOutput["minSize"] = mr->myMinScale;
+		
+	};
+
+
 }

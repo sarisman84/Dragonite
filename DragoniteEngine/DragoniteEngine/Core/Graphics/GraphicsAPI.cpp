@@ -28,8 +28,10 @@ void Dragonite::ForwardRenderer::OnRender(
 {
 
 	DXInterface::Context->IASetInputLayout(someShaderInstructions.myInputLayout.Get());
+	DXInterface::Context->VSSetShader(someShaderInstructions.myVertexShader.Get(), nullptr, 0);
+	DXInterface::Context->PSSetShader(someShaderInstructions.myPixelShader.Get(), nullptr, 0);
 
-
+	
 
 	FrameBufferData fData;
 	fData.myWorldToClipMatrix = aCameraInstruction.myViewMatrix * aCameraInstruction.myProjectionMatrix;
@@ -65,8 +67,6 @@ void Dragonite::ForwardRenderer::OnRender(
 		DXInterface::Context->IASetVertexBuffers(0, 1, instruction.myVertexBuffer.GetAddressOf(), &stride, &offset);
 		DXInterface::Context->IASetIndexBuffer(instruction.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		DXInterface::Context->VSSetShader(someShaderInstructions.myVertexShader.Get(), nullptr, 0);
-		DXInterface::Context->PSSetShader(someShaderInstructions.myPixelShader.Get(), nullptr, 0);
 		DXInterface::Context->PSSetSamplers(0, 1, &DXInterface::GetSampler());
 
 

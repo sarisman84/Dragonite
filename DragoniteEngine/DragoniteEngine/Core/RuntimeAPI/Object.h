@@ -39,8 +39,13 @@ namespace Dragonite
 
 		void Awake();
 		void Update(const float aDt);
+		void ConstantUpdate();
+		void OnDisable();
 
 		inline unsigned int UUID() { return myUUID; }
+
+
+		inline Scene* GetCurrentScene()  const noexcept { return myCurrentScene; }
 
 	private:
 		void GenerateID();
@@ -52,6 +57,9 @@ namespace Dragonite
 		std::vector<std::shared_ptr<Component>> myComponents;
 		Transform myTransform;
 		PollingStation* myPollingStation;
+		Scene* myCurrentScene;
+
+		Transform myInitialTransform;
 	};
 
 	template<typename TComponent>
@@ -60,7 +68,7 @@ namespace Dragonite
 		std::shared_ptr<Component> cmp = std::make_shared<TComponent>();
 		cmp->myObject = this;
 		cmp->myPollingStation = myPollingStation;
-		cmp->Awake();
+		cmp->OnCreate();
 		myComponents.push_back(cmp);
 		return std::dynamic_pointer_cast<TComponent>(cmp);
 	}

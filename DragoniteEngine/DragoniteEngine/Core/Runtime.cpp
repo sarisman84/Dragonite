@@ -11,6 +11,8 @@
 #include "Editor/SceneEditor.h"
 #include "Editor//AssetBrowser.h"
 
+#include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
+
 
 Dragonite::Runtime Dragonite::Runtime::myRuntime;
 
@@ -51,7 +53,7 @@ Dragonite::Runtime::~Runtime()
 	myPipeline = nullptr;
 }
 
-bool Dragonite::Runtime::Initialize(HWND& anInstance)
+bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsEditorFlag)
 {
 	myRuntimeHandler = new PollingStation();
 
@@ -68,10 +70,26 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 
 	myRuntimeHandler->AddHandler(myPipeline);
 
+
+
+
 	myScene = new Scene();
-	myScene->myApplication = this;
-	myScene->myPollingStation = myRuntimeHandler;
+	auto projectS = SceneBuilder::GetProjectSettings();
+	if (!Scene::New(*myScene, this, myPipeline, myRuntimeHandler))
+	{
+		return false;
+	}
+
 	myRuntimeHandler->AddHandler(myScene);
+
+	if (!projectS.empty())
+	{
+		SceneBuilder::LoadScene(projectS[mainScene].get<std::string>().c_str(), *myScene);
+	}
+
+
+
+
 
 
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
@@ -80,13 +98,21 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance)
 	myScene->myInputManager = IM;
 
 
-	myGUIInterface = new DragoniteGui();
-	myGUIInterface->Init(this, myPipeline);
-	myRuntimeHandler->AddHandler(myGUIInterface);
-	/*myScene->Awake();*/
+	if (anInitializeAsEditorFlag)
+	{
+		myGUIInterface = new DragoniteGui();
+		myGUIInterface->Init(this, myPipeline);
+		myRuntimeHandler->AddHandler(myGUIInterface);
+		/*myScene->Awake();*/
 
-	myGUIInterface->CreateEditorWindow(new EngineDebugger());
-	myGUIInterface->CreateEditorWindow(new SceneEditor());
+		myGUIInterface->CreateEditorWindow(new EngineDebugger());
+		myGUIInterface->CreateEditorWindow(new SceneEditor());
+	}
+	else
+	{
+		myScene->Play();
+	}
+
 
 
 

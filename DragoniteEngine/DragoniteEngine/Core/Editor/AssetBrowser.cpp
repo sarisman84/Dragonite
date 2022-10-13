@@ -72,8 +72,9 @@ void Dragonite::AssetBrowser::OnWindowInit()
 
 
 	myFolderIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/open-folder.dds");
-	myUnknownArtAssetIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/large-paint-brush.dds");
-	myJsonIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/paper-clip.dds");
+	myArtAssetIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/large-paint-brush.dds");
+	myJsonIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/cube.png");
+	myShaderIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/database.png");
 
 
 	mySelectedFolderDir = myAssetBrowserDirectory;
@@ -314,31 +315,32 @@ void Dragonite::AssetBrowser::RenderFolderContents(Directory anEntry, const bool
 		bool isImage = isDDS || extension == ".png";
 		bool isScene = extension == ".json";
 
-		if (!isDirectory && !isImage && !isScene)
+		if (!isDirectory && !isImage && !isScene && !isShader)
 		{
 			ImGui::PopID();
 			continue;
 		}
 
 
+		image = myArtAssetIcon->GetData();
 		if (isImage)
 		{
 			auto r = myTextureFactory->LoadTexture(file.path().wstring().c_str());
-			image = r ? r->GetData() : myUnknownArtAssetIcon->GetData();
+			image = r ? r->GetData() : myArtAssetIcon->GetData();
 		}
-		else if (isDirectory)
+		if (isDirectory)
 		{
 			image = myFolderIcon->GetData();
-
 		}
-		else if (isScene)
+		if (isScene)
 		{
 			image = myJsonIcon->GetData();
 		}
-		else
+		if (isShader)
 		{
-			image = myUnknownArtAssetIcon->GetData();
+			image = myShaderIcon->GetData();
 		}
+
 
 
 
