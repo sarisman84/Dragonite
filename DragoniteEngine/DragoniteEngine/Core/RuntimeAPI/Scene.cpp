@@ -54,13 +54,12 @@ void Dragonite::Scene::OnSceneInit()
 
 void Dragonite::Scene::Update(const float aDt)
 {
-	if (myCurrentState)
+
+	for (auto& object : myObjects)
 	{
-		for (auto& object : myObjects)
-		{
-			object.Update(aDt);
-		}
+		object.Update(aDt);
 	}
+
 
 	for (auto& object : myObjects)
 	{

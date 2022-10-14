@@ -118,6 +118,17 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 
 
 	myRuntimeHandler->AddHandler(this);
+
+
+
+	Reflect::IterateMembers(this, [](auto member)
+		{
+			const char* name = member.Name();
+		});
+
+
+
+
 	return true;
 }
 

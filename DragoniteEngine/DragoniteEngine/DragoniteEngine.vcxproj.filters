@@ -237,6 +237,9 @@
     <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Utilities\Reflection.h">
+      <Filter>Core\Utilities\Reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -446,6 +449,9 @@
     </Filter>
     <Filter Include="Core\RuntimeAPI\SceneManagement">
       <UniqueIdentifier>{80dcdd14-e936-4bed-9f77-9bcb1ff27806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utilities\Reflection">
+      <UniqueIdentifier>{c1b9bc32-7d13-4816-927a-5dd71653d228}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

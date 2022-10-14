@@ -2,7 +2,6 @@
 #include "Core/Editor/SceneEditor.h"
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Component.h"
-#include "Core/RuntimeAPI/Components/TestComponent.h"
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 
@@ -85,7 +84,6 @@ Dragonite::PropertyEditor::~PropertyEditor()
 
 void Dragonite::PropertyEditor::OnWindowInit()
 {
-	RegisterComponent<TestComponent>();
 }
 
 void Dragonite::PropertyEditor::OnWindowUpdate()
@@ -116,8 +114,10 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Indent();
-			InspectComponent(components[i].get());
+			//InspectElement(typeid(*components[i].get()).hash_code());
 			ImGui::Unindent();
+
+
 		}
 	}
 
@@ -133,14 +133,14 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 
 	if (ImGui::BeginPopup("add_component"))
 	{
-		for (auto& comp : myRegisteredComponents)
+	/*	for (auto& comp : myRegisteredComponents)
 		{
 			if (ImGui::Button(comp.first.c_str()))
 			{
 				AddComponent(selectedObject, comp.first);
 				ImGui::CloseCurrentPopup();
 			}
-		}
+		}*/
 		
 
 		ImGui::EndPopup();
@@ -159,18 +159,18 @@ void Dragonite::PropertyEditor::OnDisable()
 {
 }
 
-void Dragonite::PropertyEditor::AddComponent(Object* anObjectToWorkWith, std::string aCompName)
-{
-	auto key = myRegisteredComponents[aCompName];
-
-	if (IsOfType<TestComponent>(key))
-	{
-		anObjectToWorkWith->AddComponent<TestComponent>();
-	}
-
-}
-
-void Dragonite::PropertyEditor::InspectComponent(Component* aComponent)
-{
-	aComponent->OnInspectorGUI();
-}
+//void Dragonite::PropertyEditor::AddComponent(Object* anObjectToWorkWith, std::string aCompName)
+//{
+//	auto key = myRegisteredComponents[aCompName];
+//
+//	if (IsOfType<TestComponent>(key))
+//	{
+//		anObjectToWorkWith->AddComponent<TestComponent>();
+//	}
+//
+//}
+//
+//void Dragonite::PropertyEditor::InspectComponent(Component* aComponent)
+//{
+//	aComponent->OnInspectorGUI();
+//}

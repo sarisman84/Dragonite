@@ -45,6 +45,8 @@ void Dragonite::GUIWindow::UpdateWindow()
 		}
 		else
 		{
+			
+
 			ImGui::Begin(name.c_str(), &myActiveStateFlag);
 			myFocusFlag = ImGui::IsWindowFocused();
 			myHoveredFlag = ImGui::IsWindowHovered();

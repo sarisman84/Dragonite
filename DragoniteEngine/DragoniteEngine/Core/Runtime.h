@@ -16,6 +16,10 @@
 #define DLLIMPORT _declspec(dllimport)
 
 
+#include "Utilities/Reflection.h"
+
+
+
 
 
 
@@ -50,6 +54,7 @@ namespace Dragonite
 		void Update(const float aDeltaTime) override;
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
+		int test;
 
 	private:
 		static Runtime myRuntime;
@@ -76,3 +81,14 @@ namespace Dragonite
 
 }
 DLLEXPORT APIInterface* InitializeRuntime();
+
+namespace Dragonite
+{
+	template<>
+	inline auto Reflect::RegisterElement<Runtime>() 
+	{
+		return Class("Runtime", 
+			Member("Test", &Runtime::test));
+	}
+}
+
