@@ -10,6 +10,7 @@ namespace Dragonite
 	class Scene;
 	class Object
 	{
+		friend Scene;
 		friend class SceneBuilder;
 	public:
 		Object();

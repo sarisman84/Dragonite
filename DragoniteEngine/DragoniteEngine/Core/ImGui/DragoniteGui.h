@@ -6,6 +6,7 @@
 
 namespace Dragonite
 {
+	class Scene;
 	class Runtime;
 	class GraphicalInterface;
 
@@ -18,6 +19,9 @@ namespace Dragonite
 		void Init(Runtime* anAppIns, GraphicalInterface* aGraphicsPipeline);
 		void Render();
 
+		void FocusScene(Scene* aNewScene);
+		Scene* GetFocusedScene();
+
 		void CreateEditorWindow(GUIWindow* aWindowType);
 		std::unique_ptr<GUIWindow>& GetWindow(const char* aName);
 
@@ -25,6 +29,9 @@ namespace Dragonite
 		void InitializeImgui();
 		void BeginDockingSpace();
 		void EndDockingSpace();
+
+
+		Scene* myFocusedScene;
 
 		bool myIsCurrentlyOnImGuiFlag;
 

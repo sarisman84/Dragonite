@@ -26,7 +26,7 @@ const bool Dragonite::SceneBuilder::LoadScene(const char* aPath, Dragonite::Scen
 	anOutput.Name() = file[sceneName];
 	auto objects = file[sceneObjects];
 
-	anOutput.Stop();
+	anOutput.Stop(nullptr);
 	auto cpy = anOutput;
 	anOutput = Scene();
 	anOutput.myCurrentState = false;

@@ -6,12 +6,23 @@
 
 Dragonite::Camera::Camera() : Component(), myPerspectiveProfile(new PerspectiveProfile(90.0f, 0.1f, 1000.0f))
 {
+	myNearPlane = 0.1f;
+	myFarPlane = 1000.0f;
+	myFOV = 90.0f;
+
+	myPerspectiveProfile->myFarPlane = myFarPlane;
+	myPerspectiveProfile->myNearPlane = myNearPlane;
+	myPerspectiveProfile->myFOV = myFOV;
+
 	static unsigned int cameraID = 0;
 	myCameraID = cameraID++;
 }
 void Dragonite::Camera::Awake()
 {
-	myCurrentScene = myCurrentScene ? myCurrentScene : myPollingStation->Get<Scene>();
+	myInterface.GetTransform() = myObject->GetTransform();
+	myInterface.Profile() = myPerspectiveProfile;
+
+	myCurrentScene = myPollingStation->Get<Scene>();
 	myPreviousCameraInterface = myCurrentScene->GetCamera();
 	SetCameraAsPrimary();
 }
@@ -42,7 +53,7 @@ std::string Dragonite::Camera::GetName()
 
 void Dragonite::Camera::SetCameraAsPrimary()
 {
-	myCurrentScene->GetCamera() = &myInterface;
+	myCurrentScene->SetTargetCamera(&myInterface);
 }
 
 void Dragonite::Camera::OnCreate()
@@ -57,5 +68,4 @@ void Dragonite::Camera::ConstantUpdate()
 
 void Dragonite::Camera::OnDisable()
 {
-	myCurrentScene->GetCamera() = myPreviousCameraInterface;
 }

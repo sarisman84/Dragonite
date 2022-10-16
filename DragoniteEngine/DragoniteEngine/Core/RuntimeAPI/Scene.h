@@ -21,19 +21,26 @@ namespace Dragonite
 		static const bool New(Scene& aNewScene, Runtime* anApp, GraphicalInterface* anGI, PollingStation* aPS);
 
 		Scene();
+		Scene(const Scene& aCpy);
+		void operator=(const Scene& aCpy);
+
+		void CopyScene(const Scene* aScene);
+
 
 		void OnSceneInit();
 		void Update(const float aDt);
+		void LateUpdate();
 
 
-		void Play();
-		void Stop();
+		Scene* Play();
+		void Stop(Scene* aScene);
 
 		inline std::vector<Object>& SceneObjects() noexcept { return myObjects; }
 
 		inline std::string& Name() { return myName; }
 
-		inline CameraInterface*& GetCamera() { return myViewportInterface; }
+		inline CameraInterface* GetCamera() { return myViewportInterface; }
+		inline void SetTargetCamera(CameraInterface* anInterface) { myViewportInterface = anInterface; }
 
 		inline const unsigned int GetNextID() noexcept
 		{
@@ -48,6 +55,9 @@ namespace Dragonite
 		inline const bool IsPlaying() const noexcept { return myCurrentState; }
 
 	private:
+
+
+
 		PollingStation* myPollingStation;
 		Runtime* myApplication;
 		GraphicalInterface* myRenderInterface;

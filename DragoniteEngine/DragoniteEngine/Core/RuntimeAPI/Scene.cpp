@@ -40,46 +40,89 @@ Dragonite::Scene::Scene()
 
 }
 
+Dragonite::Scene::Scene(const Scene& aCpy)
+{
+	CopyScene(&aCpy);
+
+}
+
+void Dragonite::Scene::operator=(const Scene& aCpy)
+{
+	CopyScene(&aCpy);
+}
+
+void Dragonite::Scene::CopyScene(const Scene* aScene)
+{
+	myPollingStation = aScene->myPollingStation;
+	myApplication = aScene->myApplication;
+	myCurrentState = aScene->myCurrentState;
+	myInputManager = aScene->myInputManager;
+	myName = aScene->myName;
+	myNextUUID = aScene->myNextUUID;
+	myRenderInterface = aScene->myRenderInterface;
+	myViewportInterface = aScene->myViewportInterface;
+	myObjects = aScene->myObjects;
+
+	for (size_t i = 0; i < myObjects.size(); i++)
+	{
+		myObjects[i].myCurrentScene = this;
+		for (size_t x = 0; x < myObjects[i].Components().size(); x++)
+		{
+			myObjects[i].Components()[x]->OnCreate();
+		}
+	}
+
+
+}
+
 void Dragonite::Scene::OnSceneInit()
 {
-	myRenderInterface = myRenderInterface ? myRenderInterface : myPollingStation->Get<GraphicalInterface>();
-	myRenderInterface->SetActiveCameraAs(*myViewportInterface);
-
-
 	for (auto& object : myObjects)
 	{
 		object.Awake();
 	}
+
+	myRenderInterface = myRenderInterface ? myRenderInterface : myPollingStation->Get<GraphicalInterface>();
+	myRenderInterface->SetActiveCameraAs(*myViewportInterface);
 }
 
 void Dragonite::Scene::Update(const float aDt)
 {
-
-	for (auto& object : myObjects)
+	auto cpy = myObjects;
+	for (auto& object : cpy)
 	{
 		object.Update(aDt);
 	}
+}
 
-
-	for (auto& object : myObjects)
+void Dragonite::Scene::LateUpdate()
+{
+	auto cpy = myObjects;
+	for (auto& object : cpy)
 	{
 		object.ConstantUpdate();
 	}
 
 }
 
-void Dragonite::Scene::Play()
+Dragonite::Scene* Dragonite::Scene::Play()
 {
-	myCurrentState = true;
-	OnSceneInit();
+	Scene* cpy = new Scene(*this);
+
+	myPollingStation->AddHandler(cpy);
+
+	cpy->OnSceneInit();
+
+	myApplication->OnUpdate() += [cpy](const float aDt)
+	{
+		cpy->Update(aDt);
+	};
+
+	return cpy;
+
 }
 
-void Dragonite::Scene::Stop()
+void Dragonite::Scene::Stop(Scene* aScene)
 {
-	if (!myCurrentState) return;
-	myCurrentState = false;
-	for (auto& object : myObjects)
-	{
-		object.OnDisable();
-	}
+	myApplication->OnUpdate().operator--();
 }

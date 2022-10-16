@@ -93,6 +93,14 @@ namespace Dragonite
 			}
 
 
+			template<typename T>
+			struct TypeInfo {
+				typedef T type;
+				const size_t id = typeid(type).hash_code();
+			};
+
+
+
 			template<typename>
 			struct is_template : std::false_type
 			{
@@ -150,7 +158,7 @@ namespace Dragonite
 		template<typename... DerivedTypes, typename... Members>
 		constexpr inline auto Class(const char* aName, Members&&... someMembers)
 		{
-			return ReflectedType(aName, std::tuple<DerivedTypes...>(), std::make_tuple(std::forward<Members>(someMembers)...));
+			return ReflectedType(aName, std::make_tuple(Internal::TypeInfo<DerivedTypes...>()), std::make_tuple(std::forward<Members>(someMembers)...));
 		}
 
 
@@ -159,7 +167,7 @@ namespace Dragonite
 
 
 		template<typename TClass>
-		const auto& GetMembers()
+		const auto& GetReflectedType()
 		{
 			auto r = Reflect::RegisterElement<TClass>();
 			return Internal::ReflectionInfo<TClass, decltype(r)::Members, decltype(r)::DerivedTypes>::reflectedType;
@@ -167,10 +175,34 @@ namespace Dragonite
 
 
 
-		template<typename TClass, typename Func>
-		void IterateMembers(TClass* anInstance, Func aCallback, const bool aDeepIterationFlag = false, size_t aTypeHash = size_t(0) - 1)
+
+		template<typename TClass>
+		const auto& GetReflectedType(TClass* anInstance)
 		{
-			Internal::for_each(Reflect::GetMembers<TClass>().members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
+			if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
+
+			Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, [anInstance](auto element)
+				{
+					if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
+					{
+						if (typeid(*anInstance).hash_code() == element.id)
+							return Reflect::GetReflectedType<decltype(element)::type>();
+					}
+
+
+				});
+
+
+
+			return Reflect::GetReflectedType<TClass>();
+		}
+
+
+
+		template<typename TClass, typename Func>
+		void IterateMembers(TClass* anInstance, Func aCallback, const bool aDeepIterationFlag = false)
+		{
+			Internal::for_each(Reflect::GetReflectedType<TClass>(anInstance).members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
 				{
 					if constexpr (!Internal::is_template<decltype(member)>::value) return;
 

@@ -79,7 +79,7 @@ Dragonite::PropertyEditor::PropertyEditor() : GUIWindow("Inspector")
 
 Dragonite::PropertyEditor::~PropertyEditor()
 {
-	
+
 }
 
 void Dragonite::PropertyEditor::OnWindowInit()
@@ -115,6 +115,8 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 		{
 			ImGui::Indent();
 			//InspectElement(typeid(*components[i].get()).hash_code());
+			
+
 			ImGui::Unindent();
 
 
@@ -133,15 +135,15 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 
 	if (ImGui::BeginPopup("add_component"))
 	{
-	/*	for (auto& comp : myRegisteredComponents)
-		{
-			if (ImGui::Button(comp.first.c_str()))
+		/*	for (auto& comp : myRegisteredComponents)
 			{
-				AddComponent(selectedObject, comp.first);
-				ImGui::CloseCurrentPopup();
-			}
-		}*/
-		
+				if (ImGui::Button(comp.first.c_str()))
+				{
+					AddComponent(selectedObject, comp.first);
+					ImGui::CloseCurrentPopup();
+				}
+			}*/
+
 
 		ImGui::EndPopup();
 	}

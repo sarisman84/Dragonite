@@ -14,6 +14,9 @@
 #include "Core/Graphics/Textures/TextureFactory.h"
 #include "Core/CU/Math/MathFunctions.h"
 
+#include "Core/ImGui/DragoniteGui.h"
+#include "Core/Runtime.h"
+
 
 
 
@@ -79,10 +82,12 @@ const Dragonite::Vector2f Dragonite::Viewport::GetLocalMousePos(Mouse* aMouse)
 void Dragonite::Viewport::ManipulateObject(Dragonite::Scene* aScene, Dragonite::Object* anObject)
 {
 	myIsManipulatingFlag = false;
-	if (!anObject) return;
+	if (!anObject || !aScene->GetCamera()) return;
 
-	Matrix4x4f view = myEditorCameraInterface.ViewMatrix();
-	Matrix4x4f proj = myEditorCameraInterface.Profile()->CalculateProjectionMatrix();
+
+
+	Matrix4x4f view = aScene->GetCamera()->ViewMatrix();
+	Matrix4x4f proj = aScene->GetCamera()->Profile()->CalculateProjectionMatrix();
 	Matrix4x4f transform = anObject->GetTransform().GetMatrix();
 	ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
 
@@ -99,7 +104,7 @@ void Dragonite::Viewport::OnWindowInit()
 {
 	myGraphicsInterface = myPollingStation->Get<GraphicalInterface>();
 	myTextureFactory = myPollingStation->Get<TextureFactory>();
-	myCurrentScene = myPollingStation->Get<Scene>();
+	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
 	myRenderID = RenderID(myGraphicsInterface);
 
 	D3D11_TEXTURE2D_DESC desc = { 0 };
@@ -136,7 +141,6 @@ void Dragonite::Viewport::OnWindowInit()
 	myStopIcon = myTextureFactory->LoadTexture(L"resources/textures/icons/pause-button.png");
 
 
-	myCurrentScene->GetCamera() = &myEditorCameraInterface;
 	myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
 
 
@@ -148,11 +152,13 @@ void Dragonite::Viewport::OnWindowUpdate()
 {
 	ImGui::ShowDemoWindow();
 
+	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
+
 
 	myMinRegion.x = ImGui::GetWindowContentRegionMin().x;
 	myMinRegion.y = ImGui::GetWindowContentRegionMin().y + 37.0f;
 
-	ImGuizmo::SetRect(myMinRegion.x, myMinRegion.y, myCurrentResolution.x, myCurrentResolution.y);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, myCurrentResolution.x, myCurrentResolution.y);
 	ImGuizmo::DrawGrid(&myEditorCameraInterface.ViewMatrix(), &myEditorCameraInterface.Profile()->CalculateProjectionMatrix(), &Matrix4x4f(), 1.0f);
 
 	RenderViewport();
@@ -261,7 +267,7 @@ void Dragonite::Viewport::DetectAssetDrop()
 
 void Dragonite::Viewport::RenderTopBar()
 {
-
+	static Scene* sceneCpy;
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
@@ -283,17 +289,53 @@ void Dragonite::Viewport::RenderTopBar()
 	{
 		if (ImGui::ImageButton("play", myPlayIcon->GetData().Get(), ImVec2(16, 16)))
 		{
-			myCurrentScene->Play();
+			if (!sceneCpy)
+			{
+				sceneCpy = myCurrentScene;
+				{
+					myCurrentScene = new Scene(*sceneCpy);
+					myPollingStation->AddHandler(myCurrentScene);
+					myCurrentScene->OnSceneInit();
+					myPollingStation->Get<Runtime>()->OnUpdate() += [this](const float aDt)
+					{
+						myCurrentScene->Update(aDt);
+					};
+					myDragoniteGuiAPI->FocusScene(myCurrentScene);
+				}
+
+			}
+
 		}
 		ImGui::SameLine();
 		if (ImGui::ImageButton("stop", myStopIcon->GetData().Get(), ImVec2(16, 16)))
 		{
-			myCurrentScene->Stop();
+			if (sceneCpy)
+			{
+				myCurrentScene->Stop(nullptr);
+				delete myCurrentScene;
+				myCurrentScene = sceneCpy;
+				myCurrentScene->CopyScene(sceneCpy);
+				sceneCpy = nullptr;
+				myDragoniteGuiAPI->FocusScene(myCurrentScene);
+				myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+			}
+
 		}
 		ImGui::SameLine();
 		if (ImGui::ImageButton("save", mySaveIcon->GetData().Get(), ImVec2(16, 16)))
 		{
+			if (sceneCpy)
+			{
+				myCurrentScene->Stop(nullptr);
+				delete myCurrentScene;
+				myCurrentScene = sceneCpy;
+				myCurrentScene->CopyScene(sceneCpy);
+				sceneCpy = nullptr;
+				myDragoniteGuiAPI->FocusScene(myCurrentScene);
+				myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+			}
 			mySceneEditor->SaveScene();
+
 		}
 	}
 	ImGui::End();

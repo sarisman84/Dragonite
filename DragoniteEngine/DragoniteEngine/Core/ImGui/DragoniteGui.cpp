@@ -1,6 +1,8 @@
 #include "DragoniteGui.h"
 
 #include "Core/Runtime.h"
+#include "Core/RuntimeAPI/Scene.h"
+
 #include "Core/Graphics/GraphicsAPI.h"
 
 #include "Core/External/imgui/imgui.h"
@@ -72,6 +74,17 @@ void Dragonite::DragoniteGui::Render()
 
 	EndDockingSpace();
 
+}
+
+void Dragonite::DragoniteGui::FocusScene(Scene* aNewScene)
+{
+	myFocusedScene = aNewScene;
+	myApplicationIns->GetPollingStation().AddHandler(myFocusedScene);
+}
+
+Dragonite::Scene* Dragonite::DragoniteGui::GetFocusedScene()
+{
+	return myFocusedScene;
 }
 
 

@@ -6,6 +6,7 @@ namespace Dragonite
 	class Object;
 	class Component
 	{
+		friend class Scene;
 		friend Object;
 	public:
 		Component() = default;

@@ -13,11 +13,6 @@
 
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 
-
-Dragonite::Runtime Dragonite::Runtime::myRuntime;
-
-
-
 LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (message == WM_DESTROY)
@@ -97,11 +92,12 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 	if (!IM->Init(this)) return false;
 	myScene->myInputManager = IM;
 
-
+	myEditorFlag = anInitializeAsEditorFlag;
 	if (anInitializeAsEditorFlag)
 	{
 		myGUIInterface = new DragoniteGui();
 		myGUIInterface->Init(this, myPipeline);
+		myGUIInterface->FocusScene(myScene);
 		myRuntimeHandler->AddHandler(myGUIInterface);
 		/*myScene->Awake();*/
 
@@ -110,7 +106,12 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 	}
 	else
 	{
-		myScene->Play();
+		myScene->OnSceneInit();
+		myUpdateCB += [this](const float aDt)
+		{
+			myScene->Update(aDt);
+			myScene->LateUpdate();
+		};
 	}
 
 
@@ -121,13 +122,6 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 
 
 
-	Reflect::IterateMembers(this, [](auto member)
-		{
-			const char* name = member.Name();
-		});
-
-
-
 
 	return true;
 }
@@ -135,8 +129,15 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 void Dragonite::Runtime::Update(const float aDeltaTime)
 {
 	myUpdateCB(aDeltaTime);
-	if (myScene)
-		myScene->Update(aDeltaTime);
+
+	auto scene = myEditorFlag ? myGUIInterface->GetFocusedScene() : myScene;
+
+	if (scene)
+	{
+		scene->LateUpdate();
+	}
+
+
 	myPipeline->Render();
 
 }

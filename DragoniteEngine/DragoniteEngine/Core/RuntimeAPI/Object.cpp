@@ -10,6 +10,7 @@ Dragonite::Object::Object(const char* aName, Scene* aCurrentScene) : myName(aNam
 {
 	myUUID = aCurrentScene->GetNextID();
 	myCurrentScene = aCurrentScene;
+	myPollingStation = aCurrentScene->GetPollingStation();
 }
 
 Dragonite::Object::Object(const char* aName, const unsigned int aUUID) : myName(aName), myActiveState(true)

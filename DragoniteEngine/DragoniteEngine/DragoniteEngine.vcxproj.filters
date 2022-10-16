@@ -453,6 +453,9 @@
     <Filter Include="Core\Utilities\Reflection">
       <UniqueIdentifier>{c1b9bc32-7d13-4816-927a-5dd71653d228}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Editor\Contexts">
+      <UniqueIdentifier>{44717463-5df0-4153-a39a-a84323bf404f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Core\Graphics\Shaders\Unlit_VS.hlsl">

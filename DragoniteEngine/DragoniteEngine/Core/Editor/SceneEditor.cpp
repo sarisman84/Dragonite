@@ -38,6 +38,12 @@ Dragonite::SceneEditor::~SceneEditor()
 
 void Dragonite::SceneEditor::OnWindowUpdate()
 {
+	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
+
+
+	if (!myCurrentScene) return;
+
+
 	static bool hasExecutedCommand = false;
 	if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && ImGui::IsWindowHovered())
 	{
@@ -151,6 +157,9 @@ void Dragonite::SceneEditor::OnDisable()
 
 Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 {
+	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
+	if (!myCurrentScene) return nullptr;
+
 	auto el = myFocusedElement - 1;
 	if (el < 0 || el >= myCurrentScene->SceneObjects().size())
 		return nullptr;
@@ -187,8 +196,6 @@ void Dragonite::SceneEditor::TryGetNewElement()
 
 void Dragonite::SceneEditor::SaveScene()
 {
-	
-	myCurrentScene->Stop();
 	mySaveSceneFlag = true;
 }
 
@@ -365,13 +372,13 @@ void Dragonite::SceneEditor::OnWindowInit()
 	//GUIWindow::CreateEditorWindow(Inspector());
 	//GUIWindow::CreateEditorWindow(Hierachy());
 
-	myCurrentScene = myPollingStation->Get<Scene>();
+	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
 	myModelFactory = myPollingStation->Get<ModelFactory>();
 	myMouseInput = &myPollingStation->Get<InputManager>()->GetMouse();
 
 
-	
-	
+
+
 
 }
 

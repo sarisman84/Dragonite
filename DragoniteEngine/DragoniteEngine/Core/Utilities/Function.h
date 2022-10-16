@@ -23,6 +23,12 @@ namespace Dragonite
 			myCallbacks.push_back(aNewCallback);
 		}
 
+		void operator--()
+		{
+			if (!myCallbacks.empty())
+				myCallbacks.pop_back();
+		}
+
 		template<typename Func>
 		void operator=(Func aNewCallback)
 		{
@@ -58,6 +64,11 @@ namespace Dragonite
 		void operator+=(Func aNewCallback)
 		{
 			myCallbacks.push_back(aNewCallback);
+		}
+
+		void operator--()
+		{
+			myCallbacks.pop_back();
 		}
 
 		template<typename Func>

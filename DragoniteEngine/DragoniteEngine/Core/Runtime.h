@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <typeinfo>
+#include <functional>
+#include <vector>
 
 #include <unordered_map>
 
@@ -54,11 +56,14 @@ namespace Dragonite
 		void Update(const float aDeltaTime) override;
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
-		int test;
+
+
 
 	private:
-		static Runtime myRuntime;
+
+
 		bool myRuntimeState;
+		bool myEditorFlag;
 		HWND myInstance;
 		PollingStation* myRuntimeHandler;
 		GraphicalInterface* myPipeline;
@@ -82,13 +87,4 @@ namespace Dragonite
 }
 DLLEXPORT APIInterface* InitializeRuntime();
 
-namespace Dragonite
-{
-	template<>
-	inline auto Reflect::RegisterElement<Runtime>() 
-	{
-		return Class("Runtime", 
-			Member("Test", &Runtime::test));
-	}
-}
 

@@ -28,9 +28,9 @@ namespace Dragonite
 		float myNearPlane, myFarPlane;
 
 	private:
-		CameraInterface* myPreviousCameraInterface;
-		Scene* myCurrentScene;
-		PerspectiveProfile* myPerspectiveProfile;
+		CameraInterface* myPreviousCameraInterface = nullptr;
+		Scene* myCurrentScene = nullptr;
+		PerspectiveProfile* myPerspectiveProfile = nullptr;
 		CameraInterface myInterface;
 		unsigned int myCameraID;
 
