@@ -163,7 +163,7 @@ namespace Dragonite
 
 			(f(std::declval<DerivedTypes>()), ...);
 
-			return ReflectedType(aName, std::make_tuple(std::forward<DerivedTypes>(Internal::TypeInfo<DerivedTypes>())...), std::make_tuple(std::forward<Members>(someMembers)...));
+			return ReflectedType(aName, std::forward<decltype(Dts)>(Dts), std::make_tuple(std::forward<Members>(someMembers)...));
 		}
 
 
