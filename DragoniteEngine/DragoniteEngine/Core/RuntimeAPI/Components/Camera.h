@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/RuntimeAPI/Component.h"
 #include "Core/Graphics/CameraInterface.h"
+#include "Core/Utilities/Reflection.h"
 
 namespace Dragonite
 {
@@ -33,20 +34,17 @@ namespace Dragonite
 		PerspectiveProfile* myPerspectiveProfile = nullptr;
 		CameraInterface myInterface;
 		unsigned int myCameraID;
-
-
-
-
-
-
-
-
-
-
-
-	
-
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<Camera>() 
+	{
+		return Class("Camera",
+			Member("FOV", &Camera::myFOV),
+			Member("Near Plane", &Camera::myNearPlane),
+			Member("Far Plane", &Camera::myFarPlane));
+	}
 }
 
 

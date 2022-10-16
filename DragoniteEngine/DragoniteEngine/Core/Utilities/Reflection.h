@@ -158,7 +158,12 @@ namespace Dragonite
 		template<typename... DerivedTypes, typename... Members>
 		constexpr inline auto Class(const char* aName, Members&&... someMembers)
 		{
-			return ReflectedType(aName, std::make_tuple(Internal::TypeInfo<DerivedTypes...>()), std::make_tuple(std::forward<Members>(someMembers)...));
+			auto Dts = std::make_tuple();
+			auto f = [&](auto data) { Dts = std::tuple_cat(Dts, std::make_tuple(Internal::TypeInfo<decltype(data)>())); };
+
+			(f(std::declval<DerivedTypes>()), ...);
+
+			return ReflectedType(aName, std::make_tuple(std::forward<DerivedTypes>(Internal::TypeInfo<DerivedTypes>())...), std::make_tuple(std::forward<Members>(someMembers)...));
 		}
 
 

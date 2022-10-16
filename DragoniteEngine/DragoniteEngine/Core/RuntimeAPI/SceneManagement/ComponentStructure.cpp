@@ -4,6 +4,7 @@
 
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
+#include "Core/RuntimeAPI/Components/Camera.h"
 #include "Core/Graphics/Models/ModelFactory.h"
 
 #include "Core/PollingStation.h"
@@ -28,11 +29,22 @@ void Dragonite::InitializeImportSettings(std::unordered_map<std::string, ImportS
 
 	someImportSettings["fancycomponent"] = [](const nlohmann::json& anInput, const BuildData& someBuildData)
 	{
-		
+
 		auto mr = someBuildData.myObject.AddComponent<TestComponent>();
 
 		mr->myMinScale = anInput["minSize"];
 		mr->myScaleSpeed = anInput["scaleSpeed"];
+	};
+
+
+	someImportSettings["camera"] = [](const nlohmann::json& anInput, const BuildData& someBuildData)
+	{
+		auto mr = someBuildData.myObject.AddComponent<Camera>();
+
+		mr->myFOV = anInput["myFOV"];
+		mr->myNearPlane = anInput["myNearPlane"];
+		mr->myFarPlane = anInput["myFarPlane"];
+
 	};
 
 }
@@ -55,7 +67,18 @@ void Dragonite::InitializeExportSettings(std::unordered_map<std::string, ExportS
 		auto mr = someBuildData.myObject.GetComponent<TestComponent>();
 		anOutput["scaleSpeed"] = mr->myScaleSpeed;
 		anOutput["minSize"] = mr->myMinScale;
-		
+
+	};
+
+
+
+	someExportSettings["camera"] = [](nlohmann::json& anOutput, const BuildData& someBuildData)
+	{
+		auto mr = someBuildData.myObject.GetComponent<Camera>();
+		anOutput["myFOV"] = mr->myFOV;
+		anOutput["myNearPlane"] = mr->myNearPlane;
+		anOutput["myFarPlane"] = mr->myFarPlane;
+
 	};
 
 

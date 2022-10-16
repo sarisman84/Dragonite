@@ -110,8 +110,9 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 		myUpdateCB += [this](const float aDt)
 		{
 			myScene->Update(aDt);
-			myScene->LateUpdate();
+			//myScene->LateUpdate();
 		};
+		myPipeline->DrawToBackBuffer(true);
 	}
 
 

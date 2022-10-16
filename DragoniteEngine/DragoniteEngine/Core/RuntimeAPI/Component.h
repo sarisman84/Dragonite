@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include "Core/PollingStation.h"
+#include "Core/Utilities/Reflection.h"
+
 namespace Dragonite
 {
 	class Object;
@@ -24,4 +26,6 @@ namespace Dragonite
 		bool myActiveState;
 		PollingStation* myPollingStation;
 	};
+
+	
 }

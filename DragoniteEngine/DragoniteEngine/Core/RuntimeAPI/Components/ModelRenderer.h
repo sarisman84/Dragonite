@@ -4,6 +4,8 @@
 #include "Core/Graphics/Models/Material.h"
 #include "Core/RuntimeAPI/Object.h"
 
+#include "Core/Utilities/Reflection.h"
+
 namespace Dragonite
 {
 	class GraphicalInterface;
@@ -25,19 +27,14 @@ namespace Dragonite
 		std::shared_ptr<ModelInstance> myModelInstance;
 
 		std::string GetName() override;
-
-
-
-
-
-		
-
-
-
-		
-
-
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<ModelRenderer>()
+	{
+		return Class("Model Renderer");
+	}
 }
 
 

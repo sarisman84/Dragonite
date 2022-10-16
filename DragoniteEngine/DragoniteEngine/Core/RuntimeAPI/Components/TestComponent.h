@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/RuntimeAPI/Component.h"
+#include "Core/Utilities/Reflection.h"
 namespace Dragonite
 {
 	class TestComponent : public Component
@@ -15,17 +16,23 @@ namespace Dragonite
 		std::string GetName() override;
 
 	public:
-		float 
-			myScaleSpeed, 
+		float
+			myScaleSpeed,
 			myMinScale;
 
 	private:
 		float myCurrentTime;
-
-
-	
-
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<TestComponent>()
+	{
+		return Class("Test Component",
+			Member("Scale Speed", &TestComponent::myScaleSpeed),
+			Member("Min Scale", &TestComponent::myMinScale)
+		);
+	}
 
 }
 

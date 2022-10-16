@@ -115,8 +115,7 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 		{
 			ImGui::Indent();
 			//InspectElement(typeid(*components[i].get()).hash_code());
-			
-
+			Reflect::InspectElement(components[i].get());
 			ImGui::Unindent();
 
 

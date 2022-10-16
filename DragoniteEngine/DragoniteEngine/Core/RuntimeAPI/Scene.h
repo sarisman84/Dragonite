@@ -62,7 +62,7 @@ namespace Dragonite
 		Runtime* myApplication;
 		GraphicalInterface* myRenderInterface;
 		InputManager* myInputManager;
-		CameraInterface* myViewportInterface;
+		CameraInterface* myViewportInterface = nullptr;
 		std::vector<Object> myObjects;
 		std::string myName;
 
