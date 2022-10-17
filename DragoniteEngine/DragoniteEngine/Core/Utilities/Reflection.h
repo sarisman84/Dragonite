@@ -77,24 +77,26 @@ namespace Dragonite
 			};
 
 
-			template<size_t I = 0, typename Func, typename... Tp>
-			inline typename std::enable_if<I == sizeof...(Tp), void>::type
+
+			template< size_t I = 0, typename Func, typename... Tp, typename Ret = void>
+			inline typename std::enable_if<I == sizeof...(Tp), Ret>::type
 				for_each(std::tuple<Tp...>, Func)
 			{
 
 
 			}
-
-			template<size_t I = 0, typename Func, typename... Tp>
-			inline typename std::enable_if < I < sizeof...(Tp), void>::type
+			template< size_t I = 0, typename Func, typename... Tp, typename Ret = void>
+			inline typename std::enable_if < I < sizeof...(Tp), Ret>::type
 				for_each(std::tuple<Tp...> aTuple, Func aCallback) {
+
 				aCallback(std::get<I>(aTuple));
-				for_each<I + 1, Func, Tp...>(aTuple, aCallback);
+				Reflect::Internal::for_each<I + 1, Func, Tp...>(aTuple, aCallback);
 			}
 
 
 			template<typename T>
-			struct TypeInfo {
+			struct TypeInfo
+			{
 				typedef T type;
 				const size_t id = typeid(type).hash_code();
 			};
@@ -158,12 +160,7 @@ namespace Dragonite
 		template<typename... DerivedTypes, typename... Members>
 		constexpr inline auto Class(const char* aName, Members&&... someMembers)
 		{
-			auto Dts = std::make_tuple();
-			auto f = [&](auto data) { Dts = std::tuple_cat(Dts, std::make_tuple(Internal::TypeInfo<decltype(data)>())); };
-
-			(f(std::declval<DerivedTypes>()), ...);
-
-			return ReflectedType(aName, std::forward<decltype(Dts)>(Dts), std::make_tuple(std::forward<Members>(someMembers)...));
+			return ReflectedType(aName, std::make_tuple(Internal::TypeInfo<DerivedTypes>()...), std::make_tuple(std::forward<Members>(someMembers)...));
 		}
 
 
@@ -186,12 +183,15 @@ namespace Dragonite
 		{
 			if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
 
+
 			Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, [anInstance](auto element)
 				{
 					if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
 					{
 						if (typeid(*anInstance).hash_code() == element.id)
+						{
 							return Reflect::GetReflectedType<decltype(element)::type>();
+						}
 					}
 
 
@@ -200,6 +200,7 @@ namespace Dragonite
 
 
 			return Reflect::GetReflectedType<TClass>();
+
 		}
 
 
