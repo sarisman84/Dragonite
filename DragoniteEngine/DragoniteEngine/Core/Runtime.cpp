@@ -138,6 +138,7 @@ void Dragonite::Runtime::Update(const float aDeltaTime)
 		scene->LateUpdate();
 	}
 
+	myLateUpdateCB();
 
 	myPipeline->Render();
 

@@ -69,6 +69,8 @@ void Dragonite::Scene::CopyScene(const Scene* aScene)
 		for (size_t x = 0; x < myObjects[i].Components().size(); x++)
 		{
 			myObjects[i].Components()[x]->OnCreate();
+			myObjects[i].Components()[x]->myObject = &myObjects[i];
+			myObjects[i].Components()[x]->myPollingStation = myPollingStation;
 		}
 	}
 
@@ -88,18 +90,18 @@ void Dragonite::Scene::OnSceneInit()
 
 void Dragonite::Scene::Update(const float aDt)
 {
-	auto cpy = myObjects;
-	for (auto& object : cpy)
+	for (size_t i = 0; i < myObjects.size(); ++i)
 	{
+		auto& object = myObjects[i];
 		object.Update(aDt);
 	}
 }
 
 void Dragonite::Scene::LateUpdate()
 {
-	auto cpy = myObjects;
-	for (auto& object : cpy)
+	for (size_t i = 0; i < myObjects.size(); ++i)
 	{
+		auto& object = myObjects[i];
 		object.ConstantUpdate();
 	}
 

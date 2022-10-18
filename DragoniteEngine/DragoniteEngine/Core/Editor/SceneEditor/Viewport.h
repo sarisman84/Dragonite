@@ -36,6 +36,8 @@ namespace Dragonite
 		void OnEnable() override;
 		void OnDisable() override;
 	private:
+		bool myIsInPlayFlag;
+
 		void RenderViewport();
 		void DetectAssetDrop();
 		void RenderTopBar();

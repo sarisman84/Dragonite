@@ -64,18 +64,18 @@ void Dragonite::Object::Awake()
 
 void Dragonite::Object::Update(const float aDt)
 {
-	auto cpy = myComponents;
-	for (auto& comp : cpy)
+	for (size_t i = 0; i < myComponents.size(); ++i)
 	{
+		auto& comp = myComponents[i];
 		comp->Update(aDt);
 	}
 }
 
 void Dragonite::Object::ConstantUpdate()
 {
-	auto cpy = myComponents;
-	for (auto& comp : cpy)
+	for (size_t i = 0; i < myComponents.size(); ++i)
 	{
+		auto& comp = myComponents[i];
 		comp->ConstantUpdate();
 	}
 }

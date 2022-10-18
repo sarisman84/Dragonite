@@ -10,6 +10,10 @@
 *.userosscache
 *.sln.docstates
 
+#Inlämningar
+Spyridon.PassasSP21.*
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

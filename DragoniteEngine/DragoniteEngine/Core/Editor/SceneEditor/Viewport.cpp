@@ -82,21 +82,21 @@ const Dragonite::Vector2f Dragonite::Viewport::GetLocalMousePos(Mouse* aMouse)
 void Dragonite::Viewport::ManipulateObject(Dragonite::Scene* aScene, Dragonite::Object* anObject)
 {
 	myIsManipulatingFlag = false;
-	if (!anObject || !aScene->GetCamera()) return;
+	if (!anObject || (myIsInPlayFlag && !aScene->GetCamera())) return;
 
 
 
-	Matrix4x4f view = aScene->GetCamera()->ViewMatrix();
-	Matrix4x4f proj = aScene->GetCamera()->Profile()->CalculateProjectionMatrix();
-	Matrix4x4f transform = anObject->GetTransform().GetMatrix();
-	ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
+		Matrix4x4f view = myIsInPlayFlag ? aScene->GetCamera()->ViewMatrix() : myEditorCameraInterface.ViewMatrix();
+		Matrix4x4f proj = myIsInPlayFlag ? aScene->GetCamera()->Profile()->CalculateProjectionMatrix() : myEditorCameraInterface.Profile()->CalculateProjectionMatrix();
+		Matrix4x4f transform = anObject->GetTransform().GetMatrix();
+		ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
 
 
-	if (ImGuizmo::IsUsing())
-	{
-		myIsManipulatingFlag = true;
-		anObject->GetTransform().SetMatrix(transform);
-	}
+		if (ImGuizmo::IsUsing())
+		{
+			myIsManipulatingFlag = true;
+			anObject->GetTransform().SetMatrix(transform);
+		}
 
 }
 
@@ -289,8 +289,10 @@ void Dragonite::Viewport::RenderTopBar()
 	{
 		if (ImGui::ImageButton("play", myPlayIcon->GetData().Get(), ImVec2(16, 16)))
 		{
+
 			if (!sceneCpy)
 			{
+				myIsInPlayFlag = true;
 				sceneCpy = myCurrentScene;
 				{
 					myCurrentScene = new Scene(*sceneCpy);
@@ -311,13 +313,21 @@ void Dragonite::Viewport::RenderTopBar()
 		{
 			if (sceneCpy)
 			{
-				myCurrentScene->Stop(nullptr);
-				delete myCurrentScene;
-				myCurrentScene = sceneCpy;
-				myCurrentScene->CopyScene(sceneCpy);
-				sceneCpy = nullptr;
-				myDragoniteGuiAPI->FocusScene(myCurrentScene);
-				myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+				auto runtime = myPollingStation->Get<Runtime>();
+				runtime->OnLateUpdate() += [this, runtime]()
+				{
+					myIsInPlayFlag = false;
+					myCurrentScene->Stop(nullptr);
+					delete myCurrentScene;
+					myCurrentScene = sceneCpy;
+					myCurrentScene->CopyScene(sceneCpy);
+					sceneCpy = nullptr;
+					myDragoniteGuiAPI->FocusScene(myCurrentScene);
+					myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+
+
+					runtime->OnLateUpdate().operator--();
+				};
 			}
 
 		}
@@ -326,6 +336,7 @@ void Dragonite::Viewport::RenderTopBar()
 		{
 			if (sceneCpy)
 			{
+				myIsInPlayFlag = false;
 				myCurrentScene->Stop(nullptr);
 				delete myCurrentScene;
 				myCurrentScene = sceneCpy;

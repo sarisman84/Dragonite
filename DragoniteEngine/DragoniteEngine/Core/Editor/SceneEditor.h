@@ -28,6 +28,7 @@ namespace Dragonite
 		Object* GetInspectedObject();
 
 		void InitializeNewObject();
+		void InitializeCustomObject();
 
 		inline Scene* GetCurrentScene() { return myCurrentScene; }
 		inline Viewport* GetViewport() { return myViewport; }

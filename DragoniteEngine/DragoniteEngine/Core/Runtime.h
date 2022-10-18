@@ -49,6 +49,7 @@ namespace Dragonite
 		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
 		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
 		inline Function<void(GraphicalInterface*)>& OnRender() { return myOnRenderCB; }
+		inline Function<void()>& OnLateUpdate() { return myLateUpdateCB; }
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -69,7 +70,7 @@ namespace Dragonite
 		GraphicalInterface* myPipeline;
 		Scene* myScene;
 
-
+		Function<void()> myLateUpdateCB;
 		Function<void(const float)> myUpdateCB;
 		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
 		Function<void(GraphicalInterface*)> myOnRenderCB;

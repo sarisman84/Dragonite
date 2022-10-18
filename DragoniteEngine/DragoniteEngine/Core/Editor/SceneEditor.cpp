@@ -4,6 +4,7 @@
 
 #include "Core/RuntimeAPI/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
+#include "Core/RuntimeAPI/Components/TestComponent.h"
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 
 #include "Core/Utilities/Input.h"
@@ -63,7 +64,7 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 		if (ImGui::BeginPopup("create_context_menu"))
 		{
-			ImGui::MenuItem("Object", "", &x);
+			ImGui::MenuItem("Cube", "", &x);
 
 			if (ImGui::IsItemClicked())
 			{
@@ -72,6 +73,19 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 				ImGui::CloseCurrentPopup();
 			}
+
+
+
+			ImGui::MenuItem("Fancy Cube", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeCustomObject();
+
+				ImGui::CloseCurrentPopup();
+			}
+
 
 			ImGui::EndPopup();
 		}
@@ -177,6 +191,7 @@ void Dragonite::SceneEditor::InitializeNewObject()
 	newObject.GetTransform().myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
+	newObject.AddComponent<TestComponent>();
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
@@ -185,6 +200,24 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 	myFocusedElement = myCurrentScene->SceneObjects().size();
 
+}
+
+void Dragonite::SceneEditor::InitializeCustomObject()
+{
+	std::string name = "New GameObject ";
+	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
+	Object newObject = Object(name.c_str(), myCurrentScene);
+	newObject.Init(myPollingStation);
+	newObject.GetTransform().myPosition = { 0,0, 1 };
+
+	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
+
+	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
+
+
+	myCurrentScene->SceneObjects().push_back(newObject);
+
+	myFocusedElement = myCurrentScene->SceneObjects().size();
 }
 
 void Dragonite::SceneEditor::TryGetNewElement()

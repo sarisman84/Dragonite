@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DragoniteEditor", "Dragonit
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DragoniteEngine", "..\DragoniteEngine\DragoniteEngine\DragoniteEngine.vcxproj", "{A121B13F-327C-4FE4-93C7-88B743FAB60E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DragoniteLauncher", "..\DragoniteLauncher\DragoniteLauncher\DragoniteLauncher.vcxproj", "{EACDFEFC-ED13-46BD-8E06-AF27393F036A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A121B13F-327C-4FE4-93C7-88B743FAB60E} = {A121B13F-327C-4FE4-93C7-88B743FAB60E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +39,14 @@ Global
 		{A121B13F-327C-4FE4-93C7-88B743FAB60E}.Release|x64.Build.0 = Release|x64
 		{A121B13F-327C-4FE4-93C7-88B743FAB60E}.Release|x86.ActiveCfg = Release|Win32
 		{A121B13F-327C-4FE4-93C7-88B743FAB60E}.Release|x86.Build.0 = Release|Win32
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Debug|x64.ActiveCfg = Debug|x64
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Debug|x64.Build.0 = Debug|x64
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Debug|x86.ActiveCfg = Debug|Win32
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Debug|x86.Build.0 = Debug|Win32
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Release|x64.ActiveCfg = Release|x64
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Release|x64.Build.0 = Release|x64
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Release|x86.ActiveCfg = Release|Win32
+		{EACDFEFC-ED13-46BD-8E06-AF27393F036A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

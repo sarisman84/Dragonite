@@ -6,6 +6,9 @@
 
 void Dragonite::TestComponent::Awake()
 {
+	myScaleSpeed = 2.0f;
+	myMinScale = 0.0f;
+	myCurrentTime = 0.0f;
 }
 
 void Dragonite::TestComponent::Update(const float aDt)
