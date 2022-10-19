@@ -8,8 +8,8 @@
 #include "Core/Editor/SceneEditor/Viewport.h"
 
 
-#include "Core/RuntimeAPI/Scene.h"
-#include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
+#include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 
 #include "Core/Graphics/Models/Model.h"

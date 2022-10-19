@@ -1,8 +1,12 @@
 #include "Camera.h"
-#include "Core/RuntimeAPI/Object.h"
-#include "Core/RuntimeAPI/Scene.h"
+#include "Core/RuntimeAPI/NEW/Object.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
 
 #include "Core/External/imgui/imgui.h"
+
+
+#include "Core/External/nlohmann/json.hpp"
+#include "Core/Graphics/GraphicsAPI.h"
 
 Dragonite::Camera::Camera() : Component(), myPerspectiveProfile(new PerspectiveProfile(90.0f, 0.1f, 1000.0f))
 {
@@ -17,14 +21,11 @@ Dragonite::Camera::Camera() : Component(), myPerspectiveProfile(new PerspectiveP
 	static unsigned int cameraID = 0;
 	myCameraID = cameraID++;
 }
+
 void Dragonite::Camera::Awake()
 {
-	myInterface.GetTransform() = myObject->GetTransform();
+	myInterface.GetTransform() = myObject->myTransform;
 	myInterface.Profile() = myPerspectiveProfile;
-
-	myCurrentScene = myPollingStation->Get<Scene>();
-	myPreviousCameraInterface = myCurrentScene->GetCamera();
-	SetCameraAsPrimary();
 }
 
 void Dragonite::Camera::Update(const float aDt)
@@ -36,36 +37,50 @@ void Dragonite::Camera::Update(const float aDt)
 
 }
 
+
+
+
+
+
+
+void Dragonite::Camera::Start()
+{
+	auto pol = myObject->GetScene()->myPollingStation;
+	auto gi = pol.Get<GraphicalInterface>();
+	gi->SetActiveCameraAs(myInterface);
+}
+
+void Dragonite::Camera::LateUpdate(const float aDt)
+{
+}
+
+void* Dragonite::Camera::Serialize()
+{
+	using namespace nlohmann;
+
+	static json data;
+
+	data["farPlane"] = myFarPlane;
+	data["nearPlane"] = myNearPlane;
+	data["fov"] = myFOV;
+
+	return (void*)&data;
+}
+
+void Dragonite::Camera::Deserialize(void* someData)
+{
+	using namespace nlohmann;
+	json data = *(json*)someData;
+
+	myFarPlane = data["farPlane"];
+	myNearPlane = data["nearPlane"];
+	myFOV = data["fov"];
+}
+
 void Dragonite::Camera::OnInspectorGUI()
 {
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::InputFloat("Near Plane", &myNearPlane, 0.0f, 0.0f, "%.1f");
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::InputFloat("Far Plane", &myFarPlane);
-	ImGui::InputFloat("Field Of View", &myFOV);
+	ImGui::DragFloat("Near Plane", &myNearPlane, 0.1f);
+	ImGui::DragFloat("Far Plane", &myFarPlane, 0.1f);
+	ImGui::DragFloat("Field Of View", &myFOV, 0.1f);
 }
 
-std::string Dragonite::Camera::GetName()
-{
-	return  "Camera";
-}
-
-void Dragonite::Camera::SetCameraAsPrimary()
-{
-	myCurrentScene->SetTargetCamera(&myInterface);
-}
-
-void Dragonite::Camera::OnCreate()
-{
-	myInterface.GetTransform() = myObject->GetTransform();
-	myInterface.Profile() = myPerspectiveProfile;
-}
-
-void Dragonite::Camera::ConstantUpdate()
-{
-}
-
-void Dragonite::Camera::OnDisable()
-{
-}

@@ -9,12 +9,11 @@ namespace Dragonite
 		// Inherited via Component
 		void Awake() override;
 		void Update(const float aDt) override;
+		void Start() override;
+		void LateUpdate(const float aDt) override;
+		void* Serialize() override;
+		void Deserialize(void* someData) override;
 		void OnInspectorGUI() override;
-		void OnDisable() override;
-		void ConstantUpdate() override;
-		void OnCreate() override;
-		std::string GetName() override;
-
 	public:
 		float
 			myScaleSpeed,
@@ -22,6 +21,11 @@ namespace Dragonite
 
 	private:
 		float myCurrentTime;
+
+
+
+
+
 	};
 
 

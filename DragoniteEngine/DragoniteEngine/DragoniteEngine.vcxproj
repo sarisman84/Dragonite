@@ -227,9 +227,8 @@
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h" />
-    <ClInclude Include="Core\RuntimeAPI\Object.h" />
-    <ClInclude Include="Core\RuntimeAPI\Scene.h" />
-    <ClInclude Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.h" />
+    <ClInclude Include="Core\RuntimeAPI\NEW\Object.h" />
+    <ClInclude Include="Core\RuntimeAPI\NEW\Scene.h" />
     <ClInclude Include="Core\RuntimeAPI\SceneManagement\SceneBuilder.h" />
     <ClInclude Include="Core\Utilities\EnumMap.h" />
     <ClInclude Include="Core\Utilities\Function.h" />
@@ -275,9 +274,8 @@
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp" />
-    <ClCompile Include="Core\RuntimeAPI\Object.cpp" />
-    <ClCompile Include="Core\RuntimeAPI\Scene.cpp" />
-    <ClCompile Include="Core\RuntimeAPI\SceneManagement\ComponentStructure.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\NEW\Object.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\NEW\Scene.cpp" />
     <ClCompile Include="Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp" />
     <ClCompile Include="Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="Core\Utilities\Input.cpp" />

@@ -36,41 +36,48 @@ namespace Dragonite
 		void OnEnable() override;
 		void OnDisable() override;
 	private:
-		bool myIsInPlayFlag;
+
 
 		void RenderViewport();
 		void DetectAssetDrop();
 		void RenderTopBar();
 
+	private:
+		//Primitive Data
 		int myFoundID;
+		bool myIsInPlayFlag;
+		int myLastValidElement;
+		bool myIsManipulatingFlag;
+		float myAspectRatio;
 
-
+		//Transform data
 		Vector2f myMousePos;
 		Vector2f myMinRegion;
 		Vector2f myCurrentResolution;
 		Vector2f myPreviousResolution;
 
-		int myLastValidElement;
-		bool myIsManipulatingFlag;
-		float myAspectRatio;
-
+	
+		//Camera data
 		PerspectiveProfile myPerspectiveProfile;
 		CameraInterface myEditorCameraInterface;
 		GraphicalInterface* myGraphicsInterface;
-		Scene* myCurrentScene;
-		RenderID myRenderID;
 
+		//Scene data
+		Scene* myScene;
+		RenderID myRenderID;
 		RenderView myViewportTarget;
+
+		//Editor References
 		ShaderResourceV myViewportResource;
 		SceneEditor* mySceneEditor;
 		TextureFactory* myTextureFactory;
 
-
+		//Icons
 		std::shared_ptr<Texture>
 			myPlayIcon,
 			myStopIcon,
 			mySaveIcon;
-		
+
 
 	};
 

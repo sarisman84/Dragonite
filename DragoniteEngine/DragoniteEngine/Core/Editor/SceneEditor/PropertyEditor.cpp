@@ -1,6 +1,6 @@
 #include "PropertyEditor.h"
 #include "Core/Editor/SceneEditor.h"
-#include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Component.h"
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
@@ -96,26 +96,26 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 	if (!selectedObject) return;
 
 
-	ImGui::InputText("Name", &selectedObject->Name(), 0, DefaultStringResize);
+	ImGui::InputText("Name", &selectedObject->myName, 0, DefaultStringResize);
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
-		ImGui::DragFloat3("Position", (float*)&selectedObject->GetTransform().myPosition, 0.01f);
-		ImGui::DragFloat3("Rotation", (float*)&selectedObject->GetTransform().myRotation, 0.01f);
-		ImGui::DragFloat3("Size", (float*)&selectedObject->GetTransform().myScale, 0.01f);
+		ImGui::DragFloat3("Position", (float*)&selectedObject->myTransform.myPosition, 0.01f);
+		ImGui::DragFloat3("Rotation", (float*)&selectedObject->myTransform.myRotation, 0.01f);
+		ImGui::DragFloat3("Size", (float*)&selectedObject->myTransform.myScale, 0.01f);
 		ImGui::Unindent();
 	}
 	auto components = selectedObject->Components();
 	for (size_t i = 0; i < components.size(); i++)
 	{
-		std::string name(components[i]->GetName());
+		std::string name(components[i]->myName);
 		name += std::to_string(i);
 
 		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Indent();
 			//InspectElement(typeid(*components[i].get()).hash_code());
-			Reflect::InspectElement(components[i].get());
+			components[i]->OnInspectorGUI();
 			ImGui::Unindent();
 
 

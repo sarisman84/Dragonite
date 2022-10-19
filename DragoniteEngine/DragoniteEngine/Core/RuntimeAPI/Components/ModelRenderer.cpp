@@ -3,56 +3,80 @@
 #include "Core/Graphics/Models/ModelFactory.h"
 #include "Core/Graphics/GraphicsAPI.h"
 
+#include "Core/RuntimeAPI/NEW/Object.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
+
 #include "Core/External/imgui/imgui.h"
+#include "Core/External/nlohmann/json.hpp"
+#include <filesystem>
 
 void Dragonite::ModelRenderer::Awake()
 {
-	
+
 }
 
 void Dragonite::ModelRenderer::Update(const float aDt)
 {
-	
-
-}
-
-#include <filesystem>
-void Dragonite::ModelRenderer::OnInspectorGUI()
-{
-	
-	ImGui::Text("Model: %s", myModelInstance->myModelName);
-	ImGui::Text("Texture: %s", std::filesystem::path(myModelInstance->myTexture->Name()).string().c_str());
 
 
 }
 
-std::string Dragonite::ModelRenderer::GetName()
+void Dragonite::ModelRenderer::LateUpdate(const float aDt)
 {
-	return "Model Renderer";
-}
-
-void Dragonite::ModelRenderer::OnCreate()
-{
-	myModelFactory = myPollingStation->Get<ModelFactory>();
-	myRenderInterface = myPollingStation->Get<GraphicalInterface>();
-}
-
-void Dragonite::ModelRenderer::ConstantUpdate()
-{
-	if (!myModelInstance || !myObject) return;
+	if (!myModelInstance) return;
 
 	RenderInstructions instruction;
 	instruction.myTexture = myModelInstance->myTexture;
-	instruction.myModelMatrix = myObject->GetTransform().GetMatrix();
+	instruction.myModelMatrix = myObject->myTransform.GetMatrix();
 	instruction.myIndexBuffer = myModelInstance->myModel->myIndexBuffer;
 	instruction.myIndexCount = myModelInstance->myModel->myIndexCount;
 	instruction.myVertexBuffer = myModelInstance->myModel->myVertexBuffer;
 	instruction.myShaderInstructionsID = myModelInstance->myShaderInstructionsID;
 	instruction.myID = myObject->UUID();
 
+
+	myRenderInterface = myRenderInterface ? myRenderInterface : myObject->GetScene()->myPollingStation.Get<GraphicalInterface>();
 	myRenderInterface->AddRenderInstructions(instruction);
 }
 
-void Dragonite::ModelRenderer::OnDisable()
+void Dragonite::ModelRenderer::Start()
 {
 }
+
+void* Dragonite::ModelRenderer::Serialize()
+{
+	using namespace nlohmann;
+
+	static json data;
+
+	data["model"] = myModelInstance->myModelName;
+	data["material"] = myModelInstance->myMaterialName;
+	data["texture"] = myModelInstance->myTextureName;
+
+
+
+	return (void*)&data;
+}
+
+void Dragonite::ModelRenderer::Deserialize(void* someData)
+{
+	using namespace nlohmann;
+	json data = *(json*)someData;
+
+	myModelFactory = myModelFactory ? myModelFactory : myObject->GetScene()->myPollingStation.Get<ModelFactory>();
+
+	std::filesystem::path p(data["texture"].get<std::u8string>());
+
+	myModelInstance = myModelFactory->GetModel(data["model"].get<std::string>(), data["material"].get<std::string>(), p.wstring());
+
+}
+
+void Dragonite::ModelRenderer::OnInspectorGUI()
+{
+	std::filesystem::path p(myModelInstance->myTextureName);
+
+	ImGui::Text("Model %s", myModelInstance->myModelName);
+	ImGui::Text("Texture %s", p.string().c_str());
+}
+
+

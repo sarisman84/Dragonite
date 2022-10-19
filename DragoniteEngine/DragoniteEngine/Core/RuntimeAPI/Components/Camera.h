@@ -13,16 +13,15 @@ namespace Dragonite
 		// Inherited via Component
 		void Awake() override;
 		void Update(const float aDt) override;
+		void Start() override;
+		void LateUpdate(const float aDt) override;
+		void* Serialize() override;
+		void Deserialize(void* someData) override;
 		void OnInspectorGUI() override;
-		void OnDisable() override;
-		void ConstantUpdate() override;
-		void OnCreate() override;
-		std::string GetName() override;
 
 		inline const unsigned int GetID() { return myCameraID; }
 		inline CameraInterface& GetInterface() { return myInterface; }
 
-		void SetCameraAsPrimary();
 
 
 		float myFOV;
@@ -34,11 +33,17 @@ namespace Dragonite
 		PerspectiveProfile* myPerspectiveProfile = nullptr;
 		CameraInterface myInterface;
 		unsigned int myCameraID;
+
+
+
+
+		
+
 	};
 
 
 	template<>
-	inline auto Reflect::RegisterElement<Camera>() 
+	inline auto Reflect::RegisterElement<Camera>()
 	{
 		return Class("Camera",
 			Member("FOV", &Camera::myFOV),

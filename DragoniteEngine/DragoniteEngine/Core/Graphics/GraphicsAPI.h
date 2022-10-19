@@ -107,6 +107,8 @@ namespace Dragonite
 		~GraphicalInterface();
 		void SetActiveCameraAs(CameraInterface& aNewCamera);
 
+		inline CameraInterface& GetActiveCamera() { return *myActiveCamera; }
+
 		inline void RegisterRenderCall(const std::function<void()>& aCallback)
 		{
 			myExtraRenderCalls.push_back(aCallback);

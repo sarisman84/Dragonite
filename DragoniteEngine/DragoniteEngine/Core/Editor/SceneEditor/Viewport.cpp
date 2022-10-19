@@ -1,7 +1,7 @@
 #include "Viewport.h"
 #include "Core/Graphics/GraphicsAPI.h"
-#include "Core/RuntimeAPI/Scene.h"
-#include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
+#include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 
@@ -31,6 +31,9 @@ myPerspectiveProfile(PerspectiveProfile(90.0f, 0.1f, 1000.0f))
 
 Dragonite::Viewport::~Viewport()
 {
+	if (myScene)
+		delete myScene;
+	myScene = nullptr;
 }
 
 const bool Dragonite::Viewport::TryGetObjectID(Mouse* aMouse, int& anId)
@@ -82,21 +85,21 @@ const Dragonite::Vector2f Dragonite::Viewport::GetLocalMousePos(Mouse* aMouse)
 void Dragonite::Viewport::ManipulateObject(Dragonite::Scene* aScene, Dragonite::Object* anObject)
 {
 	myIsManipulatingFlag = false;
-	if (!anObject || (myIsInPlayFlag && !aScene->GetCamera())) return;
+	if (!anObject) return;
 
 
 
-		Matrix4x4f view = myIsInPlayFlag ? aScene->GetCamera()->ViewMatrix() : myEditorCameraInterface.ViewMatrix();
-		Matrix4x4f proj = myIsInPlayFlag ? aScene->GetCamera()->Profile()->CalculateProjectionMatrix() : myEditorCameraInterface.Profile()->CalculateProjectionMatrix();
-		Matrix4x4f transform = anObject->GetTransform().GetMatrix();
-		ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
+	Matrix4x4f view = myIsInPlayFlag ? aScene->GetMainCamera().ViewMatrix() : myEditorCameraInterface.ViewMatrix();
+	Matrix4x4f proj = myIsInPlayFlag ? aScene->GetMainCamera().Profile()->CalculateProjectionMatrix() : myEditorCameraInterface.Profile()->CalculateProjectionMatrix();
+	Matrix4x4f transform = anObject->myTransform.GetMatrix();
+	ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
 
 
-		if (ImGuizmo::IsUsing())
-		{
-			myIsManipulatingFlag = true;
-			anObject->GetTransform().SetMatrix(transform);
-		}
+	if (ImGuizmo::IsUsing())
+	{
+		myIsManipulatingFlag = true;
+		anObject->myTransform.SetMatrix(transform);
+	}
 
 }
 
@@ -104,7 +107,7 @@ void Dragonite::Viewport::OnWindowInit()
 {
 	myGraphicsInterface = myPollingStation->Get<GraphicalInterface>();
 	myTextureFactory = myPollingStation->Get<TextureFactory>();
-	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
+	myScene = myDragoniteGuiAPI->GetFocusedScene();
 	myRenderID = RenderID(myGraphicsInterface);
 
 	D3D11_TEXTURE2D_DESC desc = { 0 };
@@ -152,7 +155,7 @@ void Dragonite::Viewport::OnWindowUpdate()
 {
 	ImGui::ShowDemoWindow();
 
-	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
+
 
 
 	myMinRegion.x = ImGui::GetWindowContentRegionMin().x;
@@ -165,9 +168,13 @@ void Dragonite::Viewport::OnWindowUpdate()
 	RenderTopBar();
 	DetectAssetDrop();
 
-	auto obj = mySceneEditor->GetInspectedObject();
 
-	ManipulateObject(myCurrentScene, obj);
+	if (auto scene = myDragoniteGuiAPI->GetFocusedScene())
+	{
+		auto obj = mySceneEditor->GetInspectedObject();
+		ManipulateObject(scene, obj);
+	}
+
 
 
 
@@ -243,7 +250,12 @@ void Dragonite::Viewport::DetectAssetDrop()
 			{
 				auto path = file->path();
 				auto absPath = std::filesystem::absolute(file->path());
-				SceneBuilder::LoadScene(path.string().c_str(), *myCurrentScene);
+				if (myScene)
+				{
+					delete myScene;
+				}
+				myScene = new Scene(*myPollingStation, absPath.string());
+				myDragoniteGuiAPI->FocusScene(myScene);
 			}
 			else if (foundObj)
 			{
@@ -267,7 +279,7 @@ void Dragonite::Viewport::DetectAssetDrop()
 
 void Dragonite::Viewport::RenderTopBar()
 {
-	static Scene* sceneCpy;
+	static std::string sceneCpy;
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
@@ -285,69 +297,72 @@ void Dragonite::Viewport::RenderTopBar()
 	window_flags |= ImGuiWindowFlags_NoMove;
 
 	ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+	auto runtime = myPollingStation->Get<Runtime>();
 	if (ImGui::Begin("Top Bar", NULL, window_flags))
 	{
 		if (ImGui::ImageButton("play", myPlayIcon->GetData().Get(), ImVec2(16, 16)))
 		{
 
-			if (!sceneCpy)
-			{
-				myIsInPlayFlag = true;
-				sceneCpy = myCurrentScene;
-				{
-					myCurrentScene = new Scene(*sceneCpy);
-					myPollingStation->AddHandler(myCurrentScene);
-					myCurrentScene->OnSceneInit();
-					myPollingStation->Get<Runtime>()->OnUpdate() += [this](const float aDt)
-					{
-						myCurrentScene->Update(aDt);
-					};
-					myDragoniteGuiAPI->FocusScene(myCurrentScene);
-				}
 
+			myIsInPlayFlag = true;
+			sceneCpy = Scene::LastSavedPath();
+			if (sceneCpy.empty())
+				sceneCpy = "temp/tempscene.json";
+			myScene->Serialize("temp/tempscene.json");
+			if (myScene)
+			{
+				delete myScene;
 			}
+			myScene = new Scene(*myPollingStation, "temp/tempscene.json");
+			myDragoniteGuiAPI->FocusScene(myScene);
+			myScene->Start();
+			runtime->OnUpdate() += [this](const float aDt)
+			{
+				myScene->Update(aDt);
+			};
+
+
 
 		}
 		ImGui::SameLine();
 		if (ImGui::ImageButton("stop", myStopIcon->GetData().Get(), ImVec2(16, 16)))
 		{
-			if (sceneCpy)
+			myIsInPlayFlag = false;
+
+
+			runtime->OnUpdate().operator--();
+			if (myScene)
 			{
-				auto runtime = myPollingStation->Get<Runtime>();
-				runtime->OnLateUpdate() += [this, runtime]()
-				{
-					myIsInPlayFlag = false;
-					myCurrentScene->Stop(nullptr);
-					delete myCurrentScene;
-					myCurrentScene = sceneCpy;
-					myCurrentScene->CopyScene(sceneCpy);
-					sceneCpy = nullptr;
-					myDragoniteGuiAPI->FocusScene(myCurrentScene);
-					myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
-
-
-					runtime->OnLateUpdate().operator--();
-				};
+				delete myScene;
 			}
+			myScene = new Scene(*myPollingStation, sceneCpy);
+			myDragoniteGuiAPI->FocusScene(myScene);
+			myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+
 
 		}
-		ImGui::SameLine();
-		if (ImGui::ImageButton("save", mySaveIcon->GetData().Get(), ImVec2(16, 16)))
-		{
-			if (sceneCpy)
-			{
-				myIsInPlayFlag = false;
-				myCurrentScene->Stop(nullptr);
-				delete myCurrentScene;
-				myCurrentScene = sceneCpy;
-				myCurrentScene->CopyScene(sceneCpy);
-				sceneCpy = nullptr;
-				myDragoniteGuiAPI->FocusScene(myCurrentScene);
-				myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
-			}
-			mySceneEditor->SaveScene();
 
-		}
 	}
+	ImGui::SameLine();
+	if (ImGui::ImageButton("save", mySaveIcon->GetData().Get(), ImVec2(16, 16)))
+	{
+		if (myIsInPlayFlag)
+		{
+			runtime->OnUpdate().operator--();
+
+			if (myScene)
+			{
+				delete myScene;
+			}
+			myScene = new Scene(*myPollingStation, sceneCpy);
+			myDragoniteGuiAPI->FocusScene(myScene);
+		}
+		myIsInPlayFlag = false;
+		myGraphicsInterface->SetActiveCameraAs(myEditorCameraInterface);
+		mySceneEditor->SaveScene();
+	}
+
 	ImGui::End();
+
 }
+

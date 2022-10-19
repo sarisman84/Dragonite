@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Runtime.h"
-#include "Core/RuntimeAPI/Scene.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
 
 #include "ImGui/DragoniteGui.h"
 #include "Core/PollingStation.h"
@@ -12,6 +12,7 @@
 #include "Editor//AssetBrowser.h"
 
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
+#include "Core/External/nlohmann/json.hpp"
 
 LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -27,6 +28,16 @@ LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam,
 	return 0;
 }
 
+void Dragonite::Runtime::FocusScene(Scene* aNewScene)
+{
+	myScene = aNewScene;
+}
+
+Dragonite::Scene* Dragonite::Runtime::GetFocusedScene()
+{
+	return myScene;
+}
+
 Dragonite::Runtime::Runtime() = default;
 
 Dragonite::Runtime::~Runtime()
@@ -35,9 +46,7 @@ Dragonite::Runtime::~Runtime()
 		delete myRuntimeHandler;
 	myRuntimeHandler = nullptr;
 
-	if (myScene)
-		delete myScene;
-	myScene = nullptr;
+
 
 	if (myGUIInterface)
 		delete myGUIInterface;
@@ -67,19 +76,18 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 
 
 
+	
 
-	myScene = new Scene();
-	auto projectS = SceneBuilder::GetProjectSettings();
-	if (!Scene::New(*myScene, this, myPipeline, myRuntimeHandler))
-	{
-		return false;
-	}
+	auto projectS = *(nlohmann::json*)Scene::GetProjectSettings();
 
-	myRuntimeHandler->AddHandler(myScene);
 
 	if (!projectS.empty())
 	{
-		SceneBuilder::LoadScene(projectS[mainScene].get<std::string>().c_str(), *myScene);
+		myScene = new Scene(*myRuntimeHandler, projectS["mainScene"].get<std::string>());
+	}
+	else
+	{
+		myScene = new Scene(*myRuntimeHandler);
 	}
 
 
@@ -90,28 +98,23 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
 
 	if (!IM->Init(this)) return false;
-	myScene->myInputManager = IM;
 
 	myEditorFlag = anInitializeAsEditorFlag;
 	if (anInitializeAsEditorFlag)
 	{
 		myGUIInterface = new DragoniteGui();
 		myGUIInterface->Init(this, myPipeline);
-		myGUIInterface->FocusScene(myScene);
 		myRuntimeHandler->AddHandler(myGUIInterface);
 		/*myScene->Awake();*/
 
 		myGUIInterface->CreateEditorWindow(new EngineDebugger());
 		myGUIInterface->CreateEditorWindow(new SceneEditor());
+
+
 	}
 	else
 	{
-		myScene->OnSceneInit();
-		myUpdateCB += [this](const float aDt)
-		{
-			myScene->Update(aDt);
-			//myScene->LateUpdate();
-		};
+		myScene->Start();
 		myPipeline->DrawToBackBuffer(true);
 	}
 
@@ -130,15 +133,25 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 void Dragonite::Runtime::Update(const float aDeltaTime)
 {
 	myUpdateCB(aDeltaTime);
+	myLateUpdateCB(aDeltaTime);
+	//auto scene = myEditorFlag ? myGUIInterface->GetFocusedScene() : myScene;
 
-	auto scene = myEditorFlag ? myGUIInterface->GetFocusedScene() : myScene;
-
-	if (scene)
+	if (myEditorFlag)
 	{
-		scene->LateUpdate();
+		myScene->LateUpdate(aDeltaTime);
+	}
+	else
+	{
+		myScene->Update(aDeltaTime);
+		myScene->LateUpdate(aDeltaTime);
 	}
 
-	myLateUpdateCB();
+	//if (scene)
+	//{
+	//	scene->LateUpdate();
+	//}
+
+	//myLateUpdateCB();
 
 	myPipeline->Render();
 

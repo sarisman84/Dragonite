@@ -50,33 +50,40 @@ namespace Dragonite
 	namespace Reflect
 	{
 		template<typename Member>
-		inline void InspectMember(const char* aName, Member& aMember)
+		inline void InspectMember(const char* aName, Member aMember)
 		{
 
 		}
 
 
 		template<>
-		inline void InspectMember<float>(const char* aName, float& aFloatVal)
+		inline void InspectMember<float>(const char* aName, float aFloatVal)
 		{
 			ImGui::DragFloat(aName, &aFloatVal, 0.1f);
 		}
 
 		template<>
-		inline void InspectMember<bool>(const char* aName, bool& aBoolVal)
+		inline void InspectMember<bool>(const char* aName, bool aBoolVal)
 		{
 			ImGui::Checkbox(aName, &aBoolVal);
 		}
 
 
 		template<>
-		inline void InspectMember<const char*>(const char* aName, const char*& aConstCharVal)
+		inline void InspectMember<const char*>(const char* aName, const char* aConstCharVal)
 		{
 			char input[200];
 
 			strcpy_s<200>(input, aConstCharVal);
 			ImGui::InputText(aName, input, sizeof(input));
 			aConstCharVal = input;
+		}
+
+
+		template<>
+		inline void InspectMember<void(*)()>(const char* aName, void(*aCallback)()) 
+		{
+			aCallback();
 		}
 
 

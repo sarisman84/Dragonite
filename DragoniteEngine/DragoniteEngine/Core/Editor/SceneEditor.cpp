@@ -1,8 +1,8 @@
 #include "SceneEditor.h"
-#include "Core/RuntimeAPI/Scene.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
 #include "Core/Graphics/Models/ModelFactory.h"
 
-#include "Core/RuntimeAPI/Object.h"
+#include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
@@ -126,10 +126,10 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 	{
 		bool selected = false;
 
-		ImGui::Selectable(objs[i].Name().c_str(), &selected);
+		ImGui::Selectable(objs[i]->myName.c_str(), &selected);
 		if (selected)
 		{
-			myFocusedElement = objs[i].UUID();
+			myFocusedElement = objs[i]->UUID();
 		}
 	}
 	ImGui::Unindent();
@@ -144,7 +144,7 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 	myViewport->DisplayDebugInfo(myMouseInput);
 
-	if (myMouseInput->GetButtonDown(MouseKey::Left) && myViewport->IsBeingFocused())
+	if (myMouseInput->GetButtonDown(MouseKey::Left) && myViewport->IsBeingFocused() && myViewport->IsBeingHovered())
 	{
 		TryGetNewElement();
 	}
@@ -174,10 +174,10 @@ Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
 	if (!myCurrentScene) return nullptr;
 
-	auto el = myFocusedElement - 1;
+	auto el = myFocusedElement;
 	if (el < 0 || el >= myCurrentScene->SceneObjects().size())
 		return nullptr;
-	return &myCurrentScene->SceneObjects()[el];
+	return myCurrentScene->SceneObjects()[el].get();
 }
 
 void Dragonite::SceneEditor::InitializeNewObject()
@@ -186,17 +186,15 @@ void Dragonite::SceneEditor::InitializeNewObject()
 
 	std::string name = "New GameObject ";
 	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
-	Object newObject = Object(name.c_str(), myCurrentScene);
-	newObject.Init(myPollingStation);
-	newObject.GetTransform().myPosition = { 0,0, 1 };
+	Object* newObject = myCurrentScene->CreateObject(name);
+	newObject->myTransform.myPosition = { 0,0, 1 };
 
-	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
-	newObject.AddComponent<TestComponent>();
+	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
+	newObject->AddComponent<TestComponent>();
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
 
-	myCurrentScene->SceneObjects().push_back(newObject);
 
 	myFocusedElement = myCurrentScene->SceneObjects().size();
 
@@ -206,16 +204,13 @@ void Dragonite::SceneEditor::InitializeCustomObject()
 {
 	std::string name = "New GameObject ";
 	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
-	Object newObject = Object(name.c_str(), myCurrentScene);
-	newObject.Init(myPollingStation);
-	newObject.GetTransform().myPosition = { 0,0, 1 };
+	Object* newObject = myCurrentScene->CreateObject(name);
+	newObject->myTransform.myPosition = { 0,0, 1 };
 
-	auto modelRenderer = newObject.AddComponent<ModelRenderer>();
+	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
-
-	myCurrentScene->SceneObjects().push_back(newObject);
 
 	myFocusedElement = myCurrentScene->SceneObjects().size();
 }
@@ -351,7 +346,7 @@ bool Dragonite::SceneEditor::OpenFileExplorer(std::string& aPath, const _FILEOPE
 
 void Dragonite::SceneEditor::SaveSceneDefinition()
 {
-	static std::string name = myCurrentScene->Name();
+	static std::string name = myCurrentScene->myName;
 	static std::string entry;
 	if (ImGui::BeginPopupModal("Save..."))
 	{
@@ -359,7 +354,7 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 		if (ImGui::IsKeyDown(ImGuiKey_Escape))
 		{
 			ImGui::CloseCurrentPopup();
-			name = myCurrentScene->Name();
+			name = myCurrentScene->myName;
 		}
 
 		ImGui::InputText("Name", &name, 0, DefaultStringResize);
@@ -376,10 +371,10 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 		{
 			ImGui::CloseCurrentPopup();
 
-			myCurrentScene->Name() = name;
+			myCurrentScene->myName = name;
 			entry += "\\" + name + ".json";
-			SceneBuilder::SaveScene(entry.c_str(), *myCurrentScene);
-			name = myCurrentScene->Name();
+			myCurrentScene->Serialize(entry.c_str());
+			name = myCurrentScene->myName;
 		}
 
 

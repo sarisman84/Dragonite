@@ -49,7 +49,7 @@ namespace Dragonite
 		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
 		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
 		inline Function<void(GraphicalInterface*)>& OnRender() { return myOnRenderCB; }
-		inline Function<void()>& OnLateUpdate() { return myLateUpdateCB; }
+		inline Function<void(const float)>& OnLateUpdate() { return myLateUpdateCB; }
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -58,19 +58,21 @@ namespace Dragonite
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
 
-
+		void FocusScene(Scene* aNewScene);
+		Scene* GetFocusedScene();
 
 	private:
 
+		Scene* myScene;
 
 		bool myRuntimeState;
 		bool myEditorFlag;
 		HWND myInstance;
 		PollingStation* myRuntimeHandler;
 		GraphicalInterface* myPipeline;
-		Scene* myScene;
+		//Scene* myScene;
 
-		Function<void()> myLateUpdateCB;
+		Function<void(const float)> myLateUpdateCB;
 		Function<void(const float)> myUpdateCB;
 		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
 		Function<void(GraphicalInterface*)> myOnRenderCB;

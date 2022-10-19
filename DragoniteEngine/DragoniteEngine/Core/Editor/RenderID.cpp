@@ -1,6 +1,6 @@
 #include "RenderID.h"
 #include "Core/Graphics/GraphicsAPI.h"
-#include "Core/RuntimeAPI/Scene.h"
+#include "Core/RuntimeAPI/NEW/Scene.h"
 #include "Core/Graphics/Models/Model.h"
 #include "Core/Graphics/Models/ModelFactory.h"
 #include "Core/Graphics/DirectX11/DXInterface.h"

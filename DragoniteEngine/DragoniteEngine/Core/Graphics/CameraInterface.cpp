@@ -2,8 +2,23 @@
 #include "Core/CU/Math/MathFunctions.h"
 
 
+Dragonite::PerspectiveProfile::PerspectiveProfile(const PerspectiveProfile& aCpy)
+{
+	myFarPlane = aCpy.myFarPlane;
+	myNearPlane = aCpy.myNearPlane;
+	myFOV = aCpy.myFOV;
+}
+
+void Dragonite::PerspectiveProfile::operator=(const PerspectiveProfile& aCpy)
+{
+	myFarPlane = aCpy.myFarPlane;
+	myNearPlane = aCpy.myNearPlane;
+	myFOV = aCpy.myFOV;
+}
+
 Dragonite::PerspectiveProfile::PerspectiveProfile(const float aFOV, const float aNearPlane, const float aFarPlane) : CameraProfile(), myNearPlane(aNearPlane), myFarPlane(aFarPlane), myFOV(aFOV)
 {
+
 }
 
 Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateProjectionMatrix()
@@ -32,6 +47,10 @@ Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateProjectionMatrix()
 }
 
 Dragonite::CameraInterface::CameraInterface() = default;
+
+Dragonite::CameraInterface::CameraInterface(const CameraInterface& aCamera)
+{
+}
 
 Dragonite::CameraInterface::~CameraInterface()
 {
