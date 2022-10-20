@@ -24,9 +24,11 @@ bool Dragonite::ModelFactory::Initialize(GraphicalInterface* aPipeline)
 
 	auto cube = CreateUnitCube();
 	auto screen = CreateScreenMesh();
+	auto quad = CreateUnitQuad();
 
 	myFactoryModelData[cube->myName] = cube;
 	myFactoryModelData[screen->myName] = screen;
+	myFactoryModelData[quad->myName] = quad;
 
 	Material unlit = Dragonite::Material(
 		{
@@ -54,6 +56,8 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	{
 	case PrimitiveType::Cube:
 		return GetModel("Primitive Cube", aMaterial);
+	case PrimitiveType::Quad:
+		return GetModel("Quad", aMaterial);
 	default:
 		return nullptr;
 	}
@@ -97,7 +101,6 @@ std::shared_ptr<Dragonite::ModelInstance> Dragonite::ModelFactory::GetModel(cons
 	}
 
 	ins->myShaderInstructionsID = myPipeline->AddShaderInstructions(mat, vsShader, psShader, inputLayout);
-
 
 
 	ins->myTexture = myPipeline->GetPollingStation()->Get<TextureFactory>()->LoadTexture(mat.myTexture.c_str());
@@ -252,6 +255,64 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateScreenMesh()
 
 	model->myIndexCount = 6;
 	model->myName = "Fullscreen Mesh";
+
+	return model;
+}
+
+Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitQuad()
+{
+
+	ModelRef model = std::make_shared<Model>();
+
+	unsigned int indices[6] =
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	Vertex vertices[4] =
+	{
+		Vertex::Position(-0.5f, -0.5f, 0, 1.0f).UV(0.0f, 0.0f),
+		Vertex::Position(-0.5f,  0.5f, 0, 1.0f).UV(0.0f, 1.0f),
+		Vertex::Position(0.5f,  0.5f, 0, 1.0f).UV(1.0f, 1.0f),
+		Vertex::Position(0.5f, -0.5f, 0, 1.0f).UV(1.0f, 0.0f)
+	};
+
+
+	BufferDesc desc /*= BufferDesc(vertices, sizeof(vertices), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER)*/;
+	//BufferDesc indexDesc/* = BufferDesc(indices, sizeof(indices), D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER)*/;
+
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.ByteWidth = sizeof(vertices);
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+
+	desc.GetSubResourceData().SysMemPitch = 0;
+	desc.GetSubResourceData().SysMemSlicePitch = 0;
+	desc.GetSubResourceData().pSysMem = vertices;
+
+
+	if (FAILED(DXInterface::CreateBuffer(model->myVertexBuffer, &desc)))
+		return nullptr;
+
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(indices);
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+
+	desc.GetSubResourceData().SysMemPitch = 0;
+	desc.GetSubResourceData().SysMemSlicePitch = 0;
+	desc.GetSubResourceData().pSysMem = indices;
+
+	if (FAILED(DXInterface::CreateBuffer(model->myIndexBuffer, &desc)))
+		return nullptr;
+
+	model->myIndexCount = 6;
+	model->myName = "Quad";
 
 	return model;
 }

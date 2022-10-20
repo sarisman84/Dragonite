@@ -197,7 +197,7 @@ namespace Dragonite
 
 				});
 
-
+			
 
 			return Reflect::GetReflectedType<TClass>();
 

@@ -54,13 +54,10 @@ Dragonite::CameraInterface::CameraInterface(const CameraInterface& aCamera)
 
 Dragonite::CameraInterface::~CameraInterface()
 {
-	if (myProfile)
-		delete myProfile;
 
-	myProfile = nullptr;
 }
 
-Dragonite::OrthographicProfile::OrthographicProfile(Vector2f& aViewPort, const float aNearPlane, const float aFarPlane) : 
+Dragonite::OrthographicProfile::OrthographicProfile(const Vector2f& aViewPort, const float aNearPlane, const float aFarPlane) :
 	myCurrentViewPort(aViewPort), myNearPlane(aNearPlane), myFarPlane(aFarPlane) {}
 
 Dragonite::Matrix4x4f Dragonite::OrthographicProfile::CalculateProjectionMatrix()

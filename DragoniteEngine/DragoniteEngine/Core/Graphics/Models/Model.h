@@ -31,7 +31,7 @@ namespace Dragonite
 
 	enum class PrimitiveType
 	{
-		Cube, Sphere, Screen
+		Cube, Sphere, Quad
 	};
 
 	class Model

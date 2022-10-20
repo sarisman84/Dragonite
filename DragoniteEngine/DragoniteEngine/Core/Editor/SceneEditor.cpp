@@ -5,6 +5,8 @@
 #include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
+#include "Core/RuntimeAPI/Components/SpriteRenderer.h"
+#include "Core/RuntimeAPI/Components/Camera.h"
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 
 #include "Core/Utilities/Input.h"
@@ -46,10 +48,25 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 
 	static bool hasExecutedCommand = false;
-	if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && ImGui::IsWindowHovered())
-	{
-		ImGui::OpenPopup("context_menu");
-	}
+
+	if (ImGui::IsWindowHovered())
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+		{
+
+			if (ImGui::IsAnyItemActive())
+			{
+
+			}
+			else
+			{
+
+				ImGui::OpenPopup("context_menu");
+			}
+
+
+
+
+		}
 
 	if (ImGui::BeginPopup("context_menu"))
 	{
@@ -82,6 +99,30 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 			{
 				hasExecutedCommand = true;
 				InitializeCustomObject();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+
+
+			ImGui::MenuItem("Camera", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeCamera();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+
+
+			ImGui::MenuItem("Sprite", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeNewSprite();
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -174,10 +215,17 @@ Dragonite::Object* Dragonite::SceneEditor::GetInspectedObject()
 	myCurrentScene = myDragoniteGuiAPI->GetFocusedScene();
 	if (!myCurrentScene) return nullptr;
 
-	auto el = myFocusedElement;
-	if (el < 0 || el >= myCurrentScene->SceneObjects().size())
+	auto& objs = myCurrentScene->SceneObjects();
+
+
+	auto it = std::find_if(objs.begin(), objs.end(), [this](auto value)
+		{
+			return value.first == myFocusedElement;
+		});
+
+	if (it == objs.end())
 		return nullptr;
-	return myCurrentScene->SceneObjects()[el].get();
+	return it->second.get();
 }
 
 void Dragonite::SceneEditor::InitializeNewObject()
@@ -190,13 +238,13 @@ void Dragonite::SceneEditor::InitializeNewObject()
 	newObject->myTransform.myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
-	newObject->AddComponent<TestComponent>();
+	
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
 
 
-	myFocusedElement = myCurrentScene->SceneObjects().size();
+	myFocusedElement = newObject->UUID();
 
 }
 
@@ -208,11 +256,40 @@ void Dragonite::SceneEditor::InitializeCustomObject()
 	newObject->myTransform.myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
+	newObject->AddComponent<TestComponent>();
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
 
-	myFocusedElement = myCurrentScene->SceneObjects().size();
+	myFocusedElement = newObject->UUID();
+}
+
+
+void Dragonite::SceneEditor::InitializeCamera()
+{
+	std::string name = "New Camera ";
+	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
+	Object* newObject = myCurrentScene->CreateObject(name);
+	newObject->myTransform.myPosition = { 0,0, 0 };
+
+	newObject->AddComponent<Camera>();
+
+	myFocusedElement = newObject->UUID();
+}
+
+void Dragonite::SceneEditor::InitializeNewSprite()
+{
+	std::string name = "New Sprite ";
+	name += "[" + std::to_string(myCurrentScene->SceneObjects().size()) + "]";
+	Object* newObject = myCurrentScene->CreateObject(name);
+	newObject->myTransform.myPosition = { 0,0, 1 };
+
+	auto modelRenderer = newObject->AddComponent<SpriteRenderer>();
+
+	modelRenderer->Sprite() = myModelFactory->GetModel(PrimitiveType::Quad, Material::defaultMaterial);
+
+
+	myFocusedElement = newObject->UUID();
 }
 
 void Dragonite::SceneEditor::TryGetNewElement()

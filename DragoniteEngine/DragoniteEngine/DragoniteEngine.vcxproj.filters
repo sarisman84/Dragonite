@@ -237,6 +237,9 @@
     <ClInclude Include="Core\RuntimeAPI\Component.h">
       <Filter>Core\RuntimeAPI\NEW</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -363,6 +366,9 @@
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\NEW\Object.cpp">
       <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -14,7 +14,9 @@
 
 namespace Dragonite
 {
+	struct CameraProfile;
 	class CameraInterface;
+
 	class Runtime;
 	class ModelFactory;
 	class TextureFactory;
@@ -37,6 +39,7 @@ namespace Dragonite
 	struct RenderInstructions
 	{
 		unsigned int myShaderInstructionsID;
+		unsigned int myProfileIndex;
 
 		DataBuffer myVertexBuffer;
 		DataBuffer myIndexBuffer;
@@ -47,11 +50,6 @@ namespace Dragonite
 	};
 
 
-	struct CameraInstructions
-	{
-		Matrix4x4f myViewMatrix;
-		Matrix4x4f myProjectionMatrix;
-	};
 
 	struct ShaderInstructions
 	{
@@ -75,7 +73,7 @@ namespace Dragonite
 		Renderer();
 		virtual void OnRender(
 			std::vector<RenderInstructions> someInstructions,
-			CameraInstructions aCameraInstruction,
+			CameraInterface* anInterface,
 			ShaderInstructions someShaderInstructions,
 			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr) = 0;
 
@@ -90,7 +88,7 @@ namespace Dragonite
 		// Inherited via Renderer
 		virtual void OnRender(
 			std::vector<RenderInstructions> someInstructions,
-			CameraInstructions aCameraInstruction,
+			CameraInterface* anInterface,
 			ShaderInstructions someShaderInstructions,
 			std::function<void(RenderInstructions)> anOnElementDrawCallback = nullptr) override;
 
@@ -113,6 +111,12 @@ namespace Dragonite
 		{
 			myExtraRenderCalls.push_back(aCallback);
 		}
+
+		inline void RegisterProfile(CameraProfile* const aProfile) 
+		{
+			myProfileLayers.push_back(aProfile);
+		}
+
 
 		inline PollingStation* GetPollingStation() { return myPollingStation; }
 		inline void DrawToBackBuffer(const bool aNewVal) { myRenderToBackBufferFlag = aNewVal; }
@@ -138,6 +142,8 @@ namespace Dragonite
 		void Render();
 
 		bool myRenderToBackBufferFlag;
+
+		std::vector<CameraProfile*> myProfileLayers;
 		CameraInterface* myActiveCamera;
 		PollingStation* myPollingStation;
 

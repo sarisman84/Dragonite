@@ -23,14 +23,18 @@ namespace Dragonite
 		inline CameraInterface& GetInterface() { return myInterface; }
 
 
+		Vector2f myViewportSize;
 
+		bool myPerspectiveFlag;
 		float myFOV;
 		float myNearPlane, myFarPlane;
 
 	private:
 		CameraInterface* myPreviousCameraInterface = nullptr;
 		Scene* myCurrentScene = nullptr;
-		PerspectiveProfile* myPerspectiveProfile = nullptr;
+		PerspectiveProfile myPerspectiveProfile;
+		OrthographicProfile myOrthographicProfile;
+
 		CameraInterface myInterface;
 		unsigned int myCameraID;
 

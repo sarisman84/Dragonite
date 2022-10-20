@@ -8,6 +8,7 @@
 #include "Core/RuntimeAPI/Components/Camera.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
+#include "Core/RuntimeAPI/Components/SpriteRenderer.h"
 
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Graphics/CameraInterface.h"
@@ -161,6 +162,10 @@ void Dragonite::Scene::Load(std::string aPath)
 			if (compIns["type"] == typeid(ModelRenderer).name())
 			{
 				comp = (newObj->AddComponent<ModelRenderer>()).get();
+			}
+			if (compIns["type"] == typeid(SpriteRenderer).name())
+			{
+				comp = (newObj->AddComponent<SpriteRenderer>()).get();
 			}
 			if (compIns["type"] == typeid(TestComponent).name())
 			{

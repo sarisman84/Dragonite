@@ -29,6 +29,8 @@ namespace Dragonite
 
 		void InitializeNewObject();
 		void InitializeCustomObject();
+		void InitializeCamera();
+		void InitializeNewSprite();
 
 		inline Scene* GetCurrentScene() { return myCurrentScene; }
 		inline Viewport* GetViewport() { return myViewport; }

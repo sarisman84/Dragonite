@@ -4,6 +4,7 @@
 #include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
+#include "Core/RuntimeAPI/Components/SpriteRenderer.h"
 
 #include "Core/Editor/SceneEditor.h"
 #include "Core/Editor/AssetBrowser.h"
@@ -22,11 +23,14 @@
 
 #include <d3d11.h>
 
+
 Dragonite::Viewport::Viewport() : GUIWindow("Scene"),
 myEditorCameraInterface(CameraInterface()),
-myPerspectiveProfile(PerspectiveProfile(90.0f, 0.1f, 1000.0f))
+myPerspectiveProfile(PerspectiveProfile(90.0f, 0.1f, 1000.0f)),
+myOrthographicProfile(OrthographicProfile(Vector2f(1920.0f, 1080.0f), 0.1f, 1000.0f))
 {
-	myEditorCameraInterface.Profile() = &myPerspectiveProfile;
+	myEditorCameraInterface.AddLayer(&myPerspectiveProfile);
+	myEditorCameraInterface.AddLayer(&myOrthographicProfile);
 }
 
 Dragonite::Viewport::~Viewport()
@@ -87,11 +91,16 @@ void Dragonite::Viewport::ManipulateObject(Dragonite::Scene* aScene, Dragonite::
 	myIsManipulatingFlag = false;
 	if (!anObject) return;
 
+	auto sprite = anObject->GetComponent<SpriteRenderer>();
+	bool isSprite = sprite != nullptr;
+
+	auto pProfile = isSprite ? aScene->GetMainCamera().Profiles()[1] : aScene->GetMainCamera().Profiles()[0];
+	auto eProfile = isSprite ? myEditorCameraInterface.Profiles()[1] : myEditorCameraInterface.Profiles()[0];
 
 
 	Matrix4x4f view = myIsInPlayFlag ? aScene->GetMainCamera().ViewMatrix() : myEditorCameraInterface.ViewMatrix();
-	Matrix4x4f proj = myIsInPlayFlag ? aScene->GetMainCamera().Profile()->CalculateProjectionMatrix() : myEditorCameraInterface.Profile()->CalculateProjectionMatrix();
-	Matrix4x4f transform = anObject->myTransform.GetMatrix();
+	Matrix4x4f proj = myIsInPlayFlag ? pProfile->CalculateProjectionMatrix() : eProfile->CalculateProjectionMatrix();
+	Matrix4x4f transform = isSprite ? sprite->GetLocal2DMatrix() : anObject->myTransform.GetMatrix();
 	ImGuizmo::Manipulate(&view, &proj, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &transform);
 
 

@@ -59,6 +59,7 @@ namespace Dragonite
 	
 		//Camera data
 		PerspectiveProfile myPerspectiveProfile;
+		OrthographicProfile myOrthographicProfile;
 		CameraInterface myEditorCameraInterface;
 		GraphicalInterface* myGraphicsInterface;
 

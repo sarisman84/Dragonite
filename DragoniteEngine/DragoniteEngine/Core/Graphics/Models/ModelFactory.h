@@ -24,7 +24,7 @@ namespace Dragonite
 		//VVV Model Definitions
 		ModelRef CreateUnitCube();
 		ModelRef CreateScreenMesh();
-
+		ModelRef CreateUnitQuad();
 
 
 		GraphicalInterface* myPipeline;

@@ -226,6 +226,7 @@
     <ClInclude Include="Core\RuntimeAPI\Component.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h" />
     <ClInclude Include="Core\RuntimeAPI\NEW\Object.h" />
     <ClInclude Include="Core\RuntimeAPI\NEW\Scene.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="Core\PollingStation.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp" />
     <ClCompile Include="Core\RuntimeAPI\NEW\Object.cpp" />
     <ClCompile Include="Core\RuntimeAPI\NEW\Scene.cpp" />

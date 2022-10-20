@@ -33,7 +33,7 @@ void Dragonite::ModelRenderer::LateUpdate(const float aDt)
 	instruction.myVertexBuffer = myModelInstance->myModel->myVertexBuffer;
 	instruction.myShaderInstructionsID = myModelInstance->myShaderInstructionsID;
 	instruction.myID = myObject->UUID();
-
+	instruction.myProfileIndex = 0; //Use Perspective Camera
 
 	myRenderInterface = myRenderInterface ? myRenderInterface : myObject->GetScene()->myPollingStation.Get<GraphicalInterface>();
 	myRenderInterface->AddRenderInstructions(instruction);

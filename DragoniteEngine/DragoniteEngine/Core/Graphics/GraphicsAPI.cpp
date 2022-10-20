@@ -21,8 +21,8 @@ Dragonite::ForwardRenderer::ForwardRenderer() : Renderer()
 }
 
 void Dragonite::ForwardRenderer::OnRender(
-	std::vector<RenderInstructions> someInstructions,
-	CameraInstructions aCameraInstruction,
+	std::vector<RenderInstructions> someInstructions, 
+	CameraInterface* anInterface,
 	ShaderInstructions someShaderInstructions,
 	std::function<void(RenderInstructions)> anOnElementDrawCallback)
 {
@@ -31,48 +31,54 @@ void Dragonite::ForwardRenderer::OnRender(
 	DXInterface::Context->VSSetShader(someShaderInstructions.myVertexShader.Get(), nullptr, 0);
 	DXInterface::Context->PSSetShader(someShaderInstructions.myPixelShader.Get(), nullptr, 0);
 
-	
-
-	FrameBufferData fData;
-	fData.myWorldToClipMatrix = aCameraInstruction.myViewMatrix * aCameraInstruction.myProjectionMatrix;
-	DXInterface::ModifyBuffer(myFrameBuffer, Data(&fData));
-
-	DXInterface::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
-
-
-	while (!someInstructions.empty())
+	for (size_t i = 0; i < anInterface->Profiles().size(); i++)
 	{
-		auto instruction = someInstructions.back();
-		someInstructions.pop_back();
+		auto cpy = someInstructions;
+		FrameBufferData fData;
+		fData.myWorldToClipMatrix = anInterface->ViewMatrix() * anInterface->Profiles()[i]->CalculateProjectionMatrix();
+		DXInterface::ModifyBuffer(myFrameBuffer, Data(&fData));
 
-		if (someShaderInstructions.myIndex != -1 && instruction.myShaderInstructionsID != someShaderInstructions.myIndex) continue;
-
-
-		if (instruction.myTexture)
-			instruction.myTexture->Bind(DXInterface::Context);
-
-		ObjectBufferData oData;
-		oData.myModelToWorldMatrix = instruction.myModelMatrix;
-		DXInterface::ModifyBuffer(myObjectBuffer, Data(&oData));
-
-		DXInterface::Context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
-		DXInterface::Context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
-
-		if (anOnElementDrawCallback)
-			anOnElementDrawCallback(instruction);
-
-		unsigned int stride = sizeof(Vertex);
-		unsigned int offset = 0;
-
-		DXInterface::Context->IASetVertexBuffers(0, 1, instruction.myVertexBuffer.GetAddressOf(), &stride, &offset);
-		DXInterface::Context->IASetIndexBuffer(instruction.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-		DXInterface::Context->PSSetSamplers(0, 1, &DXInterface::GetSampler());
+		DXInterface::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
 
+		while (!cpy.empty())
+		{
+			auto instruction = cpy.back();
+			cpy.pop_back();
 
-		DXInterface::Context->DrawIndexed(instruction.myIndexCount, 0, 0);
+			auto id = anInterface->Profiles()[i]->GetID();
+			if (instruction.myProfileIndex != id) continue;
+			if (someShaderInstructions.myIndex != -1 && instruction.myShaderInstructionsID != someShaderInstructions.myIndex) continue;
+
+
+			if (instruction.myTexture)
+				instruction.myTexture->Bind(DXInterface::Context);
+
+			ObjectBufferData oData;
+			oData.myModelToWorldMatrix = instruction.myModelMatrix;
+			DXInterface::ModifyBuffer(myObjectBuffer, Data(&oData));
+
+			DXInterface::Context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+			DXInterface::Context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+
+			if (anOnElementDrawCallback)
+				anOnElementDrawCallback(instruction);
+
+			unsigned int stride = sizeof(Vertex);
+			unsigned int offset = 0;
+
+			DXInterface::Context->IASetVertexBuffers(0, 1, instruction.myVertexBuffer.GetAddressOf(), &stride, &offset);
+			DXInterface::Context->IASetIndexBuffer(instruction.myIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+			DXInterface::Context->PSSetSamplers(0, 1, &DXInterface::GetSampler());
+
+
+
+			DXInterface::Context->DrawIndexed(instruction.myIndexCount, 0, 0);
+		}
 	}
+
+	
 }
 
 Dragonite::GraphicalInterface::~GraphicalInterface()
@@ -133,10 +139,7 @@ void Dragonite::GraphicalInterface::DrawInstructions(ShaderInstructions aShaderI
 
 	myPrimaryRenderer->OnRender(
 		myRenderInstructions,
-		CameraInstructions{
-			myActiveCamera->ViewMatrix(),
-			myActiveCamera->Profile()->CalculateProjectionMatrix()
-		},
+		myActiveCamera,
 		aShaderInstruciton,
 		anOnElementDrawCallback
 	);
@@ -160,10 +163,7 @@ void Dragonite::GraphicalInterface::DrawInstructions(VertexShader aVS, PixelShad
 	instruction.myIndex = -1;
 	myPrimaryRenderer->OnRender(
 		myRenderInstructions,
-		CameraInstructions{
-			myActiveCamera->ViewMatrix(),
-			myActiveCamera->Profile()->CalculateProjectionMatrix()
-		},
+		myActiveCamera,
 		instruction,
 		anOnElementDrawCallback
 	);
