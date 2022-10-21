@@ -67,6 +67,7 @@ void Dragonite::SpriteRenderer::Deserialize(void* someData)
 
 void Dragonite::SpriteRenderer::OnInspectorGUI()
 {
+	if (!mySpriteInstance) return;
 	std::filesystem::path p(mySpriteInstance->myTextureName);
 
 	ImGui::Text("Sprite Type: %s", mySpriteInstance->myModelName);
@@ -79,9 +80,9 @@ Dragonite::Matrix4x4f Dragonite::SpriteRenderer::GetLocal2DMatrix()
 
 	Matrix4x4f result;
 
-	float radRot = (myObject->myTransform.myRotation.y) * (pieVal / 180.0f);
+	float radRot = (myObject->myTransform.myRotation.z) * (pieVal / 180.0f);
 
-	Vector3f lPivot = Vector3f(-0.5f, -0.5f, 0.0f);
+	Vector3f lPivot = Vector3f(0.0f, 0.0f, 0.0f);
 
 	Matrix4x4f size = Matrix4x4f::CreateScaleMatrix(myObject->myTransform.myScale);
 
@@ -100,4 +101,9 @@ Dragonite::Matrix4x4f Dragonite::SpriteRenderer::GetLocal2DMatrix()
 	result(4, 2) = p.y;
 
 	return result;
+}
+
+std::shared_ptr<Dragonite::Component> Dragonite::SpriteRenderer::Clone()
+{
+	return std::make_shared<SpriteRenderer>(*this);
 }

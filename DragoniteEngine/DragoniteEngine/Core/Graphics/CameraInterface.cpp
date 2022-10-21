@@ -1,6 +1,8 @@
 #include "CameraInterface.h"
 #include "Core/CU/Math/MathFunctions.h"
 
+#include "Core/Graphics/DirectX11/DXDefines.h"
+
 
 Dragonite::PerspectiveProfile::PerspectiveProfile(const PerspectiveProfile& aCpy)
 {
@@ -18,7 +20,7 @@ void Dragonite::PerspectiveProfile::operator=(const PerspectiveProfile& aCpy)
 
 Dragonite::PerspectiveProfile::PerspectiveProfile(const float aFOV, const float aNearPlane, const float aFarPlane) : CameraProfile(), myNearPlane(aNearPlane), myFarPlane(aFarPlane), myFOV(aFOV)
 {
-
+	myActiveState = true;
 }
 
 Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateProjectionMatrix()
@@ -46,6 +48,18 @@ Dragonite::Matrix4x4f Dragonite::PerspectiveProfile::CalculateProjectionMatrix()
 	return result;
 }
 
+inline unsigned int Dragonite::PerspectiveProfile::GetDepthStencilState()
+{
+	return DEPTH_LESS_READ;
+}
+
+unsigned int Dragonite::PerspectiveProfile::GetCullMode()
+{
+	return CULL_BACK;
+}
+
+
+
 Dragonite::CameraInterface::CameraInterface() = default;
 
 Dragonite::CameraInterface::CameraInterface(const CameraInterface& aCamera)
@@ -58,7 +72,9 @@ Dragonite::CameraInterface::~CameraInterface()
 }
 
 Dragonite::OrthographicProfile::OrthographicProfile(const Vector2f& aViewPort, const float aNearPlane, const float aFarPlane) :
-	myCurrentViewPort(aViewPort), myNearPlane(aNearPlane), myFarPlane(aFarPlane) {}
+	myCurrentViewPort(aViewPort), myNearPlane(aNearPlane), myFarPlane(aFarPlane) {
+	myActiveState = true;
+}
 
 Dragonite::Matrix4x4f Dragonite::OrthographicProfile::CalculateProjectionMatrix()
 {
@@ -82,3 +98,24 @@ Dragonite::Matrix4x4f Dragonite::OrthographicProfile::CalculateProjectionMatrix(
 	return result;
 }
 
+inline unsigned int Dragonite::OrthographicProfile::GetDepthStencilState()
+{
+	return DEPTH_LESS_EQUAL_READ;
+}
+
+unsigned int Dragonite::OrthographicProfile::GetCullMode()
+{
+	return CULL_FRONT;
+}
+
+
+
+const bool Dragonite::CameraProfile::IsActive()
+{
+	return myActiveState;
+}
+
+void Dragonite::CameraProfile::SetActive(const bool aNewState)
+{
+	myActiveState = aNewState;
+}

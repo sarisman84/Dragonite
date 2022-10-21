@@ -58,6 +58,11 @@ void Dragonite::TestComponent::OnInspectorGUI()
 	ImGui::InputFloat("Min Uniform Size", &myMinScale);
 }
 
+std::shared_ptr<Dragonite::Component> Dragonite::TestComponent::Clone()
+{
+	return std::make_shared<Dragonite::TestComponent>(*this);
+}
+
 //void Dragonite::TestComponent::OnInspectorGUI()
 //{
 //	ImGui::InputFloat("Scale Speed", &myScaleSpeed);

@@ -79,4 +79,9 @@ void Dragonite::ModelRenderer::OnInspectorGUI()
 	ImGui::Text("Texture %s", p.string().c_str());
 }
 
+std::shared_ptr<Dragonite::Component> Dragonite::ModelRenderer::Clone()
+{
+	return std::make_shared<ModelRenderer>(*this);
+}
+
 

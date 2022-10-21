@@ -9,6 +9,7 @@
 #include "Core/RuntimeAPI/Components/ModelRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
 #include "Core/RuntimeAPI/Components/SpriteRenderer.h"
+#include "Core/RuntimeAPI/Components/PlayerController.h"
 
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Graphics/CameraInterface.h"
@@ -171,6 +172,10 @@ void Dragonite::Scene::Load(std::string aPath)
 			{
 				comp = (newObj->AddComponent<TestComponent>()).get();
 			}
+			if (compIns["type"] == typeid(PlayerController).name())
+			{
+				comp = (newObj->AddComponent<PlayerController>()).get();
+			}
 
 			if (comp)
 				comp->Deserialize((void*)&compIns["data"]);
@@ -213,7 +218,10 @@ void Dragonite::Scene::Save(std::string aPath)
 			json comp;
 
 			comp["type"] = typeid(*myObjects[i]->myComponents[x]).name();
-			comp["data"] = *reinterpret_cast<json*>(myObjects[i]->myComponents[x]->Serialize());
+
+			auto data = myObjects[i]->myComponents[x]->Serialize();
+
+			comp["data"] = data ? *reinterpret_cast<json*>(data) : json::object();
 
 			objIns["components"].push_back(comp);
 		}

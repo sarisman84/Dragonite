@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/RuntimeAPI/Component.h"
 #include "Core/Utilities/Reflection.h"
+
+#include <memory>
 namespace Dragonite
 {
 	class TestComponent : public Component
@@ -13,7 +15,8 @@ namespace Dragonite
 		void LateUpdate(const float aDt) override;
 		void* Serialize() override;
 		void Deserialize(void* someData) override;
-		void OnInspectorGUI() override;
+		void OnInspectorGUI() override;	
+		std::shared_ptr<Dragonite::Component> Clone() override;
 	public:
 		float
 			myScaleSpeed,
@@ -22,9 +25,8 @@ namespace Dragonite
 	private:
 		float myCurrentTime;
 
-
-
-
+		// Inherited via Component
+	
 
 	};
 

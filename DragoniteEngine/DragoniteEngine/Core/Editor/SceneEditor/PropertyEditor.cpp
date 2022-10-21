@@ -5,6 +5,8 @@
 
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 
+#include "ComponentRegistry.h"
+
 #pragma region OLD CODE
 
 /*
@@ -84,6 +86,7 @@ Dragonite::PropertyEditor::~PropertyEditor()
 
 void Dragonite::PropertyEditor::OnWindowInit()
 {
+	myRegistry = InitializeRegistry();
 }
 
 void Dragonite::PropertyEditor::OnWindowUpdate()
@@ -134,14 +137,14 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 
 	if (ImGui::BeginPopup("add_component"))
 	{
-		/*	for (auto& comp : myRegisteredComponents)
+		for (auto& comp : myRegistry)
+		{
+			if (ImGui::Button(typeid(*comp).name()))
 			{
-				if (ImGui::Button(comp.first.c_str()))
-				{
-					AddComponent(selectedObject, comp.first);
-					ImGui::CloseCurrentPopup();
-				}
-			}*/
+				selectedObject->AddComponent(comp);
+				ImGui::CloseCurrentPopup();
+			}
+		}
 
 
 		ImGui::EndPopup();

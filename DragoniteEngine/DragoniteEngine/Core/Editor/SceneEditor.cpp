@@ -22,6 +22,7 @@
 #include "SceneEditor/Viewport.h"
 #include "SceneEditor/PropertyEditor.h"
 #include "AssetBrowser.h"
+#include "Core/CU/Math/Vector.h"
 
 
 
@@ -81,36 +82,25 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 		if (ImGui::BeginPopup("create_context_menu"))
 		{
-			ImGui::MenuItem("Cube", "", &x);
-
-			if (ImGui::IsItemClicked())
-			{
-				hasExecutedCommand = true;
-				InitializeNewObject();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-
-
-			ImGui::MenuItem("Fancy Cube", "", &x);
-
-			if (ImGui::IsItemClicked())
-			{
-				hasExecutedCommand = true;
-				InitializeCustomObject();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-
-
 			ImGui::MenuItem("Camera", "", &x);
 
 			if (ImGui::IsItemClicked())
 			{
 				hasExecutedCommand = true;
 				InitializeCamera();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+
+
+
+			ImGui::MenuItem("Cube", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeNewObject();
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -167,7 +157,7 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 	{
 		bool selected = false;
 
-		ImGui::Selectable(objs[i]->myName.c_str(), &selected);
+		ImGui::Selectable((objs[i]->myName + "##" + std::to_string(i)).c_str(), &selected);
 		if (selected)
 		{
 			myFocusedElement = objs[i]->UUID();
@@ -238,7 +228,7 @@ void Dragonite::SceneEditor::InitializeNewObject()
 	newObject->myTransform.myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
-	
+
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
@@ -288,7 +278,8 @@ void Dragonite::SceneEditor::InitializeNewSprite()
 
 	modelRenderer->Sprite() = myModelFactory->GetModel(PrimitiveType::Quad, Material::defaultMaterial);
 
-
+	newObject->myTransform.myPosition = ToVector3(DXInterface::GetViewportResolution() / 2.0f);
+	newObject->myTransform.myScale = ToVector3(Vector2f{ 100, 100 });
 	myFocusedElement = newObject->UUID();
 }
 

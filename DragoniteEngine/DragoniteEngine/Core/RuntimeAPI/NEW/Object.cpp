@@ -1,5 +1,5 @@
 #include "Object.h"
-
+#include "Core/RuntimeAPI/Component.h"
 Dragonite::Object::Object(std::string aName)
 {
 	myName = aName;
@@ -29,4 +29,9 @@ void Dragonite::Object::LateUpdate(const float aDt)
 	{
 		myComponents[i]->LateUpdate(aDt);
 	}
+}
+
+void Dragonite::Object::AddComponent(const std::shared_ptr<Component>& aCpy)
+{
+	myComponents.push_back(aCpy->Clone());
 }

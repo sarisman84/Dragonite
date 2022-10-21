@@ -6,6 +6,8 @@
 
 #include "Core/CU/Math/Matrix4x4.hpp"
 
+#include <memory>
+
 namespace Dragonite
 {
 	class GraphicalInterface;
@@ -35,5 +37,8 @@ namespace Dragonite
 		GraphicalInterface* myInterface;
 		ModelFactory* myModelFactory;
 		std::shared_ptr<ModelInstance> mySpriteInstance;
+
+		// Inherited via Component
+		virtual std::shared_ptr<Component> Clone() override;
 	};
 }

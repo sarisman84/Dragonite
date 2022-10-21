@@ -21,7 +21,7 @@ Dragonite::ForwardRenderer::ForwardRenderer() : Renderer()
 }
 
 void Dragonite::ForwardRenderer::OnRender(
-	std::vector<RenderInstructions> someInstructions, 
+	std::vector<RenderInstructions> someInstructions,
 	CameraInterface* anInterface,
 	ShaderInstructions someShaderInstructions,
 	std::function<void(RenderInstructions)> anOnElementDrawCallback)
@@ -33,6 +33,9 @@ void Dragonite::ForwardRenderer::OnRender(
 
 	for (size_t i = 0; i < anInterface->Profiles().size(); i++)
 	{
+
+		if (!anInterface->Profiles()[i]->IsActive()) continue;
+
 		auto cpy = someInstructions;
 		FrameBufferData fData;
 		fData.myWorldToClipMatrix = anInterface->ViewMatrix() * anInterface->Profiles()[i]->CalculateProjectionMatrix();
@@ -40,6 +43,9 @@ void Dragonite::ForwardRenderer::OnRender(
 
 		DXInterface::Context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 
+
+		DXInterface::SetDepthStencilState(anInterface->Profiles()[i]->GetDepthStencilState());
+		DXInterface::SetRasterizerState(anInterface->Profiles()[i]->GetCullMode());
 
 		while (!cpy.empty())
 		{
@@ -78,7 +84,7 @@ void Dragonite::ForwardRenderer::OnRender(
 		}
 	}
 
-	
+
 }
 
 Dragonite::GraphicalInterface::~GraphicalInterface()
@@ -121,7 +127,8 @@ unsigned int Dragonite::GraphicalInterface::AddShaderInstructions(const Material
 
 
 	auto foundInstructions = std::find(myShaderInstructions.begin(), myShaderInstructions.end(), instructions);
-	if (foundInstructions != myShaderInstructions.end()) {
+	if (foundInstructions != myShaderInstructions.end())
+	{
 
 		return foundInstructions - myShaderInstructions.begin();
 	}
@@ -184,7 +191,7 @@ void Dragonite::GraphicalInterface::Render()
 {
 	if (!myPrimaryRenderer) return;
 
-	if (myRenderToBackBufferFlag) 
+	if (myRenderToBackBufferFlag)
 	{
 		DXInterface::DrawToBackBuffer();
 		DrawInstructions();

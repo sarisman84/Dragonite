@@ -33,6 +33,10 @@ namespace Dragonite
 
 
 
+
+		// Inherited via Component
+		virtual std::shared_ptr<Component> Clone() override;
+
 	};
 
 

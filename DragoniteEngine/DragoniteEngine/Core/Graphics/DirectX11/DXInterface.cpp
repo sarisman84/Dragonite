@@ -26,9 +26,13 @@ const bool Dragonite::DXInterface::Init(HWND anInstance)
 		D3D11_FILTER_COMPARISON_MIN_LINEAR_MAG_MIP_POINT,
 		D3D11_TEXTURE_ADDRESS_WRAP,
 		Color(0, 0, 0, 0));
-	if (FAILED(CreateSampler(0, &desc))) {
+	if (FAILED(CreateSampler(0, &desc)))
+	{
 		return false;
 	}
+
+
+
 
 
 	AlphaBlend aBlend = AlphaBlend();
@@ -47,6 +51,84 @@ const bool Dragonite::DXInterface::Init(HWND anInstance)
 	{
 		return false;
 	}
+
+
+	D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+	depthDesc.DepthEnable = true;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthDesc.StencilEnable = false;
+
+
+	if (FAILED(CreateDepthState(DEPTH_LESS_READ, &depthDesc)))
+	{
+		return false;
+	}
+
+
+
+	depthDesc = {};
+	depthDesc.DepthEnable = true;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthDesc.StencilEnable = false;
+
+	if (FAILED(CreateDepthState(DEPTH_LESS_READ, &depthDesc)))
+	{
+		return false;
+	}
+
+
+	depthDesc = {};
+	depthDesc.DepthEnable = true;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	depthDesc.StencilEnable = false;
+
+	if (FAILED(CreateDepthState(DEPTH_LESS_EQUAL_READ, &depthDesc)))
+	{
+		return false;
+	}
+
+
+	depthDesc = {};
+	depthDesc.DepthEnable = true;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	depthDesc.StencilEnable = false;
+
+	if (FAILED(CreateDepthState(DEPTH_LESS_EQUAL_WRITE, &depthDesc)))
+	{
+		return false;
+	}
+
+
+	D3D11_RASTERIZER_DESC rasterDesc = {};
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+
+
+
+	if (FAILED(CreateRasteriserState(CULL_BACK, &rasterDesc)))
+	{
+		return false;
+	}
+
+
+	rasterDesc = {};
+	rasterDesc.CullMode = D3D11_CULL_FRONT;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+
+
+
+	if (FAILED(CreateRasteriserState(CULL_FRONT, &rasterDesc)))
+	{
+		return false;
+	}
+
+
+
+
 
 	return true;
 }
@@ -117,11 +199,22 @@ const HRESULT Dragonite::DXInterface::CreateBlendState(const unsigned int aKey, 
 	return r;
 }
 
+const HRESULT Dragonite::DXInterface::CreateDepthState(const unsigned int aKey, D3D11_DEPTH_STENCIL_DESC* aDesc)
+{
+	return	Device->CreateDepthStencilState(aDesc, &myInstance.myStencilStates[aKey]);
+}
+
+const HRESULT Dragonite::DXInterface::CreateRasteriserState(const unsigned int aKey, D3D11_RASTERIZER_DESC* aDesc)
+{
+	return Device->CreateRasterizerState(aDesc, &myInstance.myRasterizerStates[aKey]);
+}
+
 const HRESULT Dragonite::DXInterface::CreateBuffer(DataBuffer& aBuffer, BufferDesc* someBufferDesc)
 {
 	auto desc = someBufferDesc;
 
-	if (desc->ContainsData()) {
+	if (desc->ContainsData())
+	{
 
 		auto subData = desc->GetSubResourceData();
 		return Device->CreateBuffer(desc, &subData, &aBuffer);
@@ -195,7 +288,7 @@ const HRESULT Dragonite::DXInterface::SetViewport(const Vector2f& aNewViewport, 
 	newViewport.Height = aNewViewport.y;
 	newViewport.MinDepth = aMinDepth;
 	newViewport.MaxDepth = aMaxDepth;
-	
+
 	Context->RSSetViewports(1, &newViewport);
 	return S_OK;
 }
@@ -216,6 +309,16 @@ Dragonite::TextureSampler Dragonite::DXInterface::GetSampler(unsigned int aKey)
 void Dragonite::DXInterface::SetBlendState(unsigned int aNewState)
 {
 	Context->OMSetBlendState(myInstance.myBlendStates[aNewState].Get(), nullptr, 0xffffffff);
+}
+
+void Dragonite::DXInterface::SetDepthStencilState(unsigned int aNewState)
+{
+	Context->OMSetDepthStencilState(myInstance.myStencilStates[aNewState].Get(), 0);
+}
+
+void Dragonite::DXInterface::SetRasterizerState(unsigned int aNewState)
+{
+	Context->RSSetState(myInstance.myRasterizerStates[aNewState].Get());
 }
 
 void Dragonite::DXInterface::DrawTo(RenderView aTarget, DepthStencil aDepthStencil)
@@ -279,7 +382,8 @@ const HRESULT Dragonite::DXInterface::InitializeBackBuffer()
 	}
 
 
-	if (FAILED(CreateDepthStencil(depthBufferText, myDepthBuffer))) {
+	if (FAILED(CreateDepthStencil(depthBufferText, myDepthBuffer)))
+	{
 		return E_INVALIDARG;
 	}
 

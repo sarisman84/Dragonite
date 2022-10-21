@@ -120,8 +120,10 @@ void Dragonite::Mouse::Update(UINT aMessage, WPARAM aWParam, LPARAM anLParam)
 	{
 	case WM_MOUSEMOVE:
 		auto point = MAKEPOINTS(anLParam);
-		position.x = point.x;
-		position.y = point.y;
+		absPosition.x = point.x;
+		absPosition.y = point.y;
+
+		position = absPosition - myOffset;
 		break;
 	default:
 		break;

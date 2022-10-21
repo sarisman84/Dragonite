@@ -5,9 +5,6 @@
 #include <string>
 #include "Core/Utilities/Reflection.h"
 
-#include "Core/RuntimeAPI/Components/Camera.h"
-#include "Core/RuntimeAPI/Components/ModelRenderer.h"
-#include "Core/RuntimeAPI/Components/TestComponent.h"
 
 
 int DefaultStringResize(ImGuiInputTextCallbackData* data);
@@ -34,13 +31,13 @@ namespace Dragonite
 
 	private:
 		SceneEditor* mySceneEditor;
-
+		std::vector<std::shared_ptr<Component>> myRegistry;
 
 
 	};
 
 
-	template<>
+	/*template<>
 	inline auto Reflect::RegisterElement<Component>()
 	{
 		return Reflect::Class<TestComponent, Camera, ModelRenderer>("Component");
@@ -96,7 +93,7 @@ namespace Dragonite
 					Reflect::InspectMember(member.Name(), &member.ValueOf(anElement));
 				}, true);
 		}
-	}
+	}*/
 }
 
 

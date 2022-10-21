@@ -31,6 +31,10 @@ namespace Dragonite
 		Comp<T> GetComponent();
 
 
+
+		void AddComponent(const std::shared_ptr<Component>& aCpy);
+
+
 		Transform myTransform;
 		std::string myName;
 

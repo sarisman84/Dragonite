@@ -240,6 +240,18 @@
     <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\DirectX11\DXDefines.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\PlayerController.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Vector.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\SceneEditor\ComponentRegistry.h">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -368,6 +380,9 @@
       <Filter>Core\RuntimeAPI\NEW</Filter>
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\PlayerController.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
   </ItemGroup>

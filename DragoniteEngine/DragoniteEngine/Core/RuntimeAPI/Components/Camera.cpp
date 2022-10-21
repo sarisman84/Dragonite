@@ -36,6 +36,10 @@ void Dragonite::Camera::Update(const float aDt)
 	myPerspectiveProfile.myFOV = myFOV;
 
 	myOrthographicProfile.myCurrentViewPort = myViewportSize;
+
+
+	myPerspectiveProfile.SetActive(myPerspectiveFlag);
+	myOrthographicProfile.SetActive(!myPerspectiveFlag);
 }
 
 
@@ -114,5 +118,10 @@ void Dragonite::Camera::OnInspectorGUI()
 	ImGui::DragFloat("Far Plane", &myFarPlane, 0.1f);
 
 
+}
+
+std::shared_ptr<Dragonite::Component> Dragonite::Camera::Clone()
+{
+	return std::make_shared<Camera>(*this);
 }
 

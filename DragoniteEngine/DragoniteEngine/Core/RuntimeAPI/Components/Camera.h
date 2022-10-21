@@ -3,6 +3,8 @@
 #include "Core/Graphics/CameraInterface.h"
 #include "Core/Utilities/Reflection.h"
 
+#include <memory>
+
 namespace Dragonite
 {
 	class Scene;
@@ -22,6 +24,7 @@ namespace Dragonite
 		inline const unsigned int GetID() { return myCameraID; }
 		inline CameraInterface& GetInterface() { return myInterface; }
 
+		virtual std::shared_ptr<Component> Clone() override;
 
 		Vector2f myViewportSize;
 
