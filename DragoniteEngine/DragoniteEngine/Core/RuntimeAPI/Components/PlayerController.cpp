@@ -27,7 +27,6 @@ void Dragonite::PlayerController::Start()
 
 void Dragonite::PlayerController::Update(const float aDt)
 {
-	auto rez = Vector2f(1920, 1080);
 	constexpr float stoppingDistance = 0.15f;
 
 	if (myMousePtr)
@@ -40,7 +39,7 @@ void Dragonite::PlayerController::Update(const float aDt)
 	float length = dir.Length();
 	Vector2f delta = dir.GetNormalized();
 
-	if (stoppingDistance >= 0.1f)
+	if (length > stoppingDistance)
 		myObject->myTransform.myPosition += ToVector3(delta * myMovementSpeed * aDt);
 
 }

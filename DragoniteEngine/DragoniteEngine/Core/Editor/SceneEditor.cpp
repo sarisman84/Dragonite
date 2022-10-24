@@ -14,6 +14,7 @@
 #include <string>
 #include <fstream>
 
+#include "Core/External/nlohmann/json.hpp"
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Graphics/RenderTargets/RenderFactory.h"
 #include "Core/Utilities/Input.h"
@@ -416,6 +417,7 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 {
 	static std::string name = myCurrentScene->myName;
 	static std::string entry;
+
 	if (ImGui::BeginPopupModal("Save..."))
 	{
 
@@ -437,12 +439,16 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 
 		if (ImGui::Button("Save") || ImGui::IsKeyDown(ImGuiKey_Enter))
 		{
-			ImGui::CloseCurrentPopup();
+			nlohmann::json jsonIns;
 
+			ImGui::CloseCurrentPopup();
+			std::string r = entry + "\\" + name + ".json";
 			myCurrentScene->myName = name;
-			entry += "\\" + name + ".json";
-			myCurrentScene->Serialize(entry.c_str());
+
+			myCurrentScene->Serialize(r.c_str());
 			name = myCurrentScene->myName;
+			jsonIns["mainScene"] = Scene::LastSavedPath();
+			Scene::SetProjectSettings((void*)&jsonIns);
 		}
 
 

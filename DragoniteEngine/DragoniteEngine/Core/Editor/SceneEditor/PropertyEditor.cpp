@@ -117,7 +117,7 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Indent();
-			//InspectElement(typeid(*components[i].get()).hash_code());
+			//Reflect::InspectElement(typeid(*components[i].get()).hash_code());
 			components[i]->OnInspectorGUI();
 			ImGui::Unindent();
 
@@ -137,6 +137,9 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 
 	if (ImGui::BeginPopup("add_component"))
 	{
+
+
+
 		for (auto& comp : myRegistry)
 		{
 			if (ImGui::Button(typeid(*comp).name()))

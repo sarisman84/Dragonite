@@ -82,8 +82,8 @@ namespace Dragonite
 			inline typename std::enable_if<I == sizeof...(Tp), Ret>::type
 				for_each(std::tuple<Tp...>, Func)
 			{
-
-
+				
+				
 			}
 			template< size_t I = 0, typename Func, typename... Tp, typename Ret = void>
 			inline typename std::enable_if < I < sizeof...(Tp), Ret>::type

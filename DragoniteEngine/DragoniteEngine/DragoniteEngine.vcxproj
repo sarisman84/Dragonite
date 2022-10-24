@@ -228,6 +228,7 @@
     <ClInclude Include="Core\PollingStation.h" />
     <ClInclude Include="Core\RuntimeAPI\Component.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerAgent.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\PlayerController.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
     <ClCompile Include="Core\PollingStation.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerAgent.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\PlayerController.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp" />
