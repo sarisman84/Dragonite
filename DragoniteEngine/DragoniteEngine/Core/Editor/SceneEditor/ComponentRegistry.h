@@ -4,6 +4,8 @@
 #include "Core/RuntimeAPI/Components/PlayerController.h"
 #include "Core/RuntimeAPI/Components/SpriteRenderer.h"
 #include "Core/RuntimeAPI/Components/TestComponent.h"
+#include "Core/RuntimeAPI/Components/ComputerTerminal.h"
+#include "Core/RuntimeAPI/Components/ComputerAgent.h"
 
 #include <vector>
 #include <memory>
@@ -20,6 +22,8 @@ namespace Dragonite
 		result.push_back(std::make_shared<Camera>());
 		result.push_back(std::make_shared<PlayerController>());
 		result.push_back(std::make_shared<TestComponent>());
+		result.push_back(std::make_shared<ComputerAgent>());
+		result.push_back(std::make_shared<ComputerTerminal>());
 
 		return result;
 	}

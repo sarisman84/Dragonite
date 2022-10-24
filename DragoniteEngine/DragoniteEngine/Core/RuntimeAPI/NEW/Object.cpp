@@ -1,6 +1,6 @@
 #include "Object.h"
 #include "Core/RuntimeAPI/Component.h"
-Dragonite::Object::Object(std::string aName)
+Dragonite::Object::Object(std::string aName) : myBounds(&myTransform)
 {
 	myName = aName;
 
@@ -11,6 +11,12 @@ void Dragonite::Object::Start()
 	for (size_t i = 0; i < myComponents.size(); i++)
 	{
 		myComponents[i]->Awake();
+		
+	}
+
+
+	for (size_t i = 0; i < myComponents.size(); i++)
+	{
 		myComponents[i]->Start();
 	}
 }

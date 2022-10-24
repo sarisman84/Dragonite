@@ -10,6 +10,8 @@
 #include "Core/RuntimeAPI/Components/TestComponent.h"
 #include "Core/RuntimeAPI/Components/SpriteRenderer.h"
 #include "Core/RuntimeAPI/Components/PlayerController.h"
+#include "Core/RuntimeAPI/Components/ComputerTerminal.h"
+#include "Core/RuntimeAPI/Components/ComputerAgent.h"
 
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Graphics/CameraInterface.h"
@@ -175,6 +177,14 @@ void Dragonite::Scene::Load(std::string aPath)
 			if (compIns["type"] == typeid(PlayerController).name())
 			{
 				comp = (newObj->AddComponent<PlayerController>()).get();
+			}
+			if (compIns["type"] == typeid(ComputerAgent).name())
+			{
+				comp = (newObj->AddComponent<ComputerAgent>()).get();
+			}
+			if (compIns["type"] == typeid(ComputerTerminal).name())
+			{
+				comp = (newObj->AddComponent<ComputerTerminal>()).get();
 			}
 
 			if (comp)

@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <memory>
+
+
+
 namespace Dragonite
 {
 	class Object;
@@ -24,8 +27,7 @@ namespace Dragonite
 		virtual std::shared_ptr<Component> Clone() = 0;
 
 		std::string myName;
-
-	protected:
 		Object* myObject;
+		
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "Core/CU/Transform.h"
+#include "Core/CU/Bounds.h"
 #include "Core/RuntimeAPI/Component.h"
 
 #include <vector>
@@ -35,6 +36,7 @@ namespace Dragonite
 		void AddComponent(const std::shared_ptr<Component>& aCpy);
 
 
+		Bounds2D myBounds; //TEMP
 		Transform myTransform;
 		std::string myName;
 

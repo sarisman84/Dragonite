@@ -12,6 +12,9 @@
 #include "Core/CU/Math/Vector.h"
 
 
+#include "NeuralStation.h"
+
+
 void Dragonite::PlayerController::Awake()
 {
 	//myMovementSpeed = myMovementSpeed <= 0 ? 5.0f : myMovementSpeed;
@@ -19,6 +22,9 @@ void Dragonite::PlayerController::Awake()
 
 void Dragonite::PlayerController::Start()
 {
+	NeuralStation::Instance().PollPlayer(this);
+
+
 	SpriteRenderer* s;
 	mySprite = (s = myObject->GetComponent<SpriteRenderer>().get()) ? s : myObject->AddComponent<SpriteRenderer>().get();
 	myInputManager = myObject->GetScene()->myPollingStation.Get<InputManager>();

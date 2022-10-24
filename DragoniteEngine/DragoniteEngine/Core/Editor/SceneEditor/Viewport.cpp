@@ -178,7 +178,7 @@ void Dragonite::Viewport::OnWindowUpdate()
 		auto p = dynamic_cast<OrthographicProfile*>(myScene->GetMainCamera().Profiles()[1]);
 		p->myCurrentViewPort = myCurrentResolution;
 	}
-		
+
 
 	RenderViewport();
 	RenderTopBar();
@@ -283,9 +283,17 @@ void Dragonite::Viewport::DetectAssetDrop()
 					std::shared_ptr<SpriteRenderer> sRenderer = foundObj->GetComponent<SpriteRenderer>();
 
 					if (mRenderer)
+					{
 						mRenderer->Model()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+						mRenderer->Model()->myTextureName = file->path().wstring();
+					}
+
 					if (sRenderer)
+					{
 						sRenderer->Sprite()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+						sRenderer->Sprite()->myTextureName = file->path().wstring().c_str();
+					}
+
 				}
 			}
 

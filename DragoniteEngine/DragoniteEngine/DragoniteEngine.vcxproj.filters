@@ -255,6 +255,15 @@
     <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h">
       <Filter>Core\RuntimeAPI\Components\Temp</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\NeuralStation.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerTerminal.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Bounds.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -389,6 +398,12 @@
       <Filter>Core\RuntimeAPI\Components\Temp</Filter>
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\NeuralStation.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerTerminal.cpp">
       <Filter>Core\RuntimeAPI\Components\Temp</Filter>
     </ClCompile>
   </ItemGroup>
