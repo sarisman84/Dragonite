@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-
+#include "Core/Utilities/Reflection.h"
 
 
 namespace Dragonite
@@ -30,4 +30,5 @@ namespace Dragonite
 		Object* myObject;
 		
 	};
+
 }

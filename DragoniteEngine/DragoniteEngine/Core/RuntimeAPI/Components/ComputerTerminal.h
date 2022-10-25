@@ -2,6 +2,8 @@
 
 #include "Core/RuntimeAPI/Component.h"
 
+#include "Core/Utilities/Reflection.h"
+
 namespace Dragonite
 {
 	class SpriteRenderer;
@@ -20,4 +22,11 @@ namespace Dragonite
 	private:
 		SpriteRenderer* mySprite;
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<ComputerTerminal>() 
+	{
+		return Class("Computer Terminal");
+	}
 }

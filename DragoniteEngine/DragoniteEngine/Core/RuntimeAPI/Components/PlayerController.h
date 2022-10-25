@@ -4,6 +4,9 @@
 
 #include <memory>
 
+
+#include "Core/Utilities/Reflection.h"
+
 namespace Dragonite
 {
 	class InputManager;
@@ -33,6 +36,13 @@ namespace Dragonite
 		// Inherited via Component
 
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<PlayerController>() 
+	{
+		return Class("Player Controller", Member("Movement Speed", &PlayerController::myMovementSpeed));
+	}
 }
 
 

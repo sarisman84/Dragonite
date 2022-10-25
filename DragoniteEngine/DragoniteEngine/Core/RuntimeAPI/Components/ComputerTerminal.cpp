@@ -39,7 +39,7 @@ void Dragonite::ComputerTerminal::Update(const float aDt)
 
 void Dragonite::ComputerTerminal::LateUpdate(const float aDt)
 {
-	NeuralStation::Instance().ResetInformation();
+	/*NeuralStation::Instance().ResetInformation();*/
 }
 
 void* Dragonite::ComputerTerminal::Serialize()

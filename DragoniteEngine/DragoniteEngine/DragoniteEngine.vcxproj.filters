@@ -264,6 +264,9 @@
     <ClInclude Include="Core\CU\Bounds.h">
       <Filter>Core\CU</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ComponentStructure.h">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />

@@ -45,8 +45,8 @@ void Dragonite::ComputerAgent::Update(const float aDt)
 {
 	if (myPollInformationFlag)
 	{
-		ComputerTerminal* terminal;
-		if (NeuralStation::Instance().IsPlayerHacking(terminal))
+		ComputerTerminal* terminal = nullptr;
+		if (NeuralStation::Instance().IsPlayerHacking(terminal) && terminal)
 		{
 			myTargetPosition = ToVector2(terminal->myObject->myTransform.myPosition);
 			myHasReachedDestination = false;

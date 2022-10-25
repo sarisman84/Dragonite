@@ -44,6 +44,7 @@ namespace Dragonite
 		PlayerController* myPlayerPtr = nullptr;
 		ComputerTerminal* myFocusedTerminal = nullptr;
 		std::unordered_map<unsigned int, std::function<void(ComputerTerminal*)>> myEvents;
+		std::unordered_map<ComputerTerminal*, bool> myStates;
 
 
 	};

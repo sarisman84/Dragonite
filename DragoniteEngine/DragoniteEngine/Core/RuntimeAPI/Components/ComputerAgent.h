@@ -3,6 +3,8 @@
 
 #include "Core/CU/Math/Vector.h"
 
+#include "Core/Utilities/Reflection.h"
+
 namespace Dragonite
 {
 	class SpriteRenderer;
@@ -27,5 +29,14 @@ namespace Dragonite
 		Vector2f myTargetPosition;
 		bool myHasReachedDestination;
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<ComputerAgent>()
+	{
+		return Class("Computer Agent", 
+			Member("Movement Speed", &ComputerAgent::myMovementSpeed), 
+			Member("Poll Information", &ComputerAgent::myPollInformationFlag));
+	}
 
 }

@@ -117,8 +117,8 @@ void Dragonite::PropertyEditor::OnWindowUpdate()
 		if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Indent();
-			//Reflect::InspectElement(typeid(*components[i].get()).hash_code());
-			components[i]->OnInspectorGUI();
+			Reflect::InspectElement(components[i].get());
+			//components[i]->OnInspectorGUI();
 			ImGui::Unindent();
 
 

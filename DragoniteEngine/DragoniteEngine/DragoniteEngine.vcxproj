@@ -229,6 +229,7 @@
     <ClInclude Include="Core\PollingStation.h" />
     <ClInclude Include="Core\RuntimeAPI\Component.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ComponentStructure.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ComputerAgent.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ComputerTerminal.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />

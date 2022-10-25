@@ -8,23 +8,31 @@
 
 void Dragonite::NeuralStation::PollPlayerBehaviourAgainstTerminal(ComputerTerminal* const aTerminal)
 {
-	if (!aTerminal || myIsPlayerHackingATerminalFlag) return;
+	if (!aTerminal) return;
 
 	bool r = aTerminal->myObject->myBounds.IsIntersectingAgainst(myPlayerPtr->myObject->myBounds);
-	myFocusedTerminal = aTerminal;
-	myIsPlayerHackingATerminalFlag = r;
+	myStates[aTerminal] = r;
 }
 
 void Dragonite::NeuralStation::ResetInformation()
 {
 	myIsPlayerHackingATerminalFlag = false;
-	myFocusedTerminal = nullptr;
 }
 
 const bool Dragonite::NeuralStation::IsPlayerHacking(ComputerTerminal*& anOutput)
 {
-	anOutput = myFocusedTerminal;
-	return myIsPlayerHackingATerminalFlag;
+
+	for (auto& state : myStates)
+	{
+		if (state.second)
+		{
+			anOutput = state.first;
+
+			return state.second;
+		}
+	}
+
+	return false;
 }
 
 void Dragonite::NeuralStation::OnComputerHack(ComputerTerminal* const aTerminal)
