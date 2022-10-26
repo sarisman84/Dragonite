@@ -1,5 +1,9 @@
 #pragma once
 #include <string>
+#include <memory>
+#include "Core/Utilities/Reflection.h"
+
+
 namespace Dragonite
 {
 	class Object;
@@ -20,9 +24,11 @@ namespace Dragonite
 
 		virtual void OnInspectorGUI() = 0;
 
-		std::string myName;
+		virtual std::shared_ptr<Component> Clone() = 0;
 
-	protected:
+		std::string myName;
 		Object* myObject;
+		
 	};
+
 }

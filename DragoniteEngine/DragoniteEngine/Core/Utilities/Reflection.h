@@ -1,6 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <tuple>
+#include <xtr1common>
 namespace Dragonite
 {
 	namespace Reflect
@@ -77,21 +78,83 @@ namespace Dragonite
 			};
 
 
+			template<typename Func>
+			auto invoke_with_args(Func) {};
 
-			template< size_t I = 0, typename Func, typename... Tp, typename Ret = void>
-			inline typename std::enable_if<I == sizeof...(Tp), Ret>::type
-				for_each(std::tuple<Tp...>, Func)
+
+			template<typename Func, typename Arg0, typename... Args>
+			auto invoke_with_args(Func&& anF, Arg0&& anArg0, Args&&... someArgs)
 			{
+				if constexpr (std::is_same_v<void, std::invoke_result_t<Func&&, Arg0&&, Args&&...>>)
+				{
+					anF(std::forward<Arg0>(anArg0));
+					Reflect::Internal::invoke_with_args(anF, std::forward<Args>(someArgs)...);
+				}
+				else
+				{
+					return anF(std::forward<Arg0>(anArg0));
+				}
+			}
+
+
+			template<typename TTuple, typename Func, size_t... Indices>
+			auto for_each_helper(TTuple&& aT, Func&& aFunc, std::index_sequence<Indices...>)
+			{
+				constexpr bool isVoid = std::is_same_v<void, decltype(Reflect::Internal::invoke_with_args(std::move(aFunc), std::get<Indices>(std::forward<TTuple>(aT))...))>;
+				if (isVoid)
+				{
+					Reflect::Internal::invoke_with_args(std::move(aFunc), std::get<Indices>(std::forward<TTuple>(aT))...);
+				}
+				else
+				{
+					return Reflect::Internal::invoke_with_args(std::move(aFunc), std::get<Indices>(std::forward<TTuple>(aT))...);
+				}
 
 
 			}
-			template< size_t I = 0, typename Func, typename... Tp, typename Ret = void>
-			inline typename std::enable_if < I < sizeof...(Tp), Ret>::type
-				for_each(std::tuple<Tp...> aTuple, Func aCallback) {
 
-				aCallback(std::get<I>(aTuple));
-				Reflect::Internal::for_each<I + 1, Func, Tp...>(aTuple, aCallback);
+
+			template<typename TTuple, typename Func>
+			auto for_each(TTuple&& aT, Func&& aFunc)
+			{
+				using size = std::tuple_size<typename std::remove_reference<TTuple>::type>;
+
+				constexpr bool isVoid = std::is_same<void, decltype(Reflect::Internal::for_each_helper
+				(
+					std::forward<TTuple>(aT),
+					std::move(aFunc),
+					std::make_index_sequence<size::value>()
+				))>::value;
+
+
+
+				if (isVoid)
+				{
+					Reflect::Internal::for_each_helper
+					(
+						std::forward<TTuple>(aT),
+						std::move(aFunc),
+						std::make_index_sequence<size::value>()
+					);
+
+				}
+				else
+				{
+					return  Reflect::Internal::for_each_helper
+					(
+						std::forward<TTuple>(aT),
+						std::move(aFunc),
+						std::make_index_sequence<size::value>()
+					);
+				}
+
+
+
 			}
+
+
+
+
 
 
 			template<typename T>
@@ -179,27 +242,35 @@ namespace Dragonite
 
 
 		template<typename TClass>
-		const auto& GetReflectedType(TClass* anInstance)
+		inline auto GetReflectedType(TClass* anInstance)
 		{
 			if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
 
-
-			Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, [anInstance](auto element)
+			auto lambda = [anInstance](auto element)
+			{
+				if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
 				{
-					if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
+					if (typeid(*anInstance).hash_code() == element.id)
 					{
-						if (typeid(*anInstance).hash_code() == element.id)
-						{
-							return Reflect::GetReflectedType<decltype(element)::type>();
-						}
+						return Reflect::GetReflectedType<decltype(element)::type>();
 					}
+				}
 
 
-				});
+			};
 
-			
+			using type = decltype(Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda));
+			using derivedTypes = decltype(Reflect::GetReflectedType<TClass>().derivedTypes);
+			using lambdaT = decltype(lambda);
 
-			return Reflect::GetReflectedType<TClass>();
+			using for_each_type = std::invoke_result_t<typename type, typename derivedTypes, typename lambdaT>;
+
+			using isVoid = std::is_same<for_each_type, void>;
+
+
+			if constexpr (isVoid::value) return Reflect::GetReflectedType<TClass>();
+
+			return Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda);
 
 		}
 

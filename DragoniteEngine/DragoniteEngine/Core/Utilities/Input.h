@@ -37,6 +37,13 @@ namespace Dragonite
 
 		void ResetPos();
 
+
+
+		inline void SetOffset(const Vector2f& anOffset)
+		{
+			myOffset = anOffset;
+		}
+
 		Vector2f position;
 		Vector2f absPosition;
 		Vector2f delta;
@@ -48,9 +55,9 @@ namespace Dragonite
 		void UpdateState(UINT aButton);
 
 		Vector2f myPreviousPos;
+		Vector2f myOffset;
 
 
-		
 		std::bitset<3> myDownState;
 		std::bitset<3> myPreviousDownState;
 

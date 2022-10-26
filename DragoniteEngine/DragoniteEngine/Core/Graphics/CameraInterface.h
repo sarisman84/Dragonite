@@ -2,6 +2,7 @@
 #include "Core/CU/Transform.h"
 #include "Core/CU/Math/Vector2.h"
 
+
 #include <vector>
 
 namespace Dragonite
@@ -10,6 +11,13 @@ namespace Dragonite
 	{
 		virtual unsigned int GetID() = 0;
 		virtual Matrix4x4f CalculateProjectionMatrix() = 0;
+		virtual unsigned int GetDepthStencilState() = 0;
+		virtual unsigned int GetCullMode() = 0;
+		const bool IsActive();
+		void SetActive(const bool aNewState);
+
+	protected:
+		bool myActiveState;
 	};
 
 
@@ -24,6 +32,9 @@ namespace Dragonite
 
 		Matrix4x4f CalculateProjectionMatrix() override;
 		inline unsigned int GetID() override { return 0; }
+		unsigned int GetDepthStencilState() override;
+		unsigned int GetCullMode() override;
+
 	};
 
 
@@ -35,6 +46,9 @@ namespace Dragonite
 
 		Matrix4x4f CalculateProjectionMatrix() override;
 		inline unsigned int GetID() override { return 1; }
+		unsigned int GetDepthStencilState() override;
+		unsigned int GetCullMode() override;
+
 	};
 
 

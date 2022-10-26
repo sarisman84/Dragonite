@@ -156,7 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="APIInterface.h" />
+    <ClInclude Include="Core\CU\Bounds.h" />
     <ClInclude Include="Core\CU\MathLibrary.h" />
+    <ClInclude Include="Core\CU\Math\Vector.h" />
     <ClInclude Include="Core\Editor\AssetBrowser.h" />
     <ClInclude Include="Core\Editor\Commands\Command.h" />
     <ClInclude Include="Core\Editor\Commands\MenuCommand.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="Core\Editor\GUIWindow.h" />
     <ClInclude Include="Core\Editor\RenderID.h" />
     <ClInclude Include="Core\Editor\SceneEditor.h" />
+    <ClInclude Include="Core\Editor\SceneEditor\ComponentRegistry.h" />
     <ClInclude Include="Core\Editor\SceneEditor\PropertyEditor.h" />
     <ClInclude Include="Core\Editor\SceneEditor\Viewport.h" />
     <ClInclude Include="Core\External\imgui\backends\imgui_impl_dx11.h" />
@@ -172,6 +175,7 @@
     <ClInclude Include="Core\External\imgui\ImGuizmo.h" />
     <ClInclude Include="Core\External\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="Core\Graphics\BaseRenderer.h" />
+    <ClInclude Include="Core\Graphics\DirectX11\DXDefines.h" />
     <ClInclude Include="Core\Graphics\DirectX11\DXIncludes.h" />
     <ClInclude Include="Core\Graphics\DirectX11\DXInterface.h" />
     <ClInclude Include="Core\Graphics\DirectX11\DXUtilities.h" />
@@ -225,7 +229,12 @@
     <ClInclude Include="Core\PollingStation.h" />
     <ClInclude Include="Core\RuntimeAPI\Component.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ComponentStructure.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerAgent.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerTerminal.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\ModelRenderer.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\NeuralStation.h" />
+    <ClInclude Include="Core\RuntimeAPI\Components\PlayerController.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h" />
     <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h" />
     <ClInclude Include="Core\RuntimeAPI\NEW\Object.h" />
@@ -273,7 +282,11 @@
     <ClCompile Include="Core\ImGui\DragoniteGui.cpp" />
     <ClCompile Include="Core\PollingStation.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerAgent.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerTerminal.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\ModelRenderer.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\NeuralStation.cpp" />
+    <ClCompile Include="Core\RuntimeAPI\Components\PlayerController.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp" />
     <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp" />
     <ClCompile Include="Core\RuntimeAPI\NEW\Object.cpp" />

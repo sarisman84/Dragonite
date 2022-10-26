@@ -65,7 +65,7 @@ void Dragonite::ModelRenderer::Deserialize(void* someData)
 
 	myModelFactory = myModelFactory ? myModelFactory : myObject->GetScene()->myPollingStation.Get<ModelFactory>();
 
-	std::filesystem::path p(data["texture"].get<std::u8string>());
+	std::filesystem::path p(data["texture"].get<std::wstring>());
 
 	myModelInstance = myModelFactory->GetModel(data["model"].get<std::string>(), data["material"].get<std::string>(), p.wstring());
 
@@ -77,6 +77,11 @@ void Dragonite::ModelRenderer::OnInspectorGUI()
 
 	ImGui::Text("Model %s", myModelInstance->myModelName);
 	ImGui::Text("Texture %s", p.string().c_str());
+}
+
+std::shared_ptr<Dragonite::Component> Dragonite::ModelRenderer::Clone()
+{
+	return std::make_shared<ModelRenderer>(*this);
 }
 
 

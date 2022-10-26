@@ -81,8 +81,8 @@ void Dragonite::Viewport::DisplayDebugInfo(Mouse* aMouse)
 
 const Dragonite::Vector2f Dragonite::Viewport::GetLocalMousePos(Mouse* aMouse)
 {
-	auto viewport = DXInterface::GetViewportResolution();
-	auto pos = aMouse->position - myMinRegion;
+	aMouse->SetOffset(myMinRegion);
+	auto pos = aMouse->position;
 	return pos;
 }
 
@@ -172,6 +172,13 @@ void Dragonite::Viewport::OnWindowUpdate()
 
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, myCurrentResolution.x, myCurrentResolution.y);
 	ImGuizmo::DrawGrid(&myEditorCameraInterface.ViewMatrix(), &myEditorCameraInterface.Profile()->CalculateProjectionMatrix(), &Matrix4x4f(), 1.0f);
+
+	if (myScene)
+	{
+		auto p = dynamic_cast<OrthographicProfile*>(myScene->GetMainCamera().Profiles()[1]);
+		p->myCurrentViewPort = myCurrentResolution;
+	}
+
 
 	RenderViewport();
 	RenderTopBar();
@@ -272,8 +279,21 @@ void Dragonite::Viewport::DetectAssetDrop()
 				if (extension == ".dds" ||
 					extension == ".png")
 				{
-					std::shared_ptr<ModelRenderer> renderer = foundObj->GetComponent<ModelRenderer>();
-					renderer->Model()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+					std::shared_ptr<ModelRenderer> mRenderer = foundObj->GetComponent<ModelRenderer>();
+					std::shared_ptr<SpriteRenderer> sRenderer = foundObj->GetComponent<SpriteRenderer>();
+
+					if (mRenderer)
+					{
+						mRenderer->Model()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+						mRenderer->Model()->myTextureName = file->path().wstring();
+					}
+
+					if (sRenderer)
+					{
+						sRenderer->Sprite()->myTexture = myTextureFactory->LoadTexture(file->path().wstring().c_str());
+						sRenderer->Sprite()->myTextureName = file->path().wstring().c_str();
+					}
+
 				}
 			}
 

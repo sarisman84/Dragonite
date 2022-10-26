@@ -1,6 +1,6 @@
 #include "Object.h"
-
-Dragonite::Object::Object(std::string aName)
+#include "Core/RuntimeAPI/Component.h"
+Dragonite::Object::Object(std::string aName) : myBounds(&myTransform)
 {
 	myName = aName;
 
@@ -11,6 +11,12 @@ void Dragonite::Object::Start()
 	for (size_t i = 0; i < myComponents.size(); i++)
 	{
 		myComponents[i]->Awake();
+		
+	}
+
+
+	for (size_t i = 0; i < myComponents.size(); i++)
+	{
 		myComponents[i]->Start();
 	}
 }
@@ -29,4 +35,9 @@ void Dragonite::Object::LateUpdate(const float aDt)
 	{
 		myComponents[i]->LateUpdate(aDt);
 	}
+}
+
+void Dragonite::Object::AddComponent(const std::shared_ptr<Component>& aCpy)
+{
+	myComponents.push_back(aCpy->Clone());
 }

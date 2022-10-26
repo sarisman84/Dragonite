@@ -222,9 +222,6 @@
     <ClInclude Include="Core\RuntimeAPI\Components\Camera.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Utilities\Reflection.h">
       <Filter>Core\Utilities\Reflection</Filter>
     </ClInclude>
@@ -239,6 +236,36 @@
     </ClInclude>
     <ClInclude Include="Core\RuntimeAPI\Components\SpriteRenderer.h">
       <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\DirectX11\DXDefines.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Math\Vector.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Editor\SceneEditor\ComponentRegistry.h">
+      <Filter>Core\Editor\SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\PlayerController.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerAgent.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\TestComponent.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\NeuralStation.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ComputerTerminal.h">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CU\Bounds.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RuntimeAPI\Components\ComponentStructure.h">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,9 +385,6 @@
     <ClCompile Include="Core\RuntimeAPI\Components\Camera.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\NEW\Scene.cpp">
       <Filter>Core\RuntimeAPI\NEW</Filter>
     </ClCompile>
@@ -369,6 +393,21 @@
     </ClCompile>
     <ClCompile Include="Core\RuntimeAPI\Components\SpriteRenderer.cpp">
       <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\PlayerController.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerAgent.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\TestComponent.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\NeuralStation.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RuntimeAPI\Components\ComputerTerminal.cpp">
+      <Filter>Core\RuntimeAPI\Components\Temp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,6 +497,9 @@
     </Filter>
     <Filter Include="Core\RuntimeAPI\NEW">
       <UniqueIdentifier>{62623675-0fe7-45db-b77b-96d1658e605b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\Components\Temp">
+      <UniqueIdentifier>{aaab68ed-b730-4b35-aec2-967568064313}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

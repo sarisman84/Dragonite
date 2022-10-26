@@ -6,6 +6,10 @@
 
 #include "Core/CU/Math/Matrix4x4.hpp"
 
+#include "Core/Utilities/Reflection.h"
+
+#include <memory>
+
 namespace Dragonite
 {
 	class GraphicalInterface;
@@ -35,5 +39,18 @@ namespace Dragonite
 		GraphicalInterface* myInterface;
 		ModelFactory* myModelFactory;
 		std::shared_ptr<ModelInstance> mySpriteInstance;
+
+		// Inherited via Component
+		virtual std::shared_ptr<Component> Clone() override;
 	};
+
+
+	template<>
+	inline auto Reflect::RegisterElement<SpriteRenderer>() 
+	{
+		return Class("Sprite Renderer",
+			Member("Pivot", &SpriteRenderer::myPivot),
+			Member("UV Min", &SpriteRenderer::myUVMin),
+			Member("UV Max", &SpriteRenderer::myUVMax));
+	}
 }

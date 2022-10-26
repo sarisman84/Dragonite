@@ -14,6 +14,7 @@
 #include <string>
 #include <fstream>
 
+#include "Core/External/nlohmann/json.hpp"
 #include "Core/External/imgui/misc/cpp/imgui_stdlib.h"
 #include "Core/Graphics/RenderTargets/RenderFactory.h"
 #include "Core/Utilities/Input.h"
@@ -22,6 +23,7 @@
 #include "SceneEditor/Viewport.h"
 #include "SceneEditor/PropertyEditor.h"
 #include "AssetBrowser.h"
+#include "Core/CU/Math/Vector.h"
 
 
 
@@ -81,36 +83,25 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 
 		if (ImGui::BeginPopup("create_context_menu"))
 		{
-			ImGui::MenuItem("Cube", "", &x);
-
-			if (ImGui::IsItemClicked())
-			{
-				hasExecutedCommand = true;
-				InitializeNewObject();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-
-
-			ImGui::MenuItem("Fancy Cube", "", &x);
-
-			if (ImGui::IsItemClicked())
-			{
-				hasExecutedCommand = true;
-				InitializeCustomObject();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-
-
 			ImGui::MenuItem("Camera", "", &x);
 
 			if (ImGui::IsItemClicked())
 			{
 				hasExecutedCommand = true;
 				InitializeCamera();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+
+
+
+			ImGui::MenuItem("Cube", "", &x);
+
+			if (ImGui::IsItemClicked())
+			{
+				hasExecutedCommand = true;
+				InitializeNewObject();
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -167,7 +158,7 @@ void Dragonite::SceneEditor::OnWindowUpdate()
 	{
 		bool selected = false;
 
-		ImGui::Selectable(objs[i]->myName.c_str(), &selected);
+		ImGui::Selectable((objs[i]->myName + "##" + std::to_string(i)).c_str(), &selected);
 		if (selected)
 		{
 			myFocusedElement = objs[i]->UUID();
@@ -238,7 +229,7 @@ void Dragonite::SceneEditor::InitializeNewObject()
 	newObject->myTransform.myPosition = { 0,0, 1 };
 
 	auto modelRenderer = newObject->AddComponent<ModelRenderer>();
-	
+
 
 	modelRenderer->Model() = myModelFactory->GetModel(PrimitiveType::Cube, Material::defaultMaterial);
 
@@ -288,7 +279,8 @@ void Dragonite::SceneEditor::InitializeNewSprite()
 
 	modelRenderer->Sprite() = myModelFactory->GetModel(PrimitiveType::Quad, Material::defaultMaterial);
 
-
+	newObject->myTransform.myPosition = ToVector3(DXInterface::GetViewportResolution() / 2.0f);
+	newObject->myTransform.myScale = ToVector3(Vector2f{ 100, 100 });
 	myFocusedElement = newObject->UUID();
 }
 
@@ -425,6 +417,7 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 {
 	static std::string name = myCurrentScene->myName;
 	static std::string entry;
+
 	if (ImGui::BeginPopupModal("Save..."))
 	{
 
@@ -446,12 +439,16 @@ void Dragonite::SceneEditor::SaveSceneDefinition()
 
 		if (ImGui::Button("Save") || ImGui::IsKeyDown(ImGuiKey_Enter))
 		{
-			ImGui::CloseCurrentPopup();
+			nlohmann::json jsonIns;
 
+			ImGui::CloseCurrentPopup();
+			std::string r = entry + "\\" + name + ".json";
 			myCurrentScene->myName = name;
-			entry += "\\" + name + ".json";
-			myCurrentScene->Serialize(entry.c_str());
+
+			myCurrentScene->Serialize(r.c_str());
 			name = myCurrentScene->myName;
+			jsonIns["mainScene"] = Scene::LastSavedPath();
+			Scene::SetProjectSettings((void*)&jsonIns);
 		}
 
 
