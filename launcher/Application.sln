@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game_launcher", "game_launcher.vcxproj", "{50E6C172-BCA6-3DA9-85E1-8626F1608285}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor_launcher", "editor_launcher.vcxproj", "{FD5D41AF-69E9-AE73-72FA-3168DE040B74}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editoreditor_launcher", "..\editor\editoreditor_launcher.vcxproj", "{C40CC5B6-3079-80B1-F96C-180F6598A219}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine_game_launcher", "..\engine\engine_game_launcher.vcxproj", "{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+		Retail|x64 = Retail|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Debug|x64.ActiveCfg = Debug|x64
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Debug|x64.Build.0 = Debug|x64
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Release|x64.ActiveCfg = Release|x64
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Release|x64.Build.0 = Release|x64
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Retail|x64.ActiveCfg = Retail|x64
+		{50E6C172-BCA6-3DA9-85E1-8626F1608285}.Retail|x64.Build.0 = Retail|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Debug|x64.ActiveCfg = Debug|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Debug|x64.Build.0 = Debug|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Release|x64.ActiveCfg = Release|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Release|x64.Build.0 = Release|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Retail|x64.ActiveCfg = Retail|x64
+		{FD5D41AF-69E9-AE73-72FA-3168DE040B74}.Retail|x64.Build.0 = Retail|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Debug|x64.ActiveCfg = Debug|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Debug|x64.Build.0 = Debug|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Release|x64.ActiveCfg = Release|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Release|x64.Build.0 = Release|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Retail|x64.ActiveCfg = Retail|x64
+		{C40CC5B6-3079-80B1-F96C-180F6598A219}.Retail|x64.Build.0 = Retail|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Debug|x64.ActiveCfg = Debug|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Debug|x64.Build.0 = Debug|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Release|x64.ActiveCfg = Release|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Release|x64.Build.0 = Release|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Retail|x64.ActiveCfg = Retail|x64
+		{25AB00E2-113A-8AAB-BA58-9EA6A6C69A51}.Retail|x64.Build.0 = Retail|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
