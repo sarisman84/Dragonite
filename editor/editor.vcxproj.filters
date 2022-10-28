@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{17269CB7-03F3-F6C2-2C0C-E56A18382C51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{764D2783-E2B7-DBF9-2BF6-8C9F979FB94E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneEditor">
+      <UniqueIdentifier>{BAC7EB38-267D-642E-AF71-5E051B265B32}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AssetBrowser.h" />
+    <ClInclude Include="src\Commands\Command.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Commands\MenuCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorSettings.h" />
+    <ClInclude Include="src\EngineDebugger.h" />
+    <ClInclude Include="src\GUIWindow.h" />
+    <ClInclude Include="src\Graphics\DirectX.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\EmberGUI.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderID.h" />
+    <ClInclude Include="src\SceneEditor.h" />
+    <ClInclude Include="src\SceneEditor\ComponentRegistry.h">
+      <Filter>SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneEditor\PropertyEditor.h">
+      <Filter>SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneEditor\Viewport.h">
+      <Filter>SceneEditor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AssetBrowser.cpp" />
+    <ClCompile Include="src\Commands\MenuCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineDebugger.cpp" />
+    <ClCompile Include="src\GUIWindow.cpp" />
+    <ClCompile Include="src\Graphics\DirectX.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Interface\EmberGUI.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderID.cpp" />
+    <ClCompile Include="src\SceneEditor.cpp" />
+    <ClCompile Include="src\SceneEditor\PropertyEditor.cpp">
+      <Filter>SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneEditor\Viewport.cpp">
+      <Filter>SceneEditor</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,66 +1,60 @@
 #pragma once
 #include "EditorSettings.h"
-#include "Core/PollingStation.h"
-#include "Core/External/imgui/imgui.h"
-#include "Core/External/imgui/ImGuizmo.h"
-#include "Core/PollingStation.h"
-#include <memory>
+//#include "Core/PollingStation.h"
+//#include "Core/External/imgui/imgui.h"
+//#include "Core/External/imgui/ImGuizmo.h"
+//#include "Core/PollingStation.h"
 
+#include "imgui.h"
+#include "ImGuizmo.h"
 
-namespace Dragonite
+namespace Ember
 {
-	class DragoniteGui;
-	class GUIWindow
+	class AbsWindows
 	{
 	public:
-		inline void SetActive(const bool aNewState)
-		{
-			myActiveStateFlag = aNewState;
-			UpdateWindowState();
-		}
-		inline const bool IsActive() const noexcept { return myActiveStateFlag; }
-		inline bool& IsActive() noexcept { return myActiveStateFlag; }
-		inline const char* Name() { return myWindowName; }
-
-		void UpdateWindowState();
-		GUIWindow(const char* aWindowName);
-		virtual ~GUIWindow() = default;
-
-		inline void Init(PollingStation* aStation, DragoniteGui* aDragoniteGuiAPI) noexcept {
-			myPollingStation = aStation;
-			myDragoniteGuiAPI = aDragoniteGuiAPI;
-			OnWindowInit();
-		}
-
-
-		const bool IsBeingHovered() const noexcept;
-		const bool IsBeingFocused() const noexcept;
-
-		void UpdateWindow();
-
-		GUIWindow* CreateEditorWindow(GUIWindow* aWindowType, const bool anIsChildElementFlag = false);
-
+		virtual void Update() = 0;
+		inline const bool IsBeingHovered() const { return myHoveredFlag; };
+		inline const bool IsBeingFocused() const { return myFocusedFlag; };
+		inline const unsigned int GetUUID() const { return myID; }
 	protected:
-		virtual void OnWindowInit() = 0;
-		virtual void OnWindowUpdate() = 0;
-		virtual void OnEnable() = 0;
-		virtual void OnDisable() = 0;
+		bool myHoveredFlag, myFocusedFlag;
+		unsigned int myID;
+	};
 
-		DragoniteGui* myDragoniteGuiAPI;
-		PollingStation* myPollingStation;
-		const char* myWindowName;
+
+
+	template<typename Render>
+	class Window : public AbsWindows
+	{
+	public:
+		Window(Render&& aRenderCall);
+		void Update() override;
+
+
 	private:
-		std::vector<std::unique_ptr<GUIWindow>> mySubWindowElements;
-		bool myActiveStateFlag;
-		bool myIsChildElementFlag;
-		unsigned int myGUID;
-
-		bool myFocusFlag, myHoveredFlag;
+		Render myRenderCall;
 
 
 
 	};
 
+	template<typename Render>
+	inline Window<Render>::Window(Render&& aRenderCall)
+	{
+		static unsigned int nextID;
+		myID = nextID++;
+
+		myRenderCall = aRenderCall;
+	}
+	template<typename Render>
+	inline void Window<Render>::Update()
+	{
+		myHoveredFlag = ImGui::IsWindowHovered();
+		myFocusedFlag = ImGui::IsWindowFocused();
+
+		myRenderCall(this);
+	}
 }
 
 

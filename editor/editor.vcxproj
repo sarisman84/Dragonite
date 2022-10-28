@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Retail|x64">
+      <Configuration>Retail</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AC2EC5FA-98D0-EFD0-818B-03256DCC7621}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>editor</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\resc\launcher\editor\</OutDir>
+    <IntDir>..\bin\resc\launcher\editor\temp\Debug\</IntDir>
+    <TargetName>editor_Debug</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\resc\launcher\editor\</OutDir>
+    <IntDir>..\bin\resc\launcher\editor\temp\Release\</IntDir>
+    <TargetName>editor_Release</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\resc\launcher\editor\</OutDir>
+    <IntDir>..\bin\resc\launcher\editor\temp\Retail\</IntDir>
+    <TargetName>editor_Retail</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>..\bin\resc\launcher\editor\editor_Debug.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>..\bin\resc\launcher\editor\editor_Release.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>..\bin\resc\launcher\editor\editor_Retail.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AssetBrowser.h" />
+    <ClInclude Include="src\Commands\Command.h" />
+    <ClInclude Include="src\Commands\MenuCommand.h" />
+    <ClInclude Include="src\EditorSettings.h" />
+    <ClInclude Include="src\EngineDebugger.h" />
+    <ClInclude Include="src\GUIWindow.h" />
+    <ClInclude Include="src\Graphics\DirectX.h" />
+    <ClInclude Include="src\Interface\EmberGUI.h" />
+    <ClInclude Include="src\RenderID.h" />
+    <ClInclude Include="src\SceneEditor.h" />
+    <ClInclude Include="src\SceneEditor\ComponentRegistry.h" />
+    <ClInclude Include="src\SceneEditor\PropertyEditor.h" />
+    <ClInclude Include="src\SceneEditor\Viewport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AssetBrowser.cpp" />
+    <ClCompile Include="src\Commands\MenuCommand.cpp" />
+    <ClCompile Include="src\EngineDebugger.cpp" />
+    <ClCompile Include="src\GUIWindow.cpp" />
+    <ClCompile Include="src\Graphics\DirectX.cpp" />
+    <ClCompile Include="src\Interface\EmberGUI.cpp" />
+    <ClCompile Include="src\RenderID.cpp" />
+    <ClCompile Include="src\SceneEditor.cpp" />
+    <ClCompile Include="src\SceneEditor\PropertyEditor.cpp" />
+    <ClCompile Include="src\SceneEditor\Viewport.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

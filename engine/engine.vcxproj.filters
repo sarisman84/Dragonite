@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CU">
+      <UniqueIdentifier>{553E7134-C11D-F0CF-CA35-7BA636945631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CU\Math">
+      <UniqueIdentifier>{4EE0AC0C-3A43-3CB1-E3C8-7467CF0A0834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External">
+      <UniqueIdentifier>{205AB2A3-8C1A-2EDA-5555-7757C1D472B6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\DirectX">
+      <UniqueIdentifier>{E25CBE54-4EC9-794F-17BD-11AD83E89BB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\STB">
+      <UniqueIdentifier>{189CAD8B-84B2-AB21-CD29-3743397F7CA9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui">
+      <UniqueIdentifier>{8A7F212F-F6E0-FE3C-7F4E-45EFEBAE35FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\backends">
+      <UniqueIdentifier>{F414881D-E0CF-77C9-8987-F0137521C259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples">
+      <UniqueIdentifier>{78E848C8-64A3-3874-0D5B-B1BEF9F48204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_allegro5">
+      <UniqueIdentifier>{0DB7931B-7927-9694-4246-101DAE75CE95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_android_opengl3">
+      <UniqueIdentifier>{4A0CBAB3-364B-642F-DFCD-4061CBEB199A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_emscripten_opengl3">
+      <UniqueIdentifier>{230F16D8-8FF6-00CE-98E4-024A044BA490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_emscripten_wgpu">
+      <UniqueIdentifier>{2E2E602E-1A6D-0AAA-C3EF-E6DBAF0DC014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_glfw_opengl2">
+      <UniqueIdentifier>{98AAB198-0471-0EB5-4DCC-9C17B9D17C19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_glfw_opengl3">
+      <UniqueIdentifier>{99AAB198-0571-0EB5-4ECC-9C17BAD17C19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_glfw_vulkan">
+      <UniqueIdentifier>{B25505DF-9EFE-6C0E-C794-888DB39C874F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_glut_opengl2">
+      <UniqueIdentifier>{84D8DA77-F09E-3794-39FA-C5F6A5FFA5F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_null">
+      <UniqueIdentifier>{CDC77247-39E2-D5E8-8204-E67CEE5DFDEF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_sdl_directx11">
+      <UniqueIdentifier>{C92007F5-B5B4-FC9C-1E79-56510A2C378F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_sdl_opengl2">
+      <UniqueIdentifier>{CB554C54-B7FE-B383-E094-CF02CC9CCEC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_sdl_opengl3">
+      <UniqueIdentifier>{CC554C54-B8FE-B383-E194-CF02CD9CCEC4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_sdl_sdlrenderer">
+      <UniqueIdentifier>{EEAAA2DE-DAE9-4C5A-836C-298C6F8A02C5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_sdl_vulkan">
+      <UniqueIdentifier>{85E68D49-F121-EE0C-FA16-6B9C66D1723D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_win32_directx10">
+      <UniqueIdentifier>{3885A5B9-24C4-4F35-CD46-2C67B96405A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_win32_directx11">
+      <UniqueIdentifier>{3985A5B9-25C4-4F35-CE46-2C67BA6405A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_win32_directx12">
+      <UniqueIdentifier>{3A85A5B9-26C4-4F35-CF46-2C67BB6405A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\example_win32_directx9">
+      <UniqueIdentifier>{10040599-7C15-AD3F-0567-3F7F71773679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\libs">
+      <UniqueIdentifier>{D177947D-3DE6-E9FC-86CF-A4FCF27CDF98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\libs\glfw">
+      <UniqueIdentifier>{30D6099B-1C28-E18A-0547-1E9BF137FA73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\libs\glfw\include">
+      <UniqueIdentifier>{A32D626C-8FAB-B205-78A3-709D64C0F42D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\libs\glfw\include\GLFW">
+      <UniqueIdentifier>{C2E679F1-2EF8-2198-B749-B4D7235AABD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\examples\libs\usynergy">
+      <UniqueIdentifier>{2638C34D-12A0-891B-7B0B-9E316792A007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\misc">
+      <UniqueIdentifier>{A5D86050-91FD-AFD0-BA48-9560A6CCAEEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\misc\cpp">
+      <UniqueIdentifier>{F71CD2D0-E3D7-C17C-8C8F-3AC778290C0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\misc\fonts">
+      <UniqueIdentifier>{BEFA024E-AA20-CDB4-9366-52807F2BF280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\misc\freetype">
+      <UniqueIdentifier>{F8602401-64CF-7980-ADB8-348019666F1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\imgui\misc\single_file">
+      <UniqueIdentifier>{15C15F4E-01A8-2146-AAF8-876396BE9AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\External\nlohmann">
+      <UniqueIdentifier>{2A9A818F-1694-AAE1-FF00-41F2EB99104E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{2E10C882-9AD0-43B9-630B-8D36CF8A8895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\DirectX11">
+      <UniqueIdentifier>{72430C2F-DE7A-54C6-E784-B8E9533B7BBF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Models">
+      <UniqueIdentifier>{21E28900-0D71-13CA-B68F-27C5A2FD2370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\RenderTargets">
+      <UniqueIdentifier>{17AAC264-83B7-F04A-0C9E-EC3578AABC01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Textures">
+      <UniqueIdentifier>{C1F54CEE-ADEF-7540-965C-0C5182F5DBAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI">
+      <UniqueIdentifier>{DBFED414-478A-42D9-509B-C5CDBCA59ED9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\Components">
+      <UniqueIdentifier>{1005589C-FC14-046D-65CE-688B51FDF205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\NEW">
+      <UniqueIdentifier>{340FBA62-A070-9770-29DE-DD22953ECE2F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RuntimeAPI\SceneManagement">
+      <UniqueIdentifier>{9505EE1A-01E9-FC5A-0AEC-2A97764EC3AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utilities">
+      <UniqueIdentifier>{196AB171-0538-A577-EECB-159EDA3881DC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\APIInterface.h" />
+    <ClInclude Include="src\Core\CU\Bounds.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\CommonData.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\MathFunctions.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Matrix3x3.hpp">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Matrix4x4.hpp">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Vector.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Vector2.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Vector3.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Math\Vector4.h">
+      <Filter>Core\CU\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\MathLibrary.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Transform.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\DirectX\DDSTextureLoader11.h">
+      <Filter>Core\External\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_c_lexer.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_connected_components.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_divide.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_ds.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_dxt.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_easy_font.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_herringbone_wang_tile.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_hexwave.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_image.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_image_resize.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_image_write.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_include.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_leakcheck.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_perlin.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_rect_pack.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_sprintf.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_textedit.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_tilemap_editor.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_truetype.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\STB\stb_voxel_render.h">
+      <Filter>Core\External\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\ImGuizmo.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_allegro5.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_android.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx10.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx11.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx12.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx9.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_glfw.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_glut.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_metal.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl2.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_osx.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_sdl.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_sdlrenderer.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_vulkan.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_wgpu.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_win32.h">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\examples\example_allegro5\imconfig_allegro5.h">
+      <Filter>Core\External\imgui\examples\example_allegro5</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\examples\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>Core\External\imgui\examples\libs\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\examples\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>Core\External\imgui\examples\libs\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\examples\libs\usynergy\uSynergy.h">
+      <Filter>Core\External\imgui\examples\libs\usynergy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imconfig.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imgui.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imgui_internal.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imstb_rectpack.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imstb_textedit.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\imstb_truetype.h">
+      <Filter>Core\External\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>Core\External\imgui\misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\misc\freetype\imgui_freetype.h">
+      <Filter>Core\External\imgui\misc\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\imgui\misc\single_file\imgui_single_file.h">
+      <Filter>Core\External\imgui\misc\single_file</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\External\nlohmann\json.hpp">
+      <Filter>Core\External\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\BaseRenderer.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\CameraInterface.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\DirectX11\DXDefines.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\DirectX11\DXIncludes.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\DirectX11\DXInterface.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\DirectX11\DXUtilities.h">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\GraphicsAPI.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Models\Material.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Models\Model.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Models\ModelFactory.h">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderFactory.h">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderTarget.h">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Textures\Texture.h">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Textures\TextureFactory.h">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\PollingStation.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Runtime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Component.h">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\Camera.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\ComponentStructure.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerAgent.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerTerminal.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\ModelRenderer.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\NeuralStation.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\PlayerController.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\SpriteRenderer.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\Components\TestComponent.h">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\NEW\Object.h">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\NEW\Scene.h">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.h">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Utilities\EnumMap.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Utilities\Function.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Utilities\Input.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Utilities\Reflection.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\framework.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\APIInterface.cpp" />
+    <ClCompile Include="src\Core\CU\Transform.cpp">
+      <Filter>Core\CU</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\DirectX\DDSTextureLoader11.cpp">
+      <Filter>Core\External\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\STB\stb_vorbis.c">
+      <Filter>Core\External\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\ImGuizmo.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_allegro5.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_android.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx10.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx9.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_glut.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_opengl2.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_sdl.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_sdlrenderer.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_vulkan.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_wgpu.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>Core\External\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_allegro5\main.cpp">
+      <Filter>Core\External\imgui\examples\example_allegro5</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_android_opengl3\main.cpp">
+      <Filter>Core\External\imgui\examples\example_android_opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_emscripten_opengl3\main.cpp">
+      <Filter>Core\External\imgui\examples\example_emscripten_opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_emscripten_wgpu\main.cpp">
+      <Filter>Core\External\imgui\examples\example_emscripten_wgpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_opengl2\main.cpp">
+      <Filter>Core\External\imgui\examples\example_glfw_opengl2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_opengl3\main.cpp">
+      <Filter>Core\External\imgui\examples\example_glfw_opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_vulkan\main.cpp">
+      <Filter>Core\External\imgui\examples\example_glfw_vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_glut_opengl2\main.cpp">
+      <Filter>Core\External\imgui\examples\example_glut_opengl2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_null\main.cpp">
+      <Filter>Core\External\imgui\examples\example_null</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_directx11\main.cpp">
+      <Filter>Core\External\imgui\examples\example_sdl_directx11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_opengl2\main.cpp">
+      <Filter>Core\External\imgui\examples\example_sdl_opengl2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_opengl3\main.cpp">
+      <Filter>Core\External\imgui\examples\example_sdl_opengl3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_sdlrenderer\main.cpp">
+      <Filter>Core\External\imgui\examples\example_sdl_sdlrenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_vulkan\main.cpp">
+      <Filter>Core\External\imgui\examples\example_sdl_vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx10\main.cpp">
+      <Filter>Core\External\imgui\examples\example_win32_directx10</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx11\main.cpp">
+      <Filter>Core\External\imgui\examples\example_win32_directx11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx12\main.cpp">
+      <Filter>Core\External\imgui\examples\example_win32_directx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx9\main.cpp">
+      <Filter>Core\External\imgui\examples\example_win32_directx9</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\examples\libs\usynergy\uSynergy.c">
+      <Filter>Core\External\imgui\examples\libs\usynergy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\imgui.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\imgui_demo.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\imgui_draw.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\imgui_tables.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\imgui_widgets.cpp">
+      <Filter>Core\External\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Core\External\imgui\misc\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\misc\fonts\binary_to_compressed_c.cpp">
+      <Filter>Core\External\imgui\misc\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\External\imgui\misc\freetype\imgui_freetype.cpp">
+      <Filter>Core\External\imgui\misc\freetype</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\CameraInterface.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\DirectX11\DXInterface.cpp">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\DirectX11\DXUtilities.cpp">
+      <Filter>Core\Graphics\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\GraphicsAPI.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Models\Material.cpp">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Models\ModelFactory.cpp">
+      <Filter>Core\Graphics\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderFactory.cpp">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderTarget.cpp">
+      <Filter>Core\Graphics\RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Textures\Texture.cpp">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Textures\TextureFactory.cpp">
+      <Filter>Core\Graphics\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\PollingStation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Runtime.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerAgent.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerTerminal.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\ModelRenderer.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\NeuralStation.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\PlayerController.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\SpriteRenderer.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Components\TestComponent.cpp">
+      <Filter>Core\RuntimeAPI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\NEW\Object.cpp">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\NEW\Scene.cpp">
+      <Filter>Core\RuntimeAPI\NEW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\Object.cpp">
+      <Filter>Core\RuntimeAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp">
+      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Utilities\EnumMap.cpp">
+      <Filter>Core\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Utilities\Input.cpp">
+      <Filter>Core\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dllmain.cpp" />
+  </ItemGroup>
+</Project>

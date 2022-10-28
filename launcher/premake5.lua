@@ -1,14 +1,3 @@
-workspace "Application"
-location "."
-architecture "x64"
-startproject "game_launcher"
-
-configurations {
-    "Debug",
-    "Release",
-    "Retail"
-}
-
 function setLinks(someLinks)
     links = someLinks
 end
@@ -16,8 +5,7 @@ end
 include "engine"
 include "editor"
 function initLauncher(aName)
-    local name = aName
-    project(name)
+    project(aName)
     location "."
     kind "WindowedApp"
     language "C++"
@@ -27,30 +15,35 @@ function initLauncher(aName)
     solutionDir = ("%{wks.location}" .. "/../")
     prjName = "%{prj.name}"
 
-    local tDir = solutionDir .. "bin/" .. prjName .. "/"
-    local dDir = "../bin/resc/launcher"
+    local name = aName
+    local binDir = os.realpath(solutionDir .. "../bin/resc")
+    local launcherDir = os.realpath(binDir .. "/launcher")
+    local outputDir = launcherDir .. "/build"
+    local debugDir = launcherDir
+    local tempDir = outputDir .. "/temp"
 
-    targetdir(tDir) -- ouput dir  
+    targetdir(outputDir) -- ouput dir  
+    if not (os.isdir(outputDir)) then
+        os.mkdir(os.realpath(outputDir))
+    end
 
-    objdir(solutionDir .. "temp/" .. prjName) -- intermediate dir
+    objdir(tempDir) -- intermediate dir
+    if not (os.isdir(tempDir)) then
+        os.mkdir(os.realpath(tempDir))
+    end
+
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    debugdir(dDir)
+    debugdir(debugDir)
 
     flags {
         "MultiProcessorCompile"
     }
 
-    if (string.find(name, "editor")) then
-        links {
-            "engine",
-            "editor"
-        }
-    else
-        links {
-            "engine"
-        }
-    end
+    links {
+        "engine",
+        "editor"
+    }
 
     includedirs {
         "src/"
@@ -78,14 +71,23 @@ function initLauncher(aName)
     runtime "Release"
     optimize "on"
 
-    if(string.find(name, "editor")) then
-        initEditor(name, tDir, dDir)
-    else
-        initEngine(name, tDir, dDir)
+    local gameDir = initEngine(name, launcherDir)
+    local editorDir = initEditor(name, launcherDir)
+
+    if not (os.isdir(gameDir)) then
+        os.mkdir(os.realpath(gameDir))
     end
-    
+
+    if not (os.isdir(editorDir)) then
+        os.mkdir(os.realpath(editorDir))
+    end
+
+    postbuildcommands {
+        "xcopy /S /Y " .. outputDir .. " " .. gameDir,
+        "xcopy /S /Y " .. gameDir .. " " .. editorDir,
+        "xcopy /S /Y " .. outputDir .. " " .. editorDir
+    }
 end
 
-initLauncher("game_launcher")
-initLauncher("editor_launcher")
+initLauncher("launcher")
 
