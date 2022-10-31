@@ -5,6 +5,15 @@
 #include "DLLParser.h"
 #include "APIInterface.h"
 
+#ifdef _DEBUG
+#define DLLPATH L"engine_Debug.dll"
+#elif defined _RELEASE
+#define DLLPATH L"engine_Release.dll"
+#elif defined _RETAIL
+#define DLLPATH L"engine_Retail.dll"
+#endif
+
+
 namespace Dragonite
 {
 
@@ -19,10 +28,12 @@ namespace Dragonite
 
 	//API implementation is based from this: https://blog.benoitblanchon.fr/getprocaddress-like-a-boss/
 	//Reads an DLL and parses it to the APIInterface.
-	class DragoniteAPI {
+	class DragoniteAPI
+	{
 	private:
 		DLLParser myParser{ L"DragoniteEngine.dll" };
-		
+		DLLParser myEditorParser{ DLLPATH };
+
 		static APIInterface* InitializeRuntime() {};
 	public:
 		decltype(InitializeRuntime)* getInterface = myParser["?InitializeRuntime@@YAPEAUAPIInterface@@XZ"];

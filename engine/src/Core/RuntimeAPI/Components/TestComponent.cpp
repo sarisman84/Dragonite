@@ -1,11 +1,11 @@
 #include "TestComponent.h"
 #include "Core/RuntimeAPI/NEW/Object.h"
 
-#include "Core/External/imgui/imgui.h"
+#include "imgui/imgui.h"
 #include <cmath>
 
 
-#include "Core/External/nlohmann/json.hpp"
+#include "nlohmann/single_include/nlohmann/json.hpp"
 
 void Dragonite::TestComponent::Awake()
 {

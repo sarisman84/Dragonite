@@ -2,11 +2,13 @@
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Runtime.h"
 
-#include "../../External/DirectX/DDSTextureLoader11.h"
+//#include "../../External/DirectX/DDSTextureLoader11.h"
+#include "DirectX/DDSTextureLoader11.h"
 #include "Core/Graphics/DirectX11/DXInterface.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../../External/STB/stb_image.h"
+//#include "../../External/STB/stb_image.h"
+#include "STB/stb_image.h"
 
 
 #include <stdlib.h>

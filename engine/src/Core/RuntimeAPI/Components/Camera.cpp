@@ -2,10 +2,9 @@
 #include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/NEW/Scene.h"
 
-#include "Core/External/imgui/imgui.h"
+#include "imgui/imgui.h"
+#include "nlohmann/single_include/nlohmann/json.hpp"
 
-
-#include "Core/External/nlohmann/json.hpp"
 #include "Core/Graphics/GraphicsAPI.h"
 
 Dragonite::Camera::Camera() : Component(), myPerspectiveProfile(PerspectiveProfile(90.0f, 0.1f, 1000.0f)), myOrthographicProfile(OrthographicProfile(Vector2f(1920.0f, 1080.0f), 0.01f, 1000.0f))

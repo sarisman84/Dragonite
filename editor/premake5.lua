@@ -1,4 +1,4 @@
-
+include "vendor"
 
 function initEditor(aName, aDir)
     local prjDir = "../editor/"
@@ -19,20 +19,62 @@ function initEditor(aName, aDir)
     targetdir(tDir) -- ouput dir  
     objdir(tempDir) -- intermediate dir
     debugdir(tDir)
-    if not (os.isdir(tDir)) then
-        os.mkdir(os.realpath(tDir))
-    end
 
-    if not (os.isdir(tempDir)) then
-        os.mkdir(os.realpath(tempDir))
-    end
+    trymkdir(tDir)
+    trymkdir(tempDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {src, src .. "/shaders/includes", "../vendor/src/"}
-    libdirs {"../lib"}
+    includedirs {
+        src,
+        src .. "/shaders/includes",
+        "../vendor/src/",
+        "../vendor/src/imgui/",
+        "../vendor/src/imgui/backends/"
+    }
+    fetchVendorInclude()
 
-    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "shaders/**.hlsl",
-           src .. "shaders/includes/**.hlsli"}
+    links {
+        "vendor"
+    }
+    libdirs {
+        "../lib"
+    }
+
+    files {
+        src .. "**.h",
+        src .. "**.hpp",
+        src .. "**.c",
+        src .. "**.cpp",
+        src .. "shaders/**.hlsl",
+        src .. "shaders/includes/**.hlsli"
+    }
+
+    fetchVendorInclude()
+
+    filter "configurations:Debug"
+    defines "_DEBUG"
+    runtime "Debug"
+    symbols "on"
+    links {
+        "vendor_Debug.lib"
+    }
+
+    filter "configurations:Release"
+    defines "_RELEASE"
+    runtime "Release"
+    optimize "on"
+    links {
+        "vendor_Release.lib"
+    }
+
+    filter "configurations:Retail"
+    defines "_RETAIL"
+    runtime "Release"
+    optimize "on"
+    links {
+        "vendor_Retail.lib"
+    }
+
     return tDir
 end

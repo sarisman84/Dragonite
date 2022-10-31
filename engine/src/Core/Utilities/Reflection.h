@@ -241,45 +241,45 @@ namespace Dragonite
 
 
 
-		template<typename TClass>
-		inline auto GetReflectedType(TClass* anInstance)
-		{
-			if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
+		//template<typename TClass>
+		//inline auto GetReflectedType(TClass* anInstance)
+		//{
+		//	if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
 
-			auto lambda = [anInstance](auto element)
-			{
-				if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
-				{
-					if (typeid(*anInstance).hash_code() == element.id)
-					{
-						return Reflect::GetReflectedType<decltype(element)::type>();
-					}
-				}
-
-
-			};
-
-			using type = decltype(Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda));
-			using derivedTypes = decltype(Reflect::GetReflectedType<TClass>().derivedTypes);
-			using lambdaT = decltype(lambda);
-
-			using for_each_type = std::invoke_result_t<typename type, typename derivedTypes, typename lambdaT>;
-
-			using isVoid = std::is_same<for_each_type, void>;
+		//	auto lambda = [anInstance](auto element)
+		//	{
+		//		if constexpr (Internal::is_specialization<decltype(element), Internal::TypeInfo>::value)
+		//		{
+		//			if (typeid(*anInstance).hash_code() == element.id)
+		//			{
+		//				return Reflect::GetReflectedType<decltype(element)::type>();
+		//			}
+		//		}
 
 
-			if constexpr (isVoid::value) return Reflect::GetReflectedType<TClass>();
+		//	};
 
-			return Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda);
+		//	using type = decltype(Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda));
+		//	using derivedTypes = decltype(Reflect::GetReflectedType<TClass>().derivedTypes);
+		//	using lambdaT = decltype(lambda);
 
-		}
+		//	using for_each_type = std::invoke_result_t<typename type, typename derivedTypes, typename lambdaT>;
+
+		//	using isVoid = std::is_same<for_each_type, void>;
+
+
+		//	if constexpr (isVoid::value) return Reflect::GetReflectedType<TClass>();
+
+		//	return Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda);
+
+		//}
 
 
 
 		template<typename TClass, typename Func>
 		void IterateMembers(TClass* anInstance, Func aCallback, const bool aDeepIterationFlag = false)
 		{
-			Internal::for_each(Reflect::GetReflectedType<TClass>(anInstance).members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
+			Internal::for_each(Reflect::GetReflectedType<TClass>().members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
 				{
 					if constexpr (!Internal::is_template<decltype(member)>::value) return;
 

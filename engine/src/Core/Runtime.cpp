@@ -2,17 +2,18 @@
 #include "Runtime.h"
 #include "Core/RuntimeAPI/NEW/Scene.h"
 
-#include "ImGui/DragoniteGui.h"
+//#include "ImGui/DragoniteGui.h"
 #include "Core/PollingStation.h"
 #include "Graphics/GraphicsAPI.h"
 #include "Utilities/Input.h"
 
-#include "Editor/EngineDebugger.h"
-#include "Editor/SceneEditor.h"
-#include "Editor//AssetBrowser.h"
+//#include "Editor/EngineDebugger.h"
+//#include "Editor/SceneEditor.h"
+//#include "Editor//AssetBrowser.h"
 
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
-#include "Core/External/nlohmann/json.hpp"
+#include "nlohmann/single_include/nlohmann/json.hpp"
+
 
 LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -102,13 +103,13 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 	myEditorFlag = anInitializeAsEditorFlag;
 	if (anInitializeAsEditorFlag)
 	{
-		myGUIInterface = new DragoniteGui();
-		myGUIInterface->Init(this, myPipeline);
-		myRuntimeHandler->AddHandler(myGUIInterface);
-		/*myScene->Awake();*/
+		//myGUIInterface = new DragoniteGui();
+		//myGUIInterface->Init(this, myPipeline);
+		//myRuntimeHandler->AddHandler(myGUIInterface);
+		///*myScene->Awake();*/
 
-		myGUIInterface->CreateEditorWindow(new EngineDebugger());
-		myGUIInterface->CreateEditorWindow(new SceneEditor());
+		//myGUIInterface->CreateEditorWindow(new EngineDebugger());
+		//myGUIInterface->CreateEditorWindow(new SceneEditor());
 
 
 	}

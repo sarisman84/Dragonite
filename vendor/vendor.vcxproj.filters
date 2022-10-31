@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="DirectX">
+      <UniqueIdentifier>{D86A6D73-444A-EC0E-4D62-77E5B9C05270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STB">
+      <UniqueIdentifier>{0E1F880B-7A28-887C-03A4-9E7C6FAC937C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="entt">
       <UniqueIdentifier>{2055967C-0C8C-970D-B578-7D10A18E130F}</UniqueIdentifier>
     </Filter>
@@ -45,6 +51,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectX\DDSTextureLoader11.h">
+      <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_c_lexer.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_connected_components.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_divide.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_ds.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_dxt.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_easy_font.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_herringbone_wang_tile.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_hexwave.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_image.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_image_resize.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_image_write.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_include.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_leakcheck.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_perlin.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_rect_pack.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_sprintf.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_textedit.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_tilemap_editor.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_truetype.h">
+      <Filter>STB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\STB\stb_voxel_render.h">
+      <Filter>STB</Filter>
+    </ClInclude>
     <ClInclude Include="src\entt\single_include\entt\entt.hpp">
       <Filter>entt\single_include\entt</Filter>
     </ClInclude>
@@ -107,6 +176,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectX\DDSTextureLoader11.cpp">
+      <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\STB\stb_vorbis.c">
+      <Filter>STB</Filter>
+    </ClCompile>
     <ClCompile Include="src\imgui\backends\imgui_impl_dx11.cpp">
       <Filter>imgui\backends</Filter>
     </ClCompile>

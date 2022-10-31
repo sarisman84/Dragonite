@@ -1,3 +1,4 @@
+include "vendor"
 function initEngine(aName, aDir)
     local prjDir = "../engine/"
     local src = prjDir .. "src/"
@@ -17,22 +18,59 @@ function initEngine(aName, aDir)
     targetdir(tDir) -- ouput dir  
     objdir(tempDir) -- intermediate dir
     debugdir(tDir)
-    if not (os.isdir(tDir)) then
-        os.mkdir(os.realpath(tDir))
-    end
 
-    if not (os.isdir(tempDir)) then
-        os.mkdir(os.realpath(tempDir))
-    end
+    trymkdir(tDir)
+    trymkdir(tempDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {src, src .. "/shaders/includes"}
+    includedirs {
+        src,
+        src .. "/shaders/includes",
+        "../vendor/src/"
+    }
 
-    libdirs {"../lib"}
+    libdirs {
+        "../lib"
+    }
 
-    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "shaders/**.hlsl",
-           src .. "shaders/includes/**.hlsli"}
+    links {
+        "vendor"
+    }
+
+    files {
+        src .. "**.h",
+        src .. "**.hpp",
+        src .. "**.c",
+        src .. "**.cpp",
+        src .. "shaders/**.hlsl",
+        src .. "shaders/includes/**.hlsli"
+    }
+
+    filter "configurations:Debug"
+    defines "_DEBUG"
+    runtime "Debug"
+    symbols "on"
+    links {
+        "vendor_Debug.lib"
+    }
+
+    filter "configurations:Release"
+    defines "_RELEASE"
+    runtime "Release"
+    optimize "on"
+    links {
+        "vendor_Release.lib"
+    }
+
+    filter "configurations:Retail"
+    defines "_RETAIL"
+    runtime "Release"
+    optimize "on"
+    links {
+        "vendor_Retail.lib"
+    }
+
     return tDir
 end
 

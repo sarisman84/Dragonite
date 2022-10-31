@@ -1,7 +1,7 @@
 #include "PlayerController.h"
 
-#include "Core/External/imgui/imgui.h"
-#include "Core/External/nlohmann/json.hpp"
+#include "imgui/imgui.h"
+#include "nlohmann/single_include/nlohmann/json.hpp"
 
 #include "Core/RuntimeAPI/NEW/Object.h"
 #include "Core/RuntimeAPI/NEW/Scene.h"

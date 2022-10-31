@@ -23,7 +23,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -60,14 +60,14 @@
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\resc\launcher\engine\</OutDir>
     <IntDir>..\bin\resc\launcher\engine\temp\Release\</IntDir>
     <TargetName>engine_Release</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\resc\launcher\engine\</OutDir>
     <IntDir>..\bin\resc\launcher\engine\temp\Retail\</IntDir>
     <TargetName>engine_Retail</TargetName>
@@ -77,13 +77,18 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vendor_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Debug.lib</ImportLibrary>
     </Link>
@@ -92,13 +97,22 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>vendor_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Release.lib</ImportLibrary>
     </Link>
@@ -107,13 +121,22 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_RETAIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>vendor_Retail.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Retail.lib</ImportLibrary>
     </Link>
@@ -131,60 +154,6 @@
     <ClInclude Include="src\Core\CU\Math\Vector4.h" />
     <ClInclude Include="src\Core\CU\MathLibrary.h" />
     <ClInclude Include="src\Core\CU\Transform.h" />
-    <ClInclude Include="src\Core\External\DirectX\DDSTextureLoader11.h" />
-    <ClInclude Include="src\Core\External\STB\stb_c_lexer.h" />
-    <ClInclude Include="src\Core\External\STB\stb_connected_components.h" />
-    <ClInclude Include="src\Core\External\STB\stb_divide.h" />
-    <ClInclude Include="src\Core\External\STB\stb_ds.h" />
-    <ClInclude Include="src\Core\External\STB\stb_dxt.h" />
-    <ClInclude Include="src\Core\External\STB\stb_easy_font.h" />
-    <ClInclude Include="src\Core\External\STB\stb_herringbone_wang_tile.h" />
-    <ClInclude Include="src\Core\External\STB\stb_hexwave.h" />
-    <ClInclude Include="src\Core\External\STB\stb_image.h" />
-    <ClInclude Include="src\Core\External\STB\stb_image_resize.h" />
-    <ClInclude Include="src\Core\External\STB\stb_image_write.h" />
-    <ClInclude Include="src\Core\External\STB\stb_include.h" />
-    <ClInclude Include="src\Core\External\STB\stb_leakcheck.h" />
-    <ClInclude Include="src\Core\External\STB\stb_perlin.h" />
-    <ClInclude Include="src\Core\External\STB\stb_rect_pack.h" />
-    <ClInclude Include="src\Core\External\STB\stb_sprintf.h" />
-    <ClInclude Include="src\Core\External\STB\stb_textedit.h" />
-    <ClInclude Include="src\Core\External\STB\stb_tilemap_editor.h" />
-    <ClInclude Include="src\Core\External\STB\stb_truetype.h" />
-    <ClInclude Include="src\Core\External\STB\stb_voxel_render.h" />
-    <ClInclude Include="src\Core\External\imgui\ImGuizmo.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_allegro5.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_android.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx10.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx12.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_dx9.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_glut.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_metal.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl2.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_osx.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_sdl.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_sdlrenderer.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_vulkan.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_wgpu.h" />
-    <ClInclude Include="src\Core\External\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="src\Core\External\imgui\examples\example_allegro5\imconfig_allegro5.h" />
-    <ClInclude Include="src\Core\External\imgui\examples\libs\glfw\include\GLFW\glfw3.h" />
-    <ClInclude Include="src\Core\External\imgui\examples\libs\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="src\Core\External\imgui\examples\libs\usynergy\uSynergy.h" />
-    <ClInclude Include="src\Core\External\imgui\imconfig.h" />
-    <ClInclude Include="src\Core\External\imgui\imgui.h" />
-    <ClInclude Include="src\Core\External\imgui\imgui_internal.h" />
-    <ClInclude Include="src\Core\External\imgui\imstb_rectpack.h" />
-    <ClInclude Include="src\Core\External\imgui\imstb_textedit.h" />
-    <ClInclude Include="src\Core\External\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\Core\External\imgui\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="src\Core\External\imgui\misc\freetype\imgui_freetype.h" />
-    <ClInclude Include="src\Core\External\imgui\misc\single_file\imgui_single_file.h" />
-    <ClInclude Include="src\Core\External\nlohmann\json.hpp" />
     <ClInclude Include="src\Core\Graphics\BaseRenderer.h" />
     <ClInclude Include="src\Core\Graphics\CameraInterface.h" />
     <ClInclude Include="src\Core\Graphics\DirectX11\DXDefines.h" />
@@ -223,85 +192,6 @@
   <ItemGroup>
     <ClCompile Include="src\APIInterface.cpp" />
     <ClCompile Include="src\Core\CU\Transform.cpp" />
-    <ClCompile Include="src\Core\External\DirectX\DDSTextureLoader11.cpp" />
-    <ClCompile Include="src\Core\External\STB\stb_vorbis.c" />
-    <ClCompile Include="src\Core\External\imgui\ImGuizmo.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_allegro5.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_android.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx10.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx12.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_dx9.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_glut.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_opengl2.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_sdl.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_sdlrenderer.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_wgpu.cpp" />
-    <ClCompile Include="src\Core\External\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="src\Core\External\imgui\examples\example_allegro5\main.cpp" />
-    <ClCompile Include="src\Core\External\imgui\examples\example_android_opengl3\main.cpp">
-      <ObjectFileName>$(IntDir)\main1.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_emscripten_opengl3\main.cpp">
-      <ObjectFileName>$(IntDir)\main2.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_emscripten_wgpu\main.cpp">
-      <ObjectFileName>$(IntDir)\main3.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_opengl2\main.cpp">
-      <ObjectFileName>$(IntDir)\main4.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_opengl3\main.cpp">
-      <ObjectFileName>$(IntDir)\main5.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_glfw_vulkan\main.cpp">
-      <ObjectFileName>$(IntDir)\main6.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_glut_opengl2\main.cpp">
-      <ObjectFileName>$(IntDir)\main7.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_null\main.cpp">
-      <ObjectFileName>$(IntDir)\main8.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_directx11\main.cpp">
-      <ObjectFileName>$(IntDir)\main9.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_opengl2\main.cpp">
-      <ObjectFileName>$(IntDir)\main10.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_opengl3\main.cpp">
-      <ObjectFileName>$(IntDir)\main11.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_sdlrenderer\main.cpp">
-      <ObjectFileName>$(IntDir)\main12.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_sdl_vulkan\main.cpp">
-      <ObjectFileName>$(IntDir)\main13.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx10\main.cpp">
-      <ObjectFileName>$(IntDir)\main14.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx11\main.cpp">
-      <ObjectFileName>$(IntDir)\main15.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx12\main.cpp">
-      <ObjectFileName>$(IntDir)\main16.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\example_win32_directx9\main.cpp">
-      <ObjectFileName>$(IntDir)\main17.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\External\imgui\examples\libs\usynergy\uSynergy.c" />
-    <ClCompile Include="src\Core\External\imgui\imgui.cpp" />
-    <ClCompile Include="src\Core\External\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\Core\External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="src\Core\External\imgui\imgui_tables.cpp" />
-    <ClCompile Include="src\Core\External\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\Core\External\imgui\misc\cpp\imgui_stdlib.cpp" />
-    <ClCompile Include="src\Core\External\imgui\misc\fonts\binary_to_compressed_c.cpp" />
-    <ClCompile Include="src\Core\External\imgui\misc\freetype\imgui_freetype.cpp" />
     <ClCompile Include="src\Core\Graphics\CameraInterface.cpp" />
     <ClCompile Include="src\Core\Graphics\DirectX11\DXInterface.cpp" />
     <ClCompile Include="src\Core\Graphics\DirectX11\DXUtilities.cpp" />
@@ -331,6 +221,11 @@
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="src\Core\Utilities\Input.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vendor\vendor.vcxproj">
+      <Project>{B3738122-9F15-ACF8-88D0-BF4C74113349}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

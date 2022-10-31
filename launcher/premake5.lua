@@ -46,6 +46,10 @@ function initLauncher(aName)
         "editor"
     }
 
+    libdirs {
+        "../lib"
+    }
+
     includedirs {
         "src/"
     }
@@ -55,6 +59,18 @@ function initLauncher(aName)
         "src/**.hpp",
         "src/**.c",
         "src/**.cpp"
+    }
+
+    outputDir = os.realpath(outputDir)
+
+    local gameDir = os.realpath(launcherDir .. "/engine/")
+    local editorDir = os.realpath(launcherDir .. "/editor/")
+
+    local gameDirCpy = "xcopy " .. outputDir .. " " .. gameDir .. " /t /e /i /y "
+    local editorDirCpy = "xcopy " .. outputDir .. " " .. editorDir .. " /t /e /i /y "
+    local gameToEditorDirCpy = "xcopy " .. gameDir .. " " .. editorDir .. " /y "
+    postbuildcommands {
+        gameDirCpy .. " && " .. editorDirCpy .. " && " .. gameToEditorDirCpy
     }
 
     filter "configurations:Debug"
@@ -72,22 +88,12 @@ function initLauncher(aName)
     runtime "Release"
     optimize "on"
 
-    local gameDir = initEngine(name, launcherDir)
-    local editorDir = initEditor(name, launcherDir)
+    initEngine(name, launcherDir)
+    initEditor(name, launcherDir)
 
-    if not (os.isdir(gameDir)) then
-        os.mkdir(os.realpath(gameDir))
-    end
+    trymkdir(gameDir)
+    trymkdir(editorDir)
 
-    if not (os.isdir(editorDir)) then
-        os.mkdir(os.realpath(editorDir))
-    end
-
-    postbuildcommands {
-        "xcopy /S /Y " .. outputDir .. " " .. gameDir,
-        "xcopy /S /Y " .. gameDir .. " " .. editorDir,
-        "xcopy /S /Y " .. outputDir .. " " .. editorDir
-    }
 end
 
 initLauncher("launcher")

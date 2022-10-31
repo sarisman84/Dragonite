@@ -7,8 +7,9 @@
 #include "PlayerController.h"
 #include "NeuralStation.h"
 
-#include "Core/External/imgui/imgui.h"
-#include "Core/External/nlohmann/json.hpp"
+#include "imgui/imgui.h"
+#include "nlohmann/single_include/nlohmann/json.hpp"
+
 
 void Dragonite::ComputerTerminal::Awake()
 {

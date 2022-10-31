@@ -7,9 +7,10 @@
 #include <typeinfo>
 
 #include "Core/RuntimeAPI/NEW/Object.h"
+//
+#include "imgui/imgui.h"
+#include "nlohmann/single_include/nlohmann/json.hpp"
 
-#include "Core/External/imgui/imgui.h"
-#include "Core/External/nlohmann/json.hpp"
 
 #include "Core/RuntimeAPI/Components/SpriteRenderer.h"
 

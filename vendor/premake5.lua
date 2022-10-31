@@ -31,9 +31,29 @@ function trymkdir(aDir)
     end
 end
 
-local src = "src/"
-local cOutput = "../lib/"
-local outputTemp = "../temp/"
+src = os.realpath("src/")
+cOutput = "../lib/"
+outputTemp = "../temp/"
+
+function fetchVendorInclude()
+    removefiles {
+        src .. "nlohmann/include/**",
+        src .. "nlohmann/tests/**",
+        src .. "nlohmann/tools/**",
+        src .. "nlohmann/docs/**",
+        src .. "imguizmo/example/**",
+        src .. "imguizmo/vcpkg-example/**",
+        src .. "imgui/examples/**",
+        src .. "imgui/backends/**",
+        src .. "entt/src/**",
+        src .. "entt/test/**",
+        src .. "entt/conan/**"
+    }
+    files {
+        src .. "imgui/backends/imgui_impl_dx11.**",
+        src .. "imgui/backends/imgui_impl_win32.**"
+    }
+end
 
 project "vendor"
 location "."
@@ -54,27 +74,53 @@ trymkdir(outputTemp)
 
 targetname("%{prj.name}_%{cfg.buildcfg}")
 
-files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp",
-       src .. "../util/vcpkg/packages/freetype_**/include/"}
+files {
+    src .. "**.h",
+    src .. "**.hpp",
+    src .. "**.c",
+    src .. "**.cpp",
+    src .. "../util/vcpkg/packages/freetype_**/include/"
+}
 
-removefiles {src .. "nlohmann/include/**", src .. "nlohmann/tests/**", src .. "nlohmann/tools/**",
-             src .. "nlohmann/docs/**", src .. "imguizmo/example/**", src .. "imguizmo/vcpkg-example/**",
-             src .. "imgui/examples/**", src .. "imgui/backends/**", src .. "entt/src/**", src .. "entt/test/**",
-             src .. "entt/conan/**"}
-files {src .. "imgui/backends/imgui_impl_dx11.**", src .. "imgui/backends/imgui_impl_win32.**"}
+fetchVendorInclude()
 
-excludes {"ffmpeg-2.0/**.h", "ffmpeg-2.0/**.c", "ffmpeg-2.0/**.cpp", "DirectXTex/DirectXTex/**",
-          "DirectXTex/DDSView/**", "DirectXTex/Texassemble/**", "DirectXTex/Texconv/**", "DirectXTex/Texdiag/**",
-          "DirectXTex/DDSTextureLoader/DDSTextureLoader9.**", "DirectXTex/DDSTextureLoader/DDSTextureLoader12.**",
-          "DirectXTex/ScreenGrab/ScreenGrab9.**", "DirectXTex/ScreenGrab/ScreenGrab12.**",
-          "DirectXTex/WICTextureLoader/WICTextureLoader9.**", "DirectXTex/WICTextureLoader/WICTextureLoader12.**"}
-includedirs {".", src, src .. "nlohmann/", src .. "imgui/", src .. "imguizmo/", src .. "entt/",
-             src .. "entt/single_include/"}
-libdirs {cOutput, src .. "../util/vcpkg/packages/freetype_**/lib/"}
-defines {"_CONSOLE"}
+excludes {
+    "ffmpeg-2.0/**.h",
+    "ffmpeg-2.0/**.c",
+    "ffmpeg-2.0/**.cpp",
+    "DirectXTex/DirectXTex/**",
+    "DirectXTex/DDSView/**",
+    "DirectXTex/Texassemble/**",
+    "DirectXTex/Texconv/**",
+    "DirectXTex/Texdiag/**",
+    "DirectXTex/DDSTextureLoader/DDSTextureLoader9.**",
+    "DirectXTex/DDSTextureLoader/DDSTextureLoader12.**",
+    "DirectXTex/ScreenGrab/ScreenGrab9.**",
+    "DirectXTex/ScreenGrab/ScreenGrab12.**",
+    "DirectXTex/WICTextureLoader/WICTextureLoader9.**",
+    "DirectXTex/WICTextureLoader/WICTextureLoader12.**"
+}
+includedirs {
+    ".",
+    src,
+    src .. "nlohmann/",
+    src .. "imgui/",
+    src .. "imguizmo/",
+    src .. "entt/",
+    src .. "entt/single_include/"
+}
+libdirs {
+    cOutput,
+    src .. "../util/vcpkg/packages/freetype_**/lib/"
+}
+defines {
+    "_CONSOLE"
+}
 
 filter "configurations:Debug"
-defines {"_DEBUG"}
+defines {
+    "_DEBUG"
+}
 runtime "Debug"
 symbols "on"
 filter "configurations:Release"
@@ -95,8 +141,14 @@ systemversion "latest"
 -- conformanceMode "On"
 -- buildoptions { "/permissive" }
 flags { --	"FatalWarnings", -- would be both compile and lib, the original didn't set lib
---	"FatalCompileWarnings",
-"MultiProcessorCompile"}
-links {"DXGI", "dxguid"}
-defines {"_WIN32_WINNT=0x0601"}
+    --	"FatalCompileWarnings",
+    "MultiProcessorCompile"
+}
+links {
+    "DXGI",
+    "dxguid"
+}
+defines {
+    "_WIN32_WINNT=0x0601"
+}
 

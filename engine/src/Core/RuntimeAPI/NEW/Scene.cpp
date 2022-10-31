@@ -1,5 +1,6 @@
 #include "Scene.h"
-#include "Core/External/nlohmann/json.hpp"
+#include "nlohmann/single_include/nlohmann/json.hpp"
+
 
 #include <filesystem>
 #include <fstream>

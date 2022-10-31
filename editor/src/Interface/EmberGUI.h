@@ -13,6 +13,7 @@
 
 #define ITF __declspec(dllimport)
 
+
 using Microsoft::WRL::ComPtr;
 
 struct ID3D11Device;
