@@ -84,6 +84,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Debug.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -98,6 +99,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Release.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -112,6 +114,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Retail.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

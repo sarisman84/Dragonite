@@ -27,19 +27,12 @@ function initEngine(aName, aDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {
-        src,
-        src .. "/shaders/includes"
-    }
+    includedirs {src, src .. "/shaders/includes"}
 
-    files {
-        src .. "**.h",
-        src .. "**.hpp",
-        src .. "**.c",
-        src .. "**.cpp",
-        src .. "shaders/**.hlsl",
-        src .. "shaders/includes/**.hlsli"
-    }
+    libdirs {"../lib"}
+
+    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "shaders/**.hlsl",
+           src .. "shaders/includes/**.hlsli"}
     return tDir
 end
 

@@ -1,4 +1,4 @@
-include "vendor"
+
 
 function initEditor(aName, aDir)
     local prjDir = "../editor/"
@@ -29,20 +29,10 @@ function initEditor(aName, aDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {
-        src,
-        src .. "/shaders/includes",
-        fetchVendorInclude("imgui", prjDir),
-        fetchVendorInclude("imguizmo", prjDir)
-    }
+    includedirs {src, src .. "/shaders/includes", "../vendor/src/"}
+    libdirs {"../lib"}
 
-    files {
-        src .. "**.h",
-        src .. "**.hpp",
-        src .. "**.c",
-        src .. "**.cpp",
-        src .. "shaders/**.hlsl",
-        src .. "shaders/includes/**.hlsli"
-    }
+    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "shaders/**.hlsl",
+           src .. "shaders/includes/**.hlsli"}
     return tDir
 end

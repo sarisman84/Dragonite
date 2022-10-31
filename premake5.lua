@@ -10,3 +10,4 @@ configurations {
 }
 
 include "launcher"
+include "vendor"

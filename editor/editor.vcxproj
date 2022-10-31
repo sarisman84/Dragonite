@@ -77,57 +77,60 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+      <Command>xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/engine D:\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/editor</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+      <Command>xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/engine D:\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/editor</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;src\shaders\includes;vendor\imgui;vendor\imguizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\shaders\includes;..\vendor\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/engine
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/engine D:\Projects\Git\Dragonite\bin\resc\launcher/editor
-xcopy /S /Y D:\Projects\Git\Dragonite\bin\resc\launcher/build D:\Projects\Git\Dragonite\bin\resc\launcher/editor</Command>
+      <Command>xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/engine
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/engine D:\Git\Dragonite\bin\resc\launcher/editor
+xcopy /S /Y D:\Git\Dragonite\bin\resc\launcher/build D:\Git\Dragonite\bin\resc\launcher/editor</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

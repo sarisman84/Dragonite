@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "editor\editor.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{FBDB78FB-E77D-A3D1-D038-B725BC792A22}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vendor", "vendor\vendor.vcxproj", "{B3738122-9F15-ACF8-88D0-BF4C74113349}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -32,6 +34,12 @@ Global
 		{FBDB78FB-E77D-A3D1-D038-B725BC792A22}.Release|x64.Build.0 = Release|x64
 		{FBDB78FB-E77D-A3D1-D038-B725BC792A22}.Retail|x64.ActiveCfg = Retail|x64
 		{FBDB78FB-E77D-A3D1-D038-B725BC792A22}.Retail|x64.Build.0 = Retail|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Debug|x64.ActiveCfg = Debug|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Debug|x64.Build.0 = Debug|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Release|x64.ActiveCfg = Release|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Release|x64.Build.0 = Release|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Retail|x64.ActiveCfg = Retail|x64
+		{B3738122-9F15-ACF8-88D0-BF4C74113349}.Retail|x64.Build.0 = Retail|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

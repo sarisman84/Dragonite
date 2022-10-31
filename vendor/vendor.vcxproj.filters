@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="entt">
+      <UniqueIdentifier>{2055967C-0C8C-970D-B578-7D10A18E130F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\single_include">
+      <UniqueIdentifier>{944E5221-00B0-2F2F-891D-76E1F57D66EE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\single_include\entt">
+      <UniqueIdentifier>{5E50BA13-4A75-0994-73C0-EE235F4408B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{0098A80F-6CAC-D0C0-352E-7420A101CDF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\backends">
+      <UniqueIdentifier>{2A126960-16E0-5C66-FF73-CD8CEBE038CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\misc">
+      <UniqueIdentifier>{DBAA57AC-C762-99F9-306A-72551C4134EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\misc\cpp">
+      <UniqueIdentifier>{2D1AB313-19E8-A619-027C-1740EEE8827E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\misc\fonts">
+      <UniqueIdentifier>{741D18CD-6016-371F-8948-1CA475A0162B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\misc\freetype">
+      <UniqueIdentifier>{EE0F22B7-5A71-FFC4-E3DE-45774F3F3684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\misc\single_file">
+      <UniqueIdentifier>{4B942DFF-378E-5651-20FB-EC610C94BCBD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imguizmo">
+      <UniqueIdentifier>{76AD0322-627A-5E2D-8B93-4CD577BF93BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nlohmann">
+      <UniqueIdentifier>{E0661284-CC33-6D8F-F54C-5B37E178A21D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nlohmann\single_include">
+      <UniqueIdentifier>{54A8AE50-C0DF-F6E7-C9E9-5A0B35A01DE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nlohmann\single_include\nlohmann">
+      <UniqueIdentifier>{DE225BA2-CA73-46E4-F3D7-34A6DF87D94D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\entt\single_include\entt\entt.hpp">
+      <Filter>entt\single_include\entt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\backends\imgui_impl_dx11.h">
+      <Filter>imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\backends\imgui_impl_win32.h">
+      <Filter>imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>imgui\misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\misc\freetype\imgui_freetype.h">
+      <Filter>imgui\misc\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\misc\single_file\imgui_single_file.h">
+      <Filter>imgui\misc\single_file</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\GraphEditor.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\ImCurveEdit.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\ImGradient.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\ImGuizmo.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\ImSequencer.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguizmo\ImZoomSlider.h">
+      <Filter>imguizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nlohmann\single_include\nlohmann\json.hpp">
+      <Filter>nlohmann\single_include\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nlohmann\single_include\nlohmann\json_fwd.hpp">
+      <Filter>nlohmann\single_include\nlohmann</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>imgui\misc\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\misc\fonts\binary_to_compressed_c.cpp">
+      <Filter>imgui\misc\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\misc\freetype\imgui_freetype.cpp">
+      <Filter>imgui\misc\freetype</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguizmo\GraphEditor.cpp">
+      <Filter>imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguizmo\ImCurveEdit.cpp">
+      <Filter>imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguizmo\ImGradient.cpp">
+      <Filter>imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguizmo\ImGuizmo.cpp">
+      <Filter>imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguizmo\ImSequencer.cpp">
+      <Filter>imguizmo</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

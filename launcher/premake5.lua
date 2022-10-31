@@ -4,6 +4,7 @@ end
 -- include "vendor"
 include "engine"
 include "editor"
+
 function initLauncher(aName)
     project(aName)
     location "."

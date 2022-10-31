@@ -5,8 +5,8 @@
 //#include "Core/External/imgui/ImGuizmo.h"
 //#include "Core/PollingStation.h"
 
-#include "imgui.h"
-#include "ImGuizmo.h"
+#include "imgui/imgui.h"
+#include "imguizmo/Imguizmo.h"
 
 namespace Ember
 {

@@ -10,3 +10,6 @@
 [submodule "vendor/src/nlohmann"]
 	path = vendor/src/nlohmann
 	url = https://github.com/nlohmann/json
+[submodule "vendor/util/vcpkg"]
+	path = vendor/util/vcpkg
+	url = https://github.com/Microsoft/vcpkg
