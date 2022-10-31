@@ -1,8 +1,15 @@
-[submodule "vendor/entt"]
-	url = https://github.com/skypjack/entt.git
-[submodule "vendor/imgui"]
-	url = https://github.com/ocornut/imgui.git
-[submodule "vendor/imguizmo"]
-	url = https://github.com/CedricGuillemet/ImGuizmo.git
-[submodule "vendor/nlohmann"]
-	url = https://github.com/nlohmann/json.git
+[submodule "vendor/src/entt"]
+	path = vendor/src/entt
+	url = https://github.com/skypjack/entt
+[submodule "vendor/src/imgui"]
+	path = vendor/src/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "vendor/src/imguizmo"]
+	path = vendor/src/imguizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "vendor/src/nlohmann"]
+	path = vendor/src/nlohmann
+	url = https://github.com/nlohmann/json
+[submodule "vender/util/vcpkg"]
+	path = vender/util/vcpkg
+	url = https://github.com/Microsoft/vcpkg
