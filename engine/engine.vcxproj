@@ -92,6 +92,9 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Debug.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -116,6 +119,9 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Release.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
@@ -140,9 +146,11 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Retail.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\APIInterface.h" />
     <ClInclude Include="src\Core\CU\Bounds.h" />
     <ClInclude Include="src\Core\CU\CommonData.h" />
     <ClInclude Include="src\Core\CU\Math\MathFunctions.h" />
@@ -190,7 +198,6 @@
     <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\APIInterface.cpp" />
     <ClCompile Include="src\Core\CU\Transform.cpp" />
     <ClCompile Include="src\Core\Graphics\CameraInterface.cpp" />
     <ClCompile Include="src\Core\Graphics\DirectX11\DXInterface.cpp" />

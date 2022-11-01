@@ -7,7 +7,7 @@
 #define NOMINMAX
 #include <Windows.h>
 #include "Application.h"
-#include "DLLParser.h"
+#include "DLLParser/DLLParser.h"
 
 
 

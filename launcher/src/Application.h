@@ -2,15 +2,19 @@
 #include <wtypes.h>
 #include <chrono>
 
-#include "DLLParser.h"
-#include "APIInterface.h"
+#include "DLLParser/DLLParser.h"
+#include "EngineAPI/APIInterface.h"
+#include "EditorAPI/EmberGUI.h"
 
 #ifdef _DEBUG
-#define DLLPATH L"engine_Debug.dll"
+#define ENGINEDLLPATH L"engine_Debug.dll"
+#define EDITORDLLPATH L"editor_Debug.dll"
 #elif defined _RELEASE
-#define DLLPATH L"engine_Release.dll"
+#define ENGINEDLLPATH L"engine_Release.dll"
+#define EDITORDLLPATH L"editor_Release.dll"
 #elif defined _RETAIL
-#define DLLPATH L"engine_Retail.dll"
+#define ENGINEDLLPATH L"engine_Retail.dll"
+#define EDITORDLLPATH L"editor_Retail.dll"
 #endif
 
 
@@ -31,12 +35,14 @@ namespace Dragonite
 	class DragoniteAPI
 	{
 	private:
-		DLLParser myParser{ L"DragoniteEngine.dll" };
-		DLLParser myEditorParser{ DLLPATH };
+		DLLParser myEngineParser{ ENGINEDLLPATH };
+		DLLParser myEditorParser{ EDITORDLLPATH };
 
 		static APIInterface* InitializeRuntime() {};
+		static EmberGUI* InitializeEditor() {};
 	public:
-		decltype(InitializeRuntime)* getInterface = myParser["?InitializeRuntime@@YAPEAUAPIInterface@@XZ"];
+		decltype(InitializeRuntime)* getInterface = myEngineParser["?InitializeRuntime@@YAPEAUAPIInterface@@XZ"];
+		decltype(InitializeEditor)* getEditorInterface = myEditorParser["ImportEmberGUI"];
 
 	};
 
@@ -59,7 +65,7 @@ namespace Dragonite
 		int ExecuteRuntime();
 		inline void EndRuntime() { myRuntimeState = false; }
 
-		inline APIInterface* GetDragoniteAPI() { return myInterface; }
+		inline APIInterface* GetDragoniteAPI() { return myEngineInterface; }
 
 		operator bool() const
 		{
@@ -68,8 +74,8 @@ namespace Dragonite
 
 	private:
 		bool myRuntimeState;
-		APIInterface* myInterface;
-		DragoniteAPI myDragoniteAPI;
+		APIInterface* myEngineInterface;
+		DragoniteAPI myEngineAPI;
 		HWND mySelf;
 	};
 

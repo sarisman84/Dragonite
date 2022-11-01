@@ -51,7 +51,8 @@ function initLauncher(aName)
     }
 
     includedirs {
-        "src/"
+        "src/",
+        "../vendor/src/"
     }
 
     files {
@@ -61,17 +62,14 @@ function initLauncher(aName)
         "src/**.cpp"
     }
 
-    outputDir = os.realpath(outputDir)
+    outputDir = os.realpath(outputDir .. "/")
 
-    local gameDir = os.realpath(launcherDir .. "/engine/")
-    local editorDir = os.realpath(launcherDir .. "/editor/")
+    local gameDir = os.realpath(launcherDir .. "/engine")
+    local editorDir = os.realpath(launcherDir .. "/editor")
 
-    local gameDirCpy = "xcopy " .. outputDir .. " " .. gameDir .. " /t /e /i /y "
-    local editorDirCpy = "xcopy " .. outputDir .. " " .. editorDir .. " /t /e /i /y "
-    local gameToEditorDirCpy = "xcopy " .. gameDir .. " " .. editorDir .. " /y "
-    postbuildcommands {
-        gameDirCpy .. " && " .. editorDirCpy .. " && " .. gameToEditorDirCpy
-    }
+    local gameDirCpy = "xcopy " .. gameDir .. " " .. outputDir .. " /y "
+    local editorDirCpy = "xcopy " .. editorDir .. " " .. outputDir .. " /y "
+    -- local gameToEditorDirCpy = "xcopy " .. gameDir .. " " .. editorDir .. " /y "
 
     filter "configurations:Debug"
     defines "_DEBUG"
@@ -88,8 +86,9 @@ function initLauncher(aName)
     runtime "Release"
     optimize "on"
 
-    initEngine(name, launcherDir)
-    initEditor(name, launcherDir)
+    initEngine(name, launcherDir, gameDirCpy)
+    initEditor(name, launcherDir, editorDirCpy)
+   
 
     trymkdir(gameDir)
     trymkdir(editorDir)

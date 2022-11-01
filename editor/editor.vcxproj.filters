@@ -7,11 +7,11 @@
     <Filter Include="src\Commands">
       <UniqueIdentifier>{0E2916E8-FA8B-A58C-A311-DE428F53710F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Interface">
-      <UniqueIdentifier>{4DAFE1C2-B96F-5DF9-82AA-A676EE29A2D5}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\SceneEditor">
       <UniqueIdentifier>{51FBC550-BD86-3315-C697-B60932A28F15}</UniqueIdentifier>
@@ -45,6 +45,9 @@
     <ClInclude Include="src\Commands\MenuCommand.h">
       <Filter>src\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\EnderGUIAPI.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\EditorSettings.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -56,9 +59,6 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\DirectX.h">
       <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Interface\EmberGUI.h">
-      <Filter>src\Interface</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderID.h">
       <Filter>src</Filter>
@@ -89,6 +89,9 @@
     <ClCompile Include="src\Commands\MenuCommand.cpp">
       <Filter>src\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\EnderGUIAPI.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\EngineDebugger.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -97,9 +100,6 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\DirectX.cpp">
       <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Interface\EmberGUI.cpp">
-      <Filter>src\Interface</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderID.cpp">
       <Filter>src</Filter>

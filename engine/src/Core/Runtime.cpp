@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Runtime.h"
 #include "Core/RuntimeAPI/NEW/Scene.h"
-
+#include "EditorAPI/PresetSpaces/Viewport.h"
 //#include "ImGui/DragoniteGui.h"
 #include "Core/PollingStation.h"
 #include "Graphics/GraphicsAPI.h"
@@ -17,12 +17,18 @@
 
 LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
+
+
 	if (message == WM_DESTROY)
 	{
 		myRuntimeState = false;
 		PostQuitMessage(0);
 		return 1;
 	}
+
+	if (myEditorInterface)
+		myEditorInterface->WinProc(hWnd, message, wParam, lParam);
 
 	myWndProcs(hWnd, message, wParam, lParam);
 
@@ -58,27 +64,31 @@ Dragonite::Runtime::~Runtime()
 	myPipeline = nullptr;
 }
 
-bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsEditorFlag)
+bool Dragonite::Runtime::Initialize(HWND& anInstance, EmberGUI* anEditorInterface)
 {
+	myGUIInterface = nullptr;
 	myRuntimeHandler = new PollingStation();
-
-	myInstance = anInstance;
-
 	myPipeline = new GraphicalInterface();
-
-
-
 	if (!myPipeline->Init(anInstance, myRuntimeHandler)) return false;
 
-
-
-
 	myRuntimeHandler->AddHandler(myPipeline);
+	myInstance = anInstance;
+	myEditorInterface = anEditorInterface;
 
 
 
-	
 
+	bool existsEditor = myEditorInterface;
+
+	if (existsEditor)
+	{
+		myEditorInterface->Init(anInstance, DXInterface::Device.Get(), DXInterface::Context.Get());
+		myEditorInterface->AddSpace(new EmberAPI::Viewport("Scene", 1920, 1080, []()
+			{
+				//Render your scene here
+			}));
+
+	}
 	auto projectS = *(nlohmann::json*)Scene::GetProjectSettings();
 
 
@@ -100,26 +110,10 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 
 	if (!IM->Init(this)) return false;
 
-	myEditorFlag = anInitializeAsEditorFlag;
-	if (anInitializeAsEditorFlag)
-	{
-		//myGUIInterface = new DragoniteGui();
-		//myGUIInterface->Init(this, myPipeline);
-		//myRuntimeHandler->AddHandler(myGUIInterface);
-		///*myScene->Awake();*/
-
-		//myGUIInterface->CreateEditorWindow(new EngineDebugger());
-		//myGUIInterface->CreateEditorWindow(new SceneEditor());
 
 
-	}
-	else
-	{
-		myScene->Start();
-		myPipeline->DrawToBackBuffer(true);
-	}
-
-
+	myScene->Start();
+	myPipeline->DrawToBackBuffer(true);
 
 
 
@@ -133,26 +127,9 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, const bool anInitializeAsE
 
 void Dragonite::Runtime::Update(const float aDeltaTime)
 {
-	myUpdateCB(aDeltaTime);
-	myLateUpdateCB(aDeltaTime);
-	//auto scene = myEditorFlag ? myGUIInterface->GetFocusedScene() : myScene;
 
-	if (myEditorFlag)
-	{
-		myScene->LateUpdate(aDeltaTime);
-	}
-	else
-	{
-		myScene->Update(aDeltaTime);
-		myScene->LateUpdate(aDeltaTime);
-	}
-
-	//if (scene)
-	//{
-	//	scene->LateUpdate();
-	//}
-
-	//myLateUpdateCB();
+	if (myEditorInterface)
+		myEditorInterface->Update(aDeltaTime);
 
 	myPipeline->Render();
 

@@ -1,6 +1,6 @@
 include "vendor"
 
-function initEditor(aName, aDir)
+function initEditor(aName, aDir, aPostBuildEventCommand)
     local prjDir = "../editor/"
     local src = prjDir .. "src/"
     local name = "editor"
@@ -51,6 +51,10 @@ function initEditor(aName, aDir)
     }
 
     fetchVendorInclude()
+
+    postbuildcommands {
+        aPostBuildEventCommand
+    }
 
     filter "configurations:Debug"
     defines "_DEBUG"

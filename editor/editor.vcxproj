@@ -92,6 +92,9 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Debug.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -116,6 +119,9 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Release.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
@@ -140,6 +146,9 @@
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Retail.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\vendor\src\imgui\backends\imgui_impl_dx11.h" />
@@ -147,11 +156,11 @@
     <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Commands\Command.h" />
     <ClInclude Include="src\Commands\MenuCommand.h" />
+    <ClInclude Include="src\Core\EnderGUIAPI.h" />
     <ClInclude Include="src\EditorSettings.h" />
     <ClInclude Include="src\EngineDebugger.h" />
     <ClInclude Include="src\GUIWindow.h" />
     <ClInclude Include="src\Graphics\DirectX.h" />
-    <ClInclude Include="src\Interface\EmberGUI.h" />
     <ClInclude Include="src\RenderID.h" />
     <ClInclude Include="src\SceneEditor.h" />
     <ClInclude Include="src\SceneEditor\ComponentRegistry.h" />
@@ -163,10 +172,10 @@
     <ClCompile Include="..\vendor\src\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\Commands\MenuCommand.cpp" />
+    <ClCompile Include="src\Core\EnderGUIAPI.cpp" />
     <ClCompile Include="src\EngineDebugger.cpp" />
     <ClCompile Include="src\GUIWindow.cpp" />
     <ClCompile Include="src\Graphics\DirectX.cpp" />
-    <ClCompile Include="src\Interface\EmberGUI.cpp" />
     <ClCompile Include="src\RenderID.cpp" />
     <ClCompile Include="src\SceneEditor.cpp" />
     <ClCompile Include="src\SceneEditor\PropertyEditor.cpp" />

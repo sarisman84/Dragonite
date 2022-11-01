@@ -42,7 +42,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\APIInterface.h" />
     <ClInclude Include="src\Core\CU\Bounds.h">
       <Filter>Core\CU</Filter>
     </ClInclude>
@@ -178,7 +177,6 @@
     <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\APIInterface.cpp" />
     <ClCompile Include="src\Core\CU\Transform.cpp">
       <Filter>Core\CU</Filter>
     </ClCompile>

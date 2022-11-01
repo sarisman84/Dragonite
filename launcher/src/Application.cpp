@@ -1,10 +1,7 @@
 #include "Application.h"
-#include "DLLParser.h"
 
 Dragonite::Application::Application(const ApplicationDesc& aDesc)
 {
-
-
 
 	WNDCLASSEXW wcex = {};
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -34,17 +31,19 @@ Dragonite::Application::Application(const ApplicationDesc& aDesc)
 
 	//GetProcAddress(myEngineDLLIns,)
 
-	myInterface = myDragoniteAPI.getInterface();
+	myEngineInterface = myEngineAPI.getInterface();
 
-	if (!myInterface) return;
+	if (!myEngineInterface) return;
 
-	myInterface->Initialize(mySelf);
+	myEngineInterface->Initialize(mySelf, myEngineAPI.getEditorInterface());
 	myRuntimeState = true;
 }
 
 Dragonite::Application::~Application()
 {
-
+	if (myEngineInterface)
+		delete myEngineInterface;
+	myEngineInterface = nullptr;
 }
 
 int Dragonite::Application::ExecuteRuntime()
@@ -64,7 +63,7 @@ int Dragonite::Application::ExecuteRuntime()
 				goto exit;
 			}
 		}
-		myInterface->Update(deltaTime);
+		myEngineInterface->Update(deltaTime);
 
 		Time end = Clock::now();
 		deltaTime = DeltaTime(end - start).count();

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="DLLParser">
+      <UniqueIdentifier>{0E40B8A2-7AAA-6C19-C3E8-1DBF2F924A6E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="DirectX">
       <UniqueIdentifier>{D86A6D73-444A-EC0E-4D62-77E5B9C05270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorAPI">
+      <UniqueIdentifier>{26BEAF4A-9228-64C1-DB66-156747104216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorAPI\PresetSpaces">
+      <UniqueIdentifier>{87015274-73FB-7AC6-5C68-11D74801E132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorAPI\Space">
+      <UniqueIdentifier>{41BEEAEB-AD49-58B0-B65A-DBA42265B4B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineAPI">
+      <UniqueIdentifier>{159D8BD1-8107-4048-CA45-F1ED36EF1D9D}</UniqueIdentifier>
     </Filter>
     <Filter Include="STB">
       <UniqueIdentifier>{0E1F880B-7A28-887C-03A4-9E7C6FAC937C}</UniqueIdentifier>
@@ -51,8 +66,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DLLParser\DLLParser.h">
+      <Filter>DLLParser</Filter>
+    </ClInclude>
     <ClInclude Include="src\DirectX\DDSTextureLoader11.h">
       <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectX\DXUtilities.h">
+      <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAPI\EmberGUI.h">
+      <Filter>EditorAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAPI\PresetSpaces\Viewport.h">
+      <Filter>EditorAPI\PresetSpaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAPI\Space\WindowSpace.h">
+      <Filter>EditorAPI\Space</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineAPI\APIInterface.h">
+      <Filter>EngineAPI</Filter>
     </ClInclude>
     <ClInclude Include="src\STB\stb_c_lexer.h">
       <Filter>STB</Filter>
@@ -176,8 +209,20 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DLLParser\DLLParser.cpp">
+      <Filter>DLLParser</Filter>
+    </ClCompile>
     <ClCompile Include="src\DirectX\DDSTextureLoader11.cpp">
       <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectX\DXUtilities.cpp">
+      <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorAPI\PresetSpaces\Viewport.cpp">
+      <Filter>EditorAPI\PresetSpaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineAPI\APIInterface.cpp">
+      <Filter>EngineAPI</Filter>
     </ClCompile>
     <ClCompile Include="src\STB\stb_vorbis.c">
       <Filter>STB</Filter>

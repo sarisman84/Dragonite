@@ -151,7 +151,13 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\DLLParser\DLLParser.h" />
     <ClInclude Include="src\DirectX\DDSTextureLoader11.h" />
+    <ClInclude Include="src\DirectX\DXUtilities.h" />
+    <ClInclude Include="src\EditorAPI\EmberGUI.h" />
+    <ClInclude Include="src\EditorAPI\PresetSpaces\Viewport.h" />
+    <ClInclude Include="src\EditorAPI\Space\WindowSpace.h" />
+    <ClInclude Include="src\EngineAPI\APIInterface.h" />
     <ClInclude Include="src\STB\stb_c_lexer.h" />
     <ClInclude Include="src\STB\stb_connected_components.h" />
     <ClInclude Include="src\STB\stb_divide.h" />
@@ -194,7 +200,11 @@
     <ClInclude Include="src\nlohmann\single_include\nlohmann\json_fwd.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DLLParser\DLLParser.cpp" />
     <ClCompile Include="src\DirectX\DDSTextureLoader11.cpp" />
+    <ClCompile Include="src\DirectX\DXUtilities.cpp" />
+    <ClCompile Include="src\EditorAPI\PresetSpaces\Viewport.cpp" />
+    <ClCompile Include="src\EngineAPI\APIInterface.cpp" />
     <ClCompile Include="src\STB\stb_vorbis.c" />
     <ClCompile Include="src\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_win32.cpp" />

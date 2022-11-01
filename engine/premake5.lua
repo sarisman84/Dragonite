@@ -1,5 +1,5 @@
 include "vendor"
-function initEngine(aName, aDir)
+function initEngine(aName, aDir, aPostBuildEventCommand)
     local prjDir = "../engine/"
     local src = prjDir .. "src/"
     local name = "engine"
@@ -47,6 +47,10 @@ function initEngine(aName, aDir)
         src .. "shaders/includes/**.hlsli"
     }
 
+    postbuildcommands {
+        aPostBuildEventCommand
+    }
+    
     filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
