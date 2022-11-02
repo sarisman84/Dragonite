@@ -241,7 +241,7 @@ namespace Dragonite
 
 
 
-		template<typename TClass>
+		/*template<typename TClass>
 		inline auto GetReflectedType(TClass* anInstance)
 		{
 			if (typeid(TClass).hash_code() == typeid(*anInstance).hash_code()) return Reflect::GetReflectedType<TClass>();
@@ -272,14 +272,14 @@ namespace Dragonite
 
 			return Reflect::Internal::for_each(Reflect::GetReflectedType<TClass>().derivedTypes, lambda);
 
-		}
+		}*/
 
 
 
 		template<typename TClass, typename Func>
 		void IterateMembers(TClass* anInstance, Func aCallback, const bool aDeepIterationFlag = false)
 		{
-			Internal::for_each(Reflect::GetReflectedType<TClass>(anInstance).members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
+			Internal::for_each(Reflect::GetReflectedType<TClass>().members, [&anInstance, &aCallback, &aDeepIterationFlag](auto member)
 				{
 					if constexpr (!Internal::is_template<decltype(member)>::value) return;
 
