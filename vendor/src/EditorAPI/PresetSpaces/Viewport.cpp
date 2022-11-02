@@ -21,6 +21,6 @@ void InitRenderTarget(const float aWidth, const float aHeight, ID3D11RenderTarge
 void SwitchRenderView(ID3D11RenderTargetView* aTargetView)
 {
 	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	DirectX::contextPtr->OMSetRenderTargets(1, &aTargetView,nullptr);
-	DirectX::contextPtr->ClearRenderTargetView(aTargetView, color);
+	DirectX::DX::contextPtr->OMSetRenderTargets(1, &aTargetView,nullptr);
+	DirectX::DX::contextPtr->ClearRenderTargetView(aTargetView, color);
 }

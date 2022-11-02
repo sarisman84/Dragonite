@@ -82,11 +82,11 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, EmberGUI* anEditorInterfac
 
 	if (existsEditor)
 	{
-		myEditorInterface->Init(anInstance, DXInterface::Device.Get(), DXInterface::Context.Get());
-		myEditorInterface->AddSpace(new EmberAPI::Viewport("Scene", 1920, 1080, []()
-			{
-				//Render your scene here
-			}));
+		myEditorInterface->Init(anInstance, DXInterface::Device.Get(), DXInterface::Context.Get(), DXInterface::SwapChain.Get());
+ 		//myEditorInterface->AddSpace(new EmberAPI::Viewport("Scene", 1920, 1080, []()
+			//{
+			//	//Render your scene here
+			//}));
 
 	}
 	auto projectS = *(nlohmann::json*)Scene::GetProjectSettings();

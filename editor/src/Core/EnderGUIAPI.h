@@ -9,7 +9,7 @@
 struct ID3D11RenderTargetView;
 struct ID3D11ShaderResourceView;
 struct ID3D11DepthStencilView;
-
+struct IDXGISwapChain;
 
 
 
@@ -22,7 +22,7 @@ namespace Dragonite
 	public:
 		EmberGUIAPI();
 		virtual ~EmberGUIAPI() override;
-		const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext) override;
+		const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext, IDXGISwapChain* aSwapChain) override;
 		void Update(const float aDt) override;
 		void Shutdown() override;
 		LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -45,7 +45,7 @@ namespace Dragonite
 		ID3D11ShaderResourceView* 
 			myRenderData;
 
-
+		IDXGISwapChain* mySwapChain;
 	};
 }
 

@@ -30,8 +30,12 @@ namespace DirectX
 		UINT myMiscFlags;
 	};
 
-	inline static ID3D11Device* devicePtr;
-	inline static ID3D11DeviceContext* contextPtr;
+	struct DX
+	{
+		inline static ID3D11Device* devicePtr;
+		inline static ID3D11DeviceContext* contextPtr;
+	};
+	
 
 
 	HRESULT Begin(ID3D11DeviceContext* aContext);
@@ -53,5 +57,8 @@ namespace DirectX
 	{
 		return DirectX::CreateConstantBuffer(&someData, sizeof(Data), aBuffer);
 	}
+
+	void SetViewport(float* aNewViewport);
+
 
 }

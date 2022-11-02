@@ -7,6 +7,7 @@
 
 #include "DirectX/DXUtilities.h"
 
+#include <dxgi.h>
 #include <d3d11.h>
 
 Dragonite::EmberGUIAPI::EmberGUIAPI() : EmberGUI()
@@ -26,12 +27,13 @@ Dragonite::EmberGUIAPI::~EmberGUIAPI()
 	myDeviceContext = nullptr;
 }
 
-const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext)
+const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext, IDXGISwapChain* aSwapChain)
 {
+	mySwapChain = aSwapChain;
 	myDevice = aDevice;
 	myDeviceContext = aContext;
 	myWindowsInstance = anInstance;
-	if (!anInstance || !aDevice || !aContext) return false;
+	if (!anInstance || !aDevice || !aContext || !aSwapChain) return false;
 
 	if (!InitializeBackBuffer()) return false;
 
@@ -44,7 +46,7 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 		io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports | ImGuiBackendFlags_RendererHasViewports;
 
 		ImGui_ImplWin32_Init(anInstance);
-		ImGui_ImplDX11_Init(aDevice, aContext);
+		ImGui_ImplDX11_Init(myDevice, myDeviceContext);
 		ImGui::StyleColorsDark();
 
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -58,7 +60,7 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 		myDockingSpace = new EmberGUISpace([this](GUISpace* aCurSpace)
 			{
 
-				
+
 
 				{//Render
 
@@ -158,7 +160,7 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 					}
 				}
 
-			
+				mySwapChain->Present(0, 0);
 
 			});
 	}
@@ -189,26 +191,27 @@ LRESULT Dragonite::EmberGUIAPI::WinProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 const bool Dragonite::EmberGUIAPI::InitializeBackBuffer()
 {
-	DirectX::Begin(myDevice, myDeviceContext);
+	//DirectX::Begin(myDevice, myDeviceContext);
 
-	RECT rect{};
-	GetClientRect(myWindowsInstance, &rect);
+	ID3D11Texture2D* backBufferTexture;
 
-	DirectX::RenderTargetDesc desc = {};
-	desc.myArraySize = 1;
-	desc.myCPUAccessFlags = 0;
-	desc.myMiscFlags = 0;
-	desc.myMipLevels = 1;
-	desc.myQuality = 0;
-	desc.myCount = 1;
-	desc.myFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.myUseage = D3D11_USAGE_DEFAULT;
-	/*desc.myCPUAccessFlags = D3D11_CPU_ACCESS_WRITE;*/
-	desc.myWidth = rect.right - rect.left;
-	desc.myHeight = rect.bottom - rect.top;
+	if (FAILED(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture)))
+	{
+		return  false;
+	}
 
-	if (FAILED(DirectX::CreateRenderTarget(desc, &myLocalBackbuffer, &myRenderData)))
+	if (FAILED(myDevice->CreateRenderTargetView(backBufferTexture, nullptr, &myLocalBackbuffer)))
+	{
+		backBufferTexture->Release();
 		return false;
+	}
+	backBufferTexture->Release();
+
+	//float resolution[2];
+	//resolution[0] = 1920;
+	//resolution[1] = 1080;
+
+	//DirectX::SetViewport(resolution);
 
 	return true;
 }

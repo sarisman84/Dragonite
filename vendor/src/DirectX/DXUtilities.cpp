@@ -9,7 +9,7 @@ HRESULT DirectX::Begin(ID3D11DeviceContext* aContext)
 {
 	if (!aContext) return E_INVALIDARG;
 
-	contextPtr = aContext;
+	DX::contextPtr = aContext;
 	return S_OK;
 }
 HRESULT DirectX::Begin(ID3D11Device* aDevice, ID3D11DeviceContext* aContext)
@@ -22,14 +22,14 @@ HRESULT DirectX::Begin(ID3D11Device* aDevice)
 {
 	if (!aDevice) return E_INVALIDARG;
 
-	devicePtr = aDevice;
+	DX::devicePtr = aDevice;
 	return S_OK;
 }
 
 void DirectX::End()
 {
-	devicePtr = nullptr;
-	contextPtr = nullptr;
+	DX::devicePtr = nullptr;
+	DX::contextPtr = nullptr;
 }
 
 HRESULT DirectX::CreateConstantBuffer(void* someData, const size_t someDataSize, ID3D11Buffer* aBuffer)
@@ -47,7 +47,7 @@ HRESULT DirectX::CreateConstantBuffer(void* someData, const size_t someDataSize,
 	data.SysMemPitch = 0;
 	data.SysMemSlicePitch = 0;
 
-	return devicePtr->CreateBuffer(&desc, &data, &aBuffer);
+	return DX::devicePtr->CreateBuffer(&desc, &data, &aBuffer);
 }
 
 typedef std::istreambuf_iterator<char> ShaderIT;
@@ -62,7 +62,7 @@ HRESULT DirectX::CreateVertexShader(const char* aPath, ID3D11VertexShader* aVert
 	(*someExtraData) = { ShaderIT(file),ShaderIT() };
 	file.close();
 
-	return devicePtr->CreateVertexShader(someExtraData->data(), someExtraData->size(), nullptr, &aVertexShader);
+	return DX::devicePtr->CreateVertexShader(someExtraData->data(), someExtraData->size(), nullptr, &aVertexShader);
 }
 
 HRESULT DirectX::CreatePixelShader(const char* aPath, ID3D11PixelShader* aPixelShader)
@@ -75,7 +75,7 @@ HRESULT DirectX::CreatePixelShader(const char* aPath, ID3D11PixelShader* aPixelS
 	std::string data = { ShaderIT(file),ShaderIT() };
 	file.close();
 
-	return devicePtr->CreatePixelShader(data.data(), data.size(), nullptr, &aPixelShader);
+	return DX::devicePtr->CreatePixelShader(data.data(), data.size(), nullptr, &aPixelShader);
 }
 
 HRESULT DirectX::CreateRenderTarget(const RenderTargetDesc& aDesc, ID3D11RenderTargetView** aRenderView, ID3D11ShaderResourceView** aResourceView)
@@ -98,14 +98,27 @@ HRESULT DirectX::CreateRenderTarget(const RenderTargetDesc& aDesc, ID3D11RenderT
 
 	ID3D11Texture2D* texture;
 
-	HRESULT result = devicePtr->CreateTexture2D(&desc, nullptr, &texture);
+	HRESULT result = DX::devicePtr->CreateTexture2D(&desc, nullptr, &texture);
 	if (FAILED(result)) return result;
-	result = devicePtr->CreateShaderResourceView(texture, nullptr, aResourceView);
+	result = DX::devicePtr->CreateShaderResourceView(texture, nullptr, aResourceView);
 	if (FAILED(result)) return result;
-	result = devicePtr->CreateRenderTargetView(texture, nullptr, aRenderView);
+	result = DX::devicePtr->CreateRenderTargetView(texture, nullptr, aRenderView);
 	if (FAILED(result)) return result;
 
 
 	texture->Release();
 	return S_OK;
+}
+
+void DirectX::SetViewport(float* aNewViewport)
+{
+	D3D11_VIEWPORT newViewport;
+	newViewport.TopLeftX = 0;
+	newViewport.TopLeftY = 0;
+	newViewport.Width = aNewViewport[0];
+	newViewport.Height = aNewViewport[1];
+	newViewport.MinDepth = 0;
+	newViewport.MaxDepth = 1;
+
+	DX::contextPtr->RSSetViewports(1, &newViewport);
 }

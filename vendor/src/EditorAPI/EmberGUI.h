@@ -99,12 +99,13 @@
 struct GUISpace;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
+struct IDXGISwapChain;
 
 class EmberGUI
 {
 public:
 	EmberGUI() = default;
-	virtual const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext) = 0;
+	virtual const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext, IDXGISwapChain* aSwapChain) = 0;
 	virtual void Update(const float aDt) = 0;
 	virtual void Shutdown() = 0;
 	virtual LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
