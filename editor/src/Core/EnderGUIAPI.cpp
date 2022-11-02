@@ -160,8 +160,6 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 					}
 				}
 
-				mySwapChain->Present(0, 0);
-
 			});
 	}
 
@@ -191,21 +189,25 @@ LRESULT Dragonite::EmberGUIAPI::WinProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 const bool Dragonite::EmberGUIAPI::InitializeBackBuffer()
 {
-	//DirectX::Begin(myDevice, myDeviceContext);
+	DirectX::Begin(myDevice, myDeviceContext);
+	RECT rect{};
+	GetClientRect(myWindowsInstance, &rect);
 
-	ID3D11Texture2D* backBufferTexture;
-
-	if (FAILED(mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture)))
-	{
-		return  false;
-	}
-
-	if (FAILED(myDevice->CreateRenderTargetView(backBufferTexture, nullptr, &myLocalBackbuffer)))
-	{
-		backBufferTexture->Release();
+	DirectX::RenderTargetDesc desc = {};
+	desc.myArraySize = 1;
+	desc.myCPUAccessFlags = 0;
+	desc.myMiscFlags = 0;
+	desc.myMipLevels = 1;
+	desc.myQuality = 0;
+	desc.myCount = 1;
+	desc.myFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	desc.myUseage = D3D11_USAGE_DEFAULT;
+	/*desc.myCPUAccessFlags = D3D11_CPU_ACCESS_WRITE;*/
+	desc.myWidth = rect.right - rect.left;
+	desc.myHeight = rect.bottom - rect.top;
+	
+	if (FAILED(DirectX::CreateRenderTarget(desc, &myLocalBackbuffer, &myRenderData)))
 		return false;
-	}
-	backBufferTexture->Release();
 
 	//float resolution[2];
 	//resolution[0] = 1920;

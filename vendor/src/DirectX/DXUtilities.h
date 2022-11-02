@@ -30,35 +30,28 @@ namespace DirectX
 		UINT myMiscFlags;
 	};
 
-	struct DX
-	{
-		inline static ID3D11Device* devicePtr;
-		inline static ID3D11DeviceContext* contextPtr;
-	};
-	
 
 
-	HRESULT Begin(ID3D11DeviceContext* aContext);
-	HRESULT Begin(ID3D11Device* aDevice, ID3D11DeviceContext* aContext);
-	HRESULT Begin(ID3D11Device* aDevice);
-	void End();
+	ID3D11Device* Device;
+	ID3D11DeviceContext* Context;
 
 	template<typename Data>
-	HRESULT CreateConstantBuffer(const Data& someData, ID3D11Buffer* aBuffer);
-	HRESULT CreateConstantBuffer(void* someData, const size_t someDataSize, ID3D11Buffer* aBuffer);
+	HRESULT CreateConstantBuffer(ID3D11Device* aDevice, ID3D11Buffer* aBuffer);
+	HRESULT CreateConstantBuffer(ID3D11Device* aDevice, const size_t someDataSize, ID3D11Buffer* aBuffer);
 
-	HRESULT CreateVertexShader(const char* aPath, ID3D11VertexShader* aVertexShader, std::string* someExtraData);
-	HRESULT CreatePixelShader(const char* aPath, ID3D11PixelShader* aPixelShader);
+	HRESULT CreateVertexShader(ID3D11Device* aDevice, const char* aPath, ID3D11VertexShader* aVertexShader, std::string* someExtraData);
+	HRESULT CreatePixelShader(ID3D11Device* aDevice, const char* aPath, ID3D11PixelShader* aPixelShader);
 
-	HRESULT CreateRenderTarget(const RenderTargetDesc& aDesc, ID3D11RenderTargetView** aRenderView, ID3D11ShaderResourceView** aResourceView);
+	HRESULT CreateRenderTarget(ID3D11Device* aDevice, const RenderTargetDesc& aDesc, ID3D11RenderTargetView** aRenderView, ID3D11ShaderResourceView** aResourceView);
+
 
 	template<typename Data>
-	HRESULT CreateConstantBuffer(const Data& someData, ID3D11Buffer* aBuffer)
+	HRESULT CreateConstantBuffer(ID3D11Device* aDevice, ID3D11Buffer* aBuffer)
 	{
-		return DirectX::CreateConstantBuffer(&someData, sizeof(Data), aBuffer);
+		return DirectX::CreateConstantBuffer(sizeof(Data), aBuffer);
 	}
 
-	void SetViewport(float* aNewViewport);
+	void SetViewport(ID3D11DeviceContext* aContext, float* aNewViewport);
 
 
 }

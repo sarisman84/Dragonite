@@ -27,11 +27,7 @@
 
 namespace Dragonite
 {
-
-	using Time = std::chrono::time_point<std::chrono::steady_clock>;
-	using Clock = std::chrono::high_resolution_clock;
-
-	class GraphicalInterface;
+	class GraphicsEngine;
 	class DragoniteGui;
 	class PollingStation;
 	class Scene;
@@ -45,44 +41,19 @@ namespace Dragonite
 
 		inline PollingStation& GetPollingStation() { return *myRuntimeHandler; }
 
-
-		inline Function<void(HWND, UINT, WPARAM, LPARAM)>& OnWndProc() { return myWndProcs; }
-		inline Function<void(const float)>& OnUpdate() { return myUpdateCB; }
-		inline Function<void(GraphicalInterface*)>& OnRender() { return myOnRenderCB; }
-		inline Function<void(const float)>& OnLateUpdate() { return myLateUpdateCB; }
-
 		inline HWND& GetClientInstance() { return myInstance; }
 
 		bool Initialize(HWND& anInstance, EmberGUI* anEditorInterface = nullptr) override;
 		void Update(const float aDeltaTime) override;
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
-
-		void FocusScene(Scene* aNewScene);
-		Scene* GetFocusedScene();
-
 	private:
 		EmberGUI* myEditorInterface;
-		Scene* myScene;
-
+		GraphicsEngine* myGraphicsEngine;
 		bool myRuntimeState;
-		bool myEditorFlag;
 		HWND myInstance;
 		PollingStation* myRuntimeHandler;
-		GraphicalInterface* myPipeline;
-		//Scene* myScene;
-
-		Function<void(const float)> myLateUpdateCB;
-		Function<void(const float)> myUpdateCB;
-		Function<void(HWND, UINT, WPARAM, LPARAM)> myWndProcs;
-		Function<void(GraphicalInterface*)> myOnRenderCB;
-
-
 		DragoniteGui* myGUIInterface;
-
-
-
-
 	};
 
 

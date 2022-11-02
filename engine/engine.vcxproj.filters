@@ -40,6 +40,15 @@
     <Filter Include="Core\Utilities">
       <UniqueIdentifier>{196AB171-0538-A577-EECB-159EDA3881DC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pipeline">
+      <UniqueIdentifier>{513fb039-fd73-4e92-b5d4-164df791c127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline\Rendering">
+      <UniqueIdentifier>{1c3d6e7d-98c0-44ed-a76e-0bf8f3b83776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline\Rendering\DX">
+      <UniqueIdentifier>{9e556244-64c5-4d8c-9e1e-27b4b75c5d2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CU\Bounds.h">
@@ -120,9 +129,6 @@
     <ClInclude Include="src\Core\PollingStation.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Runtime.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\RuntimeAPI\Component.h">
       <Filter>Core\RuntimeAPI</Filter>
     </ClInclude>
@@ -175,6 +181,21 @@
       <Filter>Core\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h">
+      <Filter>Pipeline\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Runtime.h">
+      <Filter>Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\DXIncludes.h">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h">
+      <Filter>Pipeline\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp">
@@ -211,9 +232,6 @@
       <Filter>Core\Graphics\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\PollingStation.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Runtime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp">
@@ -259,5 +277,12 @@
       <Filter>Core\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp">
+      <Filter>Pipeline\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Runtime.cpp">
+      <Filter>Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
   </ItemGroup>
 </Project>

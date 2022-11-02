@@ -196,6 +196,11 @@
     <ClInclude Include="src\Core\Utilities\Input.h" />
     <ClInclude Include="src\Core\Utilities\Reflection.h" />
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\Pipeline\Rendering\DXIncludes.h" />
+    <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h" />
+    <ClInclude Include="src\Pipeline\Rendering\DX\RenderContext.h" />
+    <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h" />
+    <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp" />
@@ -228,6 +233,8 @@
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="src\Core\Utilities\Input.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\vendor.vcxproj">
