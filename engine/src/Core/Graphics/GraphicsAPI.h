@@ -17,7 +17,7 @@ namespace Dragonite
 	struct CameraProfile;
 	class CameraInterface;
 
-	class Runtime;
+	class Engine;
 	class ModelFactory;
 	class TextureFactory;
 	class ModelInstance;
@@ -100,7 +100,7 @@ namespace Dragonite
 
 	class GraphicalInterface
 	{
-		friend class Runtime;
+		friend class Engine;
 	public:
 		~GraphicalInterface();
 		void SetActiveCameraAs(CameraInterface& aNewCamera);

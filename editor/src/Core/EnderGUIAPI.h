@@ -23,29 +23,26 @@ namespace Dragonite
 		EmberGUIAPI();
 		virtual ~EmberGUIAPI() override;
 		const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext, IDXGISwapChain* aSwapChain) override;
-		void Update(const float aDt) override;
+		void Update(const float aDt, ID3D11RenderTargetView* aTargetView) override;
 		void Shutdown() override;
 		LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
 		void AddSpace(GUISpace* aNewSpace) override;
 
 
-		inline ID3D11ShaderResourceView* GetData() { return myRenderData; }
-
 	private:
-		const bool InitializeBackBuffer();
+		ID3D11Device* GetDevice() override;
+		ID3D11DeviceContext* GetContext() override;
 
 		HWND myWindowsInstance;
 		ID3D11Device* myDevice;
 		ID3D11DeviceContext* myDeviceContext;
 		GUISpace* myDockingSpace;
 		std::vector<std::shared_ptr<GUISpace>> myElements;
-		ID3D11RenderTargetView* 
-			myLocalBackbuffer;
-		ID3D11ShaderResourceView* 
-			myRenderData;
 
 		IDXGISwapChain* mySwapChain;
+
+
 	};
 }
 

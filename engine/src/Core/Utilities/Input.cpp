@@ -6,20 +6,23 @@
 
 Dragonite::Mouse::Mouse() = default;
 
-const bool Dragonite::Mouse::Init(Runtime* anApplication)
+const bool Dragonite::Mouse::Init(Engine* anApplication)
 {
 	myApplicationIns = anApplication;
 	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicalInterface>();
 
-	myApplicationIns->OnWndProc() += [this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
-	{
-		Update(aMessage, aWParam, anLParam);
-	};
+	myApplicationIns->RegisterWinProcListener([this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
+		{
+			Update(aMessage, aWParam, anLParam);
+			return S_OK;
+		});
 
-	myApplicationIns->OnUpdate() += [this](const float aDt)
-	{
-		EndFrame();
-	};
+	myApplicationIns->RegisterUpdateListener([this](const float aDt)
+		{
+			EndFrame();
+
+			
+		});
 
 	return true;
 }
@@ -147,7 +150,7 @@ void Dragonite::Mouse::UpdateState(UINT aButton)
 	myUpState[buttonEvent] = aButton == WM_LBUTTONUP || aButton == WM_RBUTTONUP || aButton == WM_MBUTTONUP;
 }
 
-const bool Dragonite::InputManager::Init(Runtime* anApplication)
+const bool Dragonite::InputManager::Init(Engine* anApplication)
 {
 	if (!myMouse.Init(anApplication))
 		return false;

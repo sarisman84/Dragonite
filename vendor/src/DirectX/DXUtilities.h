@@ -32,9 +32,6 @@ namespace DirectX
 
 
 
-	ID3D11Device* Device;
-	ID3D11DeviceContext* Context;
-
 	template<typename Data>
 	HRESULT CreateConstantBuffer(ID3D11Device* aDevice, ID3D11Buffer* aBuffer);
 	HRESULT CreateConstantBuffer(ID3D11Device* aDevice, const size_t someDataSize, ID3D11Buffer* aBuffer);

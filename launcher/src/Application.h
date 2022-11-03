@@ -38,10 +38,10 @@ namespace Dragonite
 		DLLParser myEngineParser{ ENGINEDLLPATH };
 		DLLParser myEditorParser{ EDITORDLLPATH };
 
-		static APIInterface* InitializeRuntime() {};
+		static EngineAPI* InitializeRuntime() {};
 		static EmberGUI* InitializeEditor() {};
 	public:
-		decltype(InitializeRuntime)* getInterface = myEngineParser["?InitializeRuntime@@YAPEAUAPIInterface@@XZ"];
+		decltype(InitializeRuntime)* getInterface = myEngineParser["InitializeRuntime"];
 		decltype(InitializeEditor)* getEditorInterface = myEditorParser["ImportEmberGUI"];
 
 	};
@@ -65,7 +65,7 @@ namespace Dragonite
 		int ExecuteRuntime();
 		inline void EndRuntime() { myRuntimeState = false; }
 
-		inline APIInterface* GetDragoniteAPI() { return myEngineInterface; }
+		inline EngineAPI* GetDragoniteAPI() { return myEngineInterface; }
 
 		operator bool() const
 		{
@@ -74,7 +74,7 @@ namespace Dragonite
 
 	private:
 		bool myRuntimeState;
-		APIInterface* myEngineInterface;
+		EngineAPI* myEngineInterface;
 		DragoniteAPI myEngineAPI;
 		HWND mySelf;
 	};

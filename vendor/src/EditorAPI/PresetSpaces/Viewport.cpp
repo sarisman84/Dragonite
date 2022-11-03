@@ -3,7 +3,7 @@
 #include <d3d11.h>
 #include "DirectX/DXUtilities.h"
 
-void InitRenderTarget(const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView)
+void InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView)
 {
 	DirectX::RenderTargetDesc desc = {};
 	desc.myArraySize = 1;
@@ -16,11 +16,11 @@ void InitRenderTarget(const float aWidth, const float aHeight, ID3D11RenderTarge
 	desc.myWidth = aWidth;
 	desc.myHeight = aHeight;
 
-	DirectX::CreateRenderTarget(desc, &aTargetView, &aShaderView);
+	DirectX::CreateRenderTarget(aDevice, desc, &aTargetView, &aShaderView);
 }
-void SwitchRenderView(ID3D11RenderTargetView* aTargetView)
+void SwitchRenderView(ID3D11DeviceContext* aContext, ID3D11RenderTargetView* aTargetView)
 {
 	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	DirectX::DX::contextPtr->OMSetRenderTargets(1, &aTargetView,nullptr);
-	DirectX::DX::contextPtr->ClearRenderTargetView(aTargetView, color);
+	aContext->OMSetRenderTargets(1, &aTargetView, nullptr);
+	aContext->ClearRenderTargetView(aTargetView, color);
 }

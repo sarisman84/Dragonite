@@ -1,11 +1,11 @@
 #include "APIInterface.h"
 
-APIInterface& APIInterface::operator=(const APIInterface&)
+EngineAPI& EngineAPI::operator=(const EngineAPI&)
 {
     return *this;
 }
 
-APIInterface& APIInterface::operator=(APIInterface&&)
+EngineAPI& EngineAPI::operator=(EngineAPI&&)
 {
     return *this;
 }

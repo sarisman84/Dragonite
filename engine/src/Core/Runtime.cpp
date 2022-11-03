@@ -13,9 +13,13 @@
 
 #include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 #include "nlohmann/single_include/nlohmann/json.hpp"
+#include "Pipeline/Rendering/DX/DXDrawer.h"
+#include "EditorAPI/Space/WindowSpace.h"
+
+#include "imgui/imgui.h"
 
 
-LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT Dragonite::Engine::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 
@@ -30,7 +34,7 @@ LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam,
 	if (myEditorInterface)
 		myEditorInterface->WinProc(hWnd, message, wParam, lParam);
 
-	
+
 
 	return 0;
 }
@@ -39,9 +43,15 @@ LRESULT Dragonite::Runtime::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam,
 
 
 
-Dragonite::Runtime::Runtime() = default;
+Dragonite::Engine::Engine() 
+{
+	myEditorInterface = nullptr;
+	myGUIInterface = nullptr;
+	myRuntimeHandler = nullptr;
+	myGraphicsEngine = nullptr;
+}
 
-Dragonite::Runtime::~Runtime()
+Dragonite::Engine::~Engine()
 {
 	if (myRuntimeHandler)
 		delete myRuntimeHandler;
@@ -58,7 +68,7 @@ Dragonite::Runtime::~Runtime()
 
 }
 
-bool Dragonite::Runtime::Initialize(HWND& anInstance, EmberGUI* anEditorInterface)
+bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface)
 {
 	myGUIInterface = nullptr;
 
@@ -73,11 +83,17 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, EmberGUI* anEditorInterfac
 
 	if (existsEditor)
 	{
-		myEditorInterface->Init(anInstance);
- 		//myEditorInterface->AddSpace(new EmberAPI::Viewport("Scene", 1920, 1080, []()
+		auto drawer = myGraphicsEngine->GetDrawer<DirectXDrawer>();
+		myEditorInterface->Init(
+			anInstance,
+			drawer->Device(),
+			drawer->Context(),
+			drawer->SwapChain());
+		//myEditorInterface->AddSpace([this](void* aCurSpace)
 			//{
+			//	ImGui::Text("This is a space!");
 			//	//Render your scene here
-			//}));
+			//});
 
 	}
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
@@ -87,16 +103,18 @@ bool Dragonite::Runtime::Initialize(HWND& anInstance, EmberGUI* anEditorInterfac
 	return true;
 }
 
-void Dragonite::Runtime::Update(const float aDeltaTime)
+void Dragonite::Engine::Update(const float aDeltaTime)
 {
 	if (myEditorInterface)
-		myEditorInterface->Update(aDeltaTime);
+		myEditorInterface->Update(aDeltaTime, myGraphicsEngine->GetBackBuffer());
+
+	myGraphicsEngine->Draw();
 }
 
-DLLEXPORT APIInterface* InitializeRuntime()
+DLLEXPORT EngineAPI* InitializeRuntime()
 {
 	using namespace Dragonite;
 
-	Runtime* runtime = new Runtime();
+	Engine* runtime = new Engine();
 	return runtime;
 }

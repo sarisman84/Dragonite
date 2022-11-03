@@ -10,7 +10,7 @@
 
 namespace Dragonite
 {
-	class Runtime;
+	class Engine;
 	class GraphicalInterface;
 
 	enum class MouseKey : unsigned int
@@ -26,7 +26,7 @@ namespace Dragonite
 	{
 	public:
 		Mouse();
-		const bool Init(Runtime* anApplication);
+		const bool Init(Engine* anApplication);
 
 		const bool GetButton(MouseKey aKey);
 		const bool GetButtonDown(MouseKey aKey);
@@ -64,7 +64,7 @@ namespace Dragonite
 		std::bitset<3> myUpState;
 		std::bitset<3> myPreviousUpState;
 
-		Runtime* myApplicationIns;
+		Engine* myApplicationIns;
 		GraphicalInterface* myGraphicsPipeline;
 
 	};
@@ -80,7 +80,7 @@ namespace Dragonite
 
 
 
-		const bool Init(Runtime* anApplication);
+		const bool Init(Engine* anApplication);
 
 		inline Mouse& GetMouse() { return myMouse; }
 	private:

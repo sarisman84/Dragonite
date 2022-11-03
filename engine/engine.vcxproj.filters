@@ -41,13 +41,16 @@
       <UniqueIdentifier>{196AB171-0538-A577-EECB-159EDA3881DC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pipeline">
-      <UniqueIdentifier>{513fb039-fd73-4e92-b5d4-164df791c127}</UniqueIdentifier>
+      <UniqueIdentifier>{FB328BEF-E7FF-E5FA-1019-D4A2FC441B89}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pipeline\Rendering">
-      <UniqueIdentifier>{1c3d6e7d-98c0-44ed-a76e-0bf8f3b83776}</UniqueIdentifier>
+      <UniqueIdentifier>{08328B3E-F415-4C94-5D76-46E749793616}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pipeline\Rendering\DX">
-      <UniqueIdentifier>{9e556244-64c5-4d8c-9e1e-27b4b75c5d2a}</UniqueIdentifier>
+      <UniqueIdentifier>{13261BD2-7F92-D6CC-4886-6E2AB4B1F834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipeline\Utilities">
+      <UniqueIdentifier>{268DEB05-1271-AC5B-7BD1-A6AE67D496DD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +132,9 @@
     <ClInclude Include="src\Core\PollingStation.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Runtime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\RuntimeAPI\Component.h">
       <Filter>Core\RuntimeAPI</Filter>
     </ClInclude>
@@ -180,22 +186,25 @@
     <ClInclude Include="src\Core\Utilities\Reflection.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\DX\DXIncludes.h">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\DX\RenderContext.h">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h">
       <Filter>Pipeline\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Runtime.h">
-      <Filter>Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pipeline\Rendering\DXIncludes.h">
-      <Filter>Pipeline\Rendering\DX</Filter>
     </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h">
       <Filter>Pipeline\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
-      <Filter>Pipeline\Rendering\DX</Filter>
+    <ClInclude Include="src\Pipeline\Utilities\Events.h">
+      <Filter>Pipeline\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp">
@@ -232,6 +241,9 @@
       <Filter>Core\Graphics\Textures</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\PollingStation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Runtime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp">
@@ -276,13 +288,12 @@
     <ClCompile Include="src\Core\Utilities\Input.cpp">
       <Filter>Core\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp">
+      <Filter>Pipeline\Rendering\DX</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp">
       <Filter>Pipeline\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Runtime.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
   </ItemGroup>
 </Project>

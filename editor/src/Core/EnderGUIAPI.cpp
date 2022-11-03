@@ -21,8 +21,6 @@ Dragonite::EmberGUIAPI::~EmberGUIAPI()
 		delete myDockingSpace;
 	myDockingSpace = nullptr;
 
-
-	DirectX::End();
 	myDevice = nullptr;
 	myDeviceContext = nullptr;
 }
@@ -35,7 +33,6 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 	myWindowsInstance = anInstance;
 	if (!anInstance || !aDevice || !aContext || !aSwapChain) return false;
 
-	if (!InitializeBackBuffer()) return false;
 
 	{//IMGUI INIT
 		IMGUI_CHECKVERSION();
@@ -57,11 +54,9 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 		}
 
 
-		myDockingSpace = new EmberGUISpace([this](GUISpace* aCurSpace)
+		myDockingSpace = new EmberGUISpace(myDevice, myDeviceContext,[]
+		(GUISpace* aCurSpace, std::vector<std::shared_ptr<GUISpace>>& someElements, ID3D11RenderTargetView* aBufferToRenderTo)
 			{
-
-
-
 				{//Render
 
 					ImGuiIO& io = ImGui::GetIO();
@@ -130,12 +125,12 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 
 
 
-					for (size_t i = 0; i < myElements.size(); i++)
+					for (size_t i = 0; i < someElements.size(); i++)
 					{
-						ImGui::Begin(myElements[i]->myName);
-						myElements[i]->myFocusedFlag = ImGui::IsWindowFocused();
-						myElements[i]->myHoveredFlag = ImGui::IsWindowHovered();
-						myElements[i]->Invoke();
+						ImGui::Begin(someElements[i]->myName);
+						someElements[i]->myFocusedFlag = ImGui::IsWindowFocused();
+						someElements[i]->myHoveredFlag = ImGui::IsWindowHovered();
+						someElements[i]->Invoke(someElements, aBufferToRenderTo);
 						ImGui::End();
 					}
 
@@ -147,8 +142,8 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 
 					float* color = new float[4] { 0, 0, 0, 0 };
 					ImGui::Render();
-					myDeviceContext->OMSetRenderTargets(1, &myLocalBackbuffer, nullptr);
-					myDeviceContext->ClearRenderTargetView(myLocalBackbuffer, color);
+					aCurSpace->Context()->OMSetRenderTargets(1, &aBufferToRenderTo, nullptr);
+					aCurSpace->Context()->ClearRenderTargetView(aBufferToRenderTo, color);
 					//myDeviceContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 					delete[] color;
 
@@ -169,9 +164,9 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 	return true;
 }
 
-void Dragonite::EmberGUIAPI::Update(const float aDt)
+void Dragonite::EmberGUIAPI::Update(const float aDt, ID3D11RenderTargetView* aTargetView)
 {
-	myDockingSpace->Invoke();
+	myDockingSpace->Invoke(myElements, aTargetView);
 }
 
 void Dragonite::EmberGUIAPI::Shutdown()
@@ -187,35 +182,15 @@ LRESULT Dragonite::EmberGUIAPI::WinProc(HWND hWnd, UINT message, WPARAM wParam, 
 	return ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
 }
 
-const bool Dragonite::EmberGUIAPI::InitializeBackBuffer()
+
+ID3D11Device* Dragonite::EmberGUIAPI::GetDevice()
 {
-	DirectX::Begin(myDevice, myDeviceContext);
-	RECT rect{};
-	GetClientRect(myWindowsInstance, &rect);
+	return myDevice;
+}
 
-	DirectX::RenderTargetDesc desc = {};
-	desc.myArraySize = 1;
-	desc.myCPUAccessFlags = 0;
-	desc.myMiscFlags = 0;
-	desc.myMipLevels = 1;
-	desc.myQuality = 0;
-	desc.myCount = 1;
-	desc.myFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.myUseage = D3D11_USAGE_DEFAULT;
-	/*desc.myCPUAccessFlags = D3D11_CPU_ACCESS_WRITE;*/
-	desc.myWidth = rect.right - rect.left;
-	desc.myHeight = rect.bottom - rect.top;
-	
-	if (FAILED(DirectX::CreateRenderTarget(desc, &myLocalBackbuffer, &myRenderData)))
-		return false;
-
-	//float resolution[2];
-	//resolution[0] = 1920;
-	//resolution[1] = 1080;
-
-	//DirectX::SetViewport(resolution);
-
-	return true;
+ID3D11DeviceContext* Dragonite::EmberGUIAPI::GetContext()
+{
+	return myDeviceContext;
 }
 
 void Dragonite::EmberGUIAPI::AddSpace(GUISpace* aNewSpace)

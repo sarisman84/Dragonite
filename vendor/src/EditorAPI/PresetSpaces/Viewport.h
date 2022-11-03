@@ -5,8 +5,8 @@
 struct ID3D11RenderTargetView;
 struct ID3D11ShaderResourceView;
 
-void InitRenderTarget(const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView);
-void SwitchRenderView(ID3D11RenderTargetView* aTargetView);
+void InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView);
+void SwitchRenderView(ID3D11DeviceContext* aContext, ID3D11RenderTargetView* aTargetView);
 
 namespace EmberAPI
 {
@@ -14,7 +14,7 @@ namespace EmberAPI
 	class Viewport : public GUISpace
 	{
 	public:
-		Viewport( const char* aName,const float aWidth, const float aHeight, RenderCall&& aRenderCall);
+		Viewport(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const char* aName, const float aWidth, const float aHeight, RenderCall&& aRenderCall);
 		void Invoke() override;
 
 	private:
@@ -24,19 +24,27 @@ namespace EmberAPI
 		float myWidth, myHeight;
 	};
 
+
+
 	template<typename RenderCall>
-	inline Viewport<RenderCall>::Viewport(const char* aName, const float aWidth, const float aHeight, RenderCall&& aRenderCall) : GUISpace(), myRenderCall(aRenderCall)
+	inline Viewport<RenderCall>::Viewport(
+		ID3D11Device* aDevice,
+		ID3D11DeviceContext* aContext,
+		const char* aName,
+		const float aWidth,
+		const float aHeight,
+		RenderCall&& aRenderCall) : GUISpace(aDevice, aContext)
 	{
 		myName = aName;
 		myWidth = aWidth;
 		myHeight = aHeight;
-		InitRenderTarget(aWidth, aHeight, myRenderTargetView, myShaderResourceView);
+		InitRenderTarget(myDevice, aWidth, aHeight, myRenderTargetView, myShaderResourceView);
 	}
 
 	template<typename RenderCall>
 	inline void Viewport<RenderCall>::Invoke()
 	{
-		SwitchRenderView(myRenderTargetView);
+		SwitchRenderView(myContext, myRenderTargetView);
 		myRenderCall();
 		ImGui::Image(myShaderResourceView, ImVec2(myWidth, myHeight));
 	}

@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #include <unordered_map>
-
+#include "Pipeline/Rendering/DX/DXIncludes.h"
 
 namespace Dragonite
 {
@@ -40,6 +40,8 @@ namespace Dragonite
 		Call myRenderCall;
 	};
 
+	
+
 
 	class GraphicsEngine
 	{
@@ -48,18 +50,34 @@ namespace Dragonite
 		template<typename Render>
 		void RegisterInstruction(Render&& aRenderCall);
 		void Draw();
+
+		template<typename Drawer>
+		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
+
+		inline ID3D11RenderTargetView* GetBackBuffer() { return myBackBuffer; }
+
 	public:
 		static GraphicsEngine* InitializeEngine(HWND anInstance);
 	private:
 		GraphicsEngine();
 		void Init(HWND anInstance);
+
+		const int VertexShaderID(const int anRenderCallID);
+		const int PixelShaderID(const int anRenderCallID);
+		const int InputLayoutID(const int anRenderCallID);
+
 	private:
 
 		IDrawer* myDrawer;
 		ID3D11RenderTargetView* myBackBuffer;
 		ID3D11DepthStencilView* myDepthBuffer;
 
-		std::unordered_map<int, std::vector<std::shared_ptr<RenderCall>>> myInstructions;
+		std::unordered_map<int, std::vector<std::shared_ptr<RenderCall>>> myInstructions; 
+
+		std::unordered_map<int, ID3D11VertexShader*> myVertexShaders;
+		std::unordered_map<int, ID3D11PixelShader*> myPixelShaders;
+		std::unordered_map<int, ID3D11InputLayout*> myInputLayout;
+
 	};
 
 

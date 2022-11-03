@@ -19,6 +19,7 @@
 
 
 #include "Utilities/Reflection.h"
+#include "Pipeline/Utilities/Events.h"
 
 
 
@@ -33,13 +34,22 @@ namespace Dragonite
 	class Scene;
 
 
-	class Runtime : public APIInterface
+
+
+
+	class Engine : public EngineAPI
 	{
 	public:
-		Runtime();
-		~Runtime() override;
+		Engine();
+		~Engine() override;
 
 		inline PollingStation& GetPollingStation() { return *myRuntimeHandler; }
+
+		template<typename Event>
+		void RegisterWinProcListener(Event&& anEvent);
+
+		template<typename Event>
+		void RegisterUpdateListener(Event&& anEvent);
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -47,6 +57,9 @@ namespace Dragonite
 		void Update(const float aDeltaTime) override;
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
+	private:
+		std::vector<std::shared_ptr<IUpdateEvent>> myUpdateEvents;
+		std::vector<std::shared_ptr<IWinEvent>> myWinProcEvents;
 	private:
 		EmberGUI* myEditorInterface;
 		GraphicsEngine* myGraphicsEngine;
@@ -58,7 +71,24 @@ namespace Dragonite
 
 
 
+	template<typename Event>
+	inline void Engine::RegisterWinProcListener(Event&& anEvent)
+	{
+		myWinProcEvents.push_back(std::make_shared<WindowsEvent<Event>>(std::forward<Event>(anEvent)));
+	}
+
+	template<typename Event>
+	inline void Engine::RegisterUpdateListener(Event&& anEvent)
+	{
+		myUpdateEvents.push_back(std::make_shared<UpdateEvent<Event>>(std::forward<Event>(anEvent)));
+	}
+
 }
-DLLEXPORT APIInterface* InitializeRuntime();
+
+extern "C"
+{
+	DLLEXPORT EngineAPI* InitializeRuntime();
+};
+
 
 

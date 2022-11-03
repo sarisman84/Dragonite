@@ -9,6 +9,7 @@ struct ID3D11DepthStencilView;
 struct ID3D11Buffer;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
+struct ID3D11InputLayout;
 
 //Other
 struct IDXGISwapChain;

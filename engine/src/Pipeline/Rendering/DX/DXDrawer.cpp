@@ -36,7 +36,7 @@ void Dragonite::DirectXDrawer::Init(HWND anInstance)
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = anInstance;
 	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.Windowed = false;
+	swapChainDesc.Windowed = true;
 
 	UINT creationFlags = 0;
 #if defined(REPORT_DX_WARNINGS)

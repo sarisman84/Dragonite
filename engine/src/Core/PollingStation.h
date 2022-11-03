@@ -4,7 +4,7 @@
 
 namespace Dragonite
 {
-	class Runtime;
+	class Engine;
 	class GraphicalInterface;
 	class PollingStation
 	{
@@ -12,13 +12,13 @@ namespace Dragonite
 		friend class Scene;
 		friend class DragoniteGui;
 		friend GraphicalInterface;
-		friend Runtime;
+		friend Engine;
 	public:
 		PollingStation() = default;
 		~PollingStation();
 
-		PollingStation(const Runtime& anOtherIns) = delete;
-		void operator=(const Runtime& anOtherIns) = delete;
+		PollingStation(const Engine& anOtherIns) = delete;
+		void operator=(const Engine& anOtherIns) = delete;
 
 
 		template<typename Type>

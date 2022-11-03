@@ -5,7 +5,7 @@
 
 
 
-struct APIInterface
+struct EngineAPI
 {
 	virtual bool Initialize(HWND& anInstance, EmberGUI* anEditorInterface = nullptr) = 0;
 	virtual void Update(const float aDeltaTime) = 0;
@@ -16,10 +16,10 @@ struct APIInterface
 protected:
 	~APIInterface() {};
 #else
-	virtual ~APIInterface() = default;
+	virtual ~EngineAPI() = default;
 #endif
 
 private:
-	APIInterface& operator=(const APIInterface&);
-	APIInterface& operator=(APIInterface&&);
+	EngineAPI& operator=(const EngineAPI&);
+	EngineAPI& operator=(EngineAPI&&);
 };
