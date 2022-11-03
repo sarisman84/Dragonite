@@ -14,7 +14,7 @@ public:
 		myDevice = aDevice;
 		myContext = aContext;
 	}
-	virtual void Invoke(std::vector<std::shared_ptr<GUISpace>>& someElements, ID3D11RenderTargetView* aBufferToRenderTo) = 0;
+	virtual void Invoke(void* someExtraData = nullptr) = 0;
 
 
 	inline ID3D11Device* Device() { return myDevice; }
@@ -35,9 +35,9 @@ template<typename SpaceDef>
 struct EmberGUISpace : public GUISpace //Base Template
 {
 	EmberGUISpace(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, SpaceDef&& aCallback) : GUISpace(aDevice, aContext), mySpaceDefinition(aCallback) {}
-	inline void Invoke(std::vector<std::shared_ptr<GUISpace>>& someElements, ID3D11RenderTargetView* aBufferToRenderTo) override
+	inline void Invoke(void* someExtraData = nullptr) override
 	{
-		mySpaceDefinition(this, someElements, aBufferToRenderTo);
+		mySpaceDefinition(this, someExtraData);
 	}
 private:
 	SpaceDef& mySpaceDefinition;

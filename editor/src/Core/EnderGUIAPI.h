@@ -28,8 +28,8 @@ namespace Dragonite
 		LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
 		void AddSpace(GUISpace* aNewSpace) override;
-
-
+		void* GetElements() override;
+		ImGuiContext* GetIMGUIContext() override;
 	private:
 		ID3D11Device* GetDevice() override;
 		ID3D11DeviceContext* GetContext() override;
@@ -41,6 +41,13 @@ namespace Dragonite
 		std::vector<std::shared_ptr<GUISpace>> myElements;
 
 		IDXGISwapChain* mySwapChain;
+		ImGuiContext* myImguiContext;
+
+
+
+
+
+		// Inherited via EmberGUI
 
 
 	};

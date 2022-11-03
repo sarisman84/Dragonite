@@ -43,7 +43,7 @@ LRESULT Dragonite::Engine::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 
 
-Dragonite::Engine::Engine() 
+Dragonite::Engine::Engine()
 {
 	myEditorInterface = nullptr;
 	myGUIInterface = nullptr;
@@ -89,11 +89,16 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 			drawer->Device(),
 			drawer->Context(),
 			drawer->SwapChain());
-		//myEditorInterface->AddSpace([this](void* aCurSpace)
-			//{
-			//	ImGui::Text("This is a space!");
-			//	//Render your scene here
-			//});
+		myEditorInterface->AddEditor("Test", [this](GUISpace* aSelf, void*)
+			{
+				ImGui::SetCurrentContext(aSelf->myGUIInterface->GetIMGUIContext());
+
+				ImVec4 test;
+				ImGui::ColorButton("Yes", test);
+				ImGui::ColorPicker3("More Yes", (float*)&test);
+				//ImGui::Text("This is a space!");
+				//Render your scene here
+			});
 
 	}
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());

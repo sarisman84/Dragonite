@@ -8,6 +8,8 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct IDXGISwapChain;
 
+struct ImGuiContext;
+
 class EmberGUI
 {
 public:
@@ -16,8 +18,10 @@ public:
 	virtual void Update(const float aDt, ID3D11RenderTargetView* aTargetView) = 0;
 	virtual void Shutdown() = 0;
 	virtual LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
+	virtual void* GetElements() = 0;
+	virtual ImGuiContext* GetIMGUIContext() = 0;
 	template<typename Event>
-	void AddSpace(Event&& anEvent);
+	void AddEditor(const char* aName, Event&& anEvent);
 	virtual void AddSpace(GUISpace* aNewSpace) = 0;
 
 #if CHOOSE_DESTRUCTION_TYPE
@@ -38,7 +42,9 @@ private:
 
 
 template<typename Event>
-inline void EmberGUI::AddSpace(Event&& anEvent)
+inline void EmberGUI::AddEditor(const char* aName,Event&& anEvent)
 {
-	AddSpace(new EmberGUISpace(GetDevice(), GetContext(), std::forward<Event>(anEvent)));
+	auto editor = new EmberGUISpace(GetDevice(), GetContext(), std::forward<Event>(anEvent));
+	editor->myName = aName;
+	this->AddSpace(editor);
 }

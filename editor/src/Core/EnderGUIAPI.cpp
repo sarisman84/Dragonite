@@ -36,7 +36,7 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 
 	{//IMGUI INIT
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
+		myImguiContext = ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -54,8 +54,8 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 		}
 
 
-		myDockingSpace = new EmberGUISpace(myDevice, myDeviceContext,[]
-		(GUISpace* aCurSpace, std::vector<std::shared_ptr<GUISpace>>& someElements, ID3D11RenderTargetView* aBufferToRenderTo)
+		myDockingSpace = new EmberGUISpace(myDevice, myDeviceContext, [this]
+		(GUISpace* aCurSpace, void* someData)
 			{
 				{//Render
 
@@ -122,28 +122,32 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 
 					ImGui::ShowDemoWindow();
 
+					auto elements = (std::vector<std::shared_ptr<GUISpace>>*)aCurSpace->myGUIInterface->GetElements();
+					myElements;
 
-
-
-					for (size_t i = 0; i < someElements.size(); i++)
+					for (size_t i = 0; i < elements->size(); i++)
 					{
-						ImGui::Begin(someElements[i]->myName);
-						someElements[i]->myFocusedFlag = ImGui::IsWindowFocused();
-						someElements[i]->myHoveredFlag = ImGui::IsWindowHovered();
-						someElements[i]->Invoke(someElements, aBufferToRenderTo);
+
+						ImGui::Begin((*elements)[i]->myName);
+						(*elements)[i]->Invoke();
+						(*elements)[i]->myFocusedFlag = ImGui::IsWindowFocused();
+						(*elements)[i]->myHoveredFlag = ImGui::IsWindowHovered();
 						ImGui::End();
 					}
+
+
+
 
 					{//EndDockingSpace
 						ImGui::End();
 					}
 
 
-
+					ID3D11RenderTargetView* data = (ID3D11RenderTargetView*)someData;
 					float* color = new float[4] { 0, 0, 0, 0 };
 					ImGui::Render();
-					aCurSpace->Context()->OMSetRenderTargets(1, &aBufferToRenderTo, nullptr);
-					aCurSpace->Context()->ClearRenderTargetView(aBufferToRenderTo, color);
+					aCurSpace->Context()->OMSetRenderTargets(1, &data, nullptr);
+					aCurSpace->Context()->ClearRenderTargetView(data, color);
 					//myDeviceContext->ClearDepthStencilView(myDepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 					delete[] color;
 
@@ -156,6 +160,8 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 				}
 
 			});
+
+		myDockingSpace->myGUIInterface = this;
 	}
 
 
@@ -166,7 +172,8 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 
 void Dragonite::EmberGUIAPI::Update(const float aDt, ID3D11RenderTargetView* aTargetView)
 {
-	myDockingSpace->Invoke(myElements, aTargetView);
+	if (myElements.empty()) return;
+	myDockingSpace->Invoke(aTargetView);
 }
 
 void Dragonite::EmberGUIAPI::Shutdown()
@@ -193,7 +200,18 @@ ID3D11DeviceContext* Dragonite::EmberGUIAPI::GetContext()
 	return myDeviceContext;
 }
 
+ImGuiContext* Dragonite::EmberGUIAPI::GetIMGUIContext()
+{
+	return myImguiContext;
+}
+
+void* Dragonite::EmberGUIAPI::GetElements()
+{
+	return &myElements;
+}
+
 void Dragonite::EmberGUIAPI::AddSpace(GUISpace* aNewSpace)
 {
+	aNewSpace->myGUIInterface = this;
 	myElements.push_back(std::shared_ptr<GUISpace>(aNewSpace));
 }
