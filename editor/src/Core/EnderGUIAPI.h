@@ -30,6 +30,7 @@ namespace Dragonite
 		void AddSpace(GUISpace* aNewSpace) override;
 		void* GetElements() override;
 		ImGuiContext* GetIMGUIContext() override;
+		EmVec2 GetViewportResolution() override;
 	private:
 		ID3D11Device* GetDevice() override;
 		ID3D11DeviceContext* GetContext() override;
@@ -44,6 +45,10 @@ namespace Dragonite
 		ImGuiContext* myImguiContext;
 
 
+
+
+
+		// Inherited via EmberGUI
 
 
 

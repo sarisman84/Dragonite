@@ -9,11 +9,9 @@ class EmberGUI;
 struct GUISpace //Interface
 {
 public:
-	GUISpace(ID3D11Device* aDevice, ID3D11DeviceContext* aContext)
-	{
-		myDevice = aDevice;
-		myContext = aContext;
-	}
+	GUISpace() = default;
+	GUISpace(const char* aName, EmberGUI* anEmberGUIInterface);
+	virtual ~GUISpace() = default;
 	virtual void Invoke(void* someExtraData = nullptr) = 0;
 
 
@@ -34,7 +32,7 @@ public:
 template<typename SpaceDef>
 struct EmberGUISpace : public GUISpace //Base Template
 {
-	EmberGUISpace(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, SpaceDef&& aCallback) : GUISpace(aDevice, aContext), mySpaceDefinition(aCallback) {}
+	EmberGUISpace(EmberGUI* anInterface, const char* aName, SpaceDef&& aCallback) : GUISpace(aName, anInterface), mySpaceDefinition(aCallback) {}
 	inline void Invoke(void* someExtraData = nullptr) override
 	{
 		mySpaceDefinition(this, someExtraData);

@@ -8,14 +8,37 @@ struct ID3D11DeviceContext;
 
 namespace Dragonite
 {
-	struct DirectXDrawer : IDrawer
+	struct RTContent : IContent
 	{
-		DirectXDrawer();
-		~DirectXDrawer() override;
+		RTContent();
+		~RTContent() override;
+		void* GetContent() const override;
+		void** EditContent() override;
+	private:
+		ID3D11RenderTargetView* myRenderTargetView;
+	};
+
+	struct DSContent : IContent
+	{
+		DSContent();
+		~DSContent() override;
+		void* GetContent() const override;
+		void** EditContent() override;
+	private:
+		ID3D11DepthStencilView* myDepthStencilView;
+	};
+
+
+	struct DXDrawer : IDrawer
+	{
+		DXDrawer();
+		~DXDrawer() override;
 		void Present(bool aVSyncState) override;
 		void Init(HWND anInstance) override;
-		void SetRenderTarget(IContent* aTargetBuffer, IContent* aDepthBuffer) override;
-		void ClearRenderTarget(IContent* aTargetBuffer, IContent* aDepthBuffer) override;
+
+		void SetRenderTarget(void* aTargetBuffer, void* aDepthBuffer = nullptr) override;
+		void ClearRenderTarget(void* aTargetBuffer, void* aDepthBuffer = nullptr) override;
+
 
 		inline IDXGISwapChain* SwapChain() noexcept { return mySwapChain; }
 		inline ID3D11Device* Device() noexcept { return myDevice; }

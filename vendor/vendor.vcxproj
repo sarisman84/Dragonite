@@ -204,6 +204,7 @@
     <ClCompile Include="src\DirectX\DDSTextureLoader11.cpp" />
     <ClCompile Include="src\DirectX\DXUtilities.cpp" />
     <ClCompile Include="src\EditorAPI\PresetSpaces\Viewport.cpp" />
+    <ClCompile Include="src\EditorAPI\Space\WindowSpace.cpp" />
     <ClCompile Include="src\EngineAPI\APIInterface.cpp" />
     <ClCompile Include="src\STB\stb_vorbis.c" />
     <ClCompile Include="src\imgui\backends\imgui_impl_dx11.cpp" />

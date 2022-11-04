@@ -272,5 +272,8 @@
     <ClCompile Include="src\imguizmo\ImSequencer.cpp">
       <Filter>imguizmo</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorAPI\Space\WindowSpace.cpp">
+      <Filter>EditorAPI\Space</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

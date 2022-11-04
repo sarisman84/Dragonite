@@ -17,7 +17,7 @@
 #include "Core/Graphics/GraphicsAPI.h"
 #include "Core/Graphics/CameraInterface.h"
 
-#include "Core/Runtime.h"
+#include "Pipeline/Runtime.h"
 
 
 std::string Dragonite::Scene::myLastSavedPath;

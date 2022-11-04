@@ -12,8 +12,9 @@
 #include "Core/Graphics/DirectX11/DXUtilities.h"
 
 #include "Core/Graphics/GraphicsAPI.h"
-#include "Core/Runtime.h"
+#include "Pipeline/Runtime.h"
 #include "Core/PollingStation.h"
+#include "ModelFactory.h"
 
 
 
@@ -317,7 +318,6 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitQuad()
 	return model;
 }
 
-
-
-
-
+void Dragonite::ModelFactory::Init()
+{
+}

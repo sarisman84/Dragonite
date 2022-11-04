@@ -177,7 +177,6 @@
     <ClInclude Include="src\Core\Graphics\Textures\Texture.h" />
     <ClInclude Include="src\Core\Graphics\Textures\TextureFactory.h" />
     <ClInclude Include="src\Core\PollingStation.h" />
-    <ClInclude Include="src\Core\Runtime.h" />
     <ClInclude Include="src\Core\RuntimeAPI\Component.h" />
     <ClInclude Include="src\Core\RuntimeAPI\Components\Camera.h" />
     <ClInclude Include="src\Core\RuntimeAPI\Components\ComponentStructure.h" />
@@ -195,11 +194,15 @@
     <ClInclude Include="src\Core\Utilities\Function.h" />
     <ClInclude Include="src\Core\Utilities\Input.h" />
     <ClInclude Include="src\Core\Utilities\Reflection.h" />
+    <ClInclude Include="src\Pipeline\Factories\BaseFactory.h" />
+    <ClInclude Include="src\Pipeline\Factories\ModelFactory.h" />
+    <ClInclude Include="src\Pipeline\Factories\ShaderFactory.h" />
+    <ClInclude Include="src\Pipeline\Factories\TextureFactory.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXIncludes.h" />
-    <ClInclude Include="src\Pipeline\Rendering\DX\RenderContext.h" />
     <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h" />
     <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h" />
+    <ClInclude Include="src\Pipeline\Runtime.h" />
     <ClInclude Include="src\Pipeline\Utilities\Events.h" />
     <ClInclude Include="src\framework.h" />
   </ItemGroup>
@@ -216,7 +219,6 @@
     <ClCompile Include="src\Core\Graphics\Textures\Texture.cpp" />
     <ClCompile Include="src\Core\Graphics\Textures\TextureFactory.cpp" />
     <ClCompile Include="src\Core\PollingStation.cpp" />
-    <ClCompile Include="src\Core\Runtime.cpp" />
     <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp" />
     <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerAgent.cpp" />
     <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerTerminal.cpp" />
@@ -233,8 +235,10 @@
     <ClCompile Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp" />
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="src\Core\Utilities\Input.cpp" />
+    <ClCompile Include="src\Pipeline\Factories\ShaderFactory.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp" />
+    <ClCompile Include="src\Pipeline\Runtime.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>

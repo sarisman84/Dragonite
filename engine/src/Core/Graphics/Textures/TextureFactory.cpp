@@ -1,6 +1,6 @@
 #include "TextureFactory.h"
 #include "Core/Graphics/GraphicsAPI.h"
-#include "Core/Runtime.h"
+#include "Pipeline/Runtime.h"
 
 //#include "../../External/DirectX/DDSTextureLoader11.h"
 #include "DirectX/DDSTextureLoader11.h"

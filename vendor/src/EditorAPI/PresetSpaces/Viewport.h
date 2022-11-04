@@ -1,53 +1,57 @@
 #pragma once
 #include "imgui/imgui.h"
 #include "EditorAPI/Space/WindowSpace.h"
+#include "EditorAPI/EmberGUI.h"
 
 struct ID3D11RenderTargetView;
 struct ID3D11ShaderResourceView;
 
-void InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView);
-void SwitchRenderView(ID3D11DeviceContext* aContext, ID3D11RenderTargetView* aTargetView);
 
-namespace EmberAPI
+
+namespace EmberGUILayout
 {
+	void InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView** aTargetView, ID3D11ShaderResourceView** aShaderView);
+	void ReleaseElements(ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView);
+
 	template<typename RenderCall>
-	class Viewport : public GUISpace
+	struct Viewport : public GUISpace
 	{
-	public:
-		Viewport(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const char* aName, const float aWidth, const float aHeight, RenderCall&& aRenderCall);
-		void Invoke() override;
+		Viewport(const char* aName, const EmVec2& aViewportSize, RenderCall&& aRenderCall, EmberGUI* const anInterface);
+		~Viewport() override 
+		{
+			ReleaseElements(myViewportView, myTextureData);
+		}
+		void Invoke(void* someExtraData) override;
 
 	private:
-		ID3D11RenderTargetView* myRenderTargetView;
-		ID3D11ShaderResourceView* myShaderResourceView;
+
 		RenderCall myRenderCall;
-		float myWidth, myHeight;
+		ID3D11ShaderResourceView* myTextureData;
+		ID3D11RenderTargetView* myViewportView;
+		EmVec2 myViewportSize;
 	};
 
 
 
 	template<typename RenderCall>
-	inline Viewport<RenderCall>::Viewport(
-		ID3D11Device* aDevice,
-		ID3D11DeviceContext* aContext,
-		const char* aName,
-		const float aWidth,
-		const float aHeight,
-		RenderCall&& aRenderCall) : GUISpace(aDevice, aContext)
+	EmberGUILayout::Viewport<RenderCall>::Viewport(const char* aName, const EmVec2& aViewportSize, RenderCall&& aRenderCall, EmberGUI* const anInterface) : 
+		GUISpace(aName, anInterface), myRenderCall(aRenderCall)
 	{
-		myName = aName;
-		myWidth = aWidth;
-		myHeight = aHeight;
-		InitRenderTarget(myDevice, aWidth, aHeight, myRenderTargetView, myShaderResourceView);
+		myViewportSize = aViewportSize;
+
+		auto clientSize = myGUIInterface->GetViewportResolution();
+		InitRenderTarget(myDevice, clientSize.x, clientSize.y, &myViewportView, &myTextureData);
 	}
 
 	template<typename RenderCall>
-	inline void Viewport<RenderCall>::Invoke()
+	void EmberGUILayout::Viewport<RenderCall>::Invoke(void* someExtraData)
 	{
-		SwitchRenderView(myContext, myRenderTargetView);
-		myRenderCall();
-		ImGui::Image(myShaderResourceView, ImVec2(myWidth, myHeight));
+		ImGui::SetCurrentContext(myGUIInterface->GetIMGUIContext());
+		myRenderCall((void*)myViewportView);
+		ImGui::Image(myTextureData, ImVec2(myViewportSize.x, myViewportSize.y));
+
 	}
+
 
 }
 

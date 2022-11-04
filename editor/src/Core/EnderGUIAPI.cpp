@@ -54,7 +54,7 @@ const bool Dragonite::EmberGUIAPI::Init(HWND anInstance, ID3D11Device* aDevice, 
 		}
 
 
-		myDockingSpace = new EmberGUISpace(myDevice, myDeviceContext, [this]
+		myDockingSpace = new EmberGUISpace(this, "Base", [this]
 		(GUISpace* aCurSpace, void* someData)
 			{
 				{//Render
@@ -200,6 +200,15 @@ ID3D11DeviceContext* Dragonite::EmberGUIAPI::GetContext()
 	return myDeviceContext;
 }
 
+EmVec2 Dragonite::EmberGUIAPI::GetViewportResolution()
+{
+	if (!myDeviceContext) return EmVec2(0, 0);
+	UINT amm = 1;
+	D3D11_VIEWPORT port = { };
+	myDeviceContext->RSGetViewports(&amm, &port);
+	return EmVec2(port.Width, port.Height);
+}
+
 ImGuiContext* Dragonite::EmberGUIAPI::GetIMGUIContext()
 {
 	return myImguiContext;
@@ -212,6 +221,5 @@ void* Dragonite::EmberGUIAPI::GetElements()
 
 void Dragonite::EmberGUIAPI::AddSpace(GUISpace* aNewSpace)
 {
-	aNewSpace->myGUIInterface = this;
 	myElements.push_back(std::shared_ptr<GUISpace>(aNewSpace));
 }

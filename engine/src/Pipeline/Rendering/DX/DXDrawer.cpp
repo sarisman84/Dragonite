@@ -1,7 +1,7 @@
 #include "DXDrawer.h"
 #include <d3d11.h>
 #include <cassert>
-Dragonite::DirectXDrawer::DirectXDrawer()
+Dragonite::DXDrawer::DXDrawer()
 {
 	mySwapChain = nullptr;
 	myDevice = nullptr;
@@ -9,7 +9,7 @@ Dragonite::DirectXDrawer::DirectXDrawer()
 
 }
 
-Dragonite::DirectXDrawer::~DirectXDrawer()
+Dragonite::DXDrawer::~DXDrawer()
 {
 	if (mySwapChain)
 		mySwapChain->Release();
@@ -23,12 +23,12 @@ Dragonite::DirectXDrawer::~DirectXDrawer()
 	myContext = nullptr;
 }
 
-void Dragonite::DirectXDrawer::Present(bool aVSyncState)
+void Dragonite::DXDrawer::Present(bool aVSyncState)
 {
 	mySwapChain->Present(aVSyncState, 0);
 }
 
-void Dragonite::DirectXDrawer::Init(HWND anInstance)
+void Dragonite::DXDrawer::Init(HWND anInstance)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferCount = 1;
@@ -63,10 +63,70 @@ void Dragonite::DirectXDrawer::Init(HWND anInstance)
 	assert(SUCCEEDED(r) && "Failed to create swap chain");
 }
 
-void Dragonite::DirectXDrawer::SetRenderTarget(IContent* aTargetBuffer, IContent* aDepthBuffer)
+
+void Dragonite::DXDrawer::SetRenderTarget(void* aTargetBuffer, void* aDepthBuffer)
 {
+	ID3D11RenderTargetView* tView = (ID3D11RenderTargetView*)aTargetBuffer;
+	ID3D11DepthStencilView* dView = (ID3D11DepthStencilView*)aDepthBuffer;
+
+	myContext->OMSetRenderTargets(1, &tView, dView);
+	ClearRenderTarget(aTargetBuffer, aDepthBuffer);
 }
 
-void Dragonite::DirectXDrawer::ClearRenderTarget(IContent* aTargetBuffer, IContent* aDepthBuffer)
+void Dragonite::DXDrawer::ClearRenderTarget(void* aTargetBuffer, void* aDepthBuffer)
 {
+	ID3D11RenderTargetView* tView = (ID3D11RenderTargetView*)aTargetBuffer;
+	ID3D11DepthStencilView* dView = (ID3D11DepthStencilView*)aDepthBuffer;
+
+	float color[4] = { 0,0,0,1 };
+	myContext->ClearRenderTargetView(tView, color);
+	if (dView)
+		myContext->ClearDepthStencilView(dView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+}
+
+
+Dragonite::RTContent::RTContent()
+{
+	myRenderTargetView = nullptr;
+}
+
+Dragonite::RTContent::~RTContent()
+{
+	if (myRenderTargetView)
+		myRenderTargetView->Release();
+	myRenderTargetView = nullptr;
+}
+
+void** Dragonite::RTContent::EditContent()
+{
+	return (void**)&myRenderTargetView;
+}
+
+void* Dragonite::RTContent::GetContent() const
+{
+	return (void*)myRenderTargetView;
+}
+
+
+
+Dragonite::DSContent::DSContent()
+{
+	myDepthStencilView = nullptr;
+}
+
+Dragonite::DSContent::~DSContent()
+{
+	if (myDepthStencilView)
+		myDepthStencilView->Release();
+	myDepthStencilView = nullptr;
+}
+
+void** Dragonite::DSContent::EditContent()
+{
+	return (void**)myDepthStencilView;
+}
+
+void* Dragonite::DSContent::GetContent() const
+{
+	return (void*)myDepthStencilView;
 }

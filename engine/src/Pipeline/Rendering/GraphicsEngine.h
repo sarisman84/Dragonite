@@ -7,10 +7,14 @@
 
 #include <unordered_map>
 #include "Pipeline/Rendering/DX/DXIncludes.h"
+#include "Pipeline/Factories/ShaderFactory.h"
+
+
 
 namespace Dragonite
 {
 	struct IDrawer;
+	struct IContent;
 
 	struct RenderCall
 	{
@@ -40,7 +44,7 @@ namespace Dragonite
 		Call myRenderCall;
 	};
 
-	
+
 
 
 	class GraphicsEngine
@@ -49,12 +53,14 @@ namespace Dragonite
 		~GraphicsEngine();
 		template<typename Render>
 		void RegisterInstruction(Render&& aRenderCall);
-		void Draw();
+		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
+		void Present();
 
 		template<typename Drawer>
 		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
 
-		inline ID3D11RenderTargetView* GetBackBuffer() { return myBackBuffer; }
+
+		ID3D11RenderTargetView* BackBuffer();
 
 	public:
 		static GraphicsEngine* InitializeEngine(HWND anInstance);
@@ -68,15 +74,13 @@ namespace Dragonite
 
 	private:
 
+		ShaderFactory myShaderFactory;
+
 		IDrawer* myDrawer;
-		ID3D11RenderTargetView* myBackBuffer;
-		ID3D11DepthStencilView* myDepthBuffer;
+		IContent* myBackBuffer;
+		IContent* myDepthBuffer;
 
-		std::unordered_map<int, std::vector<std::shared_ptr<RenderCall>>> myInstructions; 
-
-		std::unordered_map<int, ID3D11VertexShader*> myVertexShaders;
-		std::unordered_map<int, ID3D11PixelShader*> myPixelShaders;
-		std::unordered_map<int, ID3D11InputLayout*> myInputLayout;
+		std::unordered_map<int, std::vector<std::shared_ptr<RenderCall>>> myInstructions;
 
 	};
 

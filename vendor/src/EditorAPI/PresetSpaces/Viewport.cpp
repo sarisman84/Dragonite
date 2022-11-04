@@ -3,24 +3,41 @@
 #include <d3d11.h>
 #include "DirectX/DXUtilities.h"
 
-void InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView)
+void EmberGUILayout::InitRenderTarget(ID3D11Device* aDevice, const float aWidth, const float aHeight, ID3D11RenderTargetView** aTargetView, ID3D11ShaderResourceView** aShaderView)
 {
-	DirectX::RenderTargetDesc desc = {};
-	desc.myArraySize = 1;
-	desc.myCPUAccessFlags = 0;
-	desc.myMiscFlags = 0;
-	desc.myMipLevels = 1;
+	D3D11_TEXTURE2D_DESC desc = { 0 };
 
-	desc.myFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	desc.myUseage = (UINT)D3D11_USAGE_DEFAULT;
-	desc.myWidth = aWidth;
-	desc.myHeight = aHeight;
+	desc.Width = aWidth;
+	desc.Height = aHeight;
 
-	DirectX::CreateRenderTarget(aDevice, desc, &aTargetView, &aShaderView);
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	ID3D11Texture2D* texture;
+
+	HRESULT result = aDevice->CreateTexture2D(&desc, nullptr, &texture);
+	assert(SUCCEEDED(result));
+	result = aDevice->CreateShaderResourceView(texture, nullptr, aShaderView);
+	assert(SUCCEEDED(result));
+	result = aDevice->CreateRenderTargetView(texture, nullptr, aTargetView);
+	assert(SUCCEEDED(result));
 }
-void SwitchRenderView(ID3D11DeviceContext* aContext, ID3D11RenderTargetView* aTargetView)
+
+void EmberGUILayout::ReleaseElements(ID3D11RenderTargetView* aTargetView, ID3D11ShaderResourceView* aShaderView)
 {
-	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	aContext->OMSetRenderTargets(1, &aTargetView, nullptr);
-	aContext->ClearRenderTargetView(aTargetView, color);
+	if (aTargetView)
+		aTargetView->Release();
+	aTargetView = nullptr;
+
+	if (aShaderView)
+		aShaderView->Release();
+	aShaderView = nullptr;
 }

@@ -8,7 +8,7 @@ namespace Dragonite
 	class GraphicalInterface;
 	class PollingStation
 	{
-		friend class Viewport;
+		friend struct Viewport;
 		friend class Scene;
 		friend class DragoniteGui;
 		friend GraphicalInterface;
