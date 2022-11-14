@@ -318,6 +318,6 @@ Dragonite::ModelRef Dragonite::ModelFactory::CreateUnitQuad()
 	return model;
 }
 
-void Dragonite::ModelFactory::Init()
-{
-}
+//void Dragonite::ModelFactory::Init()
+//{
+//}

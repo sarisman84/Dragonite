@@ -7,54 +7,25 @@
 
 #include <unordered_map>
 #include "Pipeline/Rendering/DX/DXIncludes.h"
-#include "Pipeline/Factories/ShaderFactory.h"
+#include "Content/DrawData.h"
+#include "entt/single_include/entt/entt.hpp"
 
-
+struct ID3D11VertexShader;
+struct ID3D11PixelShader;
+struct ID3D11InputLayout;
 
 namespace Dragonite
 {
 	struct IDrawer;
 	struct IContent;
 
-	struct RenderCall
-	{
-		RenderCall(unsigned int aVSID, unsigned int aPSID, unsigned int anIID)
-		{
-			myVSID = aVSID;
-			myPSID = aPSID;
-			myIID = anIID;
-		}
-		virtual void Render() = 0;
-		unsigned int myVSID, myPSID, myIID;
-	};
-
-
-	template<typename Call>
-	struct DrawCall : public RenderCall
-	{
-	public:
-		DrawCall(Call&& aRenderCall, unsigned int aVSID, unsigned int aPSID, unsigned int anIID) : RenderCall(aVSID, aPSID, anIID)
-		{
-			myRenderCall = aRenderCall;
-		}
-		void Render() override {
-			myRenderCall(this);
-		}
-	private:
-		Call myRenderCall;
-	};
-
-
-
-
 	class GraphicsEngine
 	{
 	public:
 		~GraphicsEngine();
-		template<typename Render>
-		void RegisterInstruction(Render&& aRenderCall);
-		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
+		void Draw(entt::registry aRegistry, void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
 		void Present();
+		uint32_t SubmitShader(const char* aShader);
 
 		template<typename Drawer>
 		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
@@ -67,30 +38,20 @@ namespace Dragonite
 	private:
 		GraphicsEngine();
 		void Init(HWND anInstance);
+	private:
+		std::unordered_map<uint32_t, std::tuple<ID3D11VertexShader*, ID3D11PixelShader*, ID3D11InputLayout*>> myShaders;
 
-		const int VertexShaderID(const int anRenderCallID);
-		const int PixelShaderID(const int anRenderCallID);
-		const int InputLayoutID(const int anRenderCallID);
+		std::vector<DrawData> myInstructions;
 
 	private:
-
-		ShaderFactory myShaderFactory;
-
 		IDrawer* myDrawer;
 		IContent* myBackBuffer;
 		IContent* myDepthBuffer;
 
-		std::unordered_map<int, std::vector<std::shared_ptr<RenderCall>>> myInstructions;
-
 	};
 
 
-	template<typename Render>
-	inline void GraphicsEngine::RegisterInstruction(Render&& aRenderCall)
-	{
-		std::shared_ptr<RenderCall> call = std::make_shared<DrawCall<Render>>(aRenderCall);
-		myInstructions[call->myIID + call->myPSID + call->myVSID].push_back(call);
-	}
+
 }
 
 

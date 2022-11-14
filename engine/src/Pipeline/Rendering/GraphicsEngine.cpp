@@ -2,9 +2,12 @@
 #include "DirectX/DXUtilities.h"
 #include <d3d11.h>
 #include <cassert>
-#include "Pipeline/Rendering/DX/DXDrawer.h"
 
-Dragonite::GraphicsEngine::GraphicsEngine() : myShaderFactory(this)
+#include "Pipeline/Rendering/DX/DXDrawer.h"
+#include "Core/CU/Transform.h"
+
+
+Dragonite::GraphicsEngine::GraphicsEngine()
 {
 	myDrawer = nullptr;
 	myBackBuffer = new RTContent();
@@ -26,7 +29,7 @@ Dragonite::GraphicsEngine::~GraphicsEngine()
 	myDepthBuffer = nullptr;
 }
 
-void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
+void Dragonite::GraphicsEngine::Draw(entt::registry aRegistry, void* aBackBuffer, void* aDepthBuffer)
 {
 	if (aBackBuffer)
 	{
@@ -40,8 +43,33 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 	}
 
 
+	auto drawer = GetDrawer<DXDrawer>();
+	auto context = drawer->Context();
 
-	for (auto& call : myInstructions)
+	for (auto& shader : myShaders)
+	{
+		context->IASetInputLayout(std::get<2>(shader.second));
+		context->VSSetShader(std::get<0>(shader.second), NULL, 0);
+		context->PSSetShader(std::get<1>(shader.second), NULL, 0);
+
+		for (size_t i = 0; i < myInstructions.size(); i++)
+		{
+			auto data = myInstructions[i];
+
+			uint8_t l = shader.first % UINT8_MAX;
+			uint8_t v = (shader.first / UINT8_MAX) % UINT8_MAX; //TODO: Replace / with something better
+			uint8_t p = (shader.first / UINT16_MAX) % UINT8_MAX;
+			if (data.myILID != l || data.myVSID != v || data.myPSID != p) continue;
+
+
+			Transform& transform = aRegistry.get<Transform>(data.myTargetEntity);
+			
+		}
+	}
+
+
+	myInstructions.clear();
+	/*for (auto& call : myInstructions)
 	{
 		DXDrawer* dxDrawer = (DXDrawer*)myDrawer;
 		auto context = dxDrawer->Context();
@@ -57,7 +85,7 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 		{
 			renderCall->Render();
 		}
-	}
+	}*/
 
 }
 
@@ -123,17 +151,3 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 	myDrawer = dxDrawer;
 }
 
-const int Dragonite::GraphicsEngine::VertexShaderID(const int anRenderCallID)
-{
-	return myInstructions[anRenderCallID][0]->myVSID;
-}
-
-const int Dragonite::GraphicsEngine::PixelShaderID(const int anRenderCallID)
-{
-	return myInstructions[anRenderCallID][0]->myPSID;
-}
-
-const int Dragonite::GraphicsEngine::InputLayoutID(const int anRenderCallID)
-{
-	return myInstructions[anRenderCallID][0]->myIID;
-}

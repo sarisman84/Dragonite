@@ -43,17 +43,14 @@
     <Filter Include="Pipeline">
       <UniqueIdentifier>{FB328BEF-E7FF-E5FA-1019-D4A2FC441B89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pipeline\Factories">
-      <UniqueIdentifier>{2A74F5EE-1658-B644-7FB8-B0976BBBA0C6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pipeline\Rendering">
       <UniqueIdentifier>{08328B3E-F415-4C94-5D76-46E749793616}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pipeline\Rendering\DX">
       <UniqueIdentifier>{13261BD2-7F92-D6CC-4886-6E2AB4B1F834}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pipeline\Utilities">
-      <UniqueIdentifier>{268DEB05-1271-AC5B-7BD1-A6AE67D496DD}</UniqueIdentifier>
+    <Filter Include="Pipeline\Rendering\Content">
+      <UniqueIdentifier>{e3099c62-5b67-4436-8fb5-e1f2a89f3c2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,18 +183,6 @@
     <ClInclude Include="src\Core\Utilities\Reflection.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pipeline\Factories\BaseFactory.h">
-      <Filter>Pipeline\Factories</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pipeline\Factories\ModelFactory.h">
-      <Filter>Pipeline\Factories</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pipeline\Factories\ShaderFactory.h">
-      <Filter>Pipeline\Factories</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pipeline\Factories\TextureFactory.h">
-      <Filter>Pipeline\Factories</Filter>
-    </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
       <Filter>Pipeline\Rendering\DX</Filter>
     </ClInclude>
@@ -213,10 +198,13 @@
     <ClInclude Include="src\Pipeline\Runtime.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pipeline\Utilities\Events.h">
-      <Filter>Pipeline\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\DrawContent.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp">
@@ -297,9 +285,6 @@
     <ClCompile Include="src\Core\Utilities\Input.cpp">
       <Filter>Core\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pipeline\Factories\ShaderFactory.cpp">
-      <Filter>Pipeline\Factories</Filter>
-    </ClCompile>
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp">
       <Filter>Pipeline\Rendering\DX</Filter>
     </ClCompile>
@@ -310,5 +295,8 @@
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\DrawData.cpp">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

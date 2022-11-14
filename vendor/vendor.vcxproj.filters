@@ -221,6 +221,9 @@
     <ClCompile Include="src\EditorAPI\PresetSpaces\Viewport.cpp">
       <Filter>EditorAPI\PresetSpaces</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorAPI\Space\WindowSpace.cpp">
+      <Filter>EditorAPI\Space</Filter>
+    </ClCompile>
     <ClCompile Include="src\EngineAPI\APIInterface.cpp">
       <Filter>EngineAPI</Filter>
     </ClCompile>
@@ -271,9 +274,6 @@
     </ClCompile>
     <ClCompile Include="src\imguizmo\ImSequencer.cpp">
       <Filter>imguizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EditorAPI\Space\WindowSpace.cpp">
-      <Filter>EditorAPI\Space</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
