@@ -10,22 +10,25 @@
 #include "Content/DrawData.h"
 #include "entt/single_include/entt/entt.hpp"
 
-struct ID3D11VertexShader;
-struct ID3D11PixelShader;
-struct ID3D11InputLayout;
+
+
+
 
 namespace Dragonite
 {
 	struct IDrawer;
 	struct IContent;
 
+	class ModelFactory;
+	class MaterialFactory;
+
 	class GraphicsEngine
 	{
 	public:
 		~GraphicsEngine();
-		void Draw(entt::registry aRegistry, void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
+		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
 		void Present();
-		uint32_t SubmitShader(const char* aShader);
+		void Submit(const DrawData& someDataToDraw);
 
 		template<typename Drawer>
 		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
@@ -39,11 +42,14 @@ namespace Dragonite
 		GraphicsEngine();
 		void Init(HWND anInstance);
 	private:
-		std::unordered_map<uint32_t, std::tuple<ID3D11VertexShader*, ID3D11PixelShader*, ID3D11InputLayout*>> myShaders;
 
 		std::vector<DrawData> myInstructions;
-
+		
+		
 	private:
+		ModelFactory* myModelFactory;
+		MaterialFactory* myMaterialFactory;
+
 		IDrawer* myDrawer;
 		IContent* myBackBuffer;
 		IContent* myDepthBuffer;

@@ -5,6 +5,7 @@
 
 #include "Pipeline/Rendering/DX/DXDrawer.h"
 #include "Core/CU/Transform.h"
+#include "Content/ContentFactories.h"
 
 
 Dragonite::GraphicsEngine::GraphicsEngine()
@@ -27,9 +28,18 @@ Dragonite::GraphicsEngine::~GraphicsEngine()
 	if (myDepthBuffer)
 		delete myDepthBuffer;
 	myDepthBuffer = nullptr;
+
+
+	if (myMaterialFactory)
+		delete myMaterialFactory;
+	myMaterialFactory = nullptr;
+
+	if (myModelFactory)
+		delete myModelFactory;
+	myModelFactory = nullptr;
 }
 
-void Dragonite::GraphicsEngine::Draw(entt::registry aRegistry, void* aBackBuffer, void* aDepthBuffer)
+void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 {
 	if (aBackBuffer)
 	{
@@ -46,52 +56,49 @@ void Dragonite::GraphicsEngine::Draw(entt::registry aRegistry, void* aBackBuffer
 	auto drawer = GetDrawer<DXDrawer>();
 	auto context = drawer->Context();
 
-	for (auto& shader : myShaders)
+	for (size_t i = 0; i < myInstructions.size(); i++)
 	{
-		context->IASetInputLayout(std::get<2>(shader.second));
-		context->VSSetShader(std::get<0>(shader.second), NULL, 0);
-		context->PSSetShader(std::get<1>(shader.second), NULL, 0);
+		auto instruction = myInstructions[i];
 
-		for (size_t i = 0; i < myInstructions.size(); i++)
+		auto material = myMaterialFactory->GetMaterial(instruction.myInputLayout);
+
+		context->IASetInputLayout(material.myInputLayout);
+		context->VSSetShader(material.myVertexShader, NULL, 0);
+		context->PSSetShader(material.myPixelShader, NULL, 0);
+
+		const unsigned int strides = 0;
+		const unsigned int offsets = 0;
+
+		switch (instruction.myDrawType)
 		{
-			auto data = myInstructions[i];
+		case 0:
+			Model model = myModelFactory->GetModel(instruction.myModelID);
 
-			uint8_t l = shader.first % UINT8_MAX;
-			uint8_t v = (shader.first / UINT8_MAX) % UINT8_MAX; //TODO: Replace / with something better
-			uint8_t p = (shader.first / UINT16_MAX) % UINT8_MAX;
-			if (data.myILID != l || data.myVSID != v || data.myPSID != p) continue;
-
-
-			Transform& transform = aRegistry.get<Transform>(data.myTargetEntity);
-			
+			context->IASetIndexBuffer(model.myIndices, DXGI_FORMAT_R32_UINT, 0);
+			context->IASetVertexBuffers(0, 1, &model.myVertices, &strides, &offsets);
+			context->DrawIndexed(model.myIndiciesCount, 0, 0);
+			break;
+		default:
+			break;
 		}
+
+
+
 	}
 
 
+
 	myInstructions.clear();
-	/*for (auto& call : myInstructions)
-	{
-		DXDrawer* dxDrawer = (DXDrawer*)myDrawer;
-		auto context = dxDrawer->Context();
-
-
-		context->IASetInputLayout(myShaderFactory.GetILOfID(InputLayoutID(call.first)));
-
-		context->VSSetShader(myShaderFactory.GetVSOfID(VertexShaderID(call.first)), nullptr, 0);
-		context->PSSetShader(myShaderFactory.GetPSOfID(PixelShaderID(call.first)), nullptr, 0);
-
-
-		for (auto& renderCall : call.second)
-		{
-			renderCall->Render();
-		}
-	}*/
-
 }
 
 void Dragonite::GraphicsEngine::Present()
 {
 	myDrawer->Present(false);
+}
+
+void Dragonite::GraphicsEngine::Submit(const DrawData& someDataToDraw)
+{
+	myInstructions.push_back(someDataToDraw);
 }
 
 ID3D11RenderTargetView* Dragonite::GraphicsEngine::BackBuffer()
@@ -102,6 +109,9 @@ ID3D11RenderTargetView* Dragonite::GraphicsEngine::BackBuffer()
 Dragonite::GraphicsEngine* Dragonite::GraphicsEngine::InitializeEngine(HWND anInstance)
 {
 	GraphicsEngine* engine = new GraphicsEngine();
+	engine->myModelFactory = new ModelFactory(engine);
+	engine->myMaterialFactory = new MaterialFactory(engine);
+
 	engine->Init(anInstance);
 	return engine;
 }
