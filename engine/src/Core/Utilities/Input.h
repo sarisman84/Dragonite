@@ -37,6 +37,7 @@ namespace Dragonite
 
 		void ResetPos();
 
+		void WinProc(HWND, UINT, WPARAM, LPARAM);
 
 
 		inline void SetOffset(const Vector2f& anOffset)

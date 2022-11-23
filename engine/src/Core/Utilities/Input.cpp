@@ -11,18 +11,9 @@ const bool Dragonite::Mouse::Init(Engine* anApplication)
 	myApplicationIns = anApplication;
 	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicalInterface>();
 
-	myApplicationIns->RegisterWinProcListener([this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam)
-		{
-			Update(aMessage, aWParam, anLParam);
-			return S_OK;
-		});
+	myApplicationIns->RegisterWinProcListener([this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam) { Update(aMessage, aWParam, anLParam); });
 
-	myApplicationIns->RegisterUpdateListener([this](const float aDt)
-		{
-			EndFrame();
-
-			
-		});
+	myApplicationIns->RegisterUpdateListener([this](const float aDT) { EndFrame(); });
 
 	return true;
 }
@@ -85,6 +76,8 @@ void Dragonite::Mouse::ResetPos()
 
 
 }
+
+
 
 void Dragonite::Mouse::EndFrame()
 {

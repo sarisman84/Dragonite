@@ -194,14 +194,17 @@
     <ClInclude Include="src\Core\Utilities\Function.h" />
     <ClInclude Include="src\Core\Utilities\Input.h" />
     <ClInclude Include="src\Core\Utilities\Reflection.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\DrawContent.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\ContentFactories.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXIncludes.h" />
     <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h" />
     <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h" />
     <ClInclude Include="src\Pipeline\Runtime.h" />
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\Pipeline\Utility\Event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp" />
@@ -232,7 +235,8 @@
     <ClCompile Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp" />
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="src\Core\Utilities\Input.cpp" />
-    <ClCompile Include="src\Pipeline\Rendering\Content\DrawData.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp" />
     <ClCompile Include="src\Pipeline\Runtime.cpp" />

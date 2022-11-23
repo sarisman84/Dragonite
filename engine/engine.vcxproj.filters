@@ -52,6 +52,9 @@
     <Filter Include="Pipeline\Rendering\Content">
       <UniqueIdentifier>{e3099c62-5b67-4436-8fb5-e1f2a89f3c2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pipeline\Utility">
+      <UniqueIdentifier>{8db6917b-6cec-451b-ae37-0796e5b9be44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CU\Bounds.h">
@@ -199,11 +202,14 @@
       <Filter>Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="src\framework.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\DrawContent.h">
-      <Filter>Pipeline\Rendering\Content</Filter>
-    </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h">
       <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\ContentFactories.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h" />
+    <ClInclude Include="src\Pipeline\Utility\Event.h">
+      <Filter>Pipeline\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -295,8 +301,7 @@
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp" />
-    <ClCompile Include="src\Pipeline\Rendering\Content\DrawData.cpp">
-      <Filter>Pipeline\Rendering\Content</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp" />
   </ItemGroup>
 </Project>

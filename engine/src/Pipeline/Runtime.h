@@ -19,8 +19,7 @@
 
 
 #include "Core/Utilities/Reflection.h"
-#include "Pipeline/Utilities/Events.h"
-
+#include "Pipeline/Utility/Event.h"
 
 
 
@@ -45,11 +44,10 @@ namespace Dragonite
 
 		inline PollingStation& GetPollingStation() { return *myRuntimeHandler; }
 
-		template<typename Event>
-		void RegisterWinProcListener(Event&& anEvent);
 
-		template<typename Event>
-		void RegisterUpdateListener(Event&& anEvent);
+		void RegisterUpdateListener(const std::function<void(const float)>& anEvent);
+
+		void RegisterWinProcListener(const std::function<void(HWND, UINT, WPARAM, LPARAM)>& anEvent);
 
 		inline HWND& GetClientInstance() { return myInstance; }
 
@@ -58,8 +56,8 @@ namespace Dragonite
 		LRESULT LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
 	private:
-		std::vector<std::shared_ptr<IUpdateEvent>> myUpdateEvents;
-		std::vector<std::shared_ptr<IWinEvent>> myWinProcEvents;
+		std::vector<std::function<void(const float)>> myUpdateEvents;
+		std::vector<std::function<void(HWND, UINT, WPARAM, LPARAM)>> myWinProcEvents;
 	private:
 		EmberGUI* myEditorInterface;
 		GraphicsEngine* myGraphicsEngine;
@@ -71,17 +69,6 @@ namespace Dragonite
 
 
 
-	template<typename Event>
-	inline void Engine::RegisterWinProcListener(Event&& anEvent)
-	{
-		myWinProcEvents.push_back(std::make_shared<WindowsEvent<Event>>(std::forward<Event>(anEvent)));
-	}
-
-	template<typename Event>
-	inline void Engine::RegisterUpdateListener(Event&& anEvent)
-	{
-		myUpdateEvents.push_back(std::make_shared<UpdateEvent<Event>>(std::forward<Event>(anEvent)));
-	}
 
 }
 

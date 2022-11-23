@@ -22,7 +22,10 @@
 
 LRESULT Dragonite::Engine::LocalWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
+	for (size_t i = 0; i < myWinProcEvents.size(); i++)
+	{
+		myWinProcEvents[i](hWnd, message, wParam, lParam);
+	}
 
 
 	if (message == WM_DESTROY)
@@ -67,6 +70,16 @@ Dragonite::Engine::~Engine()
 		delete myGraphicsEngine;
 	myGraphicsEngine = nullptr;
 
+}
+
+void Dragonite::Engine::RegisterUpdateListener(const std::function<void(const float)>& anEvent)
+{
+	myUpdateEvents.push_back(anEvent);
+}
+
+void Dragonite::Engine::RegisterWinProcListener(const std::function<void(HWND, UINT, WPARAM, LPARAM)>& anEvent)
+{
+	myWinProcEvents.push_back(anEvent);
 }
 
 bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface)
@@ -119,6 +132,11 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 
 void Dragonite::Engine::Update(const float aDeltaTime)
 {
+	for (size_t i = 0; i < myUpdateEvents.size(); i++)
+	{
+		myUpdateEvents[i](aDeltaTime);
+	}
+
 	if (myEditorInterface)
 		myEditorInterface->Update(aDeltaTime, myGraphicsEngine->BackBuffer());
 	myGraphicsEngine->Present();
