@@ -93,7 +93,7 @@
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\engine D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,7 +120,7 @@
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\engine D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
@@ -147,7 +147,7 @@
       <ImportLibrary>..\bin\resc\launcher\engine\engine_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\engine D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -162,40 +162,13 @@
     <ClInclude Include="src\Core\CU\Math\Vector4.h" />
     <ClInclude Include="src\Core\CU\MathLibrary.h" />
     <ClInclude Include="src\Core\CU\Transform.h" />
-    <ClInclude Include="src\Core\Graphics\BaseRenderer.h" />
-    <ClInclude Include="src\Core\Graphics\CameraInterface.h" />
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXDefines.h" />
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXIncludes.h" />
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXInterface.h" />
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXUtilities.h" />
-    <ClInclude Include="src\Core\Graphics\GraphicsAPI.h" />
-    <ClInclude Include="src\Core\Graphics\Models\Material.h" />
-    <ClInclude Include="src\Core\Graphics\Models\Model.h" />
-    <ClInclude Include="src\Core\Graphics\Models\ModelFactory.h" />
-    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderFactory.h" />
-    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderTarget.h" />
-    <ClInclude Include="src\Core\Graphics\Textures\Texture.h" />
-    <ClInclude Include="src\Core\Graphics\Textures\TextureFactory.h" />
     <ClInclude Include="src\Core\PollingStation.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Component.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\Camera.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComponentStructure.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerAgent.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerTerminal.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ModelRenderer.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\NeuralStation.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\PlayerController.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\SpriteRenderer.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\Components\TestComponent.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\NEW\Object.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\NEW\Scene.h" />
-    <ClInclude Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.h" />
     <ClInclude Include="src\Core\Utilities\EnumMap.h" />
     <ClInclude Include="src\Core\Utilities\Function.h" />
     <ClInclude Include="src\Core\Utilities\Input.h" />
     <ClInclude Include="src\Core\Utilities\Reflection.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\ContentFactories.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h" />
@@ -203,39 +176,16 @@
     <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h" />
     <ClInclude Include="src\Pipeline\Rendering\RenderAdapter.h" />
     <ClInclude Include="src\Pipeline\Runtime.h" />
-    <ClInclude Include="src\framework.h" />
     <ClInclude Include="src\Pipeline\Utility\Event.h" />
+    <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp" />
-    <ClCompile Include="src\Core\Graphics\CameraInterface.cpp" />
-    <ClCompile Include="src\Core\Graphics\DirectX11\DXInterface.cpp" />
-    <ClCompile Include="src\Core\Graphics\DirectX11\DXUtilities.cpp" />
-    <ClCompile Include="src\Core\Graphics\GraphicsAPI.cpp" />
-    <ClCompile Include="src\Core\Graphics\Models\Material.cpp" />
-    <ClCompile Include="src\Core\Graphics\Models\ModelFactory.cpp" />
-    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderFactory.cpp" />
-    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderTarget.cpp" />
-    <ClCompile Include="src\Core\Graphics\Textures\Texture.cpp" />
-    <ClCompile Include="src\Core\Graphics\Textures\TextureFactory.cpp" />
     <ClCompile Include="src\Core\PollingStation.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerAgent.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerTerminal.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ModelRenderer.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\NeuralStation.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\PlayerController.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Components\TestComponent.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\NEW\Object.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\NEW\Scene.cpp" />
-    <ClCompile Include="src\Core\RuntimeAPI\Object.cpp">
-      <ObjectFileName>$(IntDir)\Object1.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp" />
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
     <ClCompile Include="src\Core\Utilities\Input.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\MaterialDef.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp" />

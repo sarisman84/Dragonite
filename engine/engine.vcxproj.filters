@@ -10,33 +10,6 @@
     <Filter Include="Core\CU\Math">
       <UniqueIdentifier>{4EE0AC0C-3A43-3CB1-E3C8-7467CF0A0834}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics">
-      <UniqueIdentifier>{2E10C882-9AD0-43B9-630B-8D36CF8A8895}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\DirectX11">
-      <UniqueIdentifier>{72430C2F-DE7A-54C6-E784-B8E9533B7BBF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Models">
-      <UniqueIdentifier>{21E28900-0D71-13CA-B68F-27C5A2FD2370}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\RenderTargets">
-      <UniqueIdentifier>{17AAC264-83B7-F04A-0C9E-EC3578AABC01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Graphics\Textures">
-      <UniqueIdentifier>{C1F54CEE-ADEF-7540-965C-0C5182F5DBAC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\RuntimeAPI">
-      <UniqueIdentifier>{DBFED414-478A-42D9-509B-C5CDBCA59ED9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\RuntimeAPI\Components">
-      <UniqueIdentifier>{1005589C-FC14-046D-65CE-688B51FDF205}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\RuntimeAPI\NEW">
-      <UniqueIdentifier>{340FBA62-A070-9770-29DE-DD22953ECE2F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\RuntimeAPI\SceneManagement">
-      <UniqueIdentifier>{9505EE1A-01E9-FC5A-0AEC-2A97764EC3AB}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Utilities">
       <UniqueIdentifier>{196AB171-0538-A577-EECB-159EDA3881DC}</UniqueIdentifier>
     </Filter>
@@ -46,14 +19,14 @@
     <Filter Include="Pipeline\Rendering">
       <UniqueIdentifier>{08328B3E-F415-4C94-5D76-46E749793616}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pipeline\Rendering\Content">
+      <UniqueIdentifier>{5233091C-3E43-B5EC-A7FC-190B932BA485}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Pipeline\Rendering\DX">
       <UniqueIdentifier>{13261BD2-7F92-D6CC-4886-6E2AB4B1F834}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pipeline\Rendering\Content">
-      <UniqueIdentifier>{e3099c62-5b67-4436-8fb5-e1f2a89f3c2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pipeline\Utility">
-      <UniqueIdentifier>{8db6917b-6cec-451b-ae37-0796e5b9be44}</UniqueIdentifier>
+      <UniqueIdentifier>{3EBC0BD4-2AB5-2A26-53E7-0FAB3F3F0A32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,89 +63,8 @@
     <ClInclude Include="src\Core\CU\Transform.h">
       <Filter>Core\CU</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Graphics\BaseRenderer.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\CameraInterface.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXDefines.h">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXIncludes.h">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXInterface.h">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\DirectX11\DXUtilities.h">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\GraphicsAPI.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Models\Material.h">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Models\Model.h">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Models\ModelFactory.h">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderFactory.h">
-      <Filter>Core\Graphics\RenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\RenderTargets\RenderTarget.h">
-      <Filter>Core\Graphics\RenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Textures\Texture.h">
-      <Filter>Core\Graphics\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Textures\TextureFactory.h">
-      <Filter>Core\Graphics\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\PollingStation.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Component.h">
-      <Filter>Core\RuntimeAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\Camera.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComponentStructure.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerAgent.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ComputerTerminal.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\ModelRenderer.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\NeuralStation.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\PlayerController.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\SpriteRenderer.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\Components\TestComponent.h">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\NEW\Object.h">
-      <Filter>Core\RuntimeAPI\NEW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\NEW\Scene.h">
-      <Filter>Core\RuntimeAPI\NEW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.h">
-      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Utilities\EnumMap.h">
       <Filter>Core\Utilities</Filter>
@@ -185,6 +77,18 @@
     </ClInclude>
     <ClInclude Include="src\Core\Utilities\Reflection.h">
       <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\ContentFactories.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
     </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
       <Filter>Pipeline\Rendering\DX</Filter>
@@ -201,95 +105,32 @@
     <ClInclude Include="src\Pipeline\Runtime.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="src\framework.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h">
-      <Filter>Pipeline\Rendering\Content</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pipeline\Rendering\Content\ContentFactories.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h" />
-    <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h" />
     <ClInclude Include="src\Pipeline\Utility\Event.h">
       <Filter>Pipeline\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CU\Transform.cpp">
       <Filter>Core\CU</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Graphics\CameraInterface.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\DirectX11\DXInterface.cpp">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\DirectX11\DXUtilities.cpp">
-      <Filter>Core\Graphics\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\GraphicsAPI.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Models\Material.cpp">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Models\ModelFactory.cpp">
-      <Filter>Core\Graphics\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderFactory.cpp">
-      <Filter>Core\Graphics\RenderTargets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\RenderTargets\RenderTarget.cpp">
-      <Filter>Core\Graphics\RenderTargets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Textures\Texture.cpp">
-      <Filter>Core\Graphics\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Textures\TextureFactory.cpp">
-      <Filter>Core\Graphics\Textures</Filter>
-    </ClCompile>
     <ClCompile Include="src\Core\PollingStation.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\Camera.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerAgent.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ComputerTerminal.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\ModelRenderer.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\NeuralStation.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\PlayerController.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\SpriteRenderer.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Components\TestComponent.cpp">
-      <Filter>Core\RuntimeAPI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\NEW\Object.cpp">
-      <Filter>Core\RuntimeAPI\NEW</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\NEW\Scene.cpp">
-      <Filter>Core\RuntimeAPI\NEW</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\Object.cpp">
-      <Filter>Core\RuntimeAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\RuntimeAPI\SceneManagement\SceneBuilder.cpp">
-      <Filter>Core\RuntimeAPI\SceneManagement</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp">
       <Filter>Core\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Utilities\Input.cpp">
       <Filter>Core\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\Content\MaterialDef.cpp">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp">
+      <Filter>Pipeline\Rendering\Content</Filter>
     </ClCompile>
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp">
       <Filter>Pipeline\Rendering\DX</Filter>
@@ -301,7 +142,5 @@
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp" />
-    <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp" />
-    <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp" />
   </ItemGroup>
 </Project>

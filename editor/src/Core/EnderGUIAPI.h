@@ -22,39 +22,34 @@ namespace Dragonite
 	public:
 		EmberGUIAPI();
 		virtual ~EmberGUIAPI() override;
-		const bool Init(HWND anInstance, ID3D11Device* aDevice, ID3D11DeviceContext* aContext, IDXGISwapChain* aSwapChain) override;
-		void Update(const float aDt, ID3D11RenderTargetView* aTargetView) override;
+		const bool Init(
+			HWND anInstance,
+			ID3D11Device* aDevice,
+			ID3D11DeviceContext* aContext,
+			IDXGISwapChain* aSwapChain,
+			ID3D11RenderTargetView* aViewToRenderTo) override;
+		void Update() override;
 		void Shutdown() override;
 		LRESULT WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
-		void AddSpace(GUISpace* aNewSpace) override;
-		void* GetElements() override;
+		void AddEditor(ember::EmberWindow* aNewWindow) override;
 		ImGuiContext* GetIMGUIContext() override;
 		EmVec2 GetViewportResolution() override;
+		ID3D11RenderTargetView*& GetBackBuffer() override;
+		ID3D11Device*& GetDevice() override;
+		ID3D11DeviceContext*& GetContext() override;
 	private:
-		ID3D11Device* GetDevice() override;
-		ID3D11DeviceContext* GetContext() override;
 
+
+	private:
+		ember::EmberWindow* myRootContext;
 		HWND myWindowsInstance;
 		ID3D11Device* myDevice;
 		ID3D11DeviceContext* myDeviceContext;
-		GUISpace* myDockingSpace;
-		std::vector<std::shared_ptr<GUISpace>> myElements;
+		ID3D11RenderTargetView* myLocalBackBuffer;
 
 		IDXGISwapChain* mySwapChain;
 		ImGuiContext* myImguiContext;
-
-
-
-
-
-		// Inherited via EmberGUI
-
-
-
-		// Inherited via EmberGUI
-
-
 	};
 }
 

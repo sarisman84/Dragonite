@@ -10,6 +10,9 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Core\Editors">
+      <UniqueIdentifier>{0E8DEEE0-FA85-0D33-23B8-F2B70F10ED3E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
     </Filter>
@@ -44,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="src\Commands\MenuCommand.h">
       <Filter>src\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Editors\Root.h">
+      <Filter>src\Core\Editors</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EnderGUIAPI.h">
       <Filter>src\Core</Filter>
@@ -88,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="src\Commands\MenuCommand.cpp">
       <Filter>src\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Editors\Root.cpp">
+      <Filter>src\Core\Editors</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\EnderGUIAPI.cpp">
       <Filter>src\Core</Filter>

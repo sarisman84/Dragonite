@@ -17,6 +17,8 @@
 #include "EditorAPI/Space/WindowSpace.h"
 #include "EditorAPI/PresetSpaces/Viewport.h"
 
+#include "Pipeline/Rendering/Content/ContentFactories.h"
+
 #include "imgui/imgui.h"
 
 
@@ -102,31 +104,32 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 			anInstance,
 			drawer->Device(),
 			drawer->Context(),
-			drawer->SwapChain());
+			drawer->SwapChain(),
+			myGraphicsEngine->BackBuffer());
 
-		myEditorInterface->AddEditor("Test", [this](GUISpace* aSelf, void*)
-			{
-				ImGui::SetCurrentContext(aSelf->myGUIInterface->GetIMGUIContext());
-
-				ImVec4 test;
-				ImGui::ColorButton("Yes", test);
-				ImGui::ColorPicker3("More Yes", (float*)&test);
-				//ImGui::Text("This is a space!");
-				//Render your scene here
-			});
-
-		myEditorInterface->AddSpace(new EmberGUILayout::Viewport("Scene", EmVec2(1280, 720),
-			[this](void* aViewportBuffer)
-			{
-				myGraphicsEngine->Draw(aViewportBuffer);
-				myGraphicsEngine->Present();
-			}, myEditorInterface));
+		myEditorInterface->AddEditor(new ember::SceneView(
+			[this](ID3D11RenderTargetView* aView) 
+			{ 
+				myGraphicsEngine->Draw(aView); 
+				myGraphicsEngine->Present(); 
+			}));
 
 	}
 	auto IM = myRuntimeHandler->AddHandler(new InputManager());
 
 	if (!IM->Init(this)) return false;
 	myRuntimeHandler->AddHandler(this);
+
+	using namespace Dragonite;
+
+
+
+	Dragonite::DrawInstruct data;
+	data.myDrawType = 0;
+	data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, "someTexture.dds");
+	data.myModelID = ModelFactory::API()->GetModel(Primitive::Cube);
+	myGraphicsEngine->Submit(data);
+
 	return true;
 }
 
@@ -138,7 +141,7 @@ void Dragonite::Engine::Update(const float aDeltaTime)
 	}
 
 	if (myEditorInterface)
-		myEditorInterface->Update(aDeltaTime, myGraphicsEngine->BackBuffer());
+		myEditorInterface->Update();
 	myGraphicsEngine->Present();
 }
 

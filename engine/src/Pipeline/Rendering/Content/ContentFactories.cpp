@@ -10,6 +10,8 @@ Dragonite::ModelFactory::ModelFactory(GraphicsEngine* anEngine) : myEngine(anEng
 	InitPrimitiveCube();
 	InitPrimitivePlane();
 	InitPrimitiveSphere();
+
+	myInstance = this;
 }
 
 Dragonite::Model Dragonite::ModelFactory::GetModel(uint32_t anID)
@@ -157,15 +159,20 @@ Dragonite::MaterialFactory::MaterialFactory(GraphicsEngine* anEngine) : myEngine
 
 	InitPbr();
 	InitUnlit();
+
+	myInstance = this;
 }
 
-Dragonite::MaterialData Dragonite::MaterialFactory::GetMaterial(const uint32_t myMaterial)
+Dragonite::Material Dragonite::MaterialFactory::GetMaterial(const uint32_t myMaterial, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture, const wchar_t* aMaterialTexture)
 {
-	return MaterialData
+	return Material
 	{
 	myInputLayouts[myMaterial],
 	myVertexShaders[myMaterial],
-	myPixelShaders[myMaterial]
+	myPixelShaders[myMaterial],
+	LoadTexture(anAlbedoTexture),
+	LoadTexture(aNormalTexture),
+	LoadTexture(aMaterialTexture)
 	};
 }
 
@@ -215,6 +222,36 @@ ID3D11InputLayout* Dragonite::MaterialFactory::CreateInputLayout(std::vector<D3D
 	HRESULT r = device->CreateInputLayout(someDescriptions.data(), someDescriptions.size(), someVertexData.data(), someVertexData.size(), &result);
 
 	return result;
+}
+
+std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadTexture(const wchar_t* aTexture)
+{
+	std::wstring path(aTexture);
+
+	if (myTextures.contains(path))
+	{
+		return myTextures[path];
+	}
+
+	if (path.find(L".dds") != std::wstring::npos)
+	{
+		myTextures[path] = LoadDDS(path);
+	}
+	else
+		myTextures[path] = LoadPNG();
+
+	return LoadTexture(aTexture);
+
+}
+
+std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadDDS(std::wstring aPath)
+{
+	return false;
+}
+
+std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadPNG(std::wstring aPath)
+{
+	return false;
 }
 
 ID3D11Device* Dragonite::MaterialFactory::GetDevice()

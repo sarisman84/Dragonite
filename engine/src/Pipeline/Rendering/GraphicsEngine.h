@@ -28,7 +28,7 @@ namespace Dragonite
 		~GraphicsEngine();
 		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
 		void Present();
-		void Submit(const DrawData& someDataToDraw);
+		void Submit(const DrawInstruct& someDataToDraw);
 
 		template<typename Drawer>
 		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
@@ -43,7 +43,7 @@ namespace Dragonite
 		void Init(HWND anInstance);
 	private:
 
-		std::vector<DrawData> myInstructions;
+		std::vector<DrawInstruct> myInstructions;
 		
 		
 	private:

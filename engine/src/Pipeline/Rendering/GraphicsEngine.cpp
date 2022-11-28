@@ -96,7 +96,7 @@ void Dragonite::GraphicsEngine::Present()
 	myDrawer->Present(false);
 }
 
-void Dragonite::GraphicsEngine::Submit(const DrawData& someDataToDraw)
+void Dragonite::GraphicsEngine::Submit(const DrawInstruct& someDataToDraw)
 {
 	myInstructions.push_back(someDataToDraw);
 }
