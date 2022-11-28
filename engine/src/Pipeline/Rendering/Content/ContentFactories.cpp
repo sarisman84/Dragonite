@@ -4,6 +4,8 @@
 
 #include <d3d11.h>
 #include <fstream>
+#include <filesystem>
+
 
 Dragonite::ModelFactory::ModelFactory(GraphicsEngine* anEngine) : myEngine(anEngine)
 {
@@ -163,17 +165,22 @@ Dragonite::MaterialFactory::MaterialFactory(GraphicsEngine* anEngine) : myEngine
 	myInstance = this;
 }
 
-Dragonite::Material Dragonite::MaterialFactory::GetMaterial(const uint32_t myMaterial, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture, const wchar_t* aMaterialTexture)
+Dragonite::Material Dragonite::MaterialFactory::GetMaterial(const uint32_t someMaterialType, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture, const wchar_t* aMaterialTexture)
 {
 	return Material
 	{
-	myInputLayouts[myMaterial],
-	myVertexShaders[myMaterial],
-	myPixelShaders[myMaterial],
+	myInputLayouts[someMaterialType],
+	myVertexShaders[someMaterialType],
+	myPixelShaders[someMaterialType],
 	LoadTexture(anAlbedoTexture),
 	LoadTexture(aNormalTexture),
 	LoadTexture(aMaterialTexture)
 	};
+}
+
+Dragonite::Material Dragonite::MaterialFactory::GetMaterial(const Materials someMaterialType, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture, const wchar_t* aMaterialTexture)
+{
+	return GetMaterial((uint32_t)someMaterialType, anAlbedoTexture, aNormalTexture, aMaterialTexture);
 }
 
 ID3D11VertexShader* Dragonite::MaterialFactory::CreateVertexShader(const wchar_t* aPath, std::string* someVertexData)
@@ -224,34 +231,84 @@ ID3D11InputLayout* Dragonite::MaterialFactory::CreateInputLayout(std::vector<D3D
 	return result;
 }
 
-std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadTexture(const wchar_t* aTexture)
+std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadTexture(const wchar_t* aTexture, const bool anUseSRGB, const bool aGenerateMipMaps)
 {
+	if (aTexture == nullptr) return nullptr;
 	std::wstring path(aTexture);
+
+	if (!std::filesystem::directory_entry(path).exists()) return nullptr;
 
 	if (myTextures.contains(path))
 	{
 		return myTextures[path];
 	}
 
+	std::shared_ptr<Texture> newTexture = std::make_shared<Texture>();
+	newTexture->mySRGBFlag = anUseSRGB;
+	newTexture->myGenerateMipMapFlag = aGenerateMipMaps;
+
 	if (path.find(L".dds") != std::wstring::npos)
 	{
-		myTextures[path] = LoadDDS(path);
+		LoadDDS(newTexture, path);
 	}
 	else
-		myTextures[path] = LoadPNG(path);
+		LoadPNG(newTexture, path);
 
 	return LoadTexture(aTexture);
 
 }
 
-std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadDDS(std::wstring aPath)
+const bool Dragonite::MaterialFactory::LoadDDS(std::shared_ptr<Texture>& aTexture, std::wstring aPath)
 {
-	return false;
+	auto drawer = myEngine->GetDrawer<DXDrawer>();
+	if (!drawer) return false;
+
+	auto device = drawer->Device();
+
+
+	ID3D11Texture2D* texture2D = {};
+	D3D11_TEXTURE2D_DESC texture2DDesc = {};
+	ID3D11Resource* textureResource = {};
+
+	HRESULT r = DirectX::CreateDDSTextureFromFile(device, aPath.c_str(), &textureResource, &aTexture->myResourceView);
+	if (FAILED(r))
+		return false;
+
+	textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)&texture2DDesc);
+
+	aTexture->myTextureSize = Vector2f(texture2DDesc.Width, texture2DDesc.Height);
+
+	return true;
 }
 
-std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadPNG(std::wstring aPath)
+const bool Dragonite::MaterialFactory::LoadPNG(std::shared_ptr<Texture>& aTexture, std::wstring aPath)
 {
-	return false;
+	auto drawer = myEngine->GetDrawer<DXDrawer>();
+	if (!drawer) return false;
+
+	auto device = drawer->Device();
+
+
+
+
+	const auto size = wcslen(aPath.c_str());
+	char path[1000];
+	size_t r;
+	wcstombs_s(&r, path, aPath.c_str(), size);
+
+
+	_internal::PixelData pixelData = _internal::LoadTextureBuffer(path);
+
+	if (pixelData.myBuffer == nullptr) return false;
+
+	aTexture->myTextureSize = pixelData.myResolution;
+
+
+	aTexture->Init(device, pixelData.myBuffer);
+
+
+	return true;
+
 }
 
 ID3D11Device* Dragonite::MaterialFactory::GetDevice()

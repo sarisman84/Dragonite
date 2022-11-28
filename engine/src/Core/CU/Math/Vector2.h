@@ -14,6 +14,16 @@ namespace Dragonite
 		Vector2<T>(const T& aX, const T& aY) : x(aX), y(aY) {}
 		Vector2<T>(const Vector2<T>& aVector) = default;
 		Vector2<T>& operator=(const Vector2<T>& aVector2) = default;
+
+		template<typename A>
+		Vector2<T>& operator=(const Vector2<A>& aVector2)
+		{
+			x = (T)aVector2.x;
+			y = (T)aVector2.y;
+
+			return *this;
+		}
+
 		Vector2<T> operator-() const { return Vector2<T>(-x, -y); }
 		bool operator==(const Vector2<T>& aVector)
 		{

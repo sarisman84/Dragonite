@@ -1,6 +1,9 @@
 #include "DXDrawer.h"
 #include <d3d11.h>
 #include <cassert>
+
+#pragma comment(lib, "d3d11.lib")
+
 Dragonite::DXDrawer::DXDrawer()
 {
 	mySwapChain = nullptr;
@@ -85,48 +88,48 @@ void Dragonite::DXDrawer::ClearRenderTarget(void* aTargetBuffer, void* aDepthBuf
 }
 
 
-Dragonite::RTContent::RTContent()
+Dragonite::RTView::RTView()
 {
 	myRenderTargetView = nullptr;
 }
 
-Dragonite::RTContent::~RTContent()
+Dragonite::RTView::~RTView()
 {
 	if (myRenderTargetView)
 		myRenderTargetView->Release();
 	myRenderTargetView = nullptr;
 }
 
-void** Dragonite::RTContent::EditContent()
-{
-	return (void**)&myRenderTargetView;
-}
+//void** Dragonite::RTView::EditContent()
+//{
+//	return (void**)&myRenderTargetView;
+//}
+//
+//void* Dragonite::RTView::GetContent() const
+//{
+//	return (void*)myRenderTargetView;
+//}
 
-void* Dragonite::RTContent::GetContent() const
-{
-	return (void*)myRenderTargetView;
-}
 
 
-
-Dragonite::DSContent::DSContent()
+Dragonite::DSView::DSView()
 {
 	myDepthStencilView = nullptr;
 }
 
-Dragonite::DSContent::~DSContent()
+Dragonite::DSView::~DSView()
 {
 	if (myDepthStencilView)
 		myDepthStencilView->Release();
 	myDepthStencilView = nullptr;
 }
 
-void** Dragonite::DSContent::EditContent()
-{
-	return (void**)myDepthStencilView;
-}
-
-void* Dragonite::DSContent::GetContent() const
-{
-	return (void*)myDepthStencilView;
-}
+//void** Dragonite::DSView::EditContent()
+//{
+//	return (void**)myDepthStencilView;
+//}
+//
+//void* Dragonite::DSView::GetContent() const
+//{
+//	return (void*)myDepthStencilView;
+//}

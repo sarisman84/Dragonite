@@ -66,7 +66,6 @@ namespace Dragonite
 		std::bitset<3> myPreviousUpState;
 
 		Engine* myApplicationIns;
-		GraphicalInterface* myGraphicsPipeline;
 
 	};
 

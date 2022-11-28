@@ -11,8 +11,9 @@
 Dragonite::GraphicsEngine::GraphicsEngine()
 {
 	myDrawer = nullptr;
-	myBackBuffer = new RTContent();
-	myDepthBuffer = new DSContent();
+	myBackBuffer = new RTView();
+	myDepthBuffer = new DSView();
+
 }
 
 Dragonite::GraphicsEngine::~GraphicsEngine()
@@ -48,8 +49,8 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 	}
 	else
 	{
-		myDrawer->SetRenderTarget(myBackBuffer->GetContent(), myDepthBuffer->GetContent());
-		myDrawer->ClearRenderTarget(myBackBuffer->GetContent(), myBackBuffer->GetContent());
+		myDrawer->SetRenderTarget(myBackBuffer->As<RTView>()->Data(), myDepthBuffer->As<DSView>()->Data());
+		myDrawer->ClearRenderTarget(myBackBuffer->As<RTView>()->Data(), myDepthBuffer->As<DSView>()->Data());
 	}
 
 
@@ -60,27 +61,30 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 	{
 		auto instruction = myInstructions[i];
 
-		auto material = myMaterialFactory->GetMaterial(instruction.myInputLayout);
+		Material& material = instruction.myMaterial;
+
+		if (!material.IsValid()) continue;
 
 		context->IASetInputLayout(material.myInputLayout);
 		context->VSSetShader(material.myVertexShader, NULL, 0);
 		context->PSSetShader(material.myPixelShader, NULL, 0);
 
-		const unsigned int strides = 0;
+
+		material.myAlbedoTexture->Bind(context);
+		if (material.myNormalTexture)
+			material.myNormalTexture->Bind(context);
+
+		if (material.myMaterialTexture)
+			material.myMaterialTexture->Bind(context);
+
+		const unsigned int strides = sizeof(Vertex);
 		const unsigned int offsets = 0;
 
-		switch (instruction.myDrawType)
-		{
-		case 0:
-			Model model = myModelFactory->GetModel(instruction.myModelID);
+		Model& model = instruction.myModel;
 
-			context->IASetIndexBuffer(model.myIndices, DXGI_FORMAT_R32_UINT, 0);
-			context->IASetVertexBuffers(0, 1, &model.myVertices, &strides, &offsets);
-			context->DrawIndexed(model.myIndiciesCount, 0, 0);
-			break;
-		default:
-			break;
-		}
+		context->IASetIndexBuffer(model.myIndices, DXGI_FORMAT_R32_UINT, 0);
+		context->IASetVertexBuffers(0, 1, &model.myVertices, &strides, &offsets);
+		context->DrawIndexed(model.myIndiciesCount, 0, 0);
 
 
 
@@ -101,9 +105,14 @@ void Dragonite::GraphicsEngine::Submit(const DrawInstruct& someDataToDraw)
 	myInstructions.push_back(someDataToDraw);
 }
 
+void Dragonite::GraphicsEngine::SubmitView(const Matrix4x4f& aViewMatrix)
+{
+	myViewMatrix = aViewMatrix;
+}
+
 ID3D11RenderTargetView* Dragonite::GraphicsEngine::BackBuffer()
 {
-	return (ID3D11RenderTargetView*)myBackBuffer->GetContent();
+	return myBackBuffer->As<RTView>()->Data();
 }
 
 Dragonite::GraphicsEngine* Dragonite::GraphicsEngine::InitializeEngine(HWND anInstance)
@@ -122,12 +131,12 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 
 	dxDrawer->Init(anInstance);
 
-
+	//(ID3D11RenderTargetView**)myBackBuffer->EditContent()
 
 	ID3D11Texture2D* backBufferTexture;
 
 	assert(SUCCEEDED(dxDrawer->SwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture)) && "Failed to fetch backBuffer Information");
-	assert(SUCCEEDED(dxDrawer->Device()->CreateRenderTargetView(backBufferTexture, nullptr, (ID3D11RenderTargetView**)myBackBuffer->EditContent())) && "Failed to create render target");
+	assert(SUCCEEDED(dxDrawer->Device()->CreateRenderTargetView(backBufferTexture, nullptr, &myBackBuffer->As<RTView>()->Data())) && "Failed to create render target");
 
 
 	ID3D11Texture2D* depthBufferText;
@@ -146,9 +155,10 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
+	//(ID3D11DepthStencilView**)myDepthBuffer->EditContent()
 
 	assert(SUCCEEDED(dxDrawer->Device()->CreateTexture2D(&depthBufferDesc, nullptr, &depthBufferText)) && "Failed to create depth texture!");
-	assert(SUCCEEDED(dxDrawer->Device()->CreateDepthStencilView(depthBufferText, nullptr, (ID3D11DepthStencilView**)myDepthBuffer->EditContent())) && "Failed to create depth buffer!");
+	assert(SUCCEEDED(dxDrawer->Device()->CreateDepthStencilView(depthBufferText, nullptr, &myDepthBuffer->As<DSView>()->Data())) && "Failed to create depth buffer!");
 
 
 	D3D11_VIEWPORT newViewport = { 0 };
@@ -159,5 +169,13 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 
 
 	myDrawer = dxDrawer;
+}
+
+void Dragonite::GraphicsEngine::InitContent(IContent*& someContent, const size_t aTypeSize)
+{
+}
+
+void Dragonite::GraphicsEngine::EditBuffer(IContent*& someContent, void* someData, const size_t someDataSize)
+{
 }
 

@@ -3,14 +3,13 @@
 #include <string>
 #include <unordered_map>
 #include <typeinfo>
+#include <memory>
 
 #include "ModelDef.h"
 #include "MaterialDef.h"
 #include "DirectX/DDSTextureLoader11.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-//#include "../../External/STB/stb_image.h"
-#include "STB/stb_image.h"
+
 
 struct ID3D11Device;
 struct D3D11_INPUT_ELEMENT_DESC;
@@ -80,18 +79,18 @@ namespace Dragonite
 		MaterialFactory(GraphicsEngine* anEngine);
 		template<typename Type>
 		Material GetMaterial(const Type aType, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture = nullptr, const wchar_t* aMaterialTexture = nullptr);
-		Material GetMaterial(const uint32_t myMaterial, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture = nullptr, const wchar_t* aMaterialTexture = nullptr);
-
+		Material GetMaterial(const uint32_t someMaterialType, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture = nullptr, const wchar_t* aMaterialTexture = nullptr);
+		Material GetMaterial(const Materials someMaterialType, const wchar_t* anAlbedoTexture, const wchar_t* aNormalTexture = nullptr, const wchar_t* aMaterialTexture = nullptr);
 		inline static MaterialFactory* API() { return myInstance; }
 
 	private:
 		ID3D11VertexShader* CreateVertexShader(const wchar_t* aPath, std::string* someVertexData);
 		ID3D11PixelShader* CreatePixelShader(const wchar_t* aPath);
 		ID3D11InputLayout* CreateInputLayout(std::vector<D3D11_INPUT_ELEMENT_DESC> someDescriptions, std::string someVertexData);
-		std::shared_ptr<Texture> LoadTexture(const wchar_t* aTexture);
+		std::shared_ptr<Texture> LoadTexture(const wchar_t* aTexture, const bool anUseSRGB = true, const bool aGenerateMipMaps = true);
 	private:
-		std::shared_ptr<Texture> LoadDDS(std::wstring aPath);
-		std::shared_ptr<Texture> LoadPNG(std::wstring aPath);
+		const bool LoadDDS(std::shared_ptr<Texture>& aTexture, std::wstring aPath);
+		const bool LoadPNG(std::shared_ptr<Texture>& aTexture, std::wstring aPath);
 	private:
 		ID3D11Device* GetDevice();
 	private:

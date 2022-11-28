@@ -5,10 +5,10 @@
       <FullPath>D:\Git\Dragonite\bin\resc\launcher\engine\engine_Debug.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\Git\Dragonite\bin\resc\launcher\editor\editor_Debug.dll</FullPath>
+      <FullPath>D:\Projects\Git\Dragonite\bin\resc\launcher\editor\editor_Debug.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\Git\Dragonite\bin\resc\launcher\build\launcher_Debug.exe</FullPath>
+      <FullPath>D:\Projects\Git\Dragonite\bin\resc\launcher\build\launcher_Debug.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

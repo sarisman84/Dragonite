@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Runtime.h"
-#include "Core/RuntimeAPI/NEW/Scene.h"
 #include "EditorAPI/PresetSpaces/Viewport.h"
 //#include "ImGui/DragoniteGui.h"
 #include "Core/PollingStation.h"
@@ -11,7 +10,6 @@
 //#include "Editor/SceneEditor.h"
 //#include "Editor//AssetBrowser.h"
 
-#include "Core/RuntimeAPI/SceneManagement/SceneBuilder.h"
 #include "nlohmann/single_include/nlohmann/json.hpp"
 #include "Pipeline/Rendering/DX/DXDrawer.h"
 #include "EditorAPI/Space/WindowSpace.h"
@@ -108,10 +106,9 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 			myGraphicsEngine->BackBuffer());
 
 		myEditorInterface->AddEditor(new ember::SceneView(
-			[this](ID3D11RenderTargetView* aView) 
-			{ 
-				myGraphicsEngine->Draw(aView); 
-				myGraphicsEngine->Present(); 
+			[this](ID3D11RenderTargetView* aView)
+			{
+				myGraphicsEngine->Draw(aView);
 			}));
 
 	}
@@ -124,17 +121,22 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 
 
 
-	Dragonite::DrawInstruct data;
-	data.myDrawType = 0;
-	data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, "someTexture.dds");
-	data.myModelID = ModelFactory::API()->GetModel(Primitive::Cube);
-	myGraphicsEngine->Submit(data);
+
 
 	return true;
 }
 
 void Dragonite::Engine::Update(const float aDeltaTime)
 {
+	Dragonite::DrawInstruct data;
+
+	data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, L"testTexture.dds");
+	data.myModel = ModelFactory::API()->GetModel(Primitive::Cube);
+	//data.myDrawType = 0;
+	//data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, "someTexture.dds");
+	//data.myModelID = ModelFactory::API()->GetModel(Primitive::Cube);
+	myGraphicsEngine->Submit(data);
+
 	for (size_t i = 0; i < myUpdateEvents.size(); i++)
 	{
 		myUpdateEvents[i](aDeltaTime);
@@ -142,6 +144,8 @@ void Dragonite::Engine::Update(const float aDeltaTime)
 
 	if (myEditorInterface)
 		myEditorInterface->Update();
+	else
+		myGraphicsEngine->Draw();
 	myGraphicsEngine->Present();
 }
 

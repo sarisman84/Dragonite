@@ -1,7 +1,6 @@
 #include "Input.h"
 
 #include "Pipeline/Runtime.h"
-#include "Core/Graphics/GraphicsAPI.h"
 #include "Core/PollingStation.h"
 
 Dragonite::Mouse::Mouse() = default;
@@ -9,7 +8,6 @@ Dragonite::Mouse::Mouse() = default;
 const bool Dragonite::Mouse::Init(Engine* anApplication)
 {
 	myApplicationIns = anApplication;
-	myGraphicsPipeline = anApplication->GetPollingStation().Get<GraphicalInterface>();
 
 	myApplicationIns->RegisterWinProcListener([this](HWND, UINT aMessage, WPARAM aWParam, LPARAM anLParam) { Update(aMessage, aWParam, anLParam); });
 

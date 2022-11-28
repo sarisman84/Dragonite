@@ -9,8 +9,7 @@
 #include "Pipeline/Rendering/DX/DXIncludes.h"
 #include "Content/DrawData.h"
 #include "entt/single_include/entt/entt.hpp"
-
-
+#include "Core/CU/Math/Matrix4x4.hpp"
 
 
 
@@ -29,6 +28,7 @@ namespace Dragonite
 		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
 		void Present();
 		void Submit(const DrawInstruct& someDataToDraw);
+		void SubmitView(const Matrix4x4f& aViewMatrix);
 
 		template<typename Drawer>
 		inline Drawer* GetDrawer() { return (Drawer*)myDrawer; }
@@ -41,6 +41,10 @@ namespace Dragonite
 	private:
 		GraphicsEngine();
 		void Init(HWND anInstance);
+
+		void InitContent(IContent*& someContent, const size_t aTypeSize);
+		void EditBuffer(IContent*& someContent, void* someData, const size_t someDataSize);
+
 	private:
 
 		std::vector<DrawInstruct> myInstructions;
@@ -53,6 +57,13 @@ namespace Dragonite
 		IDrawer* myDrawer;
 		IContent* myBackBuffer;
 		IContent* myDepthBuffer;
+
+		IContent* myFrameBuffer;
+		IContent* myObjectBuffer;
+
+
+		Matrix4x4f myViewMatrix;
+
 
 	};
 

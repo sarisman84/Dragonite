@@ -6,8 +6,12 @@ namespace Dragonite
 	struct IContent
 	{
 		virtual ~IContent() = default;
-		virtual void* GetContent() const = 0;
-		virtual void** EditContent() = 0;
+	public:
+		template<typename T>
+		inline T* As()
+		{
+			return (T)(this);
+		}
 	};
 
 	struct IDrawer
@@ -22,5 +26,7 @@ namespace Dragonite
 
 
 
-	
+
+
+
 }

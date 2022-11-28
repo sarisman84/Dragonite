@@ -8,26 +8,23 @@ struct ID3D11DeviceContext;
 
 namespace Dragonite
 {
-	struct RTContent : IContent
+	struct RTView : public IContent
 	{
-		RTContent();
-		~RTContent() override;
-		void* GetContent() const override;
-		void** EditContent() override;
+		RTView();
+		~RTView() override;
+		inline ID3D11RenderTargetView*& Data() { return myRenderTargetView; }
 	private:
 		ID3D11RenderTargetView* myRenderTargetView;
 	};
 
-	struct DSContent : IContent
+	struct DSView : public IContent
 	{
-		DSContent();
-		~DSContent() override;
-		void* GetContent() const override;
-		void** EditContent() override;
+		DSView();
+		~DSView() override;
+		inline ID3D11DepthStencilView*& Data() { return myDepthStencilView; }
 	private:
 		ID3D11DepthStencilView* myDepthStencilView;
 	};
-
 
 	struct DXDrawer : IDrawer
 	{
@@ -51,4 +48,32 @@ namespace Dragonite
 
 		// Inherited via IDrawer
 	};
+
+	template<typename Type>
+	struct DXBuffer : public IContent
+	{
+		DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const Type& someData);
+		~DXBuffer();
+		void Modify(Type* someData);
+	private:
+		ID3D11Buffer* myBuffer;
+		ID3D11Device* myDevicePtr;
+		ID3D11DeviceContext* myContextPtr;
+	};
+
+	template<typename Type>
+	inline DXBuffer<Type>::DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const Type& someData)
+	{
+	}
+	template<typename Type>
+	inline DXBuffer<Type>::~DXBuffer()
+	{
+		if (myBuffer)
+			myBuffer->Release();
+		myBuffer = nullptr;
+	}
+	template<typename Type>
+	inline void DXBuffer<Type>::Modify(Type* someData)
+	{
+	}
 }

@@ -93,7 +93,7 @@
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\editor D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,7 +120,7 @@
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\editor D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
@@ -147,7 +147,7 @@
       <ImportLibrary>..\bin\resc\launcher\editor\editor_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\resc\launcher\editor D:\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\editor D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
