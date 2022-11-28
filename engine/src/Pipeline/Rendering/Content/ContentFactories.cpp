@@ -238,7 +238,7 @@ std::shared_ptr<Dragonite::Texture> Dragonite::MaterialFactory::LoadTexture(cons
 		myTextures[path] = LoadDDS(path);
 	}
 	else
-		myTextures[path] = LoadPNG();
+		myTextures[path] = LoadPNG(path);
 
 	return LoadTexture(aTexture);
 
