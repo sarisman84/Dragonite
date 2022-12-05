@@ -1,6 +1,6 @@
 include "vendor"
 
-function initEditor(aName, aDir, aWorkingDir, aPostBuildEventCommand)
+function initEditor(aName, aDir, aWorkingDir, aTempDir)
     local prjDir = "../editor/"
     local src = prjDir .. "src/"
     local name = "editor"
@@ -14,15 +14,14 @@ function initEditor(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     solutionDir = ("%{wks.location}" .. "/../")
     prjName = "%{prj.name}"
 
-    local tDir = aDir .. "/editor"
-    local tempDir = aDir .. "/../temp/editor"
+    
+    local tempDir = 
     targetdir(aDir) -- ouput dir  
-    objdir(tempDir) -- intermediate dir
+    objdir(aTempDir) -- intermediate dir
     debugdir(aWorkingDir)
 
-    trymkdir(aDir)
-    trymkdir(tempDir)
-    trymkdir(aWorkingDir)
+    -- trymkdir(aDir)
+    -- trymkdir(aWorkingDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
@@ -36,8 +35,6 @@ function initEditor(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "**.hlsl", src .. "**.hlsli"}
 
     fetchVendorInclude()
-
-    postbuildcommands {aPostBuildEventCommand}
 
     filter "configurations:Debug"
     defines "_DEBUG"

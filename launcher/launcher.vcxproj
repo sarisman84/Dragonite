@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\build\launcher\</OutDir>
-    <IntDir>..\bin\build\launcher\temp\Debug\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Debug\Debug\launcher\</IntDir>
     <TargetName>launcher_Debug</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\build\launcher\</OutDir>
-    <IntDir>..\bin\build\launcher\temp\Release\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Release\Release\launcher\</IntDir>
     <TargetName>launcher_Release</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\build\launcher\</OutDir>
-    <IntDir>..\bin\build\launcher\temp\Retail\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Retail\Retail\launcher\</IntDir>
     <TargetName>launcher_Retail</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -92,6 +92,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -115,6 +118,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
@@ -138,6 +144,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />

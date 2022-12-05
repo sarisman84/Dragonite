@@ -6,15 +6,16 @@
 #include "EngineAPI/APIInterface.h"
 #include "EditorAPI/EmberGUI.h"
 
+
 #ifdef _DEBUG
 #define ENGINEDLLPATH L"engine_Debug.dll"
 #define EDITORDLLPATH L"editor_Debug.dll"
 #elif defined _RELEASE
 #define ENGINEDLLPATH L"engine_Release.dll"
-#define EDITORDLLPATH L"editor_Release.dll"
+#define EDITORDLLPATH L""
 #elif defined _RETAIL
 #define ENGINEDLLPATH L"engine_Retail.dll"
-#define EDITORDLLPATH L"editor_Retail.dll"
+#define EDITORDLLPATH L""
 #endif
 
 

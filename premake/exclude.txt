@@ -1,0 +1,2 @@
+editor_Debug.*
+editor_Release.*

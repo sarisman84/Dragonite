@@ -55,19 +55,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\lib\</OutDir>
-    <IntDir>..\temp\Debug\</IntDir>
+    <IntDir>..\temp\Debug\vendor\</IntDir>
     <TargetName>vendor_Debug</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\lib\</OutDir>
-    <IntDir>..\temp\Release\</IntDir>
+    <IntDir>..\temp\Release\vendor\</IntDir>
     <TargetName>vendor_Release</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <OutDir>..\lib\</OutDir>
-    <IntDir>..\temp\Retail\</IntDir>
+    <IntDir>..\temp\Retail\vendor\</IntDir>
     <TargetName>vendor_Retail</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>

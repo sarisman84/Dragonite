@@ -25,11 +25,7 @@
 --     end
 --     return finalVendorDir
 -- end
-function trymkdir(aDir)
-    if not (os.isdir(aDir)) then
-        os.mkdir(os.realpath(aDir))
-    end
-end
+include "../premake/utils.lua"
 
 src = os.realpath("src/")
 cOutput = "../lib/"

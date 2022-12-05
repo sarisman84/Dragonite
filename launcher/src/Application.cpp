@@ -30,7 +30,6 @@ Dragonite::Application::Application(const ApplicationDesc& aDesc)
 
 
 	//GetProcAddress(myEngineDLLIns,)
-
 	myEngineInterface = myEngineAPI.getInterface();
 
 	if (!myEngineInterface) return;

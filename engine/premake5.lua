@@ -1,5 +1,5 @@
 include "vendor"
-function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand)
+function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand, aTempDir)
     local prjDir = "../engine/"
     local src = prjDir .. "src/"
     local name = "engine"
@@ -13,15 +13,12 @@ function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     solutionDir = ("%{wks.location}" .. "/../")
     prjName = "%{prj.name}"
 
-    local tDir = aDir .. "/engine"
-    local tempDir = aDir .. "/../temp/engine"
     targetdir(aDir) -- ouput dir  
-    objdir(tempDir) -- intermediate dir
+    objdir(aTempDir) -- intermediate dir
     debugdir(aWorkingDir)
 
-    trymkdir(aDir)
-    trymkdir(tempDir)
-    trymkdir(aWorkingDir)
+    -- trymkdir(aDir)
+    -- trymkdir(aWorkingDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
@@ -34,6 +31,38 @@ function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "**.hlsl", src .. "**.hlsli"}
 
     postbuildcommands {aPostBuildEventCommand}
+
+    shadermodel("5.0")
+	local shader_dir = src
+	-- os.mkdir(shader_dir)
+
+    local shaderOutput = aWorkingDir.."shaders/"
+
+    trymkdir(shaderOutput)
+
+
+	filter("files:**.hlsl")
+		flags("ExcludeFromBuild")
+		shaderobjectfileoutput(shaderOutput .. "%{file.basename}"..".cso")
+
+	filter("files:**PS.hlsl")
+		removeflags("ExcludeFromBuild")
+		shadertype("Pixel")
+
+	filter("files:**VS.hlsl")
+		removeflags("ExcludeFromBuild")
+		shadertype("Vertex")
+
+	filter("files:**GS.hlsl")
+		removeflags("ExcludeFromBuild")
+		shadertype("Geometry")
+
+	-- Warnings as errors
+	shaderoptions({"/WX"})
+
+
+
+
 
     filter "configurations:Debug"
     defines "_DEBUG"
@@ -52,6 +81,9 @@ function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     runtime "Release"
     optimize "on"
     links {"vendor_Retail.lib"}
+
+
+    
 
     return tDir
 end

@@ -1,6 +1,9 @@
 function setLinks(someLinks)
     links = someLinks
 end
+
+include "../premake/utils.lua"
+
 -- include "vendor"
 include "engine"
 include "editor"
@@ -18,42 +21,75 @@ function initLauncher(aName)
 
     local name = aName
     local binDir = os.realpath(solutionDir .. "../bin/build")
-    local launcherDir = os.realpath(binDir .. "/launcher")
-    local outputDir = launcherDir
-    local debugDir = os.realpath(solutionDir .. "../bin/resc")
-    local tempDir = outputDir .. "/temp"
 
-    targetdir(outputDir) -- ouput dir  
-    if not (os.isdir(outputDir)) then
-        os.mkdir(os.realpath(outputDir))
-    end
+    local outputDir = os.realpath(binDir .. "/debug")
 
-    objdir(tempDir) -- intermediate dir
-    if not (os.isdir(tempDir)) then
-        os.mkdir(os.realpath(tempDir))
-    end
+    local debugDir = os.realpath(solutionDir .. "../bin/resource/")
+
+    local tempDir = os.realpath(solutionDir .. "../temp/%{cfg.buildcfg}")
+
+    trymkdir(outputDir)
+    trymkdir(tempDir)
+
+    -- targetdir(outputDir) -- ouput dir  
+    -- if not (os.isdir(outputDir)) then
+    --     os.mkdir(os.realpath(outputDir))
+    -- end
+
+    -- objdir(tempDir) -- intermediate dir
+    -- if not (os.isdir(tempDir)) then
+    --     os.mkdir(os.realpath(tempDir))
+    -- end
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
     debugdir(debugDir)
+    targetdir(outputDir)
+    objdir(tempDir)
 
-    flags {"MultiProcessorCompile"}
+    flags {
+        "MultiProcessorCompile"
+    }
 
-    links {"engine", "editor"}
+    links {
+        "engine",
+        "editor"
+    }
 
-    libdirs {"../lib"}
+    libdirs {
+        "../lib"
+    }
 
-    includedirs {"src/", "../vendor/src/"}
+    includedirs {
+        "src/",
+        "../vendor/src/"
+    }
 
-    files {"src/**.h", "src/**.hpp", "src/**.c", "src/**.cpp"}
+    files {
+        "src/**.h",
+        "src/**.hpp",
+        "src/**.c",
+        "src/**.cpp"
+    }
 
     outputDir = os.realpath(outputDir .. "/")
 
-    local gameDir = os.realpath(binDir .. "/engine")
-    local editorDir = os.realpath(binDir .. "/editor")
+    local releaseDir = os.realpath(binDir .. "/release")
 
-    local gameDirCpy = "xcopy " .. outputDir .. " " .. gameDir .. " /y "
-    local editorDirCpy = "xcopy " .. outputDir .. " " .. editorDir .. " /y "
+    trymkdir(releaseDir)
+
+    local excludeArgs = "editor_Debug.*\neditor_Release.*"
+    local exclude = "../premake/exclude.txt"
+    io.writefile(exclude, excludeArgs)
+
+    local releaseCpy = "xcopy " .. outputDir .. " " .. releaseDir .. " /y " .. "/u " .. "/f " .. "/exclude:" ..
+                           os.realpath(exclude) .. " "
+
+ 
+
+    postbuildcommands {
+        releaseCpy
+    }
     -- local gameToEditorDirCpy = "xcopy " .. gameDir .. " " .. editorDir .. " /y "
 
     filter "configurations:Debug"
@@ -71,11 +107,8 @@ function initLauncher(aName)
     runtime "Release"
     optimize "on"
 
-    initEngine(name, gameDir, debugDir, gameDirCpy)
-    initEditor(name, editorDir, debugDir, editorDirCpy)
-
-    trymkdir(gameDir)
-    trymkdir(editorDir)
+    initEngine(name, outputDir, debugDir, releaseCpy, tempDir)
+    initEditor(name, outputDir, debugDir, tempDir)
 
 end
 

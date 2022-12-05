@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\build\engine\</OutDir>
-    <IntDir>..\bin\build\temp\engine\Debug\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Debug\Debug\engine\</IntDir>
     <TargetName>engine_Debug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\build\engine\</OutDir>
-    <IntDir>..\bin\build\temp\engine\Release\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Release\Release\engine\</IntDir>
     <TargetName>engine_Release</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\build\engine\</OutDir>
-    <IntDir>..\bin\build\temp\engine\Retail\</IntDir>
+    <OutDir>..\bin\build\debug\</OutDir>
+    <IntDir>..\temp\Retail\Retail\engine\</IntDir>
     <TargetName>engine_Retail</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -85,19 +85,19 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>vendor_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\build\engine\engine_Debug.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\debug\engine_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
     </PostBuildEvent>
-    <FxCompile>
-      <ShaderModel>5.0</ShaderModel>
-    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -114,20 +114,20 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>vendor_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\build\engine\engine_Release.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\debug\engine_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
     </PostBuildEvent>
-    <FxCompile>
-      <ShaderModel>5.0</ShaderModel>
-    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
@@ -144,20 +144,20 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>vendor_Retail.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\build\engine\engine_Retail.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\debug\engine_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
+      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
     </PostBuildEvent>
-    <FxCompile>
-      <ShaderModel>5.0</ShaderModel>
-    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CU\Bounds.h" />
@@ -207,29 +207,24 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Shaders\FullscreenUnlit_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType>Pixel</ShaderType>
+      <ObjectFileOutput>D:\Projects\Git\Dragonite\bin\resource\shaders/FullscreenUnlit_PS.cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\Fullscreen_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType>Vertex</ShaderType>
+      <ObjectFileOutput>D:\Projects\Git\Dragonite\bin\resource\shaders/Fullscreen_VS.cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\RenderID_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType>Pixel</ShaderType>
+      <ObjectFileOutput>D:\Projects\Git\Dragonite\bin\resource\shaders/RenderID_PS.cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\Unlit_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType>Pixel</ShaderType>
+      <ObjectFileOutput>D:\Projects\Git\Dragonite\bin\resource\shaders/Unlit_PS.cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\Shaders\Unlit_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType>Vertex</ShaderType>
+      <ObjectFileOutput>D:\Projects\Git\Dragonite\bin\resource\shaders/Unlit_VS.cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
