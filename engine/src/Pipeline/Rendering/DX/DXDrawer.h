@@ -52,18 +52,25 @@ namespace Dragonite
 	template<typename Type>
 	struct DXBuffer : public IContent
 	{
-		DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const Type& someData);
+		DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext);
 		~DXBuffer();
 		void Modify(Type* someData);
+		void PSBind(UINT aSlot);
+		void VSBind(UINT aSlot);
 	private:
 		ID3D11Buffer* myBuffer;
 		ID3D11Device* myDevicePtr;
 		ID3D11DeviceContext* myContextPtr;
 	};
 
+	void InitializeBuffer(ID3D11Device* aDevice, ID3D11Buffer** aBuffer, const size_t aTypeSize);
+	void EditBuffer(ID3D11DeviceContext* aContext, UINT aSlot, ID3D11Buffer* aBuffer, const size_t aTypeSize, void* someData);
+	void BindBuffer(ID3D11DeviceContext* aContext, UINT aBindType, ID3D11Buffer** aBuffer, UINT aSlot);
+
 	template<typename Type>
-	inline DXBuffer<Type>::DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext, const Type& someData)
+	inline DXBuffer<Type>::DXBuffer(ID3D11Device* aDevice, ID3D11DeviceContext* aContext) : myDevicePtr(aDevice), myContextPtr(aContext)
 	{
+		Dragonite::InitializeBuffer(aDevice, &myBuffer, sizeof(Type));
 	}
 	template<typename Type>
 	inline DXBuffer<Type>::~DXBuffer()
@@ -75,5 +82,16 @@ namespace Dragonite
 	template<typename Type>
 	inline void DXBuffer<Type>::Modify(Type* someData)
 	{
+		Dragonite::EditBuffer(myContextPtr, 0, myBuffer, sizeof(Type), someData);
+	}
+	template<typename Type>
+	inline void DXBuffer<Type>::PSBind(UINT aSlot)
+	{
+		Dragonite::BindBuffer(myContextPtr, 1, &myBuffer, aSlot);
+	}
+	template<typename Type>
+	inline void DXBuffer<Type>::VSBind(UINT aSlot)
+	{
+		Dragonite::BindBuffer(myContextPtr, 0, &myBuffer, aSlot);
 	}
 }

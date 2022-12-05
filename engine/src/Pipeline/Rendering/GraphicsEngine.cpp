@@ -40,7 +40,7 @@ Dragonite::GraphicsEngine::~GraphicsEngine()
 	myModelFactory = nullptr;
 }
 
-void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
+void Dragonite::GraphicsEngine::Draw(const Matrix4x4f& aWorldToClipMatrix,void* aBackBuffer, void* aDepthBuffer)
 {
 	if (aBackBuffer)
 	{
@@ -57,6 +57,12 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 	auto drawer = GetDrawer<DXDrawer>();
 	auto context = drawer->Context();
 
+	DXBuffer<FrameData>* fBuffer = myFrameBuffer->As<DXBuffer<FrameData>>();
+	FrameData data;
+	data.myWorldToClipMatrix = aWorldToClipMatrix;
+	fBuffer->Modify(&data);
+	fBuffer->VSBind(0);
+
 	for (size_t i = 0; i < myInstructions.size(); i++)
 	{
 		auto instruction = myInstructions[i];
@@ -68,6 +74,12 @@ void Dragonite::GraphicsEngine::Draw(void* aBackBuffer, void* aDepthBuffer)
 		context->IASetInputLayout(material.myInputLayout);
 		context->VSSetShader(material.myVertexShader, NULL, 0);
 		context->PSSetShader(material.myPixelShader, NULL, 0);
+
+		DXBuffer<ObjectData>* oBuffer = myObjectBuffer->As<DXBuffer<ObjectData>>();
+		ObjectData oData;
+		oData.myTransform = instruction.myTransform.GetMatrix();
+		oBuffer->Modify(&oData);
+		oBuffer->VSBind(1);
 
 
 		material.myAlbedoTexture->Bind(context);
@@ -120,7 +132,6 @@ Dragonite::GraphicsEngine* Dragonite::GraphicsEngine::InitializeEngine(HWND anIn
 	GraphicsEngine* engine = new GraphicsEngine();
 	engine->myModelFactory = new ModelFactory(engine);
 	engine->myMaterialFactory = new MaterialFactory(engine);
-
 	engine->Init(anInstance);
 	return engine;
 }
@@ -131,10 +142,10 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 
 	dxDrawer->Init(anInstance);
 
-	//(ID3D11RenderTargetView**)myBackBuffer->EditContent()
 
 	ID3D11Texture2D* backBufferTexture;
 
+	//Init the back buffer by fetching a texture with information.
 	assert(SUCCEEDED(dxDrawer->SwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture)) && "Failed to fetch backBuffer Information");
 	assert(SUCCEEDED(dxDrawer->Device()->CreateRenderTargetView(backBufferTexture, nullptr, &myBackBuffer->As<RTView>()->Data())) && "Failed to create render target");
 
@@ -142,11 +153,12 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 	ID3D11Texture2D* depthBufferText;
 	D3D11_TEXTURE2D_DESC textureDesc;
 
-
+	//Init the depth buffer from the information of the back buffer
 	backBufferTexture->GetDesc(&textureDesc);
 	backBufferTexture->Release();
 
 
+	
 	D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
 	depthBufferDesc.Width = static_cast<unsigned int>(textureDesc.Width);
 	depthBufferDesc.Height = static_cast<unsigned int>(textureDesc.Height);
@@ -155,18 +167,22 @@ void Dragonite::GraphicsEngine::Init(HWND anInstance)
 	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-	//(ID3D11DepthStencilView**)myDepthBuffer->EditContent()
-
+	//Reconstruct a desc for the depth buffer then initialize it.
 	assert(SUCCEEDED(dxDrawer->Device()->CreateTexture2D(&depthBufferDesc, nullptr, &depthBufferText)) && "Failed to create depth texture!");
 	assert(SUCCEEDED(dxDrawer->Device()->CreateDepthStencilView(depthBufferText, nullptr, &myDepthBuffer->As<DSView>()->Data())) && "Failed to create depth buffer!");
 
 
+	//Initialize the view port based on the information from the back buffer.
 	D3D11_VIEWPORT newViewport = { 0 };
 	newViewport.Width = static_cast<float>(textureDesc.Width);
 	newViewport.Height = static_cast<float>(textureDesc.Height);
 	dxDrawer->Context()->RSSetViewports(1, &newViewport);
 
 
+	//Initialize the frame and object buffers respectivily.
+	myFrameBuffer = new DXBuffer<FrameData>(dxDrawer->Device(), dxDrawer->Context());
+
+	myObjectBuffer = new DXBuffer<ObjectData>(dxDrawer->Device(), dxDrawer->Context());
 
 	myDrawer = dxDrawer;
 }

@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\engine\</OutDir>
-    <IntDir>..\bin\resc\launcher\engine\temp\Debug\</IntDir>
+    <OutDir>..\bin\build\engine\</OutDir>
+    <IntDir>..\bin\build\temp\engine\Debug\</IntDir>
     <TargetName>engine_Debug</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\engine\</OutDir>
-    <IntDir>..\bin\resc\launcher\engine\temp\Release\</IntDir>
+    <OutDir>..\bin\build\engine\</OutDir>
+    <IntDir>..\bin\build\temp\engine\Release\</IntDir>
     <TargetName>engine_Release</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\engine\</OutDir>
-    <IntDir>..\bin\resc\launcher\engine\temp\Retail\</IntDir>
+    <OutDir>..\bin\build\engine\</OutDir>
+    <IntDir>..\bin\build\temp\engine\Retail\</IntDir>
     <TargetName>engine_Retail</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -90,11 +90,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>vendor_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\resc\launcher\engine\engine_Debug.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\engine\engine_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
     </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -117,11 +120,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>vendor_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\resc\launcher\engine\engine_Release.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\engine\engine_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
     </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <ClCompile>
@@ -144,14 +150,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>vendor_Retail.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\resc\launcher\engine\engine_Retail.lib</ImportLibrary>
+      <ImportLibrary>..\bin\build\engine\engine_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\resc\launcher\engine D:\Projects\Git\Dragonite\bin\resc\launcher\build\ /y </Command>
+      <Command>xcopy D:\Git\Dragonite\bin\build\launcher\ D:\Git\Dragonite\bin\build\engine /y </Command>
     </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CU\Bounds.h" />
+    <ClInclude Include="src\Core\CU\Camera.h" />
     <ClInclude Include="src\Core\CU\CommonData.h" />
     <ClInclude Include="src\Core\CU\Math\MathFunctions.h" />
     <ClInclude Include="src\Core\CU\Math\Matrix3x3.hpp" />
@@ -171,6 +181,7 @@
     <ClInclude Include="src\Pipeline\Rendering\Content\DrawData.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\MaterialDef.h" />
     <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h" />
+    <ClInclude Include="src\Pipeline\Rendering\Content\Projection.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h" />
     <ClInclude Include="src\Pipeline\Rendering\DX\DXIncludes.h" />
     <ClInclude Include="src\Pipeline\Rendering\GraphicsEngine.h" />
@@ -180,6 +191,7 @@
     <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\CU\Camera.cpp" />
     <ClCompile Include="src\Core\CU\Transform.cpp" />
     <ClCompile Include="src\Core\PollingStation.cpp" />
     <ClCompile Include="src\Core\Utilities\EnumMap.cpp" />
@@ -187,10 +199,43 @@
     <ClCompile Include="src\Pipeline\Rendering\Content\ContentFactories.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\Content\MaterialDef.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp" />
+    <ClCompile Include="src\Pipeline\Rendering\Content\Projection.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp" />
     <ClCompile Include="src\Pipeline\Rendering\GraphicsEngine.cpp" />
     <ClCompile Include="src\Pipeline\Runtime.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Shaders\FullscreenUnlit_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Fullscreen_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\RenderID_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Unlit_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Unlit_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Shaders\Util\CBufferDef.hlsli" />
+    <None Include="src\Shaders\Util\ShaderStructs.hlsli" />
+    <None Include="src\Shaders\Util\ShaderUtils.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\vendor.vcxproj">

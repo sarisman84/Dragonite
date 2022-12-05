@@ -1,5 +1,5 @@
 include "vendor"
-function initEngine(aName, aDir, aPostBuildEventCommand)
+function initEngine(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     local prjDir = "../engine/"
     local src = prjDir .. "src/"
     local name = "engine"
@@ -14,66 +14,44 @@ function initEngine(aName, aDir, aPostBuildEventCommand)
     prjName = "%{prj.name}"
 
     local tDir = aDir .. "/engine"
-    local tempDir = tDir .. "/temp"
-    targetdir(tDir) -- ouput dir  
+    local tempDir = aDir .. "/../temp/engine"
+    targetdir(aDir) -- ouput dir  
     objdir(tempDir) -- intermediate dir
-    debugdir(tDir)
+    debugdir(aWorkingDir)
 
-    trymkdir(tDir)
+    trymkdir(aDir)
     trymkdir(tempDir)
+    trymkdir(aWorkingDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {
-        src,
-        src .. "/shaders/includes",
-        "../vendor/src/"
-    }
+    includedirs {src, src .. "/shaders/includes", "../vendor/src/"}
 
-    libdirs {
-        "../lib"
-    }
+    libdirs {"../lib"}
 
-    links {
-        "vendor"
-    }
+    links {"vendor"}
 
-    files {
-        src .. "**.h",
-        src .. "**.hpp",
-        src .. "**.c",
-        src .. "**.cpp",
-        src .. "shaders/**.hlsl",
-        src .. "shaders/includes/**.hlsli"
-    }
+    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "**.hlsl", src .. "**.hlsli"}
 
-    postbuildcommands {
-        aPostBuildEventCommand
-    }
-    
+    postbuildcommands {aPostBuildEventCommand}
+
     filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
     symbols "on"
-    links {
-        "vendor_Debug.lib"
-    }
+    links {"vendor_Debug.lib"}
 
     filter "configurations:Release"
     defines "_RELEASE"
     runtime "Release"
     optimize "on"
-    links {
-        "vendor_Release.lib"
-    }
+    links {"vendor_Release.lib"}
 
     filter "configurations:Retail"
     defines "_RETAIL"
     runtime "Release"
     optimize "on"
-    links {
-        "vendor_Retail.lib"
-    }
+    links {"vendor_Retail.lib"}
 
     return tDir
 end

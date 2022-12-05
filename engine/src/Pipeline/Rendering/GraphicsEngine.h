@@ -11,6 +11,9 @@
 #include "entt/single_include/entt/entt.hpp"
 #include "Core/CU/Math/Matrix4x4.hpp"
 
+#include "Pipeline/Rendering/Content/Projection.h"
+
+
 
 
 namespace Dragonite
@@ -25,7 +28,7 @@ namespace Dragonite
 	{
 	public:
 		~GraphicsEngine();
-		void Draw(void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
+		void Draw(const Matrix4x4f& aWorldToClipMatrix, void* aBackBuffer = nullptr, void* aDepthBuffer = nullptr);
 		void Present();
 		void Submit(const DrawInstruct& someDataToDraw);
 		void SubmitView(const Matrix4x4f& aViewMatrix);
@@ -63,7 +66,16 @@ namespace Dragonite
 
 
 		Matrix4x4f myViewMatrix;
+	private:
+		struct FrameData 
+		{
+			Matrix4x4f myWorldToClipMatrix;
+		};
 
+		struct ObjectData 
+		{
+			Matrix4x4f myTransform;
+		};
 
 	};
 

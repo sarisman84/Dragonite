@@ -324,8 +324,8 @@ void Dragonite::MaterialFactory::InitPbr()
 	uint32_t key = id + (uint32_t)Materials::Pbr;
 
 	std::string vsData;
-	myVertexShaders[key] = CreateVertexShader(L"Default_VS.cso", &vsData);
-	myPixelShaders[key] = CreatePixelShader(L"PBR_PS.cso");
+	myVertexShaders[key] = CreateVertexShader(L"shaders/Default_VS.cso", &vsData);
+	myPixelShaders[key] = CreatePixelShader(L"shaders/PBR_PS.cso");
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> descs =
 	{
@@ -344,8 +344,8 @@ void Dragonite::MaterialFactory::InitUnlit()
 	uint32_t key = id + (uint32_t)Materials::Unlit;
 
 	std::string vsData;
-	myVertexShaders[key] = CreateVertexShader(L"Default_VS.cso", &vsData);
-	myPixelShaders[key] = CreatePixelShader(L"Unlit_PS.cso");
+	myVertexShaders[key] = CreateVertexShader(L"shaders/Default_VS.cso", &vsData);
+	myPixelShaders[key] = CreatePixelShader(L"shaders/Unlit_PS.cso");
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> descs =
 	{

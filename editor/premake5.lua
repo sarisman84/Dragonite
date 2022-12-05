@@ -1,6 +1,6 @@
 include "vendor"
 
-function initEditor(aName, aDir, aPostBuildEventCommand)
+function initEditor(aName, aDir, aWorkingDir, aPostBuildEventCommand)
     local prjDir = "../editor/"
     local src = prjDir .. "src/"
     local name = "editor"
@@ -15,70 +15,47 @@ function initEditor(aName, aDir, aPostBuildEventCommand)
     prjName = "%{prj.name}"
 
     local tDir = aDir .. "/editor"
-    local tempDir = tDir .. "/temp"
-    targetdir(tDir) -- ouput dir  
+    local tempDir = aDir .. "/../temp/editor"
+    targetdir(aDir) -- ouput dir  
     objdir(tempDir) -- intermediate dir
-    debugdir(tDir)
+    debugdir(aWorkingDir)
 
-    trymkdir(tDir)
+    trymkdir(aDir)
     trymkdir(tempDir)
+    trymkdir(aWorkingDir)
 
     targetname("%{prj.name}_%{cfg.buildcfg}") -- target name
 
-    includedirs {
-        src,
-        src .. "/shaders/includes",
-        "../vendor/src/",
-        "../vendor/src/imgui/",
-        "../vendor/src/imgui/backends/"
-    }
+    includedirs {src, src .. "/shaders/includes", "../vendor/src/", "../vendor/src/imgui/",
+                 "../vendor/src/imgui/backends/"}
     fetchVendorInclude()
 
-    links {
-        "vendor"
-    }
-    libdirs {
-        "../lib"
-    }
+    links {"vendor"}
+    libdirs {"../lib"}
 
-    files {
-        src .. "**.h",
-        src .. "**.hpp",
-        src .. "**.c",
-        src .. "**.cpp",
-        src .. "shaders/**.hlsl",
-        src .. "shaders/includes/**.hlsli"
-    }
+    files {src .. "**.h", src .. "**.hpp", src .. "**.c", src .. "**.cpp", src .. "**.hlsl", src .. "**.hlsli"}
 
     fetchVendorInclude()
 
-    postbuildcommands {
-        aPostBuildEventCommand
-    }
+    postbuildcommands {aPostBuildEventCommand}
 
     filter "configurations:Debug"
     defines "_DEBUG"
     runtime "Debug"
     symbols "on"
-    links {
-        "vendor_Debug.lib"
-    }
+    links {"vendor_Debug.lib"}
 
     filter "configurations:Release"
     defines "_RELEASE"
     runtime "Release"
     optimize "on"
-    links {
-        "vendor_Release.lib"
-    }
+    links {"vendor_Release.lib"}
 
     filter "configurations:Retail"
     defines "_RETAIL"
     runtime "Release"
     optimize "on"
-    links {
-        "vendor_Retail.lib"
-    }
+    links {"vendor_Retail.lib"}
 
     return tDir
 end

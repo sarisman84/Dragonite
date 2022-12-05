@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\engine_Debug.dll</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\FullscreenUnlit_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\Fullscreen_VS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\RenderID_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\Unlit_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Git\Dragonite\bin\build\engine\Unlit_VS.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

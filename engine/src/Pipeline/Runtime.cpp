@@ -108,7 +108,7 @@ bool Dragonite::Engine::Initialize(HWND& anInstance, EmberGUI* anEditorInterface
 		myEditorInterface->AddEditor(new ember::SceneView(
 			[this](ID3D11RenderTargetView* aView)
 			{
-				myGraphicsEngine->Draw(aView);
+				myGraphicsEngine->Draw(myTestCam.GetWorldToClipSpace(), aView);
 			}));
 
 	}
@@ -130,11 +130,10 @@ void Dragonite::Engine::Update(const float aDeltaTime)
 {
 	Dragonite::DrawInstruct data;
 
-	data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, L"testTexture.dds");
+	data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, L"textures/testTexture.dds");
 	data.myModel = ModelFactory::API()->GetModel(Primitive::Cube);
-	//data.myDrawType = 0;
-	//data.myMaterial = MaterialFactory::API()->GetMaterial(Materials::Unlit, "someTexture.dds");
-	//data.myModelID = ModelFactory::API()->GetModel(Primitive::Cube);
+	data.myTransform.myPosition = { 0,0,10 };
+
 	myGraphicsEngine->Submit(data);
 
 	for (size_t i = 0; i < myUpdateEvents.size(); i++)
@@ -145,7 +144,7 @@ void Dragonite::Engine::Update(const float aDeltaTime)
 	if (myEditorInterface)
 		myEditorInterface->Update();
 	else
-		myGraphicsEngine->Draw();
+		myGraphicsEngine->Draw(myTestCam.GetWorldToClipSpace());
 	myGraphicsEngine->Present();
 }
 

@@ -10,7 +10,7 @@ namespace Dragonite
 		template<typename T>
 		inline T* As()
 		{
-			return (T)(this);
+			return (T*)(this);
 		}
 	};
 

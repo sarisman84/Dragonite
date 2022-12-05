@@ -124,6 +124,49 @@ Dragonite::DSView::~DSView()
 	myDepthStencilView = nullptr;
 }
 
+void Dragonite::InitializeBuffer(ID3D11Device * aDevice, ID3D11Buffer ** aBuffer, const size_t aTypeSize)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = aTypeSize;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+
+	HRESULT hr = aDevice->CreateBuffer(&desc, nullptr, aBuffer);
+
+
+
+}
+
+void Dragonite::EditBuffer(ID3D11DeviceContext* aContext, UINT aSlot, ID3D11Buffer* aBuffer, const size_t aTypeSize, void* someData)
+{
+	D3D11_MAPPED_SUBRESOURCE mR;
+	ZeroMemory(&mR, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	aContext->Map(aBuffer, aSlot, D3D11_MAP_WRITE_DISCARD, 0, &mR);
+	memcpy(mR.pData, someData, aTypeSize);
+	aContext->Unmap(aBuffer, aSlot);
+}
+
+void Dragonite::BindBuffer(ID3D11DeviceContext* aContext, UINT aBindType, ID3D11Buffer** aBuffer, UINT aSlot)
+{
+	switch (aBindType)
+	{
+	case 0:
+		aContext->VSSetConstantBuffers(aSlot, 1, aBuffer);
+		break;
+	case 1:
+		aContext->PSSetConstantBuffers(aSlot, 1, aBuffer);
+		break;
+	default:
+		break;
+	}
+	
+}
+
+
 //void** Dragonite::DSView::EditContent()
 //{
 //	return (void**)myDepthStencilView;

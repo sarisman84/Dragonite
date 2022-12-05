@@ -20,6 +20,7 @@
 
 #include "Core/Utilities/Reflection.h"
 #include "Pipeline/Utility/Event.h"
+#include "Core/CU/Camera.h"
 
 
 
@@ -65,6 +66,10 @@ namespace Dragonite
 		HWND myInstance;
 		PollingStation* myRuntimeHandler;
 		DragoniteGui* myGUIInterface;
+
+
+	private: //TEMP
+		Camera myTestCam;
 	};
 
 

@@ -17,10 +17,10 @@ function initLauncher(aName)
     prjName = "%{prj.name}"
 
     local name = aName
-    local binDir = os.realpath(solutionDir .. "../bin/resc")
+    local binDir = os.realpath(solutionDir .. "../bin/build")
     local launcherDir = os.realpath(binDir .. "/launcher")
-    local outputDir = launcherDir .. "/build"
-    local debugDir = launcherDir
+    local outputDir = launcherDir
+    local debugDir = os.realpath(solutionDir .. "../bin/resc")
     local tempDir = outputDir .. "/temp"
 
     targetdir(outputDir) -- ouput dir  
@@ -37,38 +37,23 @@ function initLauncher(aName)
 
     debugdir(debugDir)
 
-    flags {
-        "MultiProcessorCompile"
-    }
+    flags {"MultiProcessorCompile"}
 
-    links {
-        "engine",
-        "editor"
-    }
+    links {"engine", "editor"}
 
-    libdirs {
-        "../lib"
-    }
+    libdirs {"../lib"}
 
-    includedirs {
-        "src/",
-        "../vendor/src/"
-    }
+    includedirs {"src/", "../vendor/src/"}
 
-    files {
-        "src/**.h",
-        "src/**.hpp",
-        "src/**.c",
-        "src/**.cpp"
-    }
+    files {"src/**.h", "src/**.hpp", "src/**.c", "src/**.cpp"}
 
     outputDir = os.realpath(outputDir .. "/")
 
-    local gameDir = os.realpath(launcherDir .. "/engine")
-    local editorDir = os.realpath(launcherDir .. "/editor")
+    local gameDir = os.realpath(binDir .. "/engine")
+    local editorDir = os.realpath(binDir .. "/editor")
 
-    local gameDirCpy = "xcopy " .. gameDir .. " " .. outputDir .. " /y "
-    local editorDirCpy = "xcopy " .. editorDir .. " " .. outputDir .. " /y "
+    local gameDirCpy = "xcopy " .. outputDir .. " " .. gameDir .. " /y "
+    local editorDirCpy = "xcopy " .. outputDir .. " " .. editorDir .. " /y "
     -- local gameToEditorDirCpy = "xcopy " .. gameDir .. " " .. editorDir .. " /y "
 
     filter "configurations:Debug"
@@ -86,9 +71,8 @@ function initLauncher(aName)
     runtime "Release"
     optimize "on"
 
-    initEngine(name, launcherDir, gameDirCpy)
-    initEditor(name, launcherDir, editorDirCpy)
-   
+    initEngine(name, gameDir, debugDir, gameDirCpy)
+    initEditor(name, editorDir, debugDir, editorDirCpy)
 
     trymkdir(gameDir)
     trymkdir(editorDir)

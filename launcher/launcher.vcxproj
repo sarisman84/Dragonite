@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\build\</OutDir>
-    <IntDir>..\bin\resc\launcher\build\temp\Debug\</IntDir>
+    <OutDir>..\bin\build\launcher\</OutDir>
+    <IntDir>..\bin\build\launcher\temp\Debug\</IntDir>
     <TargetName>launcher_Debug</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\build\</OutDir>
-    <IntDir>..\bin\resc\launcher\build\temp\Release\</IntDir>
+    <OutDir>..\bin\build\launcher\</OutDir>
+    <IntDir>..\bin\build\launcher\temp\Release\</IntDir>
     <TargetName>launcher_Release</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\resc\launcher\build\</OutDir>
-    <IntDir>..\bin\resc\launcher\build\temp\Retail\</IntDir>
+    <OutDir>..\bin\build\launcher\</OutDir>
+    <IntDir>..\bin\build\launcher\temp\Retail\</IntDir>
     <TargetName>launcher_Retail</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>

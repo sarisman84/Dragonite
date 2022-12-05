@@ -28,9 +28,18 @@
     <Filter Include="Pipeline\Utility">
       <UniqueIdentifier>{3EBC0BD4-2AB5-2A26-53E7-0FAB3F3F0A32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{EFAC8DF2-5B8C-0C8E-64A4-9764D00273EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Util">
+      <UniqueIdentifier>{9C31FDFA-8894-8C9F-311A-C5551D5C5822}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CU\Bounds.h">
+      <Filter>Core\CU</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\CU\Camera.h">
       <Filter>Core\CU</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\CU\CommonData.h">
@@ -90,6 +99,9 @@
     <ClInclude Include="src\Pipeline\Rendering\Content\ModelDef.h">
       <Filter>Pipeline\Rendering\Content</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pipeline\Rendering\Content\Projection.h">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pipeline\Rendering\DX\DXDrawer.h">
       <Filter>Pipeline\Rendering\DX</Filter>
     </ClInclude>
@@ -111,6 +123,9 @@
     <ClInclude Include="src\framework.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\CU\Camera.cpp">
+      <Filter>Core\CU</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\CU\Transform.cpp">
       <Filter>Core\CU</Filter>
     </ClCompile>
@@ -132,6 +147,9 @@
     <ClCompile Include="src\Pipeline\Rendering\Content\Model.cpp">
       <Filter>Pipeline\Rendering\Content</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pipeline\Rendering\Content\Projection.cpp">
+      <Filter>Pipeline\Rendering\Content</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pipeline\Rendering\DX\DXDrawer.cpp">
       <Filter>Pipeline\Rendering\DX</Filter>
     </ClCompile>
@@ -142,5 +160,33 @@
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Shaders\FullscreenUnlit_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Fullscreen_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\RenderID_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Unlit_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\Unlit_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Shaders\Util\CBufferDef.hlsli">
+      <Filter>Shaders\Util</Filter>
+    </None>
+    <None Include="src\Shaders\Util\ShaderStructs.hlsli">
+      <Filter>Shaders\Util</Filter>
+    </None>
+    <None Include="src\Shaders\Util\ShaderUtils.hlsli">
+      <Filter>Shaders\Util</Filter>
+    </None>
   </ItemGroup>
 </Project>
