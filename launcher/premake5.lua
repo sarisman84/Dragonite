@@ -78,12 +78,11 @@ function initLauncher(aName)
 
     trymkdir(releaseDir)
 
-    local excludeArgs = "editor_Debug.*\neditor_Release.*"
+    local excludeArgs = "editor"
     local exclude = "../premake/exclude.txt"
     io.writefile(exclude, excludeArgs)
 
-    local releaseCpy = "xcopy " .. outputDir .. " " .. releaseDir .. " /y " .. "/u " .. "/f " .. "/exclude:" ..
-                           os.realpath(exclude) .. " "
+    local releaseCpy = "xcopy " .. " /y " .. "/f " .. "/exclude:" ..  os.realpath(exclude) .. " " .. outputDir .. " " .. releaseDir
 
  
 

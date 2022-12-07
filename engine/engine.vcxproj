@@ -96,7 +96,7 @@
       <ImportLibrary>..\bin\build\debug\engine_Debug.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+      <Command>xcopy  /y /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,7 +126,7 @@
       <ImportLibrary>..\bin\build\debug\engine_Release.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+      <Command>xcopy  /y /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Retail|x64'">
@@ -156,7 +156,7 @@
       <ImportLibrary>..\bin\build\debug\engine_Retail.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release /y /u /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt </Command>
+      <Command>xcopy  /y /f /exclude:D:\Projects\Git\Dragonite\premake\exclude.txt D:\Projects\Git\Dragonite\bin\build\debug\ D:\Projects\Git\Dragonite\bin\build\release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
